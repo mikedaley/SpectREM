@@ -10,9 +10,14 @@
 #import <SpriteKit/SpriteKit.h>
 #import <GameplayKit/GameplayKit.h>
 
-@interface ViewController : NSViewController
+@interface EmulationViewController : NSViewController
 
 @property (assign) IBOutlet SKView *skView;
+
+#pragma mark - Methods
+
+// Called by the machine being emulated when a new display image is ready to be displayed
+- (void)updateEmulationDisplay:(CGImageRef)emulationDisplayImageRef;
 
 @end
 

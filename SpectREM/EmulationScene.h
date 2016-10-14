@@ -8,6 +8,9 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface GameScene : SKScene
+@interface EmulationScene : SKScene
+
+@property (strong) SKSpriteNode *emulationDisplaySprite;
+@property (assign) id keyboardDelegate;
 
 @end
