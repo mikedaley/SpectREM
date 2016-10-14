@@ -10,65 +10,97 @@
 #import "EmulationScene.h"
 #import "ZXSpectrum48.h"
 
+#pragma mark - Private Interface
+
 @interface EmulationViewController ()
-
-@property (strong) EmulationScene *emulationScene;
-
-@property (strong) ZXSpectrum48 *machine;
 
 @end
 
+#pragma mark - Implementation
+
 @implementation EmulationViewController
+{
+    EmulationScene *_emulationScene;
+    ZXSpectrum48 *_machine;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     // Load the SKScene from 'GameScene.sks'
-    self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
+    _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     
     // Set the scale mode to scale to fit the window
-    self.emulationScene.scaleMode = SKSceneScaleModeFill;
+    _emulationScene.scaleMode = SKSceneScaleModeFill;
     
     // Present the scene
-    [self.skView presentScene:self.emulationScene];
+    [self.skView presentScene:_emulationScene];
     
     self.skView.showsFPS = YES;
     self.skView.showsNodeCount = YES;
     
     //Setup the machine to be emulated
     
-    self.machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
+    _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
 
-    self.emulationScene.keyboardDelegate = self.machine;
+    _emulationScene.keyboardDelegate = _machine;
 
-    [self.machine start];
+    [_machine start];
 }
+
+#pragma mark - Keyboard events
 
 - (void)flagsChanged:(NSEvent *)event
 {
-    [self.machine flagsChanged:event];
+    [_machine flagsChanged:event];
 }
 
 - (void)updateEmulationDisplay:(CGImageRef)emulationDisplayImageRef
 {
-    self.emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithCGImage:emulationDisplayImageRef];
+    _emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithCGImage:emulationDisplayImageRef];
 }
+
+#pragma mark - UI Actions
 
 - (IBAction)setAspectFitMode:(id)sender
 {
-    self.emulationScene.scaleMode = SKSceneScaleModeAspectFit;
+    _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
 }
 
 - (IBAction)setFillMode:(id)sender
 {
-    self.emulationScene.scaleMode = SKSceneScaleModeFill;
+    _emulationScene.scaleMode = SKSceneScaleModeFill;
 }
 
 - (IBAction)machineRestart:(id)sender
 {
-    dispatch_sync(self.machine.emulationQueue, ^{
-        [self.machine reset];
+    dispatch_sync(_machine.emulationQueue, ^{
+        [self.view.window setTitle:@"SpectREM"];
+        [_machine reset];
     });
+}
+
+- (IBAction)openFile:(id)sender
+{
+    NSOpenPanel *openPanel = [NSOpenPanel new];
+    openPanel.canChooseDirectories = NO;
+    openPanel.allowsMultipleSelection = NO;
+    openPanel.allowedFileTypes = @[@"sna", @"z80"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [openPanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
+            if (result == NSModalResponseOK)
+            {
+                [self loadFileWithURL:openPanel.URLs[0]];
+            }
+        }];
+    });
+}
+
+- (void)loadFileWithURL:(NSURL *)url
+{
+    [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
+    [_machine loadSnapshotWithPath:url.path];
 }
 
 @end

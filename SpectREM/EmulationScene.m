@@ -21,6 +21,14 @@
 
 - (void)didMoveToView:(SKView *)view {
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
+    
+    SKShader *shader = [SKShader shaderWithFileNamed:@"Plasma.fsh"];
+    
+    shader.uniforms = @[[SKUniform uniformWithName:@"size" vectorFloat2:vector2((float)self.frame.size.width*3, (float)self.frame.size.height*3)]];
+    
+//    self.emulationDisplaySprite.shader = shader;
+
+
 }
 
 - (void)keyDown:(NSEvent *)event {

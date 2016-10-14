@@ -9,29 +9,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SpectREM/ZXSpectrum48.mm"
-            timestampString = "498130748.967221"
+            filePath = "SpectREM/EmulationScene.m"
+            timestampString = "498135809.859868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "335"
-            endingLineNumber = "335"
-            landmarkName = "-step"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpectREM/ZXSpectrum48.mm"
-            timestampString = "498130783.955822"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "510"
-            endingLineNumber = "510"
-            landmarkName = "-generateImage"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "-didMoveToView:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

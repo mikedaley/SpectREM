@@ -508,11 +508,6 @@ static void updateScreenWithTStates(int numberTs)
                                                 kCGRenderingIntentDefault));
     CGDataProviderRelease(providerRef);
     CFRelease(dataRef);
-    
-//    CIImage *ciimage = [CIImage imageWithCGImage:(CGImage*)self.imageRef];
-//    self.imageRef = CFBridgingRelease([self.ctx createCGImage:[self.scanLineKernel applyWithExtent:CGRectMake(0, 0, emuDisplayPxWidth, emuDisplayPxHeight) arguments:@[ciimage, @(1), @(1)]] fromRect:CGRectMake(0, 0, emuDisplayPxWidth, emuDisplayPxHeight)]);
-    
-    
 }
 
 - (void)buildScreenLineAddressTable
