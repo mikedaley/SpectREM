@@ -1,33 +1,18 @@
-#define PI 3.14159265358979323846
-
-//#if 0
-//#define size iResolution.xy
-//float time=float(iGlobalTime)*1.0;
-//#else
-//uniform float time;
-//uniform vec2 size;
-//#endif
-
 
 void main()
 {
-    vec2 p = -1.0 + 2.0 * gl_FragCoord.xy / size.xy;
+    // fake chromatic aberration in the stupidest way possible
+    vec2 texCoordOffset = vec2(0.003, 0);
+    float r = texture2D(u_texture, v_tex_coord - texCoordOffset).r;
+    float g = texture2D(u_texture, v_tex_coord).g;
+    float b = texture2D(u_texture, v_tex_coord + texCoordOffset).b;
+    vec4 imageColor = vec4(r,g,b,1);
     
-    float x = p.x;
-    float y = p.y;
-    float mov0 = x+y+cos(sin(u_time)*2.0)*100.+sin(x/100.)*1000.;
-    float mov1 = y / 0.9 +  u_time;
-    float mov2 = x / 0.2;
-    float c1 = abs(sin(mov1+u_time)/2.+mov2/2.-mov1-mov2+u_time);
-    float c2 = abs(sin(c1+sin(mov0/1000.+u_time)+sin(y/40.+u_time)+sin((x+y)/100.)*3.));
-    float c3 = abs(sin(c2+cos(mov1+mov2+c2)+cos(mov2)+sin(x/1000.)));
-    //const vec3 lc=vec3(0.2125, 0.7154, 0.0721);
-    const vec3 lc=vec3(.1, .1, .1 );
-    vec3 c=vec3(c1,c2,c3*1.2);
-    vec3 i=vec3(dot(c,lc));
+    // fake scanlines in the stupidest way possible
+    vec4 scanlineColor = 1.2 * vec4(1,1,1,1) * abs(sin(v_tex_coord.y * 1000));
     
-    vec3 sc=mix(i,c,0.3);
-    //gl_FragColor = vec4(c1,c2,c3*1.2,1);
-    gl_FragColor=vec4(sc,1);
-    //gl_FragColor=vec4(1.0,1.0,0.0,1.0);
+    // combine everything
+    gl_FragColor = v_color_mix * imageColor * scanlineColor;
+
+
 }

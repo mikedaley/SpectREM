@@ -26,7 +26,7 @@
     
     shader.uniforms = @[[SKUniform uniformWithName:@"size" vectorFloat2:vector2((float)self.frame.size.width*3, (float)self.frame.size.height*3)]];
     
-//    self.emulationDisplaySprite.shader = shader;
+    self.emulationDisplaySprite.shader = shader;
 
 
 }
