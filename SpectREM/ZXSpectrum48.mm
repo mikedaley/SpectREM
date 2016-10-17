@@ -23,6 +23,7 @@
 @property (strong) EmulationViewController *emulationViewController;
 @property (assign) CGColorSpaceRef colourSpace;
 @property (strong) id imageRef;
+@property (strong) SKTexture *texture;
 @property (strong) NSString *snapshotPath;
 
 @end
@@ -329,10 +330,14 @@ static unsigned char keyboardMap[8];
         core->ResetTStates( core->GetTStates() );
         core->SignalInterrupt();
         
-        [self generateImage];
+        CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
+        self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+                                             size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
+                                          flipped:YES];
+        CFRelease(dataRef);
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.emulationViewController updateEmulationDisplay:(__bridge CGImageRef)self.imageRef];
+            [self.emulationViewController updateEmulationDisplayTextureWithImage:self.texture];
         });
 
         frameCounter++;
@@ -489,25 +494,6 @@ static void updateScreenWithTStates(int numberTs)
 
         numberTs--;
     }
-}
-
-- (void)generateImage
-{
-    CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
-    CGDataProviderRef providerRef = CGDataProviderCreateWithCFData(dataRef);
-    self.imageRef = CFBridgingRelease(CGImageCreate(emuDisplayPxWidth,
-                                                emuDisplayPxHeight,
-                                                emuDisplayBitsPerComponent,
-                                                emuDisplayBitsPerPx,
-                                                emuDisplayPxWidth * emuDisplayBytesPerPx,
-                                                _colourSpace,
-                                                (CGBitmapInfo)kCGImageAlphaPremultipliedLast,
-                                                providerRef,
-                                                nil,
-                                                emuShouldInterpolate,
-                                                kCGRenderingIntentDefault));
-    CGDataProviderRelease(providerRef);
-    CFRelease(dataRef);
 }
 
 - (void)buildScreenLineAddressTable

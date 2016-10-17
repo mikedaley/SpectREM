@@ -40,12 +40,18 @@
     self.skView.showsNodeCount = YES;
     
     //Setup the machine to be emulated
-    
     _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
 
     _emulationScene.keyboardDelegate = _machine;
 
     [_machine start];
+}
+
+#pragma mark - View events
+
+- (void)viewDidLayout
+{
+    [_emulationScene sceneViewSizeChanged:self.view.frame.size];
 }
 
 #pragma mark - Keyboard events
@@ -55,9 +61,9 @@
     [_machine flagsChanged:event];
 }
 
-- (void)updateEmulationDisplay:(CGImageRef)emulationDisplayImageRef
+- (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture
 {
-    _emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithCGImage:emulationDisplayImageRef];
+    _emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
 }
 
 #pragma mark - UI Actions

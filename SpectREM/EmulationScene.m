@@ -8,28 +8,24 @@
 
 #import "EmulationScene.h"
 
-@interface EmulationScene ()
-
-@end
-
 #pragma mark - Implementation
 
 @implementation EmulationScene {
-    
-
+    SKShader *_shader;
 }
 
 - (void)didMoveToView:(SKView *)view {
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
     
-    SKShader *shader = [SKShader shaderWithFileNamed:@"Plasma.fsh"];
-    
-    shader.uniforms = @[[SKUniform uniformWithName:@"size" vectorFloat2:vector2((float)self.frame.size.width*3, (float)self.frame.size.height*3)]];
-    
-    self.emulationDisplaySprite.shader = shader;
+    _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];    
+    _shader.uniforms = @[[SKUniform uniformWithName:@"size"
+                                      vectorFloat2:vector2((float)352, (float)304)]];
 
+    self.emulationDisplaySprite.shader = _shader;
 
 }
+
+#pragma mark - Keyboard Events
 
 - (void)keyDown:(NSEvent *)event {
     [self.keyboardDelegate keyDown:event];
@@ -40,22 +36,20 @@
     [self.keyboardDelegate keyUp:event];
 }
 
+#pragma mark - Scene View Size Changes
+
+- (void)sceneViewSizeChanged:(CGSize)newSize
+{
+    _emulationDisplaySprite.shader.uniforms = @[[SKUniform uniformWithName:@"size"
+                                                              vectorFloat2:vector2((float)newSize.width,
+                                                                                   (float)newSize.height)]];
+}
+
+#pragma mark - Game tick
+
 -(void)update:(CFTimeInterval)currentTime {
     // Called before each frame is rendered
 }
 
 @end
 
-
-//    CGFloat w = (self.size.width + self.size.height) * 0.05;
-
-// Create shape node to use during mouse interaction
-//    _spinnyNode = [SKShapeNode shapeNodeWithRectOfSize:CGSizeMake(w, w) cornerRadius:w * 0.3];
-//    _spinnyNode.lineWidth = 2.5;
-//
-//    [_spinnyNode runAction:[SKAction repeatActionForever:[SKAction rotateByAngle:M_PI duration:1]]];
-//    [_spinnyNode runAction:[SKAction sequence:@[
-//                                                [SKAction waitForDuration:0.5],
-//                                                [SKAction fadeOutWithDuration:0.5],
-//                                                [SKAction removeFromParent],
-//                                                ]]];
