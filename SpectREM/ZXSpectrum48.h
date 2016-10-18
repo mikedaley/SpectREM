@@ -25,6 +25,8 @@
 // Queue on which the emulation is run
 @property (strong) dispatch_queue_t emulationQueue;
 
+@property (assign) float borderWidth;
+
 #pragma mark - Methods
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController;

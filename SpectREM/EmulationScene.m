@@ -18,8 +18,8 @@
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
     
     _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];    
-    _shader.uniforms = @[[SKUniform uniformWithName:@"size"
-                                      vectorFloat2:vector2((float)352, (float)304)]];
+    _shader.uniforms = @[[SKUniform uniformWithName:@"u_distortion" float:0.125]
+                         ];
 
     self.emulationDisplaySprite.shader = _shader;
 
@@ -40,9 +40,14 @@
 
 - (void)sceneViewSizeChanged:(CGSize)newSize
 {
-    _emulationDisplaySprite.shader.uniforms = @[[SKUniform uniformWithName:@"size"
-                                                              vectorFloat2:vector2((float)newSize.width,
-                                                                                   (float)newSize.height)]];
+
+}
+
+#pragma mark - UI Control Values
+
+- (void)curveSliderChanged:(float)newValue
+{
+    _emulationDisplaySprite.shader.uniforms = @[[SKUniform uniformWithName:@"u_distortion" float:newValue]];
 }
 
 #pragma mark - Game tick

@@ -21,4 +21,6 @@
 // changes such as updating uniform values
 - (void)sceneViewSizeChanged:(CGSize)newSize;
 
+- (void)curveSliderChanged:(float)newValue;
+
 @end

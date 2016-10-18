@@ -187,6 +187,34 @@
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="c73-y7-8yL">
+                                <rect key="frame" x="20" y="20" width="154" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="154" id="VNN-5g-fK4"/>
+                                </constraints>
+                                <sliderCell key="cell" controlSize="mini" continuous="YES" state="on" alignment="left" maxValue="0.5" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="djM-xN-Al2"/>
+                                <connections>
+                                    <action selector="curveSliderChanged:" target="rPt-NT-nkU" id="dgT-T5-uKh"/>
+                                </connections>
+                            </slider>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hyg-W3-T2z">
+                                <rect key="frame" x="626" y="14" width="154" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="154" id="Spq-0I-fH5"/>
+                                </constraints>
+                                <sliderCell key="cell" controlSize="mini" continuous="YES" state="on" alignment="left" maxValue="32" doubleValue="16" tickMarkPosition="above" numberOfTickMarks="16" sliderType="linear" id="SEV-1c-7dw"/>
+                                <connections>
+                                    <action selector="borderSliderChanged:" target="rPt-NT-nkU" id="xI5-cq-Sbl"/>
+                                </connections>
+                            </slider>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="hyg-W3-T2z" secondAttribute="bottom" constant="14" id="Ob9-o5-Omb"/>
+                            <constraint firstItem="c73-y7-8yL" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="fgm-we-HJo"/>
+                            <constraint firstAttribute="bottom" secondItem="c73-y7-8yL" secondAttribute="bottom" constant="20" id="lNv-fd-kAl"/>
+                            <constraint firstAttribute="trailing" secondItem="hyg-W3-T2z" secondAttribute="trailing" constant="20" id="o55-rP-ewM"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="skView" destination="m2S-Jp-Qdl" id="qux-te-cT3"/>

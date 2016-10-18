@@ -224,14 +224,16 @@ static unsigned char keyboardMap[8];
         emuDisplayBitsPerComponent = 8;
         emuDisplayBytesPerPx = 4;
         
-        emuLeftBorderPx = 32 / 8;
-        emuRightBorderPx = 64 / 8;
+        emuLeftBorderPx = 32;
+        emuRightBorderPx = 64;
         
         emuBottomBorderPx = 56;
         emuTopBorderPx = 56;
         
-        emuDisplayPxWidth = 256 + 8 * (emuLeftBorderPx + emuRightBorderPx);
+        emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
+        
+        self.borderWidth = 16;
         
         [self resetFrame];
         
@@ -330,6 +332,16 @@ static unsigned char keyboardMap[8];
         core->ResetTStates( core->GetTStates() );
         core->SignalInterrupt();
         
+        // Calculate how much of the texture should be displayed
+        float hScale = 1.0 / 352;
+        float vScale = 1.0 / 304;
+
+        CGRect textureRect = CGRectMake((32 - self.borderWidth) * hScale,
+                                        (56 - self.borderWidth) * vScale,
+                                        1.0 - ((32 - self.borderWidth) * hScale + ((64 - self.borderWidth) * hScale)),
+                                        1.0 - (((56 - self.borderWidth) * vScale) * 2));
+
+        // Update the display texture using the data from the emulator display buffer
         CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
         self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                              size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
@@ -337,7 +349,8 @@ static unsigned char keyboardMap[8];
         CFRelease(dataRef);
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.emulationViewController updateEmulationDisplayTextureWithImage:self.texture];
+            [self.emulationViewController updateEmulationDisplayTextureWithImage:[SKTexture textureWithRect:textureRect
+                                                                                                  inTexture:self.texture]];
         });
 
         frameCounter++;

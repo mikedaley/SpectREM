@@ -31,7 +31,7 @@
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     
     // Set the scale mode to scale to fit the window
-    _emulationScene.scaleMode = SKSceneScaleModeFill;
+    _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
     
     // Present the scene
     [self.skView presentScene:_emulationScene];
@@ -84,6 +84,16 @@
         [self.view.window setTitle:@"SpectREM"];
         [_machine reset];
     });
+}
+
+- (IBAction)curveSliderChanged:(id)sender
+{
+    [_emulationScene curveSliderChanged:[(NSSlider *)sender floatValue]];
+}
+
+- (IBAction)borderSliderChanged:(id)sender
+{
+    _machine.borderWidth = [(NSSlider *)sender floatValue];
 }
 
 - (IBAction)openFile:(id)sender
