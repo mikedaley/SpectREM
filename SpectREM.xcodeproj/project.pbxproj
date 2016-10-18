@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
+		99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
 		EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A61DB0D60700511BAF /* EmulationScene.sks */; };
@@ -36,6 +38,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
+		99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
+		99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigViewController.xib; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF3A4A01DB0D60700511BAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDF3A4A11DB0D60700511BAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -163,6 +168,9 @@
 			children = (
 				EDF3A4AD1DB0D60700511BAF /* EmulationViewController.h */,
 				EDF3A4AE1DB0D60700511BAF /* EmulationViewController.m */,
+				99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */,
+				99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */,
+				99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -316,6 +324,7 @@
 			files = (
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
 				EDF3A4F81DB0F25F00511BAF /* CRT.fsh in Resources */,
+				99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */,
 				EDF3A4E51DB0D7BB00511BAF /* shock.sna in Resources */,
 				EDF3A4E41DB0D7BB00511BAF /* ZXSpectrum48k.rom in Resources */,
 				EDF3A4E61DB0D7BB00511BAF /* ulatest48k.sna in Resources */,
@@ -342,6 +351,7 @@
 				EDF3A4EC1DB0D7C700511BAF /* AudioQueue.m in Sources */,
 				EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */,
 				EDF3A4F01DB0D7D000511BAF /* ZXSpectrum48.mm in Sources */,
+				99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */,
 				EDF3A4D61DB0D7AB00511BAF /* Z80Core_CBOpcodes.cpp in Sources */,
 				EDF3A4AF1DB0D60700511BAF /* EmulationViewController.m in Sources */,
 				EDF3A4D81DB0D7AB00511BAF /* Z80Core_DDOpcodes.cpp in Sources */,

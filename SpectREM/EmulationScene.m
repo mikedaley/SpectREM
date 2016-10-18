@@ -18,7 +18,8 @@
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
     
     _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];    
-    _shader.uniforms = @[[SKUniform uniformWithName:@"u_distortion" float:0.125]
+    _shader.uniforms = @[
+                         [SKUniform uniformWithName:@"u_distortion" float:0.125]
                          ];
 
     self.emulationDisplaySprite.shader = _shader;

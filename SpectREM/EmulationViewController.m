@@ -9,6 +9,7 @@
 #import "EmulationViewController.h"
 #import "EmulationScene.h"
 #import "ZXSpectrum48.h"
+#import "ConfigViewController.h"
 
 #pragma mark - Private Interface
 
@@ -22,28 +23,28 @@
 {
     EmulationScene *_emulationScene;
     ZXSpectrum48 *_machine;
+    ConfigViewController *_configViewController;
+    NSPopover *_configPopover;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // Load the SKScene from 'GameScene.sks'
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    
-    // Set the scale mode to scale to fit the window
     _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
+    
+    _configViewController = [ConfigViewController new];
+    _configPopover = [NSPopover new];
+    _configPopover.contentViewController = _configViewController;
+    _configPopover.behavior = NSPopoverBehaviorTransient;
+    _configViewController.emulationViewController = self;
     
     // Present the scene
     [self.skView presentScene:_emulationScene];
     
-    self.skView.showsFPS = YES;
-    self.skView.showsNodeCount = YES;
-    
     //Setup the machine to be emulated
     _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
-
     _emulationScene.keyboardDelegate = _machine;
-
     [_machine start];
 }
 
@@ -86,14 +87,20 @@
     });
 }
 
-- (IBAction)curveSliderChanged:(id)sender
+- (void)curveSliderChanged:(id)sender
 {
     [_emulationScene curveSliderChanged:[(NSSlider *)sender floatValue]];
 }
 
-- (IBAction)borderSliderChanged:(id)sender
+- (void)borderSliderChanged:(id)sender
 {
     _machine.borderWidth = [(NSSlider *)sender floatValue];
+}
+
+- (IBAction)configButtonPressed:(id)sender
+{
+    CGRect rect = [(NSButton *)sender frame];
+    [_configPopover showRelativeToRect:rect ofView:self.view preferredEdge:NSRectEdgeMaxY];
 }
 
 - (IBAction)openFile:(id)sender

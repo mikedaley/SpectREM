@@ -15,7 +15,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="SpectREM" systemMenu="apple" id="uQy-DD-JDr">
                                     <items>
-                                        <menuItem title="About GameTemplate" id="5kV-Vb-QxS">
+                                        <menuItem title="About SpectREM" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
@@ -29,7 +29,7 @@
                                             <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                                        <menuItem title="Hide GameTemplate" keyEquivalent="h" id="Olw-nP-bQN">
+                                        <menuItem title="Hide SpectREM" keyEquivalent="h" id="Olw-nP-bQN">
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
                                             </connections>
@@ -47,7 +47,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                                        <menuItem title="Quit GameTemplate" keyEquivalent="q" id="4sb-4s-VLi">
+                                        <menuItem title="Quit SpectREM" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
                                                 <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
                                             </connections>
@@ -143,7 +143,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                                     <items>
-                                        <menuItem title="GameTemplate Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                                        <menuItem title="SpectREM Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                             <connections>
                                                 <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
                                             </connections>
@@ -185,35 +185,27 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="EmulationViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="SKView">
-                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="510" height="433"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="c73-y7-8yL">
-                                <rect key="frame" x="20" y="20" width="154" height="15"/>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unB-Bl-LlC">
+                                <rect key="frame" x="463" y="2" width="44" height="43"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="154" id="VNN-5g-fK4"/>
+                                    <constraint firstAttribute="width" constant="32" id="AJa-Ba-GsC"/>
+                                    <constraint firstAttribute="height" constant="32" id="b1k-Ij-cNX"/>
                                 </constraints>
-                                <sliderCell key="cell" controlSize="mini" continuous="YES" state="on" alignment="left" maxValue="0.5" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="djM-xN-Al2"/>
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSActionTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="XdC-XW-2cP">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system" size="26"/>
+                                </buttonCell>
                                 <connections>
-                                    <action selector="curveSliderChanged:" target="rPt-NT-nkU" id="dgT-T5-uKh"/>
+                                    <action selector="configButtonPressed:" target="rPt-NT-nkU" id="Jro-2B-A0G"/>
                                 </connections>
-                            </slider>
-                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hyg-W3-T2z">
-                                <rect key="frame" x="626" y="14" width="154" height="15"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="154" id="Spq-0I-fH5"/>
-                                </constraints>
-                                <sliderCell key="cell" controlSize="mini" continuous="YES" state="on" alignment="left" maxValue="32" doubleValue="16" tickMarkPosition="above" numberOfTickMarks="16" sliderType="linear" id="SEV-1c-7dw"/>
-                                <connections>
-                                    <action selector="borderSliderChanged:" target="rPt-NT-nkU" id="xI5-cq-Sbl"/>
-                                </connections>
-                            </slider>
+                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="hyg-W3-T2z" secondAttribute="bottom" constant="14" id="Ob9-o5-Omb"/>
-                            <constraint firstItem="c73-y7-8yL" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="fgm-we-HJo"/>
-                            <constraint firstAttribute="bottom" secondItem="c73-y7-8yL" secondAttribute="bottom" constant="20" id="lNv-fd-kAl"/>
-                            <constraint firstAttribute="trailing" secondItem="hyg-W3-T2z" secondAttribute="trailing" constant="20" id="o55-rP-ewM"/>
+                            <constraint firstAttribute="bottom" secondItem="unB-Bl-LlC" secondAttribute="bottom" constant="9" id="4FS-HR-bop"/>
+                            <constraint firstAttribute="trailing" secondItem="unB-Bl-LlC" secondAttribute="trailing" constant="9" id="7DV-7O-NPS"/>
                         </constraints>
                     </view>
                     <connections>
@@ -222,7 +214,10 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="817"/>
+            <point key="canvasLocation" x="75" y="797.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
+    </resources>
 </document>
