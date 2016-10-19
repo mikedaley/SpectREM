@@ -25,7 +25,10 @@
 // Queue on which the emulation is run
 @property (strong) dispatch_queue_t emulationQueue;
 
-@property (assign) float borderWidth;
+@property (assign) float displayBorderWidth;
+@property (assign) float soundVolume;
+@property (assign) double soundLowPassFilter;
+@property (assign) double soundHighPassFilter;
 
 #pragma mark - Methods
 

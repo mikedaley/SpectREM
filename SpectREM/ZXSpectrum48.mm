@@ -233,7 +233,7 @@ static unsigned char keyboardMap[8];
         emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
         
-        self.borderWidth = 16;
+        self.displayBorderWidth = 16;
         
         [self resetFrame];
         
@@ -261,9 +261,22 @@ static unsigned char keyboardMap[8];
                                            framesPerSecond:fps
                                             emulationQueue:_emulationQueue
                                                    machine:self];
+        
+        [self setupObservers];
     }
     return self;
 }
+
+#pragma mark - Binding
+
+- (void)setupObservers
+{
+    [self addObserver:_audioCore forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:_audioCore forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:_audioCore forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+#pragma mark -
 
 - (void)start
 {
@@ -333,13 +346,14 @@ static unsigned char keyboardMap[8];
         core->SignalInterrupt();
         
         // Calculate how much of the texture should be displayed
-        float hScale = 1.0 / 352;
-        float vScale = 1.0 / 304;
+        float hScale = 1.0 / emuDisplayPxWidth;
+        float vScale = 1.0 / emuDisplayPxHeight;
 
-        CGRect textureRect = CGRectMake((32 - self.borderWidth) * hScale,
-                                        (56 - self.borderWidth) * vScale,
-                                        1.0 - ((32 - self.borderWidth) * hScale + ((64 - self.borderWidth) * hScale)),
-                                        1.0 - (((56 - self.borderWidth) * vScale) * 2));
+        // Adjust how much of the full texture is to be displayed based on the defined border width
+        CGRect textureRect = CGRectMake((32 - self.displayBorderWidth) * hScale,
+                                        (56 - self.displayBorderWidth) * vScale,
+                                        1.0 - ((32 - self.displayBorderWidth) * hScale + ((64 - self.displayBorderWidth) * hScale)),
+                                        1.0 - (((56 - self.displayBorderWidth) * vScale) * 2));
 
         // Update the display texture using the data from the emulator display buffer
         CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);

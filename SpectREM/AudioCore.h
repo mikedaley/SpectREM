@@ -12,8 +12,9 @@
 
 @interface AudioCore : NSObject
 
-@property (nonatomic) double lowPassFilter;
-@property (nonatomic) double highPassFilter;
+@property (assign) float volume;
+@property (assign) double lowPassFilter;
+@property (assign) double highPassFilter;
 
 /*! @method initWithSampleRate:fps
 	@abstract
@@ -22,16 +23,5 @@
 	@param fps being rendered which is used to calculate the frame capacity for each audio buffer
  */
 - (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum48 *)machine;
-
-/*! @method updateBeeperAudioWithValue:
-	@abstract
- Update the beepers buffer with the value provided
-	@param value the value to be added to the audio buffer
-	@discussion
- This method is called when the number of T-States in a frame exceeds the audio step could
- which is calculated as (framesTStates / FPS) / sampleRate e.g. (69888 / 50) / 44100
- */
-//- (void)updateBeeperAudioWithValue:(float)value;
-
 
 @end

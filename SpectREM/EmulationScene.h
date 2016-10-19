@@ -15,12 +15,16 @@
 @property (strong) SKSpriteNode *emulationDisplaySprite;
 @property (assign) id keyboardDelegate;
 
+@property (assign) double displayCurve;
+@property (assign) float displaySaturation;
+@property (assign) float displayContrast;
+@property (assign) float displayBrightness;
+
 #pragma mark - Methods
 
 // Called when the size of the scene view changes. Any updates that are needed when the size
 // changes such as updating uniform values
 - (void)sceneViewSizeChanged:(CGSize)newSize;
 
-- (void)curveSliderChanged:(float)newValue;
 
 @end

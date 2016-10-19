@@ -7,11 +7,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "NSViewController+Bindings.h"
 
-@class EmulationViewController;
+@interface ConfigViewController : NSViewController_Bindings
 
-@interface ConfigViewController : NSViewController
+// Display properties
+@property (assign) double displayBorderWidth;
+@property (assign) double displayCurve;
+@property (assign) double displaySaturation;
+@property (assign) double displayContrast;
+@property (assign) double displayBrightness;
 
-@property (weak) EmulationViewController *emulationViewController;
+// Sound properties
+@property (assign) double soundVolume;
+@property (assign) double soundHighPassFilter;
+@property (assign) double soundLowPassFilter;
 
 @end

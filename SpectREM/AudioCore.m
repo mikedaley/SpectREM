@@ -31,6 +31,7 @@
 @property (assign) AUNode converterNode;
 @property (assign) AUNode lowPassNode;
 @property (assign) AUNode highPassNode;
+@property (assign) AudioUnit convert;
 
 @end
 
@@ -116,12 +117,11 @@ UInt32      formatBytesPerPacket;
         bufferFormat.mBytesPerPacket = formatBytesPerPacket;
         
         // Set the frames per slice property on the converter node
-        AudioUnit convert;
-        CheckError(AUGraphNodeInfo(_graph, _converterNode, NULL, &convert), "AUGraphNodeInfo");
-        CheckError(AudioUnitSetProperty(convert, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &bufferFormat, sizeof(bufferFormat)), "AudioUnitSetProperty");
+        CheckError(AUGraphNodeInfo(_graph, _converterNode, NULL, &_convert), "AUGraphNodeInfo");
+        CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &bufferFormat, sizeof(bufferFormat)), "AudioUnitSetProperty");
         
         uint32 framesPerSlice = 882;
-        CheckError(AudioUnitSetProperty(convert, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Input, 0, &framesPerSlice, sizeof(framesPerSlice)), "AudioUnitSetProperty");
+        CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Input, 0, &framesPerSlice, sizeof(framesPerSlice)), "AudioUnitSetProperty");
         
         // define the callback for rendering audio
         AURenderCallbackStruct renderCallbackStruct;
@@ -136,27 +136,31 @@ UInt32      formatBytesPerPacket;
         // Initial filter settings
         self.lowPassFilter = 3500;
         self.highPassFilter = 1;
-
+        
     }
     return self;
 }
 
-#pragma mark - Setters
+#pragma mark - Observers
 
-- (void)setLowPassFilter:(double)lowPassFilter
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-    _lowPassFilter = lowPassFilter;
-    AudioUnit filterUnit;
-    AUGraphNodeInfo(_graph, _lowPassNode, NULL, &filterUnit);
-    AudioUnitSetParameter(filterUnit, 0, kAudioUnitScope_Global, 0, lowPassFilter, 0);
-}
-
-- (void)setHighPassFilter:(double)highPassFilter
-{
-    _highPassFilter = highPassFilter;
-    AudioUnit filterUnit;
-    AUGraphNodeInfo(_graph, _highPassNode, NULL, &filterUnit);
-    AudioUnitSetParameter(filterUnit, 0, kAudioUnitScope_Global, 0, highPassFilter, 0);
+    if ([keyPath isEqualToString:@"soundLowPassFilter"])
+    {
+        AudioUnit filterUnit;
+        AUGraphNodeInfo(_graph, _lowPassNode, NULL, &filterUnit);
+        AudioUnitSetParameter(filterUnit, 0, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
+    }
+    else if ([keyPath isEqualToString:@"soundHighPassFilter"])
+    {
+        AudioUnit filterUnit;
+        AUGraphNodeInfo(_graph, _highPassNode, NULL, &filterUnit);
+        AudioUnitSetParameter(filterUnit, 0, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
+    }
+    else if ([keyPath isEqualToString:@"soundVolume"])
+    {
+        CheckError(AudioUnitSetParameter (_convert, kHALOutputParam_Volume, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] floatValue], 0), "AudioUnitSetProperty");
+    }
 }
 
 #pragma mark - C Functions
@@ -173,7 +177,7 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
     // Update the queue with the reset buffer
     [audioCore.queue read:buffer count:(inNumberFrames << 1)];
     
-    // Check if we have used a frames worth of buffer storage.
+    // Check if we have used a frames worth of buffer storage and if so then its time to generate another frame.
     if ([audioCore.queue used] < (samplesPerFrame << 1))
     {
         dispatch_sync(audioCore.emulationQueue, ^

@@ -35,6 +35,7 @@
 		EDF3A4F01DB0D7D000511BAF /* ZXSpectrum48.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4EF1DB0D7D000511BAF /* ZXSpectrum48.mm */; };
 		EDF3A4F31DB0D7F100511BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF3A4F21DB0D7F100511BAF /* QuartzCore.framework */; };
 		EDF3A4F81DB0F25F00511BAF /* CRT.fsh in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4F71DB0F25F00511BAF /* CRT.fsh */; };
+		EDF3A4FD1DB7745700511BAF /* NSViewController+Bindings.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4FC1DB7745700511BAF /* NSViewController+Bindings.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +86,8 @@
 		EDF3A4F21DB0D7F100511BAF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		EDF3A4F51DB0EAC900511BAF /* KeyboardEventProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardEventProtocol.h; sourceTree = "<group>"; };
 		EDF3A4F71DB0F25F00511BAF /* CRT.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CRT.fsh; sourceTree = "<group>"; };
+		EDF3A4FB1DB7745700511BAF /* NSViewController+Bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSViewController+Bindings.h"; sourceTree = "<group>"; };
+		EDF3A4FC1DB7745700511BAF /* NSViewController+Bindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSViewController+Bindings.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,7 @@
 		EDF3A49F1DB0D60700511BAF /* SpectREM */ = {
 			isa = PBXGroup;
 			children = (
+				EDF3A4FE1DB77D0F00511BAF /* Class Extensions */,
 				EDF3A4F61DB0F23000511BAF /* Shaders */,
 				EDF3A4C41DB0D79100511BAF /* ROMS */,
 				EDF3A4C31DB0D78A00511BAF /* Z80 Core */,
@@ -264,6 +268,15 @@
 			name = Shaders;
 			sourceTree = "<group>";
 		};
+		EDF3A4FE1DB77D0F00511BAF /* Class Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				EDF3A4FB1DB7745700511BAF /* NSViewController+Bindings.h */,
+				EDF3A4FC1DB7745700511BAF /* NSViewController+Bindings.m */,
+			);
+			name = "Class Extensions";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -359,6 +372,7 @@
 				EDF3A4EB1DB0D7C700511BAF /* AudioCore.m in Sources */,
 				EDF3A4D71DB0D7AB00511BAF /* Z80Core_EDOpcodes.cpp in Sources */,
 				EDF3A4D41DB0D7AB00511BAF /* Z80Core.cpp in Sources */,
+				EDF3A4FD1DB7745700511BAF /* NSViewController+Bindings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

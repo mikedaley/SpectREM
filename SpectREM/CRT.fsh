@@ -1,4 +1,4 @@
-
+// Curve the output based on the distortion value passed in
 vec2 radialDistortion(vec2 pos, float distortion)
 {
     vec2 cc = pos - 0.465;
@@ -6,10 +6,22 @@ vec2 radialDistortion(vec2 pos, float distortion)
     return (pos + cc * (1.3 + dist) * dist);
 }
 
+vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightness)
+{
+    const vec3 meanLuminosity = vec3(0.5, 0.5, 0.5);
+    const vec3 rgb2greyCoeff = vec3(0.2126, 0.7152, 0.0722);
+    vec3 brightened = color * brightness;
+    vec3 intensity = dot(brightened, rgb2greyCoeff);
+    vec3 saturated = mix(vec3(intensity), brightened, saturation);
+    vec3 contrasted = mix(meanLuminosity, saturated, contrast);
+    return contrasted;
+}
+
 void main()
 {
     vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
-    gl_FragColor = texture2D(u_texture, texCoord);
+    vec4 finalColor = vec4(colorCorrection(texture2D(u_texture, texCoord).rgb, u_saturation, u_contrast, u_brightness), 1);
+    gl_FragColor = finalColor;
 }
 
 
@@ -29,3 +41,14 @@ void main()
 ////        c1 = vec4(c.r, c.g, c.b, 0.1);
 ////    else
 //c1 = vec4(c.r, c.g, c.b, 1.0);
+
+
+
+//vec3 c=vec3(texture2D(sam,tex0));
+//
+//vec3 i=vec3(dot(c,lc));
+//
+//vec3 sc=mix(i,c,saturation);
+//vec3 cc=mix(al,sc,contrast)+vec3(brightness);
+//
+//gl_FragColor=vec4(cc,1);

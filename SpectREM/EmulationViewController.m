@@ -31,13 +31,12 @@
     [super viewDidLoad];
 
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
+    _emulationScene.scaleMode = SKSceneScaleModeFill;
     
     _configViewController = [ConfigViewController new];
     _configPopover = [NSPopover new];
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
-    _configViewController.emulationViewController = self;
     
     // Present the scene
     [self.skView presentScene:_emulationScene];
@@ -45,7 +44,40 @@
     //Setup the machine to be emulated
     _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
     _emulationScene.keyboardDelegate = _machine;
+
+    [self setupMachineBindings];
+    [self setupSceneBindings];
+    [self defaultValues];
+    
     [_machine start];
+}
+
+- (void)setupMachineBindings
+{
+    [_machine bind:@"displayBorderWidth" toObject:_configViewController withKeyPath:@"displayBorderWidth" options:nil];
+    [_machine bind:@"soundHighPassFilter" toObject:_configViewController withKeyPath:@"soundHighPassFilter" options:nil];
+    [_machine bind:@"soundLowPassFilter" toObject:_configViewController withKeyPath:@"soundLowPassFilter" options:nil];
+    [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
+}
+
+- (void)setupSceneBindings
+{
+    [_emulationScene bind:@"displayCurve" toObject:_configViewController withKeyPath:@"displayCurve" options:nil];
+    [_emulationScene bind:@"displaySaturation" toObject:_configViewController withKeyPath:@"displaySaturation" options:nil];
+    [_emulationScene bind:@"displayContrast" toObject:_configViewController withKeyPath:@"displayContrast" options:nil];
+    [_emulationScene bind:@"displayBrightness" toObject:_configViewController withKeyPath:@"displayBrightness" options:nil];
+    
+}
+
+- (void)defaultValues
+{
+    _configViewController.soundLowPassFilter = 3500.0;
+    _configViewController.soundHighPassFilter = 1.0;
+    _configViewController.displayBorderWidth = 16;
+    _configViewController.displayCurve = 0.125;
+    _configViewController.displaySaturation = 0.9;
+    _configViewController.displayContrast = 0.9;
+    _configViewController.displayBrightness = 0.9;
 }
 
 #pragma mark - View events
@@ -87,16 +119,6 @@
     });
 }
 
-- (void)curveSliderChanged:(id)sender
-{
-    [_emulationScene curveSliderChanged:[(NSSlider *)sender floatValue]];
-}
-
-- (void)borderSliderChanged:(id)sender
-{
-    _machine.borderWidth = [(NSSlider *)sender floatValue];
-}
-
 - (IBAction)configButtonPressed:(id)sender
 {
     CGRect rect = [(NSButton *)sender frame];
@@ -125,5 +147,7 @@
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
     [_machine loadSnapshotWithPath:url.path];
 }
+
+
 
 @end

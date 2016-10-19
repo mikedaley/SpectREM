@@ -7,7 +7,6 @@
 //
 
 #import "ConfigViewController.h"
-#import "EmulationViewController.h"
 
 @interface ConfigViewController ()
 
@@ -20,14 +19,46 @@
     // Do view setup here.
 }
 
-- (IBAction)curveSliderChanged:(id)sender
+#pragma mark - UI Actions
+
+- (IBAction)displayBorderChanged:(id)sender
 {
-    [self.emulationViewController curveSliderChanged:sender];
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
 }
 
-- (IBAction)borderSliderChanged:(id)sender
+- (IBAction)displayCurveChanged:(id)sender
 {
-    [self.emulationViewController borderSliderChanged:sender];
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
+}
+
+- (IBAction)displaySaturationChanged:(id)sender
+{
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
+}
+
+- (IBAction)displayContrastChanged:(id)sender
+{
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
+}
+
+- (IBAction)displayBrightnessChanged:(id)sender
+{
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
+}
+
+- (IBAction)soundVolumeChanged:(id)sender
+{
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
+}
+
+- (IBAction)soundHighPassChanged:(id)sender
+{
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
+}
+
+- (IBAction)soundLowPassChanged:(id)sender
+{
+    [self propagateValue:@([(NSSlider *)sender floatValue]) forBinding:@"value"];
 }
 
 @end
