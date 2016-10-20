@@ -24,6 +24,7 @@
 - (void)didMoveToView:(SKView *)view {
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
     
+    
     _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
     _shader.attributes = @[
                            [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],

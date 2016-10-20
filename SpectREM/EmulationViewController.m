@@ -73,15 +73,15 @@
 
 - (void)defaultValues
 {
-    _configViewController.soundLowPassFilter = 3500.0;
-    _configViewController.soundHighPassFilter = 1.0;
-    _configViewController.displayBorderWidth = 16;
-    _configViewController.displayCurve = 0.125;
-    _configViewController.displaySaturation = 1.0;
-    _configViewController.displayContrast = 1.0;
-    _configViewController.displayBrightness = 1.0;
-    _configViewController.displayVignetteX = 1.0;
-    _configViewController.displayVignetteY = 0.25;
+//    _configViewController.soundLowPassFilter = 3500.0;
+//    _configViewController.soundHighPassFilter = 1.0;
+////    _configViewController.displayBorderWidth = 16;
+//    _configViewController.displayCurve = 0.125;
+//    _configViewController.displaySaturation = 1.0;
+//    _configViewController.displayContrast = 1.0;
+//    _configViewController.displayBrightness = 1.0;
+//    _configViewController.displayVignetteX = 1.0;
+//    _configViewController.displayVignetteY = 0.25;
 }
 
 #pragma mark - View events

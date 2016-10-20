@@ -1,3 +1,10 @@
+//
+//  CRT.fsh
+//  SpectREM
+//
+//  Created by Mike Daley on 17/10/2016.
+//  Copyright © 2016 71Squared Ltd. All rights reserved.
+//
 vec2 radialDistortion(vec2 pos, float distortion)
 {
     vec2 cc = pos - vec2(0.465, 0.5);
@@ -8,7 +15,7 @@ vec2 radialDistortion(vec2 pos, float distortion)
 vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightness)
 {
     const vec3 meanLuminosity = vec3(0.5, 0.5, 0.5);
-    const vec3 rgb2greyCoeff = vec3(0.299, 0.587, 0.114);
+    const vec3 rgb2greyCoeff = vec3(0.2126, 0.7152, 0.0722);    // Updated greyscal coefficients for sRGB and modern TVs
 
     vec3 brightened = color * brightness;
     vec3 intensity = dot(brightened, rgb2greyCoeff);

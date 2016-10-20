@@ -29,7 +29,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="elg-x2-pLW"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.displayCurve" id="Mle-q9-nwb"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displayCurve" id="lu3-3m-giu"/>
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RLy-Wj-8i4">
@@ -37,7 +37,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="32" doubleValue="16" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="F0g-L5-T0u"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.displayBorderWidth" id="3Qp-Ky-dZL"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displayBorderWidth" id="2Ys-6w-XEk"/>
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QJa-e9-w9p">
@@ -81,7 +81,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="4" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="agX-2l-8Mg"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.displaySaturation" id="km2-le-isL"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displaySaturation" id="J4y-CB-J3t"/>
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w8s-Ld-7O6">
@@ -89,7 +89,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="Psg-ky-9wD"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.displayBrightness" id="dXh-bJ-kwt"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displayBrightness" id="aYb-DG-Spo"/>
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OmK-ll-xA9">
@@ -97,7 +97,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="lyw-MM-Bpg"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.displayContrast" id="dek-b2-2vF"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displayContrast" id="Uwq-HL-YMb"/>
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aoL-QE-Zch">
@@ -114,7 +114,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="0.5" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="4IT-Qm-ksF"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.displayVignetteX" id="dR4-Kq-qRW"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displayVignetteX" id="qwt-RN-M3m"/>
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6wb-gp-g87">
@@ -131,7 +131,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="ELr-H9-y9X"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.displayVignetteY" id="Huv-Kq-dzx"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displayVignetteY" id="ogL-k8-Iji"/>
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Y5-2N-xTW">
@@ -176,7 +176,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="1" maxValue="5000" doubleValue="500" tickMarkPosition="above" numberOfTickMarks="4" sliderType="linear" id="c2Y-UN-Vmf"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.soundHighPassFilter" id="spZ-k6-uX4"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.soundHighPassFilter" id="eyK-sx-WDL"/>
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W6f-m8-twk">
@@ -184,7 +184,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" enabled="NO" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="4" sliderType="linear" id="1GE-LF-ga3"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.soundVolume" id="M4s-pF-L7e"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.soundVolume" id="3V5-oa-1jP"/>
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0El-BT-H53">
@@ -192,7 +192,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="1" maxValue="22000" doubleValue="3500" tickMarkPosition="above" numberOfTickMarks="4" sliderType="linear" id="Yhg-Dv-NSV"/>
                                 <connections>
-                                    <binding destination="-2" name="value" keyPath="self.soundLowPassFilter" id="hkC-wC-Zkb"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.soundLowPassFilter" id="xQ7-hd-WkZ"/>
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xCI-SU-Vjs">
@@ -208,7 +208,7 @@
                     </view>
                 </box>
             </subviews>
-            <point key="canvasLocation" x="-571.5" y="-452.5"/>
+            <point key="canvasLocation" x="-754" y="-438"/>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="ZJD-Fu-un9"/>
     </objects>

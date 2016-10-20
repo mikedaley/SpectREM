@@ -36,6 +36,8 @@
 		EDF3A4F31DB0D7F100511BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF3A4F21DB0D7F100511BAF /* QuartzCore.framework */; };
 		EDF3A4F81DB0F25F00511BAF /* CRT.fsh in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4F71DB0F25F00511BAF /* CRT.fsh */; };
 		EDF3A4FD1DB7745700511BAF /* NSViewController+Bindings.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4FC1DB7745700511BAF /* NSViewController+Bindings.m */; };
+		EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4FF1DB8E22C00511BAF /* Credits.rtf */; };
+		EDF3A5021DB8EBD500511BAF /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A5011DB8EBD500511BAF /* Defaults.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +90,8 @@
 		EDF3A4F71DB0F25F00511BAF /* CRT.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CRT.fsh; sourceTree = "<group>"; };
 		EDF3A4FB1DB7745700511BAF /* NSViewController+Bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSViewController+Bindings.h"; sourceTree = "<group>"; };
 		EDF3A4FC1DB7745700511BAF /* NSViewController+Bindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSViewController+Bindings.m"; sourceTree = "<group>"; };
+		EDF3A4FF1DB8E22C00511BAF /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		EDF3A5011DB8EBD500511BAF /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +147,8 @@
 			children = (
 				EDF3A4B51DB0D60800511BAF /* Info.plist */,
 				EDF3A4A41DB0D60700511BAF /* main.m */,
+				EDF3A4FF1DB8E22C00511BAF /* Credits.rtf */,
+				EDF3A5011DB8EBD500511BAF /* Defaults.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -342,6 +348,8 @@
 				EDF3A4E41DB0D7BB00511BAF /* ZXSpectrum48k.rom in Resources */,
 				EDF3A4E61DB0D7BB00511BAF /* ulatest48k.sna in Resources */,
 				EDF3A4E11DB0D7BB00511BAF /* test1.sna in Resources */,
+				EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */,
+				EDF3A5021DB8EBD500511BAF /* Defaults.plist in Resources */,
 				EDF3A4E21DB0D7BB00511BAF /* beep.sna in Resources */,
 				EDF3A4B11DB0D60700511BAF /* Assets.xcassets in Resources */,
 				EDF3A4A91DB0D60700511BAF /* Actions.sks in Resources */,

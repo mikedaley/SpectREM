@@ -120,6 +120,9 @@ int             emuRightBorderPx;
 int             emuTopBorderPx;
 int             emuBottomBorderPx;
 
+float           emuHScale;
+float           emuVScale;
+
 // Tracks the number of tStates used for drawing the screen. This is compared with the number of tStates that have passed
 // in the current frame so that the right number of 8x1 screen chunks are drawn
 uint            emuDisplayTs;
@@ -232,8 +235,9 @@ static unsigned char keyboardMap[8];
         
         emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
-        
-        self.displayBorderWidth = 16;
+
+        emuHScale = 1.0 / emuDisplayPxWidth;
+        emuVScale = 1.0 / emuDisplayPxHeight;
         
         [self resetFrame];
         
@@ -345,26 +349,19 @@ static unsigned char keyboardMap[8];
         core->ResetTStates( core->GetTStates() );
         core->SignalInterrupt();
         
-        // Calculate how much of the texture should be displayed
-        float hScale = 1.0 / emuDisplayPxWidth;
-        float vScale = 1.0 / emuDisplayPxHeight;
-
         // Adjust how much of the full texture is to be displayed based on the defined border width
-        CGRect textureRect = CGRectMake((32 - self.displayBorderWidth) * hScale,
-                                        (56 - self.displayBorderWidth) * vScale,
-                                        1.0 - ((32 - self.displayBorderWidth) * hScale + ((64 - self.displayBorderWidth) * hScale)),
-                                        1.0 - (((56 - self.displayBorderWidth) * vScale) * 2));
-
-//        CGRect textureRect = CGRectMake(0,
-//                                        0,
-//                                        1,
-//                                        1);
+        CGRect textureRect = CGRectMake((32 - self.displayBorderWidth) * emuHScale,
+                                        (56 - self.displayBorderWidth) * emuVScale,
+                                        1.0 - ((32 - self.displayBorderWidth) * emuHScale + ((64 - self.displayBorderWidth) * emuHScale)),
+                                        1.0 - (((56 - self.displayBorderWidth) * emuVScale) * 2));
 
         // Update the display texture using the data from the emulator display buffer
         CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
+        
         self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                              size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
                                           flipped:YES];
+        
         CFRelease(dataRef);
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -797,9 +794,9 @@ static void coreIOContention(unsigned short address, unsigned int tstates, int p
 // This routine works out what would be on the ULA bus for a given t-state and returns the result
 static unsigned char floatingBus()
 {
-    int cpuTs = core->GetTStates();
+    int cpuTs = core->GetTStates() - 1;
     int currentDisplayLine = (cpuTs / tsPerLine);
-    int currentTs = ((cpuTs + 1) % tsPerLine);
+    int currentTs = (cpuTs % tsPerLine);
 
     // If the line and tState are within the bitmap of the screen then grab the
     // pixel or attribute value
@@ -849,7 +846,7 @@ static unsigned char floatingBus()
     dispatch_sync(self.emulationQueue, ^{
         
         self.snapshotPath = path;
-        NSString *extension = [path pathExtension];
+        NSString *extension = [[path pathExtension] lowercaseString];
         
         if ([extension isEqualToString:@"sna"])
         {
