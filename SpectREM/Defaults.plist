@@ -4,7 +4,7 @@
 <dict>
 	<key>displayBorderWidth</key>
 	<integer>16</integer>
-	<key>displayCurce</key>
+	<key>displayCurve</key>
 	<real>0.125</real>
 	<key>displaySaturation</key>
 	<real>1</real>

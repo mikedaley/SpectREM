@@ -19,12 +19,8 @@
     self = [super init];
     if (self)
     {
-        NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
-        NSDictionary *userDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsPath];
-        [[NSUserDefaults standardUserDefaults] registerDefaults:userDefaults];
-        
         NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-        
+
         [preferences addObserver:self forKeyPath:@"displayBorderWidth" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
@@ -32,11 +28,15 @@
         [preferences addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
-
+        
         [preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-
+        
+        NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
+        NSDictionary *userDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsPath];
+        [preferences registerDefaults:userDefaults];
+        
     }
     
     return self;
@@ -84,13 +84,6 @@
     {
         self.soundHighPassFilter = [change[NSKeyValueChangeNewKey] floatValue];
     }
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do view setup here.
-    
-    
 }
 
 @end
