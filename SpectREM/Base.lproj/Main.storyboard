@@ -95,7 +95,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Machine" id="9kf-Gy-LJf">
                                     <items>
-                                        <menuItem title="Restart" keyEquivalent="R" id="B7z-BB-OuW" userLabel="Restart">
+                                        <menuItem title="Restart" keyEquivalent="r" id="B7z-BB-OuW" userLabel="Restart">
                                             <connections>
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="ujU-zz-zhp"/>
                                             </connections>
