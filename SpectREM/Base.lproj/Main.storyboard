@@ -189,14 +189,16 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unB-Bl-LlC">
-                                <rect key="frame" x="463" y="2" width="44" height="43"/>
+                                <rect key="frame" x="469" y="9" width="32" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="32" id="AJa-Ba-GsC"/>
                                     <constraint firstAttribute="height" constant="32" id="b1k-Ij-cNX"/>
                                 </constraints>
-                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSActionTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="XdC-XW-2cP">
+                                <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="NSActionTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="XdC-XW-2cP">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="26"/>
+                                    <string key="keyEquivalent">C</string>
+                                    <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="configButtonPressed:" target="rPt-NT-nkU" id="Jro-2B-A0G"/>

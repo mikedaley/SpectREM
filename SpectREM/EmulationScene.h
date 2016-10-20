@@ -19,6 +19,8 @@
 @property (assign) float displaySaturation;
 @property (assign) float displayContrast;
 @property (assign) float displayBrightness;
+@property (assign) float displayVignetteX;
+@property (assign) float displayVignetteY;
 
 #pragma mark - Methods
 

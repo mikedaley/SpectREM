@@ -7,9 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "NSViewController+Bindings.h"
 
-@interface ConfigViewController : NSViewController_Bindings
+@interface ConfigViewController : NSViewController
 
 // Display properties
 @property (assign) double displayBorderWidth;
@@ -17,6 +16,8 @@
 @property (assign) double displaySaturation;
 @property (assign) double displayContrast;
 @property (assign) double displayBrightness;
+@property (assign) double displayVignetteX;
+@property (assign) double displayVignetteY;
 
 // Sound properties
 @property (assign) double soundVolume;

@@ -29,7 +29,9 @@
                            [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
                            [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeFloat],
                            [SKAttribute attributeWithName:@"u_contrast" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeFloat]
+                           [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeFloat],
+                           [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeFloat],
+                           [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
                            ];
     self.emulationDisplaySprite.shader = _shader;
 
@@ -44,6 +46,8 @@
     [self addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -63,6 +67,14 @@
     else if ([keyPath isEqualToString:@"displayBrightness"])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_brightness"];
+    }
+    else if ([keyPath isEqualToString:@"displayVignetteX"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_x"];
+    }
+    else if ([keyPath isEqualToString:@"displayVignetteY"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_y"];
     }
 }
 

@@ -355,6 +355,11 @@ static unsigned char keyboardMap[8];
                                         1.0 - ((32 - self.displayBorderWidth) * hScale + ((64 - self.displayBorderWidth) * hScale)),
                                         1.0 - (((56 - self.displayBorderWidth) * vScale) * 2));
 
+//        CGRect textureRect = CGRectMake(0,
+//                                        0,
+//                                        1,
+//                                        1);
+
         // Update the display texture using the data from the emulator display buffer
         CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
         self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
