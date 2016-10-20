@@ -39,6 +39,20 @@ void main()
     
     vec3 vignette = vegnetteColor(v_color_mix.rgb, texCoord, u_vignette_x, u_vignette_y);
     
-    gl_FragColor = vec4(colorCorrect, 1) * vec4(vignette, 1);
+    float f  = sin( texCoord.y * (304 * 3.14));
+    // scale to per pixel
+    float o  = f * (0.05 / 304.0);
+    // scale for subtle effect
+    float s  = f * 0.05 + 1.2;
+    // scan line fading
+    float l  = sin( u_time * 32 ) * 0.03 + 0.97;
+    // sample in 3 colour offset
+    float r = texture2D( u_texture, vec2( texCoord.x + o, texCoord.y + o ) ).x;
+    float g = texture2D( u_texture, vec2( texCoord.x - o, texCoord.y + o ) ).y;
+    float b = texture2D( u_texture, vec2( texCoord.x  , texCoord.y - o ) ).z;
+
+    gl_FragColor = (vec4(colorCorrect, 1)) * vec4(vignette, 1) ;
+    
+    
 }
 

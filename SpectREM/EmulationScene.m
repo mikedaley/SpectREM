@@ -33,6 +33,7 @@
                            [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeFloat],
                            [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeFloat],
                            [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
+                           [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
                            ];
     self.emulationDisplaySprite.shader = _shader;
 
@@ -49,6 +50,7 @@
     [self addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"screenHeight" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -77,6 +79,7 @@
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_y"];
     }
+
 }
 
 #pragma mark - Keyboard Events
@@ -94,7 +97,7 @@
 
 - (void)sceneViewSizeChanged:(CGSize)newSize
 {
-
+    [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:newSize.height] forAttributeNamed:@"u_screen_height"];
 }
 
 #pragma mark - Game tick

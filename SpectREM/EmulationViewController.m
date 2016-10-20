@@ -68,6 +68,7 @@
     [_emulationScene bind:@"displayBrightness" toObject:_configViewController withKeyPath:@"displayBrightness" options:nil];
     [_emulationScene bind:@"displayVignetteX" toObject:_configViewController withKeyPath:@"displayVignetteX" options:nil];
     [_emulationScene bind:@"displayVignetteY" toObject:_configViewController withKeyPath:@"displayVignetteY" options:nil];
+//    [_emulationScene bind:@"displayA" toObject:_configViewController withKeyPath:@"displayA" options:nil];
     
 }
 

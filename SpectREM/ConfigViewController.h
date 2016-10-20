@@ -18,6 +18,7 @@
 @property (assign) double displayBrightness;
 @property (assign) double displayVignetteX;
 @property (assign) double displayVignetteY;
+@property (assign) double displayA;
 
 // Sound properties
 @property (assign) double soundVolume;

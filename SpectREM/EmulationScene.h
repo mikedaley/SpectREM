@@ -21,6 +21,7 @@
 @property (assign) float displayBrightness;
 @property (assign) float displayVignetteX;
 @property (assign) float displayVignetteY;
+@property (assign) float screenHeight;
 
 #pragma mark - Methods
 
