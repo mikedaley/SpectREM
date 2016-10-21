@@ -21,5 +21,7 @@
 // Called by the machine being emulated when a new display image is ready to be displayed
 - (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture;
 
+- (void)loadFileWithURL:(NSURL *)url;
+
 @end
 
