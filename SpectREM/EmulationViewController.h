@@ -10,9 +10,11 @@
 #import <SpriteKit/SpriteKit.h>
 #import <GameplayKit/GameplayKit.h>
 
+@class EmulationView;
+
 @interface EmulationViewController : NSViewController
 
-@property (assign) IBOutlet SKView *skView;
+@property (assign) IBOutlet EmulationView *skView;
 
 #pragma mark - Methods
 

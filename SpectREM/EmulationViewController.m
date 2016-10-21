@@ -10,10 +10,11 @@
 #import "EmulationScene.h"
 #import "ZXSpectrum48.h"
 #import "ConfigViewController.h"
+#import "EmulationView.h"
 
 #pragma mark - Private Interface
 
-@interface EmulationViewController ()
+@interface EmulationViewController () <NSWindowDelegate>
 
 @end
 
@@ -25,11 +26,12 @@
     ZXSpectrum48 *_machine;
     ConfigViewController *_configViewController;
     NSPopover *_configPopover;
+    NSTrackingArea *trackingArea;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     _emulationScene.scaleMode = SKSceneScaleModeFill;
     
@@ -47,7 +49,6 @@
 
     [self setupMachineBindings];
     [self setupSceneBindings];
-    [self defaultValues];
     
     [_machine start];
 }
@@ -70,19 +71,6 @@
     [_emulationScene bind:@"displayVignetteY" toObject:_configViewController withKeyPath:@"displayVignetteY" options:nil];
 //    [_emulationScene bind:@"displayA" toObject:_configViewController withKeyPath:@"displayA" options:nil];
     
-}
-
-- (void)defaultValues
-{
-//    _configViewController.soundLowPassFilter = 3500.0;
-//    _configViewController.soundHighPassFilter = 1.0;
-////    _configViewController.displayBorderWidth = 16;
-//    _configViewController.displayCurve = 0.125;
-//    _configViewController.displaySaturation = 1.0;
-//    _configViewController.displayContrast = 1.0;
-//    _configViewController.displayBrightness = 1.0;
-//    _configViewController.displayVignetteX = 1.0;
-//    _configViewController.displayVignetteY = 0.25;
 }
 
 #pragma mark - View events

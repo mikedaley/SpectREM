@@ -21,9 +21,9 @@
     
 }
 
-- (void)didMoveToView:(SKView *)view {
+- (void)didMoveToView:(SKView *)view
+{
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
-    
     
     _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
     _shader.attributes = @[

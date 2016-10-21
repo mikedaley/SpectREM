@@ -20,7 +20,7 @@
     if (self)
     {
         NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-
+        
         [preferences addObserver:self forKeyPath:@"displayBorderWidth" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
@@ -37,7 +37,6 @@
         NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
         NSDictionary *userDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsPath];
         [preferences registerDefaults:userDefaults];
-        
     }
     
     return self;

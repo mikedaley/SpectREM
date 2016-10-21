@@ -165,12 +165,15 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
+                <windowController id="B8D-0N-5wS" customClass="EmulationWindowController" sceneMemberID="viewController">
                     <window key="window" title="SpectREM" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <connections>
+                            <outlet property="delegate" destination="B8D-0N-5wS" id="M85-Ex-0gc"/>
+                        </connections>
                     </window>
                     <connections>
                         <segue destination="XfG-lQ-9wD" kind="relationship" relationship="window.shadowedContentViewController" id="cq2-FE-JQM"/>
@@ -184,7 +187,7 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="EmulationViewController" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="SKView">
+                    <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="EmulationView">
                         <rect key="frame" x="0.0" y="0.0" width="510" height="433"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -209,6 +212,9 @@
                             <constraint firstAttribute="bottom" secondItem="unB-Bl-LlC" secondAttribute="bottom" constant="9" id="4FS-HR-bop"/>
                             <constraint firstAttribute="trailing" secondItem="unB-Bl-LlC" secondAttribute="trailing" constant="9" id="7DV-7O-NPS"/>
                         </constraints>
+                        <connections>
+                            <outlet property="configButton" destination="unB-Bl-LlC" id="sex-Za-99U"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="skView" destination="m2S-Jp-Qdl" id="qux-te-cT3"/>

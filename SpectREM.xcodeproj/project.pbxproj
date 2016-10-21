@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
 		99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */; };
+		99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA291DBA0AE00049D811 /* EmulationView.m */; };
+		99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
 		EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A61DB0D60700511BAF /* EmulationScene.sks */; };
@@ -44,6 +46,10 @@
 		99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
 		99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
 		99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigViewController.xib; sourceTree = "<group>"; };
+		99BFAA281DBA0AE00049D811 /* EmulationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationView.h; sourceTree = "<group>"; };
+		99BFAA291DBA0AE00049D811 /* EmulationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationView.m; sourceTree = "<group>"; };
+		99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationWindowController.h; sourceTree = "<group>"; };
+		99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationWindowController.m; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF3A4A01DB0D60700511BAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDF3A4A11DB0D60700511BAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -106,6 +112,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99BFAA271DBA0AC50049D811 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				99BFAA281DBA0AE00049D811 /* EmulationView.h */,
+				99BFAA291DBA0AE00049D811 /* EmulationView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		EDF3A4941DB0D60700511BAF = {
 			isa = PBXGroup;
 			children = (
@@ -176,11 +191,14 @@
 		EDF3A4BD1DB0D69800511BAF /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				99BFAA271DBA0AC50049D811 /* Views */,
 				EDF3A4AD1DB0D60700511BAF /* EmulationViewController.h */,
 				EDF3A4AE1DB0D60700511BAF /* EmulationViewController.m */,
 				99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */,
 				99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */,
 				99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */,
+				99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */,
+				99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -369,10 +387,12 @@
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,
 				EDF3A4D91DB0D7AB00511BAF /* Z80Core_FDOpcodes.cpp in Sources */,
 				EDF3A4AC1DB0D60700511BAF /* EmulationScene.m in Sources */,
+				99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */,
 				EDF3A4EC1DB0D7C700511BAF /* AudioQueue.m in Sources */,
 				EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */,
 				EDF3A4F01DB0D7D000511BAF /* ZXSpectrum48.mm in Sources */,
 				99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */,
+				99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */,
 				EDF3A4D61DB0D7AB00511BAF /* Z80Core_CBOpcodes.cpp in Sources */,
 				EDF3A4AF1DB0D60700511BAF /* EmulationViewController.m in Sources */,
 				EDF3A4D81DB0D7AB00511BAF /* Z80Core_DDOpcodes.cpp in Sources */,

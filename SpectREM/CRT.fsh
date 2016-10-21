@@ -18,7 +18,7 @@ vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightn
     const vec3 rgb2greyCoeff = vec3(0.2126, 0.7152, 0.0722);    // Updated greyscal coefficients for sRGB and modern TVs
 
     vec3 brightened = color * brightness;
-    vec3 intensity = dot(brightened, rgb2greyCoeff);
+    float intensity = dot(brightened, rgb2greyCoeff);
     vec3 saturated = mix(vec3(intensity), brightened, saturation);
     vec3 contrasted = mix(meanLuminosity, saturated, contrast);
     
@@ -28,7 +28,7 @@ vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightn
 vec3 vegnetteColor(vec3 color, vec2 coord, float vig_x, float vig_y)
 {
     float dist = distance(coord, vec2(0.465,0.5));
-    return smoothstep(vig_x, vig_y, dist);
+    return vec3(smoothstep(vig_x, vig_y, dist));
 }
 
 void main()
