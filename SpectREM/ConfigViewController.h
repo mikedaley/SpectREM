@@ -25,4 +25,6 @@
 @property (assign) double soundHighPassFilter;
 @property (assign) double soundLowPassFilter;
 
+- (void)resetPreferences;
+
 @end

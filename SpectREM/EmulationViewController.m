@@ -130,6 +130,7 @@
             if (result == NSModalResponseOK)
             {
                 [self loadFileWithURL:openPanel.URLs[0]];
+                [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:openPanel.URLs[0]];
             }
         }];
     });
@@ -141,6 +142,10 @@
     [_machine loadSnapshotWithPath:url.path];
 }
 
+- (IBAction)resetPreferences:(id)sender
+{
+    [_configViewController resetPreferences];
+}
 
 
 @end

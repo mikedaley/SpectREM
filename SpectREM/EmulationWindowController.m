@@ -22,13 +22,4 @@
 
 }
 
-- (BOOL)acceptsFirstResponder {
-    return YES;
-}
-
-- (void)mouseMoved:(NSEvent *)event
-{
-    NSLog(@"Moved");
-}
-
 @end

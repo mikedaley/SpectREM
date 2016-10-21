@@ -64,6 +64,11 @@
                                                 <action selector="openFile:" target="Ady-hI-5gd" id="bud-QG-erh"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Open…" keyEquivalent="o" id="KuV-4Q-0Vn">
+                                            <connections>
+                                                <action selector="openFile:" target="Ady-hI-5gd" id="wzn-MY-PUs"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Open Recent" id="tXI-mr-wws">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="oas-Oc-fiZ">
@@ -78,6 +83,12 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
+                                        <menuItem title="Reset Preferences" keyEquivalent="R" id="0KF-ZR-5GM" userLabel="Reset Preferences">
+                                            <connections>
+                                                <action selector="resetPreferences:" target="Ady-hI-5gd" id="r0c-pK-4xZ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="HI0-Eh-qfW"/>
                                         <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
                                             <connections>
                                                 <action selector="saveDocument:" target="Ady-hI-5gd" id="teZ-XB-qJY"/>

@@ -37,53 +37,54 @@
         NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
         NSDictionary *userDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsPath];
         [preferences registerDefaults:userDefaults];
+        NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
+        [defaultsController setInitialValues:userDefaults];
     }
     
     return self;
 }
 
+- (void)resetPreferences
+{
+    NSWindow *window = [[NSApplication sharedApplication] mainWindow];
+    
+    NSAlert *alert = [NSAlert new];
+    alert.informativeText = @"Are you sure you want to reset your preferences?";
+    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:@"Yes"];
+    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertSecondButtonReturn)
+        {
+            NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
+            [defaultsController revertToInitialValues:[self observableFloatKeys]];
+        }
+    }];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"displayBorderWidth"])
-    {
-        self.displayBorderWidth = [change[NSKeyValueChangeNewKey] floatValue];
+    for (NSString *key in [self observableFloatKeys]) {
+        if ([keyPath isEqualToString:key])
+        {
+            [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+        }
     }
-    else if ([keyPath isEqualToString:@"displayCurve"])
-    {
-        self.displayCurve = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"displaySaturation"])
-    {
-        self.displaySaturation = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"displayContrast"])
-    {
-        self.displayContrast = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"displayBrightness"])
-    {
-        self.displayBrightness = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"displayVignetteX"])
-    {
-        self.displayVignetteX = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"displayVignetteY"])
-    {
-        self.displayVignetteY = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"soundVolume"])
-    {
-        self.soundVolume = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"soundLowPassFilter"])
-    {
-        self.soundLowPassFilter = [change[NSKeyValueChangeNewKey] floatValue];
-    }
-    else if ([keyPath isEqualToString:@"soundHighPassFilter"])
-    {
-        self.soundHighPassFilter = [change[NSKeyValueChangeNewKey] floatValue];
-    }
+}
+
+- (NSArray *)observableFloatKeys
+{
+    return @[
+             @"displayBorderWidth",
+             @"displayCurve",
+             @"displaySaturation",
+             @"displayBrightness",
+             @"displayContrast",
+             @"displayVignetteX",
+             @"displayVignetteY",
+             @"soundVolume",
+             @"soundLowPassFilter",
+             @"soundHighPassFilter"
+             ];
 }
 
 @end
