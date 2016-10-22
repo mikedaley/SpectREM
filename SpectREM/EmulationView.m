@@ -49,14 +49,8 @@
     
     CGFloat distance = MAX(0, MAX(x, y) - 50);
     
-    if (distance < 10) {
-        CGFloat intensity = 0.7 / 50.0 * distance;
-        _configButton.alphaValue = MAX(1.0 - intensity, 0.3);
-    }
-    else {
-        CGFloat intensity = 0.3 / 50.0 * (distance - 100);
-        _configButton.alphaValue = MAX(0.0, 0.3 - intensity);
-    }
+    CGFloat intensity = 0.3 / 50.0 * (distance - 100);
+    _configButton.alphaValue = MAX(1.0 - intensity, 0.3);
 }
 
 
