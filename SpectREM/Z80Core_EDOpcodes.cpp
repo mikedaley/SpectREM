@@ -201,7 +201,7 @@ void CZ80Core::LD_A_I(unsigned char opcode)
 
 void CZ80Core::IN_E_off_C(unsigned char opcode)
 {
-	m_CPURegisters.regs.regD = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
+	m_CPURegisters.regs.regE = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
 }
 
 //-----------------------------------------------------------------------------------------
