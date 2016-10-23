@@ -30,6 +30,8 @@
 @property (assign) double soundLowPassFilter;
 @property (assign) double soundHighPassFilter;
 
+@property (assign, nonatomic) BOOL debug;
+
 #pragma mark - Methods
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController;

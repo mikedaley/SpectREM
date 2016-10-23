@@ -148,6 +148,8 @@ double          audioTsStepCounter;
 double          audioTsStep;
 int             audioBufferSize;
 
+bool            showDebug;
+
 // Events
 typedef enum : NSUInteger {
     None,
@@ -319,7 +321,7 @@ static unsigned char keyboardMap[8];
 {
     // Reset display
     emuDisplayBufferIndex = 0;
-    emuDisplayTs = 0;
+    emuDisplayTs = 16;
     
     // Reset audio
     audioBufferIndex = 0;
@@ -470,6 +472,11 @@ static void updateScreenWithTStates(int numberTs)
                     emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[borderColour].g;
                     emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[borderColour].b;
                     emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[borderColour].a;
+                    
+                    if (line < 64 && showDebug)
+                    {
+                        NSLog(@"%i", borderColour);
+                    }
                 }
                 break;
                 
@@ -1214,4 +1221,9 @@ static unsigned char floatingBus()
     }
 }
 
+- (void)setDebug:(BOOL)debug
+{
+    _debug = debug;
+    showDebug = debug;
+}
 @end
