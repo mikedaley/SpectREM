@@ -254,7 +254,7 @@ static unsigned char keyboardMap[8];
         float fps = 50;
         
         audioSampleRate = 192000;
-        audioBufferSize = (audioSampleRate / fps) * 6;
+        audioBufferSize = (audioSampleRate / fps) * 20;
         _audioBuffer = (int16_t *)malloc(audioBufferSize);
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
         
@@ -321,7 +321,7 @@ static unsigned char keyboardMap[8];
 {
     // Reset display
     emuDisplayBufferIndex = 0;
-    emuDisplayTs = 16;
+    emuDisplayTs = 0;
     
     // Reset audio
     audioBufferIndex = 0;
@@ -336,47 +336,45 @@ static unsigned char keyboardMap[8];
     int count = tsPerFrame;
     while (count > 0)
     {
-        count -= [self step];
+        int tsCPU = core->Execute(1, 32);
+        
+        count -= tsCPU;
+        
+        [self updateAudioWithTStates:tsCPU];
+        
+        if (core->GetTStates() >= tsPerFrame )
+        {
+            // The frame is finished so break out of the while loop
+            count = 0;
+
+            updateScreenWithTStates(tsPerFrame - emuDisplayTs);
+            
+            core->ResetTStates( tsPerFrame );
+            core->SignalInterrupt();
+            
+            // Adjust how much of the full texture is to be displayed based on the defined border width
+            CGRect textureRect = CGRectMake((32 - self.displayBorderWidth) * emuHScale,
+                                            (56 - self.displayBorderWidth) * emuVScale,
+                                            1.0 - ((32 - self.displayBorderWidth) * emuHScale + ((64 - self.displayBorderWidth) * emuHScale)),
+                                            1.0 - (((56 - self.displayBorderWidth) * emuVScale) * 2));
+            
+            // Update the display texture using the data from the emulator display buffer
+            CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
+            
+            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
+                                              flipped:YES];
+            
+            CFRelease(dataRef);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.emulationViewController updateEmulationDisplayTextureWithImage:[SKTexture textureWithRect:textureRect
+                                                                                                      inTexture:self.texture]];
+            });
+            
+            frameCounter++;
+        }
     }
-}
-
-- (int)step
-{
-    int tsCPU = core->Execute(1, 32);
-    
-    [self updateAudioWithTStates:tsCPU];
-
-    if (core->GetTStates() >= tsPerFrame )
-    {
-        updateScreenWithTStates(tsPerFrame - emuDisplayTs);
-        
-        core->ResetTStates( tsPerFrame );
-        core->SignalInterrupt();
-        
-        // Adjust how much of the full texture is to be displayed based on the defined border width
-        CGRect textureRect = CGRectMake((32 - self.displayBorderWidth) * emuHScale,
-                                        (56 - self.displayBorderWidth) * emuVScale,
-                                        1.0 - ((32 - self.displayBorderWidth) * emuHScale + ((64 - self.displayBorderWidth) * emuHScale)),
-                                        1.0 - (((56 - self.displayBorderWidth) * emuVScale) * 2));
-
-        // Update the display texture using the data from the emulator display buffer
-        CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
-        
-        self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
-                                             size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
-                                          flipped:YES];
-        
-        CFRelease(dataRef);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.emulationViewController updateEmulationDisplayTextureWithImage:[SKTexture textureWithRect:textureRect
-                                                                                                  inTexture:self.texture]];
-        });
-
-        frameCounter++;
-    }
-    
-    return tsCPU;
 }
 
 - (void)doFrame
@@ -748,7 +746,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, int tstates)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates(core->GetTStates() - emuDisplayTs + 14);
+        updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + 12);
 
         audioEar = (data & 0x10) >> 4;
         audioMic = (data & 0x08) >> 3;
