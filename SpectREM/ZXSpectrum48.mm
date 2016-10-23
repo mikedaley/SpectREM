@@ -125,7 +125,7 @@ float           emuVScale;
 
 // Tracks the number of tStates used for drawing the screen. This is compared with the number of tStates that have passed
 // in the current frame so that the right number of 8x1 screen chunks are drawn
-uint            emuDisplayTs;
+int            emuDisplayTs;
 
 // Holds the current pixel and attribute line addresses when rendering the screen
 unsigned int    pixelAddress;
@@ -239,6 +239,8 @@ static unsigned char keyboardMap[8];
         emuHScale = 1.0 / emuDisplayPxWidth;
         emuVScale = 1.0 / emuDisplayPxHeight;
         
+        emuDisplayTs = 0;
+        
         [self resetFrame];
         
         // Setup the display buffer and length used to store the output from the emulator
@@ -317,7 +319,7 @@ static unsigned char keyboardMap[8];
 {
     // Reset display
     emuDisplayBufferIndex = 0;
-    emuDisplayTs = 0;
+    emuDisplayTs = emuDisplayTs - tsPerFrame;
     
     // Reset audio
     audioBufferIndex = 0;
@@ -344,9 +346,9 @@ static unsigned char keyboardMap[8];
 
     if (core->GetTStates() >= tsPerFrame )
     {
-        updateScreenWithTStates(core->GetTStates() - emuDisplayTs);
+        updateScreenWithTStates(tsPerFrame - emuDisplayTs);
         
-        core->ResetTStates( core->GetTStates() );
+        core->ResetTStates( tsPerFrame );
         core->SignalInterrupt();
         
         // Adjust how much of the full texture is to be displayed based on the defined border width
@@ -452,8 +454,6 @@ static unsigned char keyboardMap[8];
 
 static void updateScreenWithTStates(int numberTs)
 {
-    numberTs = (numberTs / 4);
-    
     while (numberTs > 0)
     {
         int line = emuDisplayTs / tsPerLine;
@@ -521,7 +521,7 @@ static void updateScreenWithTStates(int numberTs)
 
         emuDisplayTs += tsPerChar;
 
-        numberTs--;
+        numberTs -= tsPerChar;
     }
 }
 
