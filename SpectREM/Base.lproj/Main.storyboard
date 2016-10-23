@@ -122,11 +122,6 @@
                                                 <action selector="setFillMode:" target="Ady-hI-5gd" id="gfV-9L-SIB"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Debug" keyEquivalent="d" id="qeD-rb-D58" userLabel="Debug">
-                                            <connections>
-                                                <action selector="debug:" target="Ady-hI-5gd" id="Frr-s6-wro"/>
-                                            </connections>
-                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

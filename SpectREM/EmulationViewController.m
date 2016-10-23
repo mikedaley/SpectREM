@@ -147,16 +147,4 @@
     [_configViewController resetPreferences];
 }
 
-- (IBAction)debug:(id)sender
-{
-    if (!_machine.debug)
-    {
-        _machine.debug = YES;
-    }
-    else
-    {
-        _machine.debug = NO;
-    }
-}
-
 @end

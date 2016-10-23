@@ -1219,9 +1219,4 @@ static unsigned char floatingBus()
     }
 }
 
-- (void)setDebug:(BOOL)debug
-{
-    _debug = debug;
-    showDebug = debug;
-}
 @end
