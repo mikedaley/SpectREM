@@ -60,7 +60,7 @@
 		EDF3A4AB1DB0D60700511BAF /* EmulationScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmulationScene.m; sourceTree = "<group>"; };
 		EDF3A4AD1DB0D60700511BAF /* EmulationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmulationViewController.h; sourceTree = "<group>"; };
 		EDF3A4AE1DB0D60700511BAF /* EmulationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmulationViewController.m; sourceTree = "<group>"; };
-		EDF3A4B01DB0D60700511BAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EDF3A4B01DB0D60700511BAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = SpectREM/Assets.xcassets; sourceTree = "<group>"; };
 		EDF3A4B31DB0D60800511BAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EDF3A4B51DB0D60800511BAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDF3A4C51DB0D7AB00511BAF /* Z80Core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Z80Core.h; sourceTree = "<group>"; };
@@ -121,10 +121,20 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		99D359AD1DBD0A0300C49FAE /* Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				EDF3A4ED1DB0D7D000511BAF /* KeyboardMatrix.h */,
+				EDF3A4F51DB0EAC900511BAF /* KeyboardEventProtocol.h */,
+			);
+			name = Keyboard;
+			sourceTree = "<group>";
+		};
 		EDF3A4941DB0D60700511BAF = {
 			isa = PBXGroup;
 			children = (
 				EDF3A49F1DB0D60700511BAF /* SpectREM */,
+				EDF3A4B01DB0D60700511BAF /* Assets.xcassets */,
 				EDF3A49E1DB0D60700511BAF /* Products */,
 				EDF3A4F11DB0D7F100511BAF /* Frameworks */,
 			);
@@ -150,8 +160,8 @@
 				EDF3A4BB1DB0D67D00511BAF /* App Delegate */,
 				EDF3A4BC1DB0D68800511BAF /* Scene */,
 				EDF3A4BD1DB0D69800511BAF /* View Controllers */,
+				99D359AD1DBD0A0300C49FAE /* Keyboard */,
 				EDF3A4C21DB0D77D00511BAF /* Machines */,
-				EDF3A4B01DB0D60700511BAF /* Assets.xcassets */,
 				EDF3A4A31DB0D60700511BAF /* Supporting Files */,
 			);
 			path = SpectREM;
@@ -233,8 +243,6 @@
 		EDF3A4C21DB0D77D00511BAF /* Machines */ = {
 			isa = PBXGroup;
 			children = (
-				EDF3A4ED1DB0D7D000511BAF /* KeyboardMatrix.h */,
-				EDF3A4F51DB0EAC900511BAF /* KeyboardEventProtocol.h */,
 				EDF3A4EE1DB0D7D000511BAF /* ZXSpectrum48.h */,
 				EDF3A4EF1DB0D7D000511BAF /* ZXSpectrum48.mm */,
 			);
