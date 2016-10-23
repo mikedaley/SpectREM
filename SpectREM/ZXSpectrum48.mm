@@ -319,7 +319,7 @@ static unsigned char keyboardMap[8];
 {
     // Reset display
     emuDisplayBufferIndex = 0;
-    emuDisplayTs = emuDisplayTs - tsPerFrame;
+    emuDisplayTs = 0;
     
     // Reset audio
     audioBufferIndex = 0;
