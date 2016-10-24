@@ -40,6 +40,9 @@
 #define kBitmapSize 6144
 #define kAttributeAddress kBitmapAddress + kBitmapSize
 
+#define kBorderDrawingOffset 10
+#define kPaperDrawingOffset 16
+
 #pragma mark - Structures 
 
 // Structure of pixel data used in the emulation display buffer
@@ -612,7 +615,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, int tsta
     {
         return;
     }
-    updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + 16);
+    updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + kPaperDrawingOffset);
     memory[address] = data;
 }
 
@@ -666,7 +669,8 @@ static unsigned char coreIORead(unsigned short address, int tstates)
     // If the address does not belong to the ULA then return the floating bus value
     if (address & 0x01)
     {
-        // TODO: Add Kemptston joystick support. Until then return 0
+        // TODO: Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
+        // format: 000FDULR. F = Fire, D = Down, U = Up, L = Left, R = Right
         if ((address & 0xff) == 0x1f)
         {
             return 0x0;
@@ -746,7 +750,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, int tstates)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + 10);
+        updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + kBorderDrawingOffset);
 
         audioEar = (data & 0x10) >> 4;
         audioMic = (data & 0x08) >> 3;

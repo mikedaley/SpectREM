@@ -12,6 +12,9 @@
 #import "ConfigViewController.h"
 #import "EmulationView.h"
 
+#import <GameController/GameController.h>
+#import <IOKit/hid/IOHIDLib.h>
+
 #pragma mark - Private Interface
 
 @interface EmulationViewController () <NSWindowDelegate>
@@ -27,6 +30,8 @@
     ConfigViewController *_configViewController;
     NSPopover *_configPopover;
     NSTrackingArea *trackingArea;
+    
+    IOHIDManagerRef hidManager;
 }
 
 - (void)viewDidLoad {
@@ -51,14 +56,9 @@
     [self setupSceneBindings];
     
     [_machine start];
-}
-
-- (void)setupMachineBindings
-{
-    [_machine bind:@"displayBorderWidth" toObject:_configViewController withKeyPath:@"displayBorderWidth" options:nil];
-    [_machine bind:@"soundHighPassFilter" toObject:_configViewController withKeyPath:@"soundHighPassFilter" options:nil];
-    [_machine bind:@"soundLowPassFilter" toObject:_configViewController withKeyPath:@"soundLowPassFilter" options:nil];
-    [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
+    
+    [self setupGamepad];
+    
 }
 
 - (void)setupSceneBindings
@@ -69,8 +69,6 @@
     [_emulationScene bind:@"displayBrightness" toObject:_configViewController withKeyPath:@"displayBrightness" options:nil];
     [_emulationScene bind:@"displayVignetteX" toObject:_configViewController withKeyPath:@"displayVignetteX" options:nil];
     [_emulationScene bind:@"displayVignetteY" toObject:_configViewController withKeyPath:@"displayVignetteY" options:nil];
-//    [_emulationScene bind:@"displayA" toObject:_configViewController withKeyPath:@"displayA" options:nil];
-    
 }
 
 #pragma mark - View events
@@ -147,4 +145,44 @@
     [_configViewController resetPreferences];
 }
 
+#pragma mark - USB Controllers
+
+void gamepadWasAdded(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef device) {
+    NSLog(@"Gamepad was plugged in");
+}
+
+void gamepadWasRemoved(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef device) {
+    NSLog(@"Gamepad was unplugged");
+}
+
+void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValueRef value) {
+    NSLog(@"Gamepad talked!");
+    IOHIDElementRef element = IOHIDValueGetElement(value);
+    NSLog(@"Element: %@", element);
+    int elementValue = (int)IOHIDValueGetIntegerValue(value);
+    NSLog(@"Element value: %i", elementValue);
+}
+
+-(void) setupGamepad {
+    hidManager = IOHIDManagerCreate( kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+    NSMutableDictionary* criterion = [[NSMutableDictionary alloc] init];
+    [criterion setObject: [NSNumber numberWithInt: kHIDPage_GenericDesktop] forKey: (NSString*)CFSTR(kIOHIDDeviceUsagePageKey)];
+    //    [criterion setObject: [NSNumber numberWithInt: kHIDUsage_GD_GamePad] forKey: (NSString*)CFSTR(kIOHIDDeviceUsageKey)];
+    IOHIDManagerSetDeviceMatching(hidManager, (CFDictionaryRef)criterion);
+    IOHIDManagerRegisterDeviceMatchingCallback(hidManager, gamepadWasAdded, (void*)self);
+    IOHIDManagerRegisterDeviceRemovalCallback(hidManager, gamepadWasRemoved, (void*)self);
+    IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    //    IOReturn tIOReturn = IOHIDManagerOpen(hidManager, kIOHIDOptionsTypeNone);
+    IOHIDManagerRegisterInputValueCallback(hidManager, gamepadAction, (void*)self);
+}
+
+- (void)setupMachineBindings
+{
+    [_machine bind:@"displayBorderWidth" toObject:_configViewController withKeyPath:@"displayBorderWidth" options:nil];
+    [_machine bind:@"soundHighPassFilter" toObject:_configViewController withKeyPath:@"soundHighPassFilter" options:nil];
+    [_machine bind:@"soundLowPassFilter" toObject:_configViewController withKeyPath:@"soundLowPassFilter" options:nil];
+    [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
+}
+
 @end
+

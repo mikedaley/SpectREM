@@ -11,6 +11,8 @@
 		99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */; };
 		99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA291DBA0AE00049D811 /* EmulationView.m */; };
 		99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */; };
+		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
+		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
 		EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A61DB0D60700511BAF /* EmulationScene.sks */; };
@@ -50,6 +52,8 @@
 		99BFAA291DBA0AE00049D811 /* EmulationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationView.m; sourceTree = "<group>"; };
 		99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationWindowController.h; sourceTree = "<group>"; };
 		99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationWindowController.m; sourceTree = "<group>"; };
+		ED3295CB1DBE4F4E00372061 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF3A4A01DB0D60700511BAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDF3A4A11DB0D60700511BAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -105,6 +109,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */,
+				ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */,
 				EDF3A4F31DB0D7F100511BAF /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +293,8 @@
 		EDF3A4F11DB0D7F100511BAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ED3295CD1DBE556C00372061 /* IOKit.framework */,
+				ED3295CB1DBE4F4E00372061 /* GameController.framework */,
 				EDF3A4F21DB0D7F100511BAF /* QuartzCore.framework */,
 			);
 			name = Frameworks;
