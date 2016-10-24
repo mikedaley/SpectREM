@@ -741,7 +741,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, int tstates)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates(core->GetTStates() - emuDisplayTs + 14);
+        updateScreenWithTStates(core->GetTStates() - emuDisplayTs + 10);
 
         audioEar = (data & 0x10) >> 4;
         audioMic = (data & 0x08) >> 3;
