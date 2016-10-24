@@ -612,7 +612,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, int tsta
     {
         return;
     }
-    updateScreenWithTStates(core->GetTStates() + 16 - emuDisplayTs);
+    updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + 16);
     memory[address] = data;
 }
 
@@ -746,7 +746,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, int tstates)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + 12);
+        updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + 10);
 
         audioEar = (data & 0x10) >> 4;
         audioMic = (data & 0x08) >> 3;
