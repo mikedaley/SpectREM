@@ -51,7 +51,7 @@ void main()
     float g = texture2D( u_texture, vec2( texCoord.x - o, texCoord.y + o ) ).y;
     float b = texture2D( u_texture, vec2( texCoord.x  , texCoord.y - o ) ).z;
 
-    gl_FragColor = (vec4(colorCorrect, 1)) * vec4(vignette, 1) ;
+    gl_FragColor = (vec4(colorCorrect, 1)) ;
     
     
 }
