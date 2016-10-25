@@ -337,6 +337,7 @@ static unsigned char keyboardMap[8];
 - (void)generateFrame
 {
     int count = tsPerFrame;
+
     while (count > 0)
     {
         int tsCPU = core->Execute(1, 32);
