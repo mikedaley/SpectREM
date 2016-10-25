@@ -148,7 +148,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		// First process an interrupt
         if (m_CPURegisters.IntReq)
         {
-            if (m_CPURegisters.EIHandled == false && m_CPURegisters.IFF1 != 0 )
+            if (m_CPURegisters.EIHandled == false && m_CPURegisters.IFF1 != 0 && m_CPURegisters.TStates < int_t_states )
             {
                 // First see if we are halted?
                 if ( m_CPURegisters.Halted )
