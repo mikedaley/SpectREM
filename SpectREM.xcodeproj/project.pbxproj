@@ -13,6 +13,7 @@
 		99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */; };
 		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
+		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
 		EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A61DB0D60700511BAF /* EmulationScene.sks */; };
@@ -54,6 +55,8 @@
 		99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationWindowController.m; sourceTree = "<group>"; };
 		ED3295CB1DBE4F4E00372061 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		ED619C851DC0BC97004A60CA /* CALayer+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+Actions.h"; sourceTree = "<group>"; };
+		ED619C861DC0BC97004A60CA /* CALayer+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Actions.m"; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF3A4A01DB0D60700511BAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDF3A4A11DB0D60700511BAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -136,6 +139,34 @@
 			name = Keyboard;
 			sourceTree = "<group>";
 		};
+		ED619C881DC0BE39004A60CA /* Emulation View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				EDF3A4AD1DB0D60700511BAF /* EmulationViewController.h */,
+				EDF3A4AE1DB0D60700511BAF /* EmulationViewController.m */,
+			);
+			name = "Emulation View Controller";
+			sourceTree = "<group>";
+		};
+		ED619C891DC0BE44004A60CA /* Config View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */,
+				99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */,
+				99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */,
+			);
+			name = "Config View Controller";
+			sourceTree = "<group>";
+		};
+		ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */ = {
+			isa = PBXGroup;
+			children = (
+				99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */,
+				99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */,
+			);
+			name = "Emulation Window Controller";
+			sourceTree = "<group>";
+		};
 		EDF3A4941DB0D60700511BAF = {
 			isa = PBXGroup;
 			children = (
@@ -162,10 +193,10 @@
 				EDF3A4C41DB0D79100511BAF /* ROMS */,
 				EDF3A4C31DB0D78A00511BAF /* Z80 Core */,
 				EDF3A4C11DB0D77200511BAF /* Audio Core */,
-				EDF3A4C01DB0D6EF00511BAF /* Main UI */,
 				EDF3A4BB1DB0D67D00511BAF /* App Delegate */,
 				EDF3A4BC1DB0D68800511BAF /* Scene */,
-				EDF3A4BD1DB0D69800511BAF /* View Controllers */,
+				EDF3A4C01DB0D6EF00511BAF /* Main UI */,
+				EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */,
 				99D359AD1DBD0A0300C49FAE /* Keyboard */,
 				EDF3A4C21DB0D77D00511BAF /* Machines */,
 				EDF3A4A31DB0D60700511BAF /* Supporting Files */,
@@ -204,19 +235,15 @@
 			name = Scene;
 			sourceTree = "<group>";
 		};
-		EDF3A4BD1DB0D69800511BAF /* View Controllers */ = {
+		EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */,
+				ED619C881DC0BE39004A60CA /* Emulation View Controller */,
+				ED619C891DC0BE44004A60CA /* Config View Controller */,
 				99BFAA271DBA0AC50049D811 /* Views */,
-				EDF3A4AD1DB0D60700511BAF /* EmulationViewController.h */,
-				EDF3A4AE1DB0D60700511BAF /* EmulationViewController.m */,
-				99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */,
-				99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */,
-				99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */,
-				99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */,
-				99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */,
 			);
-			name = "View Controllers";
+			name = "View/Window Controllers";
 			sourceTree = "<group>";
 		};
 		EDF3A4BE1DB0D6A500511BAF /* Actions */ = {
@@ -311,6 +338,8 @@
 		EDF3A4FE1DB77D0F00511BAF /* Class Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				ED619C851DC0BC97004A60CA /* CALayer+Actions.h */,
+				ED619C861DC0BC97004A60CA /* CALayer+Actions.m */,
 				EDF3A4FB1DB7745700511BAF /* NSViewController+Bindings.h */,
 				EDF3A4FC1DB7745700511BAF /* NSViewController+Bindings.m */,
 			);
@@ -412,6 +441,7 @@
 				EDF3A4D61DB0D7AB00511BAF /* Z80Core_CBOpcodes.cpp in Sources */,
 				EDF3A4AF1DB0D60700511BAF /* EmulationViewController.m in Sources */,
 				EDF3A4D81DB0D7AB00511BAF /* Z80Core_DDOpcodes.cpp in Sources */,
+				ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */,
 				EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */,
 				EDF3A4EB1DB0D7C700511BAF /* AudioCore.m in Sources */,
 				EDF3A4D71DB0D7AB00511BAF /* Z80Core_EDOpcodes.cpp in Sources */,

@@ -15,6 +15,8 @@
 #import <GameController/GameController.h>
 #import <IOKit/hid/IOHIDLib.h>
 
+#import "CALayer+Actions.h"
+
 #pragma mark - Private Interface
 
 @interface EmulationViewController () <NSWindowDelegate>
@@ -44,6 +46,8 @@
     _configPopover = [NSPopover new];
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
+    
+    [self.skView.layer clearActions];
     
     // Present the scene
     [self.skView presentScene:_emulationScene];

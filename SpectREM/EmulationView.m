@@ -53,6 +53,4 @@
     _configButton.alphaValue = MAX(1.0 - intensity, 0.3);
 }
 
-
-
 @end
