@@ -23,7 +23,7 @@ struct KeyboardEntry {
     int mapBit;
 };
 
-KeyboardEntry keyboardLookup[] = {
+struct KeyboardEntry keyboardLookup[] = {
     { 6, 0,	1 },    // Z
     { 7, 0,	2 },    // X
     { 8, 0,	3 },    // C

@@ -7,16 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZXSpectrum48.h"
-#import "AudioCore.h"
-#import "EmulationViewController.h"
+#import "ZXSpectrum128.h"
 #import "Z80Core.h"
+#import "AudioCore.h"
+#import "KeyboardMatrix.h"
+#import "EmulationViewController.h"
 
 #import <CoreImage/CoreImage.h>
 
 #pragma mark - Private Interface
 
-@interface ZXSpectrum48 ()
+@interface ZXSpectrum128 ()
 
 // Emulation queue and timer
 @property (strong) EmulationViewController *emulationViewController;
@@ -31,15 +32,35 @@
 
 #define kTstatesPerFrame 69888
 
+#define kDisplayBorder 1
+#define kDisplayPaper 2
+#define kDisplayRetrace 3
+
+#define kBitmapAddress 16384
+#define kBitmapSize 6144
+#define kAttributeAddress kBitmapAddress + kBitmapSize
+
 #define kBorderDrawingOffset 10
 #define kPaperDrawingOffset 16
 
-#pragma mark - Structures 
+#pragma mark - Structures
+
+// Structure of pixel data used in the emulation display buffer
+struct PixelData {
+    uint8 r;
+    uint8 g;
+    uint8 b;
+    uint8 a;
+};
 
 #pragma mark - Variables
 
 // Z80 CPU core
-CZ80Core        *core;
+CZ80Core *core;
+
+// Main Memory array
+// TODO: Break memory up into 16k banks. This will be needed for 128k machines
+unsigned char memory[64 * 1024];
 
 // Memory and IO contention tables
 unsigned char   contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
@@ -53,13 +74,42 @@ typedef enum : unsigned char {
     Attribute = 2
 } FloatingBusValueType;
 
+// Machine specific tState values
+int             tsPerFrame;
+int             tsPerLine;
+int             tsTopBorder;
+int             tsVerticalBlank;
+int             tsVerticalDisplay;
+int             tsHorizontalDisplay;
+int             tsPerChar;
+int             tsToOrigin;
+
+// Machine specific pixel values
+int             pxTopBorder;
+int             pxVerticalBlank;
+int             pxHorizontalDisplay;
+int             pxVerticalDisplay;
+int             pxHorizontalTotal;
+int             pxVerticalTotal;
+
 //*** Display values
+
+// Holds the current border colour as set by the ULA
+int             borderColour;
+
+// Used to track the flash phase
+int             frameCounter;
 
 // Details for the image that is created for the screen representation
 int             emuDisplayBitsPerPx;
 int             emuDisplayBitsPerComponent;
 int             emuDisplayBytesPerPx;
 bool            emuShouldInterpolate;
+
+// Image buffer array buffer, its length and current index into the buffer used when drawing
+unsigned char   *emuDisplayBuffer;
+unsigned int    emuDisplayBufferLength;
+unsigned int    emuDisplayBufferIndex;
 
 // Width and height of the image used to display the emulated screen
 int             emuDisplayPxWidth;
@@ -76,11 +126,16 @@ int             emuBottomBorderPx;
 float           emuHScale;
 float           emuVScale;
 
+// Tracks the number of tStates used for drawing the screen. This is compared with the number of tStates that have passed
+// in the current frame so that the right number of 8x1 screen chunks are drawn
+int            emuDisplayTs;
+
 // Holds the current pixel and attribute line addresses when rendering the screen
 unsigned int    pixelAddress;
 unsigned int    attrAddress;
 
-
+uint16          emuTsLine[192];
+uint8           emuDisplayTsTable[313][225];
 unsigned int    emuCurrentFrameTs;
 
 //*** Audio
@@ -96,6 +151,8 @@ double          audioTsStepCounter;
 double          audioTsStep;
 int             audioBufferSize;
 
+bool            showDebug;
+
 // Events
 typedef enum : NSUInteger {
     None,
@@ -106,36 +163,54 @@ typedef enum : NSUInteger {
 
 EventType event;
 
+// Pallette
+PixelData pallette[] = {
+    
+    // Normal colours
+    {0, 0, 0, 255},         // Black
+    {0, 0, 205, 255},       // Blue
+    {205, 0, 0, 255},       // Red
+    {205, 0, 205, 255},     // Green
+    {0, 205, 0, 255},       // Magenta
+    {0, 205, 205, 255},     // Cyan
+    {205, 205, 0, 255},     // Yellow
+    {205, 205, 205, 255},   // White
+    
+    // Bright colours
+    {0, 0, 0, 255},
+    {0, 0, 255, 255},
+    {255, 0, 0, 255},
+    {255, 0, 255, 255},
+    {0, 255, 0, 255},
+    {0, 255, 255, 255},
+    {255, 255, 0, 255},
+    {255, 255, 255, 255}
+};
+
+// Keyboard matrix data
+static unsigned char keyboardMap[8];
+
 #pragma mark - Implementation
 
-@implementation ZXSpectrum48
+@implementation ZXSpectrum128
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
     self = [super init];
     if (self)
     {
-        // We need 64k of memory total for the 48k Speccy
-        memory = (unsigned char*)malloc(64 * 1024);
-        
         _emulationViewController = emulationViewController;
         
         core = new CZ80Core;
-        core->Initialise(coreMemoryRead,
-                         coreMemoryWrite,
-                         coreIORead,
-                         coreIOWrite,
-                         coreMemoryContention,
-                         coreIOContention,
-                         (__bridge void *)self);
+        core->Initialise(coreMemoryRead, coreMemoryWrite, coreIORead, coreIOWrite, coreMemoryContention, coreIOContention, 0);
         
         event = None;
-
+        
         borderColour = 7;
         frameCounter = 0;
         
         _colourSpace = CGColorSpaceCreateDeviceRGB();
-
+        
         pxTopBorder = 56;
         pxVerticalBlank = 8;
         pxHorizontalDisplay = 256;
@@ -165,7 +240,7 @@ EventType event;
         
         emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
-
+        
         emuHScale = 1.0 / emuDisplayPxWidth;
         emuVScale = 1.0 / emuDisplayPxHeight;
         
@@ -176,9 +251,9 @@ EventType event;
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * emuDisplayBytesPerPx;
         emuDisplayBuffer = (unsigned char *)malloc(emuDisplayBufferLength);
-
+        
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
-
+        
         float fps = 50;
         
         audioSampleRate = 192000;
@@ -262,7 +337,7 @@ EventType event;
 - (void)generateFrame
 {
     int count = tsPerFrame;
-
+    
     while (count > 0)
     {
         int tsCPU = core->Execute(1, 32);
@@ -276,8 +351,8 @@ EventType event;
             // The frame is finished so break out of the while loop. Not doing this caused drawing ts and core
             // ts to slowly go out of sync
             count = 0;
-
-            updateScreenWithTStates(tsPerFrame - emuDisplayTs, (__bridge void *)self);
+            
+            updateScreenWithTStates(tsPerFrame - emuDisplayTs);
             
             core->ResetTStates( tsPerFrame );
             core->SignalInterrupt();
@@ -310,36 +385,36 @@ EventType event;
 - (void)doFrame
 {
     dispatch_async(self.emulationQueue, ^
-    {
-        switch (event)
-        {
-            case None:
-                break;
-                
-            case Reset:
-                event = None;
-                [self reset];
-                break;
-                
-            case Snapshot:
-                [self reset];
-                [self loadSnapshot];
-                event = None;
-                break;
-                
-            case Z80Snapshot:
-                [self reset];
-                [self loadZ80Snapshot];
-                event = None;
-                break;
-                
-            default:
-                break;
-        }
-        
-        [self resetFrame];
-        [self generateFrame];
-    });
+                   {
+                       switch (event)
+                       {
+                           case None:
+                               break;
+                               
+                           case Reset:
+                               event = None;
+                               [self reset];
+                               break;
+                               
+                           case Snapshot:
+                               [self reset];
+                               [self loadSnapshot];
+                               event = None;
+                               break;
+                               
+                           case Z80Snapshot:
+                               [self reset];
+                               [self loadZ80Snapshot];
+                               event = None;
+                               break;
+                               
+                           default:
+                               break;
+                       }
+                       
+                       [self resetFrame];
+                       [self generateFrame];
+                   });
 }
 
 #pragma mark - Audio
@@ -380,30 +455,174 @@ EventType event;
     }
 }
 
-#pragma mark - Memory & IO methods
+#pragma mark - Display
 
-static unsigned char coreMemoryRead(unsigned short address, void *m)
+static void updateScreenWithTStates(int numberTs)
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    return machine->memory[address];
+    while (numberTs > 0)
+    {
+        int line = emuDisplayTs / tsPerLine;
+        int ts = emuDisplayTs % tsPerLine;
+        
+        switch (emuDisplayTsTable[line][ts]) {
+            case kDisplayRetrace:
+                break;
+                
+            case kDisplayBorder:
+                for (int i = 0; i < 8; i++)
+                {
+                    emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[borderColour].r;
+                    emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[borderColour].g;
+                    emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[borderColour].b;
+                    emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[borderColour].a;
+                    
+                    if (line < 64 && showDebug)
+                    {
+                        NSLog(@"%i", borderColour);
+                    }
+                }
+                break;
+                
+            case kDisplayPaper:
+            {
+                int y = line - 64;
+                int x = (ts >> 2) - 4;
+                
+                uint pixelAddress = kBitmapAddress + emuTsLine[y] + x;
+                uint attributeAddress = kAttributeAddress + ((y >> 3) << 5) + x;
+                
+                int pixelByte = memory[pixelAddress];
+                int attributeByte = memory[attributeAddress];
+                
+                // Extract the ink and paper colours from the attribute byte read in
+                int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
+                int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
+                
+                // Switch ink and paper if the flash phase has changed
+                if ((frameCounter & 16) && (attributeByte & 0x80))
+                {
+                    int tempPaper = paper;
+                    paper = ink;
+                    ink = tempPaper;
+                }
+                
+                for (int b = 0x80; b; b >>= 1)
+                {
+                    if (pixelByte & b) {
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[ink].r;
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[ink].g;
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[ink].b;
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[ink].a;
+                    }
+                    else
+                    {
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[paper].r;
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[paper].g;
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[paper].b;
+                        emuDisplayBuffer[emuDisplayBufferIndex++] = pallette[paper].a;
+                    }
+                }
+                break;
+            }
+                
+            default:
+                break;
+        }
+        
+        emuDisplayTs += tsPerChar;
+        
+        numberTs -= tsPerChar;
+    }
 }
 
-static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
+- (void)buildScreenLineAddressTable
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 8; j++)
+        {
+            for(int k = 0; k < 8; k++)
+            {
+                emuTsLine[(i << 6) + (j << 3) + k] = (i << 11) + (j << 5) + (k << 8);
+            }
+        }
+    }
+}
+
+- (void)buildDisplayTsTable
+{
+    for(int line = 0; line < 312; line++)
+    {
+        for(int ts = 0 ; ts < tsPerLine; ts++)
+        {
+            if (line >= 0  && line < 8)
+            {
+                emuDisplayTsTable[line][ts] = kDisplayRetrace;
+            }
+            
+            if (line >= 8  && line < 64)
+            {
+                if (ts >= 176 && ts < 224)
+                {
+                    emuDisplayTsTable[line][ts] = kDisplayRetrace;
+                }
+                else
+                {
+                    emuDisplayTsTable[line][ts] = kDisplayBorder;
+                }
+            }
+            
+            if (line >= (pxVerticalBlank + pxTopBorder + pxVerticalDisplay) && line < 312)
+            {
+                if (ts >= 176 && ts < 224)
+                {
+                    emuDisplayTsTable[line][ts] = kDisplayRetrace;
+                }
+                else
+                {
+                    emuDisplayTsTable[line][ts] = kDisplayBorder;
+                }
+            }
+            
+            if (line >= 64 && line < (8 + 56 + 192))
+            {
+                if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 176))
+                {
+                    emuDisplayTsTable[line][ts] = kDisplayBorder;
+                }
+                else if (ts >= 176 && ts < 224)
+                {
+                    emuDisplayTsTable[line][ts] = kDisplayRetrace;
+                }
+                else
+                {
+                    emuDisplayTsTable[line][ts] = kDisplayPaper;
+                }
+            }
+        }
+    }
+}
+
+#pragma mark - Memory & IO methods
+
+static unsigned char coreMemoryRead(unsigned short address, int tstates)
+{
+    return memory[address];
+}
+
+static void coreMemoryWrite(unsigned short address, unsigned char data, int tstates)
+{
     
     if (address < 16384)
     {
         return;
     }
-    updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
-    machine->memory[address] = data;
+    updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + kPaperDrawingOffset);
+    memory[address] = data;
 }
 
-static unsigned char coreIORead(unsigned short address, void *m)
+static unsigned char coreIORead(unsigned short address, int tstates)
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    
     // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
     // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
     // C:x means that contention should be calculated based on the current tState value and then x tStates are to be
@@ -420,27 +639,27 @@ static unsigned char coreIORead(unsigned short address, void *m)
     {
         if ((address & 1) == 0)
         {
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(3);
         }
         else
         {
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
         }
     } else {
         if ((address & 1) == 0)
         {
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(3);
         }
         else
@@ -459,7 +678,7 @@ static unsigned char coreIORead(unsigned short address, void *m)
             return 0x0;
         }
         
-        return floatingBus(m);
+        return floatingBus();
     }
     
     // Default return value
@@ -470,17 +689,15 @@ static unsigned char coreIORead(unsigned short address, void *m)
     {
         if (!(address & (0x100 << i)))
         {
-            result &= machine->keyboardMap[i];
+            result &= keyboardMap[i];
         }
     }
     
     return result;
 }
 
-static void coreIOWrite(unsigned short address, unsigned char data, void *m)
+static void coreIOWrite(unsigned short address, unsigned char data, int tstates)
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    
     // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
     // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
     // C:x means that contention should be calculated based on the current tState value and then x tStates are to be
@@ -497,20 +714,20 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     {
         if ((address & 1) == 0)
         {
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(3);
         }
         else
         {
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(1);
         }
     }
@@ -519,7 +736,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
         if ((address & 1) == 0)
         {
             core->AddTStates(1);
-            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
             core->AddTStates(3);
         }
         else
@@ -527,7 +744,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
             core->AddTStates(4);
         }
     }
-
+    
     // Port: 0xFE
     //   7   6   5   4   3   2   1   0
     // +---+---+---+---+---+-----------+
@@ -535,67 +752,25 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
-
+        updateScreenWithTStates((core->GetTStates() - emuDisplayTs) + kBorderDrawingOffset);
+        
         audioEar = (data & 0x10) >> 4;
         audioMic = (data & 0x08) >> 3;
-        machine->borderColour = data & 0x07;
+        borderColour = data & 0x07;
     }
 }
 
-static void coreMemoryContention(unsigned short address, unsigned int tstates, void *m)
+static void coreMemoryContention(unsigned short address, unsigned int tstates, int param)
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    
     if (address >= 16384 && address <= 32767)
     {
-        core->AddContentionTStates( memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+        core->AddContentionTStates( memoryContentionTable[core->GetTStates() % tsPerFrame] );
     }
 }
 
-static void coreIOContention(unsigned short address, unsigned int tstates, void *m)
+static void coreIOContention(unsigned short address, unsigned int tstates, int param)
 {
     // NOT USED
-}
-
-#pragma mark - Floating Bus
-
-// When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
-// Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
-// is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
-// predict if the ULA is reading a pixel or attribute byte based on the current t-state.
-// This routine works out what would be on the ULA bus for a given t-state and returns the result
-static unsigned char floatingBus(void *m)
-{
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    
-    int cpuTs = core->GetTStates() - 1;
-    int currentDisplayLine = (cpuTs / machine->tsPerLine);
-    int currentTs = (cpuTs % machine->tsPerLine);
-    
-    // If the line and tState are within the bitmap of the screen then grab the
-    // pixel or attribute value
-    if (currentDisplayLine >= (machine->pxTopBorder + machine->pxVerticalBlank)
-        && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
-        && currentTs <= machine->tsHorizontalDisplay)
-    {
-        unsigned char ulaValueType = floatingBusTable[ currentTs & 0x07 ];
-        
-        int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
-        int x = currentTs >> 2;
-        
-        if (ulaValueType == Pixel)
-        {
-            return machine->memory[kBitmapAddress + machine->emuTsLine[y] + x];
-        }
-        
-        if (ulaValueType == Attribute)
-        {
-            return machine->memory[kAttributeAddress + ((y >> 3) << 5) + x];
-        }
-    }
-    
-    return 0xff;
 }
 
 #pragma mark - Contention Tables
@@ -619,6 +794,44 @@ static unsigned char floatingBus(void *m)
             }
         }
     }
+}
+
+#pragma mark - Floating Bus
+
+// When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
+// Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
+// is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
+// predict if the ULA is reading a pixel or attribute byte based on the current t-state.
+// This routine works out what would be on the ULA bus for a given t-state and returns the result
+static unsigned char floatingBus()
+{
+    int cpuTs = core->GetTStates() - 1;
+    int currentDisplayLine = (cpuTs / tsPerLine);
+    int currentTs = (cpuTs % tsPerLine);
+    
+    // If the line and tState are within the bitmap of the screen then grab the
+    // pixel or attribute value
+    if (currentDisplayLine >= (pxTopBorder + pxVerticalBlank)
+        && currentDisplayLine < (pxTopBorder + pxVerticalBlank + pxVerticalDisplay)
+        && currentTs <= tsHorizontalDisplay)
+    {
+        unsigned char ulaValueType = floatingBusTable[ currentTs & 0x07 ];
+        
+        int y = currentDisplayLine - (pxTopBorder + pxVerticalBlank);
+        int x = currentTs >> 2;
+        
+        if (ulaValueType == Pixel)
+        {
+            return memory[kBitmapAddress + emuTsLine[y] + x];
+        }
+        
+        if (ulaValueType == Attribute)
+        {
+            return memory[kAttributeAddress + ((y >> 3) << 5) + x];
+        }
+    }
+    
+    return 0xff;
 }
 
 #pragma mark - Load ROM
@@ -650,12 +863,12 @@ static unsigned char floatingBus(void *m)
         {
             event = Snapshot;
         }
-
+        
         if ([extension isEqualToString:@"z80"])
         {
             event = Z80Snapshot;
         }
-
+        
     });
 }
 
@@ -714,7 +927,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)loadZ80Snapshot
 {
-
+    
     NSData *data = [NSData dataWithContentsOfFile:self.snapshotPath];
     const char *fileBytes = (const char*)[data bytes];
     
@@ -746,7 +959,7 @@ static unsigned char floatingBus(void *m)
     unsigned char byte12 = fileBytes[12];
     borderColour = (fileBytes[12] & 14) >> 1;
     BOOL compressed = fileBytes[12] & 32;
-
+    
     NSLog(@"RB7: %i Border: %i SamRom: %i Compressed: %i", byte12 & 1, (byte12 & 14) >> 1, byte12 & 16, byte12 & 32);
     
     core->SetRegister(CZ80Core::eREG_DE, ((unsigned short *)&fileBytes[13])[0]);
@@ -760,7 +973,7 @@ static unsigned char floatingBus(void *m)
     core->SetIFF1((unsigned char)fileBytes[27] & 1);
     core->SetIFF2((unsigned char)fileBytes[28] & 1);
     core->SetIMMode((unsigned char)fileBytes[29] & 3);
-
+    
     NSLog(@"IFF1: %i IM Mode: %i", (unsigned char)fileBytes[27] & 1, (unsigned char)fileBytes[29] & 3);
     
     // Deal with the extra data available in version 2 & 3 formats
@@ -772,7 +985,7 @@ static unsigned char floatingBus(void *m)
     else
     {
         NSLog(@"Z80 Snapshot Version 2");
-       
+        
         int16_t additionHeaderBlockLength = 0;
         additionHeaderBlockLength = ((unsigned short *)&fileBytes[30])[0];
         int offset = 32 + additionHeaderBlockLength;
@@ -788,7 +1001,7 @@ static unsigned char floatingBus(void *m)
             }
             
             int pageId = fileBytes[offset + 2];
-         
+            
             switch (pageId) {
                 case 4:
                     [self extractMemoryBlock:fileBytes memAddr:32768 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
@@ -810,7 +1023,7 @@ static unsigned char floatingBus(void *m)
     [self resetSound];
     [self resetKeyboardMap];
     [self resetFrame];
-
+    
 }
 
 - (void)extractMemoryBlock:(const char*)fileBytes memAddr:(int)memAddr fileOffset:(int)fileOffset compressed:(BOOL)isCompressed unpackedLength:(int)unpackedLength

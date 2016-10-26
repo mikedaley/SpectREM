@@ -56,7 +56,7 @@
 
 - (void)updateButtonWithMouseLocation:(NSPoint)point
 {
-    EmulationViewController *emulationViewController = (EmulationViewController *)[self.window contentViewController];
+//    EmulationViewController *emulationViewController = (EmulationViewController *)[self.window contentViewController];
     
     CGFloat x = fabs(NSMaxX(self.window.contentView.bounds) - point.x);
     CGFloat y = fabs(NSMinY(self.window.contentView.bounds) - point.y);

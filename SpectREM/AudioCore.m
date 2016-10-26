@@ -9,7 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "AudioCore.h"
-#import "ZXSpectrum48.h"
+#import "ZXSpectrum.h"
 #import "AudioQueue.h"
 
 #pragma mark - Private interface
@@ -17,7 +17,7 @@
 @interface AudioCore ()
 
 // Reference to the machine using the audio core
-@property (strong) ZXSpectrum48 *machine;
+@property (strong) ZXSpectrum *machine;
 
 // reference to the emulation queue that is being used to drive the emulation
 @property (assign) dispatch_queue_t emulationQueue;
@@ -54,7 +54,7 @@ UInt32      formatBytesPerPacket;
 
 @implementation AudioCore
 
-- (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum48 *)machine
+- (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum *)machine
 {
     self = [super init];
     if (self)

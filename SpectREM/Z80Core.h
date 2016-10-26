@@ -17,9 +17,9 @@
 
 //-----------------------------------------------------------------------------------------
 
-typedef unsigned char (*Z80CoreRead)(unsigned short address, int param);
-typedef void (* Z80CoreWrite)(unsigned short address, unsigned char data, int param);
-typedef void (* Z80CoreContention)(unsigned short address, unsigned int tstates, int param);
+typedef unsigned char (*Z80CoreRead)(unsigned short address, void *param);
+typedef void (* Z80CoreWrite)(unsigned short address, unsigned char data, void *param);
+typedef void (* Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
 
 //-----------------------------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ public:
 	~CZ80Core();
 	
 public:
-	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreContention io_contention_handling, int member_class);
+	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreContention io_contention_handling, void *member_class);
 
 	void					Reset(bool hardReset = true);
 	void					Debug();
@@ -246,7 +246,7 @@ protected:
 	unsigned char			m_SZ35Table[256];
 	unsigned short			m_MEMPTR;
 
-	int						m_Param;
+	void *                  m_Param;
 	Z80CoreRead				m_MemRead;
 	Z80CoreWrite			m_MemWrite;
 	Z80CoreRead				m_IORead;

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class ZXSpectrum48;
+@class ZXSpectrum;
 
 @interface AudioCore : NSObject
 
@@ -22,6 +22,6 @@
 	@param sampleRate to be used for audio
 	@param fps being rendered which is used to calculate the frame capacity for each audio buffer
  */
-- (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum48 *)machine;
+- (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum *)machine;
 
 @end

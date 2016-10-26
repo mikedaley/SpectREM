@@ -33,7 +33,7 @@ CZ80Core::~CZ80Core()
 
 //-----------------------------------------------------------------------------------------
 
-void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreContention io_contention_handling, int param)
+void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreContention io_contention_handling, void *param)
 {
 	// Store our settings
 	m_Param = param;

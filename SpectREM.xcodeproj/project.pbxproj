@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995657F21DC1327100114FC9 /* ZXSpectrum.mm */; };
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
 		99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */; };
 		99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA291DBA0AE00049D811 /* EmulationView.m */; };
@@ -46,6 +47,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		995657F11DC1327100114FC9 /* ZXSpectrum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum.h; sourceTree = "<group>"; };
+		995657F21DC1327100114FC9 /* ZXSpectrum.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum.mm; sourceTree = "<group>"; };
 		99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
 		99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
 		99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigViewController.xib; sourceTree = "<group>"; };
@@ -276,6 +279,8 @@
 		EDF3A4C21DB0D77D00511BAF /* Machines */ = {
 			isa = PBXGroup;
 			children = (
+				995657F11DC1327100114FC9 /* ZXSpectrum.h */,
+				995657F21DC1327100114FC9 /* ZXSpectrum.mm */,
 				EDF3A4EE1DB0D7D000511BAF /* ZXSpectrum48.h */,
 				EDF3A4EF1DB0D7D000511BAF /* ZXSpectrum48.mm */,
 			);
@@ -432,6 +437,7 @@
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,
 				EDF3A4D91DB0D7AB00511BAF /* Z80Core_FDOpcodes.cpp in Sources */,
 				EDF3A4AC1DB0D60700511BAF /* EmulationScene.m in Sources */,
+				995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */,
 				99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */,
 				EDF3A4EC1DB0D7C700511BAF /* AudioQueue.m in Sources */,
 				EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */,
