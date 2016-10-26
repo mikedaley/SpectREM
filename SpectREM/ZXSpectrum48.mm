@@ -348,7 +348,8 @@ static unsigned char keyboardMap[8];
         
         if (core->GetTStates() >= tsPerFrame )
         {
-            // The frame is finished so break out of the while loop
+            // The frame is finished so break out of the while loop. Not doing this caused drawing ts and core
+            // ts to slowly go out of sync
             count = 0;
 
             updateScreenWithTStates(tsPerFrame - emuDisplayTs);
