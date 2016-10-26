@@ -45,12 +45,15 @@
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
     
-    // Present the scene
-    
     //Setup the machine to be emulated
     _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
     _emulationScene.keyboardDelegate = _machine;
 
+    // Ensure that the view is the same size as the parent window before presenting the scene. Not
+    // doing this causes the view to appear breifly at the size it is defined in the story board.
+    self.skView.frame = self.skView.window.frame;
+    
+    // Present the scene
     [self.skView presentScene:_emulationScene];
 
     [self setupMachineBindings];
