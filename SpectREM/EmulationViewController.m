@@ -6,16 +6,14 @@
 //  Copyright © 2016 71Squared Ltd. All rights reserved.
 //
 
+#import <GameController/GameController.h>
+#import <IOKit/hid/IOHIDLib.h>
+
 #import "EmulationViewController.h"
 #import "EmulationScene.h"
 #import "ZXSpectrum48.h"
 #import "ConfigViewController.h"
 #import "EmulationView.h"
-
-#import <GameController/GameController.h>
-#import <IOKit/hid/IOHIDLib.h>
-
-#import "CALayer+Actions.h"
 
 #pragma mark - Private Interface
 
@@ -32,7 +30,7 @@
     ConfigViewController *_configViewController;
     NSPopover *_configPopover;
     NSTrackingArea *trackingArea;
-    
+    BOOL _firstUpdate;
     IOHIDManagerRef hidManager;
 }
 
@@ -47,17 +45,17 @@
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
     
-    [self.skView.layer clearActions];
-    
     // Present the scene
-    [self.skView presentScene:_emulationScene];
     
     //Setup the machine to be emulated
     _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
     _emulationScene.keyboardDelegate = _machine;
 
+    [self.skView presentScene:_emulationScene];
+
     [self setupMachineBindings];
     [self setupSceneBindings];
+    _firstUpdate = YES;
     
     [_machine start];
     
@@ -100,6 +98,11 @@
 - (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture
 {
     _emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
+    if (_firstUpdate)
+    {
+        _emulationScene.emulationDisplaySprite.hidden = NO;
+        _firstUpdate = NO;
+    }
 }
 
 #pragma mark - UI Actions

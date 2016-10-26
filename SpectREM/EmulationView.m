@@ -7,10 +7,22 @@
 //
 
 #import "EmulationView.h"
+#import "EmulationViewController.h"
 
 @implementation EmulationView
 {
 
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self)
+    {
+        self.wantsLayer = YES;
+    }
+    
+    return self;
 }
 
 - (void)viewDidMoveToSuperview
@@ -44,12 +56,15 @@
 
 - (void)updateButtonWithMouseLocation:(NSPoint)point
 {
+    EmulationViewController *emulationViewController = (EmulationViewController *)[self.window contentViewController];
+    
     CGFloat x = fabs(NSMaxX(self.window.contentView.bounds) - point.x);
     CGFloat y = fabs(NSMinY(self.window.contentView.bounds) - point.y);
     
     CGFloat distance = MAX(0, MAX(x, y) - 50);
     
     CGFloat intensity = 0.3 / 50.0 * (distance - 100);
+    
     _configButton.alphaValue = MAX(1.0 - intensity, 0.3);
 }
 

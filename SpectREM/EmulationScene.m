@@ -7,6 +7,7 @@
 //
 
 #import "EmulationScene.h"
+#import "CALayer+Actions.h"
 
 #pragma mark - Implementation
 
@@ -18,12 +19,8 @@
 
 - (void)sceneDidLoad
 {
-    
-}
-
-- (void)didMoveToView:(SKView *)view
-{
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
+    self.emulationDisplaySprite.hidden = YES;
     
     _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
     _shader.attributes = @[
@@ -36,8 +33,13 @@
                            [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
                            ];
     self.emulationDisplaySprite.shader = _shader;
-
+    
     [self setupObservers];
+}
+
+- (void)didMoveToView:(SKView *)view
+{
+
 }
 
 #pragma mark - Observers
