@@ -10,6 +10,7 @@
 		995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995657F21DC1327100114FC9 /* ZXSpectrum.mm */; };
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
 		99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */; };
+		99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */ = {isa = PBXBuildFile; fileRef = 99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */; };
 		99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA291DBA0AE00049D811 /* EmulationView.m */; };
 		99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */; };
 		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
@@ -52,6 +53,8 @@
 		99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
 		99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
 		99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigViewController.xib; sourceTree = "<group>"; };
+		99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum128.mm; sourceTree = "<group>"; };
+		99A79E6B1DC14A2E00B8D4CD /* ZXSpectrum128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum128.h; sourceTree = "<group>"; };
 		99BFAA281DBA0AE00049D811 /* EmulationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationView.h; sourceTree = "<group>"; };
 		99BFAA291DBA0AE00049D811 /* EmulationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationView.m; sourceTree = "<group>"; };
 		99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationWindowController.h; sourceTree = "<group>"; };
@@ -283,6 +286,8 @@
 				995657F21DC1327100114FC9 /* ZXSpectrum.mm */,
 				EDF3A4EE1DB0D7D000511BAF /* ZXSpectrum48.h */,
 				EDF3A4EF1DB0D7D000511BAF /* ZXSpectrum48.mm */,
+				99A79E6B1DC14A2E00B8D4CD /* ZXSpectrum128.h */,
+				99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */,
 			);
 			name = Machines;
 			sourceTree = "<group>";
@@ -435,6 +440,7 @@
 			files = (
 				EDF3A4DA1DB0D7AB00511BAF /* Z80Core_DDCB_FDCBOpcodes.cpp in Sources */,
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,
+				99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */,
 				EDF3A4D91DB0D7AB00511BAF /* Z80Core_FDOpcodes.cpp in Sources */,
 				EDF3A4AC1DB0D60700511BAF /* EmulationScene.m in Sources */,
 				995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */,

@@ -1,5 +1,5 @@
 //
-//  ZXSpectrum48.h
+//  ZXSpectrum128.h
 //  ZXRetroEmu
 //
 //  Created by Mike Daley on 02/09/2016.
@@ -13,7 +13,7 @@
 @class AudioCore;
 @class EmulationViewController;
 
-@interface ZXSpectrum128 : ZXSpectrum <KeyboardEventProtocol>
+@interface ZXSpectrum128 : ZXSpectrum
 
 
 @end

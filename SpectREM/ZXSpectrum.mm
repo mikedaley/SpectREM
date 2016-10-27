@@ -8,7 +8,6 @@
 
 #import "ZXSpectrum.h"
 #import "KeyboardMatrix.h"
-#import "EmulationViewController.h"
 #import "Z80Core.h"
 
 // Structure of pixel data used in the emulation display buffer
@@ -43,10 +42,11 @@ struct PixelData pallette[] = {
     {255, 255, 255, 255}
 };
 
-@implementation ZXSpectrum
-{
+@interface ZXSpectrum ()
 
-}
+@end
+
+@implementation ZXSpectrum
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
@@ -67,8 +67,8 @@ void updateScreenWithTStates(int numberTs, void *m)
     
     while (numberTs > 0)
     {
-        int line = machine->emuDisplayTs / machine->tsPerLine;
-        int ts = machine->emuDisplayTs % machine->tsPerLine;
+        int line = machine->emuDisplayTs / tsPerLine;
+        int ts = machine->emuDisplayTs % tsPerLine;
         
         switch (machine->emuDisplayTsTable[line][ts]) {
             case kDisplayRetrace:
@@ -130,9 +130,9 @@ void updateScreenWithTStates(int numberTs, void *m)
                 break;
         }
         
-        machine->emuDisplayTs += machine->tsPerChar;
+        machine->emuDisplayTs += tsPerChar;
         
-        numberTs -= machine->tsPerChar;
+        numberTs -= tsPerChar;
     }
 }
 

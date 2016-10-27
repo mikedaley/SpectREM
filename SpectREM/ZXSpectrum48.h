@@ -7,8 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "KeyboardEventProtocol.h"
 #import "ZXSpectrum.h"
+#import "KeyboardEventProtocol.h"
 
 @class AudioCore;
 @class EmulationViewController;
