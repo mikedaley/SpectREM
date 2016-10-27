@@ -101,6 +101,19 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Machine" id="9kf-Gy-LJf">
                                     <items>
+                                        <menuItem title="Start 48k Machine" id="4lp-F0-xvQ" userLabel="Restart">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="start48Machine:" target="Ady-hI-5gd" id="thB-HS-WSJ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Start 128k Machine" id="u63-kA-a0P" userLabel="Restart">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="start128Machine:" target="Ady-hI-5gd" id="TwI-U5-hxp"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="HPY-CQ-paw"/>
                                         <menuItem title="Restart" keyEquivalent="r" id="B7z-BB-OuW" userLabel="Restart">
                                             <connections>
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="ujU-zz-zhp"/>

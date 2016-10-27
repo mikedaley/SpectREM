@@ -24,4 +24,5 @@
  */
 - (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum *)machine;
 
+- (void)stop;
 @end

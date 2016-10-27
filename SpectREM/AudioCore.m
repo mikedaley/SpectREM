@@ -17,7 +17,7 @@
 @interface AudioCore ()
 
 // Reference to the machine using the audio core
-@property (strong) ZXSpectrum *machine;
+@property (weak) ZXSpectrum *machine;
 
 // reference to the emulation queue that is being used to drive the emulation
 @property (assign) dispatch_queue_t emulationQueue;
@@ -53,6 +53,11 @@ UInt32      formatBytesPerPacket;
 #pragma mark - Implementation
 
 @implementation AudioCore
+
+- (void)dealloc
+{
+    NSLog(@"AC Dealloc");
+}
 
 - (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum *)machine
 {
@@ -139,6 +144,11 @@ UInt32      formatBytesPerPacket;
         
     }
     return self;
+}
+
+- (void)stop
+{
+    CheckError(AUGraphStop(_graph), "AUGraphStart");
 }
 
 #pragma mark - Observers

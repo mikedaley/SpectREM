@@ -6,14 +6,15 @@
 //  Copyright © 2016 71Squared Ltd. All rights reserved.
 //
 
-#import <GameController/GameController.h>
 #import <IOKit/hid/IOHIDLib.h>
 
 #import "EmulationViewController.h"
 #import "EmulationScene.h"
-#import "ZXSpectrum48.h"
 #import "ConfigViewController.h"
 #import "EmulationView.h"
+
+#import "ZXSpectrum48.h"
+#import "ZXSpectrum128.h"
 
 #pragma mark - Private Interface
 
@@ -26,7 +27,7 @@
 @implementation EmulationViewController
 {
     EmulationScene *_emulationScene;
-    ZXSpectrum48 *_machine;
+    ZXSpectrum *_machine;
     ConfigViewController *_configViewController;
     NSPopover *_configPopover;
     NSTrackingArea *trackingArea;
@@ -161,6 +162,41 @@
 - (IBAction)resetPreferences:(id)sender
 {
     [_configViewController resetPreferences];
+}
+
+- (IBAction)start48Machine:(id)sender
+{
+    NSAlert *alert = [NSAlert new];
+    alert.informativeText = @"Are you sure you want to switch machines?";
+    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:@"Yes"];
+    [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertSecondButtonReturn)
+        {
+            [_machine stop];
+            _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
+            _emulationScene.keyboardDelegate = _machine;
+            [self setupMachineBindings];
+        }
+    }];
+
+}
+
+- (IBAction)start128Machine:(id)sender
+{
+    NSAlert *alert = [NSAlert new];
+    alert.informativeText = @"Are you sure you want to switch machines?";
+    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:@"Yes"];
+    [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertSecondButtonReturn)
+        {
+            [_machine stop];
+            _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
+            _emulationScene.keyboardDelegate = _machine;
+            [self setupMachineBindings];
+        }
+    }];
 }
 
 #pragma mark - USB Controllers

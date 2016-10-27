@@ -10,25 +10,15 @@
 #import "ZXSpectrum48.h"
 #import "Z80Core.h"
 
-#pragma mark - Private Interface
-
-#pragma mark - Defines
-
-#define kTstatesPerFrame 69888
-
 #define kBorderDrawingOffset 10
 #define kPaperDrawingOffset 16
+
+#pragma mark - Extension Interface
 
 @interface ZXSpectrum48 ()
 {
     CZ80Core *core;
 }
-
-@property (strong) EmulationViewController *emulationViewController;
-@property (assign) CGColorSpaceRef colourSpace;
-@property (strong) id imageRef;
-@property (strong) SKTexture *texture;
-@property (strong) NSString *snapshotPath;
 
 @end
 
@@ -39,6 +29,8 @@
 - (void)dealloc
 {
     delete core;
+    free (memory);
+    free (rom);
 }
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
@@ -49,7 +41,7 @@
         // We need 64k of memory total for the 48k Speccy
         memory = (unsigned char*)malloc(64 * 1024);
 
-        _emulationViewController = emulationViewController;
+        self.emulationViewController = emulationViewController;
         
         core = new CZ80Core;
         core->Initialise(coreMemoryRead,
@@ -60,38 +52,25 @@
                          coreIOContention,
                          (__bridge void *)self);
         
+        self.colourSpace = CGColorSpaceCreateDeviceRGB();
+
         event = None;
 
         borderColour = 7;
         frameCounter = 0;
         
-        _colourSpace = CGColorSpaceCreateDeviceRGB();
-
-        pxTopBorder = 56;
-        pxVerticalBlank = 8;
-        pxHorizontalDisplay = 256;
-        pxVerticalDisplay = 192;
-        pxHorizontalTotal = 448;
-        pxVerticalTotal = 312;
-        
-        tsPerFrame = kTstatesPerFrame;
+        tsPerFrame = 69888;
         tsToOrigin = 14335;
-        
+    
         emuShouldInterpolate = NO;
         
-        emuLeftBorderPx = 32;
-        emuRightBorderPx = 64;
-        
-        emuBottomBorderPx = 56;
-        emuTopBorderPx = 56;
-        
-        emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
-        emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
-
         emuHScale = 1.0 / emuDisplayPxWidth;
         emuVScale = 1.0 / emuDisplayPxHeight;
         
         emuDisplayTs = 0;
+        
+        displayPage = 1;
+        disablePaging = YES;
         
         [self resetFrame];
         
@@ -125,58 +104,20 @@
     return self;
 }
 
-#pragma mark - Binding
-
-- (void)setupObservers
-{
-    [self addObserver:self.audioCore forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self.audioCore forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self.audioCore forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
-}
-
-#pragma mark -
-
 - (void)start
 {
-    [self resetFrame];
-    [self doFrame];
+    [super start];
+    displayPage = 1;
 }
-
-- (void)pause
-{
-    
-}
-
-#pragma mark - Reset
 
 - (void)reset
 {
-    frameCounter = 0;
-    [self resetKeyboardMap];
-    [self resetSound];
-    [self resetFrame];
+    [super reset];
+    currentRAMPage = 0;
+    currentROMPage = 0;
+    displayPage = 1;
+    disablePaging = YES;
     core->Reset();
-}
-
-- (void)resetSound
-{
-    memset(self.audioBuffer, 0, audioBufferSize);
-    audioBufferIndex = 0;
-    audioTsCounter = 0;
-    audioTsStepCounter = 0;
-    audioBeeperValue = 0;
-}
-
-- (void)resetFrame
-{
-    // Reset display
-    emuDisplayBufferIndex = 0;
-    emuDisplayTs = 0;
-    
-    // Reset audio
-    audioBufferIndex = 0;
-    audioTsCounter = 0;
-    audioTsStepCounter = 0;
 }
 
 #pragma mark - CPU
@@ -184,7 +125,7 @@
 - (void)generateFrame
 {
     int count = tsPerFrame;
-
+    
     while (count > 0)
     {
         int tsCPU = core->Execute(1, 32);
@@ -198,7 +139,7 @@
             // The frame is finished so break out of the while loop. Not doing this caused drawing ts and core
             // ts to slowly go out of sync
             count = 0;
-
+            
             updateScreenWithTStates(tsPerFrame - emuDisplayTs, (__bridge void *)self);
             
             core->ResetTStates( tsPerFrame );
@@ -227,41 +168,6 @@
             frameCounter++;
         }
     }
-}
-
-- (void)doFrame
-{
-    dispatch_async(self.emulationQueue, ^
-    {
-        switch (event)
-        {
-            case None:
-                break;
-                
-            case Reset:
-                event = None;
-                [self reset];
-                break;
-                
-            case Snapshot:
-                [self reset];
-                [self loadSnapshot];
-                event = None;
-                break;
-                
-            case Z80Snapshot:
-                [self reset];
-                [self loadZ80Snapshot];
-                event = None;
-                break;
-                
-            default:
-                break;
-        }
-        
-        [self resetFrame];
-        [self generateFrame];
-    });
 }
 
 #pragma mark - Audio
@@ -306,7 +212,7 @@
 
 static unsigned char coreMemoryRead(unsigned short address, void *m)
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
     return machine->memory[address];
 }
 
@@ -497,13 +403,13 @@ static unsigned char floatingBus(void *m)
     
     // If the line and tState are within the bitmap of the screen then grab the
     // pixel or attribute value
-    if (currentDisplayLine >= (machine->pxTopBorder + machine->pxVerticalBlank)
-        && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
+    if (currentDisplayLine >= (pxTopBorder + pxVerticalBlank)
+        && currentDisplayLine < (pxTopBorder + pxVerticalBlank + pxVerticalDisplay)
         && currentTs <= tsHorizontalDisplay)
     {
         unsigned char ulaValueType = floatingBusTable[ currentTs & 0x07 ];
         
-        int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
+        int y = currentDisplayLine - (pxTopBorder + pxVerticalBlank);
         int x = currentTs >> 2;
         
         if (ulaValueType == Pixel)
@@ -513,7 +419,7 @@ static unsigned char floatingBus(void *m)
         
         if (ulaValueType == Attribute)
         {
-            return machine->memory[kAttributeAddress + ((y >> 3) << 5) + x];
+            return machine->memory[kBitmapAddress + kBitmapSize + ((y >> 3) << 5) + x];
         }
     }
     
@@ -547,39 +453,18 @@ static unsigned char floatingBus(void *m)
 
 - (void)loadDefaultROM
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"ZXSpectrum48k" ofType:@"rom"];
-    NSData *rom = [NSData dataWithContentsOfFile:path];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"48" ofType:@"rom"];
+    NSData *data = [NSData dataWithContentsOfFile:path];
     
-    const char *fileBytes = (const char*)[rom bytes];
+    const char *fileBytes = (const char*)[data bytes];
     
-    for (int addr = 0; addr < rom.length; addr++)
+    for (int addr = 0; addr < data.length; addr++)
     {
         memory[addr] = fileBytes[addr];
     }
 }
 
 #pragma mark - SnapShot
-
-- (void)loadSnapshotWithPath:(NSString *)path
-{
-    // This will be called from the main thread so it needs to by sync'd with the emulation queue
-    dispatch_sync(self.emulationQueue, ^{
-        
-        self.snapshotPath = path;
-        NSString *extension = [[path pathExtension] lowercaseString];
-        
-        if ([extension isEqualToString:@"sna"])
-        {
-            event = Snapshot;
-        }
-
-        if ([extension isEqualToString:@"z80"])
-        {
-            event = Z80Snapshot;
-        }
-
-    });
-}
 
 - (void)loadSnapshot
 {

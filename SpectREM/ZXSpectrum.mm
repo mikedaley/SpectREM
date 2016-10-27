@@ -48,16 +48,136 @@ struct PixelData pallette[] = {
 
 @implementation ZXSpectrum
 
+- (void)dealloc
+{
+    NSLog(@"gone");
+}
+
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
     self = [super init];
     return self;
 }
 
-- (void)start {}
-- (void)reset {}
-- (void)loadSnapshotWithPath:(NSString *)path {}
-- (void)doFrame {}
+- (void)loadSnapshot {}
+- (void)loadZ80Snapshot {}
+- (void)loadSnapshotWithPath:(NSString *)path
+{
+    // This will be called from the main thread so it needs to by sync'd with the emulation queue
+    dispatch_sync(self.emulationQueue, ^{
+        
+        self.snapshotPath = path;
+        NSString *extension = [[path pathExtension] lowercaseString];
+        
+        if ([extension isEqualToString:@"sna"])
+        {
+            event = Snapshot;
+        }
+        
+        if ([extension isEqualToString:@"z80"])
+        {
+            event = Z80Snapshot;
+        }
+        
+    });
+}
+
+- (void)generateFrame {}
+
+#pragma mark - Binding
+
+- (void)setupObservers
+{
+    [self addObserver:self.audioCore forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self.audioCore forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self.audioCore forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+#pragma mark -
+
+- (void)start
+{
+    [self resetFrame];
+    [self doFrame];
+}
+
+- (void)pause
+{
+    
+}
+
+- (void)stop {
+    [self removeObserver:self.audioCore forKeyPath:@"soundLowPassFilter"];
+    [self removeObserver:self.audioCore forKeyPath:@"soundHighPassFilter"];
+    [self removeObserver:self.audioCore forKeyPath:@"soundVolume"];
+    [self.audioCore stop];
+}
+
+#pragma mark - Reset
+
+- (void)reset
+{
+    frameCounter = 0;
+    [self resetKeyboardMap];
+    [self resetSound];
+    [self resetFrame];
+}
+
+- (void)resetSound
+{
+    memset(self.audioBuffer, 0, audioBufferSize);
+    audioBufferIndex = 0;
+    audioTsCounter = 0;
+    audioTsStepCounter = 0;
+    audioBeeperValue = 0;
+}
+
+- (void)resetFrame
+{
+    // Reset display
+    emuDisplayBufferIndex = 0;
+    emuDisplayTs = 0;
+    
+    // Reset audio
+    audioBufferIndex = 0;
+    audioTsCounter = 0;
+    audioTsStepCounter = 0;
+}
+
+- (void)doFrame
+{
+    dispatch_async(self.emulationQueue, ^
+                   {
+                       switch (event)
+                       {
+                           case None:
+                               break;
+                               
+                           case Reset:
+                               event = None;
+                               [self reset];
+                               break;
+                               
+                           case Snapshot:
+                               [self reset];
+                               [self loadSnapshot];
+                               event = None;
+                               break;
+                               
+                           case Z80Snapshot:
+                               [self reset];
+                               [self loadZ80Snapshot];
+                               event = None;
+                               break;
+                               
+                           default:
+                               break;
+                       }
+                       
+                       [self resetFrame];
+                       [self generateFrame];
+                   });
+}
 
 #pragma mark - Display
 
@@ -89,11 +209,11 @@ void updateScreenWithTStates(int numberTs, void *m)
                 int y = line - 64;
                 int x = (ts >> 2) - 4;
                 
-                uint pixelAddress = kBitmapAddress + machine->emuTsLine[y] + x;
-                uint attributeAddress = kAttributeAddress + ((y >> 3) << 5) + x;
+                uint pixelAddress = machine->emuTsLine[y] + x;
+                uint attributeAddress = kBitmapSize + ((y >> 3) << 5) + x;
                 
-                int pixelByte = machine->memory[pixelAddress];
-                int attributeByte = machine->memory[attributeAddress];
+                int pixelByte = machine->memory[(machine->displayPage * 16384) + pixelAddress];
+                int attributeByte = machine->memory[(machine->displayPage * 16384) + attributeAddress];
                 
                 // Extract the ink and paper colours from the attribute byte read in
                 int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);

@@ -20,7 +20,6 @@ static int const kDisplayRetrace = 3;
 
 static int const kBitmapAddress = 16384;
 static int const kBitmapSize = 6144;
-static int const kAttributeAddress = kBitmapAddress + kBitmapSize;
 
 static int const tsPerLine = 224;
 static int const tsTopBorder = 56 * 224;
@@ -32,6 +31,23 @@ static int const tsPerChar = 4;
 static int const emuDisplayBitsPerPx = 32;
 static int const emuDisplayBitsPerComponent = 8;
 static int const emuDisplayBytesPerPx = 4;
+
+static int const pxTopBorder = 56;
+static int const pxVerticalBlank = 8;
+static int const pxHorizontalDisplay = 256;
+static int const pxVerticalDisplay = 192;
+static int const pxHorizontalTotal = 448;
+static int const pxVerticalTotal = 312;
+
+static int const emuLeftBorderPx = 32;
+static int const emuRightBorderPx = 64;
+
+static int const emuBottomBorderPx = 56;
+static int const emuTopBorderPx = 56;
+
+static int const emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
+static int const emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
+
 
 // Memory and IO contention tables
 static unsigned char const contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
@@ -62,6 +78,12 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     // Main Memory array
     // TODO: Break memory up into 16k banks. This will be needed for 128k machines
     unsigned char *memory;
+    unsigned char *rom;
+    
+    int currentROMPage;
+    int currentRAMPage;
+    BOOL disablePaging;
+    int displayPage;
     
     // Keyboard matrix data
     unsigned char keyboardMap[8];
@@ -69,14 +91,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     // Machine specific tState values
     int tsPerFrame;
     int tsToOrigin;
-    
-    // Machine specific pixel values
-    int pxTopBorder;
-    int pxVerticalBlank;
-    int pxHorizontalDisplay;
-    int pxVerticalDisplay;
-    int pxHorizontalTotal;
-    int pxVerticalTotal;
     
     uint16 emuTsLine[192];
     uint8 emuDisplayTsTable[313][225];
@@ -86,30 +100,10 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     unsigned int emuDisplayBufferLength;
     unsigned int emuDisplayBufferIndex;
     
-    // Details for the image that is created for the screen representation
-
     bool emuShouldInterpolate;
-    
-    // Width and height of the image used to display the emulated screen
-    int  emuDisplayPxWidth;
-    int  emuDisplayPxHeight;
-    
-    // Width of the left and right border in chars. A char is 8 pixels wide
-    int  emuLeftBorderPx;
-    int  emuRightBorderPx;
-    
-    // Height of the top and bottom borders in pixel lines
-    int  emuTopBorderPx;
-    int  emuBottomBorderPx;
     
     float emuHScale;
     float emuVScale;
-    
-    // Holds the current pixel and attribute line addresses when rendering the screen
-//    unsigned int    pixelAddress;
-//    unsigned int    attrAddress;
-    
-    unsigned int    emuCurrentFrameTs;
     
     // Holds the current border colour as set by the ULA
     int             borderColour;
@@ -137,7 +131,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     
     unsigned char memoryContentionTable[80000];
     unsigned char ioContentionTable[80000];
-
 }
 
 #pragma mark - Properties
@@ -155,17 +148,30 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (assign) float soundVolume;
 @property (assign) double soundLowPassFilter;
 @property (assign) double soundHighPassFilter;
+@property (strong) NSString *snapshotPath;
+
+@property (weak) EmulationViewController *emulationViewController;
+@property (assign) CGColorSpaceRef colourSpace;
+@property (strong) id imageRef;
+@property (strong) SKTexture *texture;
 
 #pragma mark - Methods
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController;
 - (void)start;
+- (void)stop;
 - (void)reset;
+- (void)resetFrame;
+- (void)resetSound;
 - (void)loadSnapshotWithPath:(NSString *)path;
+- (void)generateFrame;
 - (void)doFrame;
 - (void)resetKeyboardMap;
 - (void)buildDisplayTsTable;
 - (void)buildScreenLineAddressTable;
+- (void)loadSnapshot;
+- (void)loadZ80Snapshot;
+- (void)setupObservers;
 
 void updateScreenWithTStates(int numberTs, void *m);
 
