@@ -472,50 +472,51 @@ static unsigned char floatingBus(void *m)
     
     const char *fileBytes = (const char*)[data bytes];
     
-    if (data.length == 49179)
+    // Decode the header
+    core->SetRegister(CZ80Core::eREG_I, fileBytes[0]);
+    core->SetRegister(CZ80Core::eREG_R, fileBytes[20]);
+    core->SetRegister(CZ80Core::eREG_ALT_HL, ((unsigned short *)&fileBytes[1])[0]);
+    core->SetRegister(CZ80Core::eREG_ALT_DE, ((unsigned short *)&fileBytes[1])[1]);
+    core->SetRegister(CZ80Core::eREG_ALT_BC, ((unsigned short *)&fileBytes[1])[2]);
+    core->SetRegister(CZ80Core::eREG_ALT_AF, ((unsigned short *)&fileBytes[1])[3]);
+    core->SetRegister(CZ80Core::eREG_HL, ((unsigned short *)&fileBytes[1])[4]);
+    core->SetRegister(CZ80Core::eREG_DE, ((unsigned short *)&fileBytes[1])[5]);
+    core->SetRegister(CZ80Core::eREG_BC, ((unsigned short *)&fileBytes[1])[6]);
+    core->SetRegister(CZ80Core::eREG_IY, ((unsigned short *)&fileBytes[1])[7]);
+    core->SetRegister(CZ80Core::eREG_IX, ((unsigned short *)&fileBytes[1])[8]);
+    
+    core->SetRegister(CZ80Core::eREG_AF, ((unsigned short *)&fileBytes[21])[0]);
+    core->SetRegister(CZ80Core::eREG_SP, ((unsigned short *)&fileBytes[21])[1]);
+    
+    // Border colour
+    borderColour = fileBytes[26] & 0x07;
+    
+    // Set the IM
+    core->SetIMMode(fileBytes[25]);
+    
+    // Do both on bit 2 as a RETN copies IFF2 to IFF1
+    core->SetIFF1((fileBytes[19] >> 2) & 1);
+    core->SetIFF2((fileBytes[19] >> 2) & 1);
+    
+    if (data.length == (48 * 1024) + 27)
     {
         int snaAddr = 27;
         for (int i= 16384; i < (48 * 1024) + 16384; i++)
         {
             memory[i] = fileBytes[snaAddr++];
         }
-        
-        // Decode the header
-        core->SetRegister(CZ80Core::eREG_I, fileBytes[0]);
-        core->SetRegister(CZ80Core::eREG_R, fileBytes[20]);
-        core->SetRegister(CZ80Core::eREG_ALT_HL, ((unsigned short *)&fileBytes[1])[0]);
-        core->SetRegister(CZ80Core::eREG_ALT_DE, ((unsigned short *)&fileBytes[1])[1]);
-        core->SetRegister(CZ80Core::eREG_ALT_BC, ((unsigned short *)&fileBytes[1])[2]);
-        core->SetRegister(CZ80Core::eREG_ALT_AF, ((unsigned short *)&fileBytes[1])[3]);
-        core->SetRegister(CZ80Core::eREG_HL, ((unsigned short *)&fileBytes[1])[4]);
-        core->SetRegister(CZ80Core::eREG_DE, ((unsigned short *)&fileBytes[1])[5]);
-        core->SetRegister(CZ80Core::eREG_BC, ((unsigned short *)&fileBytes[1])[6]);
-        core->SetRegister(CZ80Core::eREG_IY, ((unsigned short *)&fileBytes[1])[7]);
-        core->SetRegister(CZ80Core::eREG_IX, ((unsigned short *)&fileBytes[1])[8]);
-        
-        core->SetRegister(CZ80Core::eREG_AF, ((unsigned short *)&fileBytes[21])[0]);
-        core->SetRegister(CZ80Core::eREG_SP, ((unsigned short *)&fileBytes[21])[1]);
-        
-        // Border colour
-        borderColour = fileBytes[26] & 0x07;
-        
-        // Set the IM
-        core->SetIMMode(fileBytes[25]);
-        
-        // Do both on bit 2 as a RETN copies IFF2 to IFF1
-        core->SetIFF1((fileBytes[19] >> 2) & 1);
-        core->SetIFF2((fileBytes[19] >> 2) & 1);
-        
+
         // Set the PC
         unsigned char pc_lsb = memory[core->GetRegister(CZ80Core::eREG_SP)];
         unsigned char pc_msb = memory[core->GetRegister(CZ80Core::eREG_SP) + 1];
         core->SetRegister(CZ80Core::eREG_PC, (pc_msb << 8) | pc_lsb);
         core->SetRegister(CZ80Core::eREG_SP, core->GetRegister(CZ80Core::eREG_SP) + 2);
-        
-        [self resetSound];
-        [self resetKeyboardMap];
-        [self resetFrame];
     }
+
+    
+    [self resetSound];
+    [self resetKeyboardMap];
+    [self resetFrame];
 }
 
 

@@ -525,7 +525,6 @@ static unsigned char floatingBus(void *m)
     {
         rom[addr + 16384] = fileBytes[addr];
     }
-    NSLog(@"ROMS Loaded");
 }
 
 #pragma mark - SnapShot
@@ -536,7 +535,33 @@ static unsigned char floatingBus(void *m)
     
     const char *fileBytes = (const char*)[data bytes];
     
-    if (data.length == 49179)
+    // Decode the header
+    core->SetRegister(CZ80Core::eREG_I, fileBytes[0]);
+    core->SetRegister(CZ80Core::eREG_R, fileBytes[20]);
+    core->SetRegister(CZ80Core::eREG_ALT_HL, ((unsigned short *)&fileBytes[1])[0]);
+    core->SetRegister(CZ80Core::eREG_ALT_DE, ((unsigned short *)&fileBytes[1])[1]);
+    core->SetRegister(CZ80Core::eREG_ALT_BC, ((unsigned short *)&fileBytes[1])[2]);
+    core->SetRegister(CZ80Core::eREG_ALT_AF, ((unsigned short *)&fileBytes[1])[3]);
+    core->SetRegister(CZ80Core::eREG_HL, ((unsigned short *)&fileBytes[1])[4]);
+    core->SetRegister(CZ80Core::eREG_DE, ((unsigned short *)&fileBytes[1])[5]);
+    core->SetRegister(CZ80Core::eREG_BC, ((unsigned short *)&fileBytes[1])[6]);
+    core->SetRegister(CZ80Core::eREG_IY, ((unsigned short *)&fileBytes[1])[7]);
+    core->SetRegister(CZ80Core::eREG_IX, ((unsigned short *)&fileBytes[1])[8]);
+    
+    core->SetRegister(CZ80Core::eREG_AF, ((unsigned short *)&fileBytes[21])[0]);
+    core->SetRegister(CZ80Core::eREG_SP, ((unsigned short *)&fileBytes[21])[1]);
+    
+    // Border colour
+    borderColour = fileBytes[26] & 0x07;
+    
+    // Set the IM
+    core->SetIMMode(fileBytes[25]);
+    
+    // Do both on bit 2 as a RETN copies IFF2 to IFF1
+    core->SetIFF1((fileBytes[19] >> 2) & 1);
+    core->SetIFF2((fileBytes[19] >> 2) & 1);
+
+    if (data.length == (48 * 1024) + 27)
     {
         int snaAddr = 27;
         for (int i= 16384; i < (48 * 1024) + 16384; i++)
@@ -544,42 +569,63 @@ static unsigned char floatingBus(void *m)
             memory[i] = fileBytes[snaAddr++];
         }
         
-        // Decode the header
-        core->SetRegister(CZ80Core::eREG_I, fileBytes[0]);
-        core->SetRegister(CZ80Core::eREG_R, fileBytes[20]);
-        core->SetRegister(CZ80Core::eREG_ALT_HL, ((unsigned short *)&fileBytes[1])[0]);
-        core->SetRegister(CZ80Core::eREG_ALT_DE, ((unsigned short *)&fileBytes[1])[1]);
-        core->SetRegister(CZ80Core::eREG_ALT_BC, ((unsigned short *)&fileBytes[1])[2]);
-        core->SetRegister(CZ80Core::eREG_ALT_AF, ((unsigned short *)&fileBytes[1])[3]);
-        core->SetRegister(CZ80Core::eREG_HL, ((unsigned short *)&fileBytes[1])[4]);
-        core->SetRegister(CZ80Core::eREG_DE, ((unsigned short *)&fileBytes[1])[5]);
-        core->SetRegister(CZ80Core::eREG_BC, ((unsigned short *)&fileBytes[1])[6]);
-        core->SetRegister(CZ80Core::eREG_IY, ((unsigned short *)&fileBytes[1])[7]);
-        core->SetRegister(CZ80Core::eREG_IX, ((unsigned short *)&fileBytes[1])[8]);
-        
-        core->SetRegister(CZ80Core::eREG_AF, ((unsigned short *)&fileBytes[21])[0]);
-        core->SetRegister(CZ80Core::eREG_SP, ((unsigned short *)&fileBytes[21])[1]);
-        
-        // Border colour
-        borderColour = fileBytes[26] & 0x07;
-        
-        // Set the IM
-        core->SetIMMode(fileBytes[25]);
-        
-        // Do both on bit 2 as a RETN copies IFF2 to IFF1
-        core->SetIFF1((fileBytes[19] >> 2) & 1);
-        core->SetIFF2((fileBytes[19] >> 2) & 1);
-        
         // Set the PC
         unsigned char pc_lsb = memory[core->GetRegister(CZ80Core::eREG_SP)];
         unsigned char pc_msb = memory[core->GetRegister(CZ80Core::eREG_SP) + 1];
         core->SetRegister(CZ80Core::eREG_PC, (pc_msb << 8) | pc_lsb);
         core->SetRegister(CZ80Core::eREG_SP, core->GetRegister(CZ80Core::eREG_SP) + 2);
         
-        [self resetSound];
-        [self resetKeyboardMap];
-        [self resetFrame];
     }
+    else if (data.length == ((128 * 1024) + 27 + 4) || data.length == ((144 * 1024) + 27 + 4))
+    {
+        int snaAddr = (3 * 16384) + 27;
+        
+        disablePaging = ((fileBytes[snaAddr + 2] & 0x20) == 0x20) ? YES : NO;
+        currentROMPage = ((fileBytes[snaAddr + 2] & 0x10) == 0x10) ? 1 : 0;
+        displayPage = ((fileBytes[snaAddr + 2] & 0x08) == 0x08) ? 7 : 5;
+        currentRAMPage = (fileBytes[snaAddr + 2] & 0x07);
+        
+        core->SetRegister(CZ80Core::eREG_PC, (fileBytes[snaAddr + 1] << 8) | fileBytes[snaAddr]);
+        
+        snaAddr = 27;
+        
+        int memoryAddr = 5 * 16384;
+        for (int i = 0; i < 16384; i++)
+        {
+            memory[memoryAddr++] = fileBytes[snaAddr++];
+        }
+        
+        memoryAddr = 2 * 16384;
+        for (int i = 0; i < 16384; i++)
+        {
+            memory[memoryAddr++] = fileBytes[snaAddr++];
+        }
+        
+        memoryAddr = currentRAMPage * 16384;
+        for (int i = 0; i < 16384; i++)
+        {
+            memory[memoryAddr++] = fileBytes[snaAddr++];
+        }
+        
+        snaAddr += 4;
+        
+        for (int p = 0; p < 8; p++)
+        {
+            if (p != 5 && p != 2 && p != currentRAMPage)
+            {
+                memoryAddr = p * 16384;
+                for (int i = 0; i < 16384; i++)
+                {
+                    memory[memoryAddr++] = fileBytes[snaAddr++];
+                }
+            }
+        }
+    }
+    
+    [self resetSound];
+    [self resetKeyboardMap];
+    [self resetFrame];
+
 }
 
 

@@ -47,7 +47,7 @@
     _configPopover.behavior = NSPopoverBehaviorTransient;
     
     //Setup the machine to be emulated
-    _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
+    _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
     _emulationScene.keyboardDelegate = _machine;
 
     // Ensure that the view is the same size as the parent window before presenting the scene. Not
