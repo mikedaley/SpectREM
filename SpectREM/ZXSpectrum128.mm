@@ -19,8 +19,8 @@
 
 @end
 
-#define kBorderDrawingOffset 10
-#define kPaperDrawingOffset 16
+#define kBorderDrawingOffset 10 //10
+#define kPaperDrawingOffset 16   //16
 
 #pragma mark - Implementation
 
@@ -60,9 +60,29 @@
         
         self.colourSpace = CGColorSpaceCreateDeviceRGB();
         
-        tsPerFrame = 69888;
-        tsToOrigin = 14335;
+        tsPerFrame = 70908;
+        tsToOrigin = 14361;
+        tsPerLine = 228;
+        tsTopBorder = 56 * tsPerLine;
+        tsVerticalBlank = 7 * tsPerLine;
+        tsVerticalDisplay = 192 * tsPerLine;
+        tsHorizontalDisplay = 128;
+        tsPerChar = 4;
+        pxTopBorder = 56;
+        pxVerticalBlank = 7;
+        pxHorizontalDisplay = 256;
+        pxVerticalDisplay = 192;
+        pxHorizontalTotal = 448;
+        pxVerticalTotal = 311;
         
+        emuLeftBorderPx = 32;
+        emuRightBorderPx = 64;
+        
+        emuBottomBorderPx = 56;
+        emuTopBorderPx = 56;
+        
+        emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
+        emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
         emuShouldInterpolate = NO;
     
         emuHScale = 1.0 / emuDisplayPxWidth;
@@ -81,7 +101,7 @@
         float fps = 50;
         
         audioSampleRate = 192000;
-        audioBufferSize = (audioSampleRate / fps) * 20;
+        audioBufferSize = (audioSampleRate / fps) * 6;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
         
@@ -288,7 +308,8 @@ static unsigned char coreIORead(unsigned short address, void *m)
     //		Yes   |  Reset  | C:1, C:3
     //		Yes   |   Set   | C:1, C:1, C:1, C:1
     //
-    if (address >= 16384 && address <= 32767)
+    int page = address / 16384;
+    if (page == 1 || page == 3 || page == 5 || page == 7)
     {
         if ((address & 1) == 0)
         {
@@ -365,7 +386,8 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     //		Yes   |  Reset  | C:1, C:3
     //		Yes   |   Set   | C:1, C:1, C:1, C:1
     //
-    if (address >= 16384 && address <= 32767)
+    int page = address / 16384;
+    if (page == 1 || page == 3 || page == 5 || page == 7)
     {
         if ((address & 1) == 0)
         {
@@ -399,16 +421,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
             machine->core->AddTStates(4);
         }
     }
-    
-    if ( (address & 0x8002) == 0 && !machine->disablePaging)
-    {
-        // This is the paging port
-        machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
-        machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
-        machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
-        machine->currentRAMPage = (data & 0x07);
-    }
-    
+
     // Port: 0xFE
     //   7   6   5   4   3   2   1   0
     // +---+---+---+---+---+-----------+
@@ -422,13 +435,31 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->audioMic = (data & 0x08) >> 3;
         machine->borderColour = data & 0x07;
     }
+    
+    if ( (address & 0x8002) == 0 && !machine->disablePaging)
+    {
+        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
+        {
+//            updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
+        }
+    
+        // This is the paging port
+        machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
+        machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
+        machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
+        machine->currentRAMPage = (data & 0x07);
+
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
+        
+    }
 }
 
 static void coreMemoryContention(unsigned short address, unsigned int tstates, void *m)
 {
     ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
     
-    if (address >= 16384 && address <= 32767)
+    int page = address / 16384;
+    if (page == 1 || page == 3 || page == 5 || page == 7)
     {
         machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
     }
@@ -451,18 +482,18 @@ static unsigned char floatingBus(void *m)
     ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
     
     int cpuTs = machine->core->GetTStates() - 1;
-    int currentDisplayLine = (cpuTs / tsPerLine);
-    int currentTs = (cpuTs % tsPerLine);
+    int currentDisplayLine = (cpuTs / machine->tsPerLine);
+    int currentTs = (cpuTs % machine->tsPerLine);
     
     // If the line and tState are within the bitmap of the screen then grab the
     // pixel or attribute value
-    if (currentDisplayLine >= (pxTopBorder + pxVerticalBlank)
-        && currentDisplayLine < (pxTopBorder + pxVerticalBlank + pxVerticalDisplay)
-        && currentTs <= tsHorizontalDisplay)
+    if (currentDisplayLine >= (machine->pxTopBorder + machine->pxVerticalBlank)
+        && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
+        && currentTs <= machine->tsHorizontalDisplay)
     {
         unsigned char ulaValueType = floatingBusTable[ currentTs & 0x07 ];
         
-        int y = currentDisplayLine - (pxTopBorder + pxVerticalBlank);
+        int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
         int x = currentTs >> 2;
         
         if (ulaValueType == Pixel)
@@ -707,14 +738,29 @@ static unsigned char floatingBus(void *m)
             int pageId = fileBytes[offset + 2];
             
             switch (pageId) {
+                case 3:
+                    [self extractMemoryBlock:fileBytes memAddr:(0 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    break;
                 case 4:
-                    [self extractMemoryBlock:fileBytes memAddr:32768 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    [self extractMemoryBlock:fileBytes memAddr:(1 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
                     break;
                 case 5:
-                    [self extractMemoryBlock:fileBytes memAddr:49152 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    [self extractMemoryBlock:fileBytes memAddr:(2 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    break;
+                case 6:
+                    [self extractMemoryBlock:fileBytes memAddr:(3 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    break;
+                case 7:
+                    [self extractMemoryBlock:fileBytes memAddr:(4 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
                     break;
                 case 8:
-                    [self extractMemoryBlock:fileBytes memAddr:16384 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    [self extractMemoryBlock:fileBytes memAddr:(5 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    break;
+                case 9:
+                    [self extractMemoryBlock:fileBytes memAddr:(6 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    break;
+                case 10:
+                    [self extractMemoryBlock:fileBytes memAddr:(7 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
                     break;
                 default:
                     break;

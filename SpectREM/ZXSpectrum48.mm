@@ -61,7 +61,28 @@
         
         tsPerFrame = 69888;
         tsToOrigin = 14335;
-    
+        tsPerLine = 224;
+        tsTopBorder = 56 * tsPerLine;
+        tsVerticalBlank = 8 * tsPerLine;
+        tsVerticalDisplay = 192 * tsPerLine;
+        tsHorizontalDisplay = 128;
+        tsPerChar = 4;
+
+        pxTopBorder = 56;
+        pxVerticalBlank = 8;
+        pxHorizontalDisplay = 256;
+        pxVerticalDisplay = 192;
+        pxHorizontalTotal = 448;
+        pxVerticalTotal = 312;
+        
+        emuLeftBorderPx = 32;
+        emuRightBorderPx = 64;
+        
+        emuBottomBorderPx = 56;
+        emuTopBorderPx = 56;
+        
+        emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
+        emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
         emuShouldInterpolate = NO;
         
         emuHScale = 1.0 / emuDisplayPxWidth;
@@ -83,7 +104,7 @@
         float fps = 50;
         
         audioSampleRate = 192000;
-        audioBufferSize = (audioSampleRate / fps) * 20;
+        audioBufferSize = (audioSampleRate / fps) * 6;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
         
@@ -398,18 +419,18 @@ static unsigned char floatingBus(void *m)
     ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
     
     int cpuTs = machine->core->GetTStates() - 1;
-    int currentDisplayLine = (cpuTs / tsPerLine);
-    int currentTs = (cpuTs % tsPerLine);
+    int currentDisplayLine = (cpuTs / machine->tsPerLine);
+    int currentTs = (cpuTs % machine->tsPerLine);
     
     // If the line and tState are within the bitmap of the screen then grab the
     // pixel or attribute value
-    if (currentDisplayLine >= (pxTopBorder + pxVerticalBlank)
-        && currentDisplayLine < (pxTopBorder + pxVerticalBlank + pxVerticalDisplay)
-        && currentTs <= tsHorizontalDisplay)
+    if (currentDisplayLine >= (machine->pxTopBorder + machine->pxVerticalBlank)
+        && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
+        && currentTs <= machine->tsHorizontalDisplay)
     {
         unsigned char ulaValueType = floatingBusTable[ currentTs & 0x07 ];
         
-        int y = currentDisplayLine - (pxTopBorder + pxVerticalBlank);
+        int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
         int x = currentTs >> 2;
         
         if (ulaValueType == Pixel)

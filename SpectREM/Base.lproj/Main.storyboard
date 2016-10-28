@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16B2555" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -101,13 +102,13 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Machine" id="9kf-Gy-LJf">
                                     <items>
-                                        <menuItem title="Start 48k Machine" id="4lp-F0-xvQ" userLabel="Restart">
+                                        <menuItem title="Start 48k" id="4lp-F0-xvQ" userLabel="Restart">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="start48Machine:" target="Ady-hI-5gd" id="thB-HS-WSJ"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Start 128k Machine" id="u63-kA-a0P" userLabel="Restart">
+                                        <menuItem title="Start 128k" id="u63-kA-a0P" userLabel="Restart">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="start128Machine:" target="Ady-hI-5gd" id="TwI-U5-hxp"/>

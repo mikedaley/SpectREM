@@ -21,33 +21,9 @@ static int const kDisplayRetrace = 3;
 static int const kBitmapAddress = 16384;
 static int const kBitmapSize = 6144;
 
-static int const tsPerLine = 224;
-static int const tsTopBorder = 56 * 224;
-static int const tsVerticalBlank = 8 * 224;
-static int const tsVerticalDisplay = 192 * 224;
-static int const tsHorizontalDisplay = 128;
-static int const tsPerChar = 4;
-
 static int const emuDisplayBitsPerPx = 32;
 static int const emuDisplayBitsPerComponent = 8;
 static int const emuDisplayBytesPerPx = 4;
-
-static int const pxTopBorder = 56;
-static int const pxVerticalBlank = 8;
-static int const pxHorizontalDisplay = 256;
-static int const pxVerticalDisplay = 192;
-static int const pxHorizontalTotal = 448;
-static int const pxVerticalTotal = 312;
-
-static int const emuLeftBorderPx = 32;
-static int const emuRightBorderPx = 64;
-
-static int const emuBottomBorderPx = 56;
-static int const emuTopBorderPx = 56;
-
-static int const emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
-static int const emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
-
 
 // Memory and IO contention tables
 static unsigned char const contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
@@ -91,7 +67,29 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     // Machine specific tState values
     int tsPerFrame;
     int tsToOrigin;
+    int tsPerLine;
+    int tsTopBorder;
+    int tsVerticalBlank;
+    int tsVerticalDisplay;
+    int tsHorizontalDisplay;
+    int tsPerChar;
     
+    int pxTopBorder;
+    int pxVerticalBlank;
+    int pxHorizontalDisplay;
+    int pxVerticalDisplay;
+    int pxHorizontalTotal;
+    int pxVerticalTotal;
+    
+    int emuLeftBorderPx;
+    int emuRightBorderPx;
+    
+    int emuBottomBorderPx;
+    int emuTopBorderPx;
+    
+    int emuDisplayPxWidth;
+    int emuDisplayPxHeight;
+
     uint16 emuTsLine[192];
     uint8 emuDisplayTsTable[313][225];
 

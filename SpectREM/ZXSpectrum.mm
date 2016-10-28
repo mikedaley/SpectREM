@@ -106,7 +106,8 @@ struct PixelData pallette[] = {
     
 }
 
-- (void)stop {
+- (void)stop
+{
     [self removeObserver:self.audioCore forKeyPath:@"soundLowPassFilter"];
     [self removeObserver:self.audioCore forKeyPath:@"soundHighPassFilter"];
     [self removeObserver:self.audioCore forKeyPath:@"soundVolume"];
@@ -187,8 +188,8 @@ void updateScreenWithTStates(int numberTs, void *m)
     
     while (numberTs > 0)
     {
-        int line = machine->emuDisplayTs / tsPerLine;
-        int ts = machine->emuDisplayTs % tsPerLine;
+        int line = machine->emuDisplayTs / machine->tsPerLine;
+        int ts = machine->emuDisplayTs % machine->tsPerLine;
         
         switch (machine->emuDisplayTsTable[line][ts]) {
             case kDisplayRetrace:
@@ -206,7 +207,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                 
             case kDisplayPaper:
             {
-                int y = line - 64;
+                int y = line - (machine->pxVerticalBlank + machine->pxTopBorder);
                 int x = (ts >> 2) - 4;
                 
                 uint pixelAddress = machine->emuTsLine[y] + x;
@@ -250,9 +251,9 @@ void updateScreenWithTStates(int numberTs, void *m)
                 break;
         }
         
-        machine->emuDisplayTs += tsPerChar;
+        machine->emuDisplayTs += machine->tsPerChar;
         
-        numberTs -= tsPerChar;
+        numberTs -= machine->tsPerChar;
     }
 }
 
@@ -271,18 +272,18 @@ void updateScreenWithTStates(int numberTs, void *m)
 }
 - (void)buildDisplayTsTable
 {
-    for(int line = 0; line < 312; line++)
+    for(int line = 0; line < pxVerticalTotal; line++)
     {
         for(int ts = 0 ; ts < tsPerLine; ts++)
         {
-            if (line >= 0  && line < 8)
+            if (line >= 0  && line < pxVerticalBlank)
             {
                 emuDisplayTsTable[line][ts] = kDisplayRetrace;
             }
             
-            if (line >= 8  && line < 64)
+            if (line >= 8  && line < pxVerticalBlank + pxTopBorder)
             {
-                if (ts >= 176 && ts < 224)
+                if (ts >= 176 && ts < tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = kDisplayRetrace;
                 }
@@ -292,9 +293,9 @@ void updateScreenWithTStates(int numberTs, void *m)
                 }
             }
             
-            if (line >= (pxVerticalBlank + pxTopBorder + pxVerticalDisplay) && line < 312)
+            if (line >= (pxVerticalBlank + pxTopBorder + pxVerticalDisplay) && line < pxVerticalTotal)
             {
-                if (ts >= 176 && ts < 224)
+                if (ts >= 176 && ts < tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = kDisplayRetrace;
                 }
@@ -304,13 +305,13 @@ void updateScreenWithTStates(int numberTs, void *m)
                 }
             }
             
-            if (line >= 64 && line < (8 + 56 + 192))
+            if (line >= (pxVerticalBlank + pxTopBorder) && line < (pxVerticalBlank + pxTopBorder + pxVerticalDisplay))
             {
                 if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 176))
                 {
                     emuDisplayTsTable[line][ts] = kDisplayBorder;
                 }
-                else if (ts >= 176 && ts < 224)
+                else if (ts >= 176 && ts < tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = kDisplayRetrace;
                 }
