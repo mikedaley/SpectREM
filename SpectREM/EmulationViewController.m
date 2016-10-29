@@ -85,6 +85,22 @@
     [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
 }
 
+- (void)removeBindings
+{
+    [_emulationScene unbind:@"displayCurve"];
+    [_emulationScene unbind:@"displaySaturation"];
+    [_emulationScene unbind:@"displayContrast"];
+    [_emulationScene unbind:@"displayCurve"];
+    [_emulationScene unbind:@"displayBrightness"];
+    [_emulationScene unbind:@"displayVignetteX"];
+    [_emulationScene unbind:@"displayVignetteY"];
+    
+    [_machine unbind:@"displayBorderWidth"];
+    [_machine unbind:@"soundHighPassFilter"];
+    [_machine unbind:@"soundLowPassFilter"];
+    [_machine unbind:@"soundVolume"];
+}
+
 #pragma mark - View events
 
 - (void)viewDidLayout
@@ -174,6 +190,7 @@
         if (returnCode == NSAlertSecondButtonReturn)
         {
             [_machine stop];
+            [self removeBindings];
             _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
             _emulationScene.keyboardDelegate = _machine;
             [self setupMachineBindings];
@@ -192,6 +209,7 @@
         if (returnCode == NSAlertSecondButtonReturn)
         {
             [_machine stop];
+            [self removeBindings];
             _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
             _emulationScene.keyboardDelegate = _machine;
             [self setupMachineBindings];

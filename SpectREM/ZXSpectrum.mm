@@ -8,7 +8,6 @@
 
 #import "ZXSpectrum.h"
 #import "KeyboardMatrix.h"
-#import "Z80Core.h"
 
 // Structure of pixel data used in the emulation display buffer
 struct PixelData {
@@ -50,7 +49,7 @@ struct PixelData pallette[] = {
 
 - (void)dealloc
 {
-    NSLog(@"gone");
+    NSLog(@"Deallocating ZXSpectrum");
 }
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
@@ -59,30 +58,10 @@ struct PixelData pallette[] = {
     return self;
 }
 
-- (void)loadSnapshot {}
-- (void)loadZ80Snapshot {}
-- (void)loadSnapshotWithPath:(NSString *)path
+- (void)generateFrame
 {
-    // This will be called from the main thread so it needs to by sync'd with the emulation queue
-    dispatch_sync(self.emulationQueue, ^{
-        
-        self.snapshotPath = path;
-        NSString *extension = [[path pathExtension] lowercaseString];
-        
-        if ([extension isEqualToString:@"sna"])
-        {
-            event = Snapshot;
-        }
-        
-        if ([extension isEqualToString:@"z80"])
-        {
-            event = Z80Snapshot;
-        }
-        
-    });
+    // Implemented in specific machine classes
 }
-
-- (void)generateFrame {}
 
 #pragma mark - Binding
 
@@ -91,6 +70,13 @@ struct PixelData pallette[] = {
     [self addObserver:self.audioCore forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self.audioCore forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self.audioCore forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)removeObservers
+{
+    [self removeObserver:self.audioCore forKeyPath:@"soundLowPassFilter"];
+    [self removeObserver:self.audioCore forKeyPath:@"soundHighPassFilter"];
+    [self removeObserver:self.audioCore forKeyPath:@"soundVolume"];
 }
 
 #pragma mark -
@@ -108,9 +94,7 @@ struct PixelData pallette[] = {
 
 - (void)stop
 {
-    [self removeObserver:self.audioCore forKeyPath:@"soundLowPassFilter"];
-    [self removeObserver:self.audioCore forKeyPath:@"soundHighPassFilter"];
-    [self removeObserver:self.audioCore forKeyPath:@"soundVolume"];
+    [self removeObservers];
     [self.audioCore stop];
 }
 
@@ -257,6 +241,8 @@ void updateScreenWithTStates(int numberTs, void *m)
     }
 }
 
+#pragma mark - Build Display Tables
+
 - (void)buildScreenLineAddressTable
 {
     for(int i = 0; i < 3; i++)
@@ -281,7 +267,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                 emuDisplayTsTable[line][ts] = kDisplayRetrace;
             }
             
-            if (line >= 8  && line < pxVerticalBlank + pxTopBorder)
+            if (line >= pxVerticalBlank  && line < pxVerticalBlank + pxTopBorder)
             {
                 if (ts >= 176 && ts < tsPerLine)
                 {
@@ -322,6 +308,62 @@ void updateScreenWithTStates(int numberTs, void *m)
             }
         }
     }
+}
+
+#pragma mark - Contention Tables
+
+- (void)buildContentionTable
+{
+    for (int i = 0; i < tsPerFrame; i++)
+    {
+        memoryContentionTable[i] = 0;
+        ioContentionTable[i] = 0;
+        
+        if (i >= tsToOrigin)
+        {
+            uint32 line = (i - tsToOrigin) / tsPerLine;
+            uint32 ts = (i - tsToOrigin) % tsPerLine;
+            
+            if (line < 192 && ts < 128)
+            {
+                memoryContentionTable[i] = contentionValues[ ts & 0x07 ];
+                ioContentionTable[i] = contentionValues[ ts & 0x07 ];
+            }
+        }
+    }
+}
+
+#pragma mark - Snapshot Loading
+
+- (void)loadSnapshot
+{
+    // Implemented in the specific machine class
+}
+
+- (void)loadZ80Snapshot
+{
+    // Implemented in the specific machine class
+}
+
+- (void)loadSnapshotWithPath:(NSString *)path
+{
+    // This will be called from the main thread so it needs to by sync'd with the emulation queue
+    dispatch_sync(self.emulationQueue, ^
+    {
+        
+        self.snapshotPath = path;
+        NSString *extension = [[path pathExtension] lowercaseString];
+        
+        if ([extension isEqualToString:@"sna"])
+        {
+            event = Snapshot;
+        }
+        
+        if ([extension isEqualToString:@"z80"])
+        {
+            event = Z80Snapshot;
+        }
+    });
 }
 
 #pragma mark - View Event Protocol Methods

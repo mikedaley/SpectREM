@@ -50,12 +50,12 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 #pragma mark - Interface
 
 @interface ZXSpectrum : NSObject <KeyboardEventProtocol>
-{    
-    // Main Memory array
-    // TODO: Break memory up into 16k banks. This will be needed for 128k machines
+{
+    // Main RAM and ROM for the 48k and 128k
     unsigned char *memory;
     unsigned char *rom;
     
+    // 128k paging
     int currentROMPage;
     int currentRAMPage;
     BOOL disablePaging;
@@ -64,7 +64,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     // Keyboard matrix data
     unsigned char keyboardMap[8];
     
-    // Machine specific tState values
+    // Machine specific tState and pixel values
     int tsPerFrame;
     int tsToOrigin;
     int tsPerLine;
@@ -81,12 +81,11 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     int pxHorizontalTotal;
     int pxVerticalTotal;
     
+    // Emulation display sizes
     int emuLeftBorderPx;
     int emuRightBorderPx;
-    
     int emuBottomBorderPx;
     int emuTopBorderPx;
-    
     int emuDisplayPxWidth;
     int emuDisplayPxHeight;
 
@@ -113,7 +112,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     // Used to track the flash phase
     int             frameCounter;
     
-    //*** Audio
+    // Audio
     double          audioBeeperValue;
     int             audioEar;
     int             audioMic;
@@ -132,7 +131,8 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 }
 
 #pragma mark - Properties
-    
+
+
 // Buffer used to hold the sound samples generated for each emulation frame
 @property (assign) int16_t *audioBuffer;
 
@@ -149,8 +149,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (strong) NSString *snapshotPath;
 
 @property (weak) EmulationViewController *emulationViewController;
-@property (assign) CGColorSpaceRef colourSpace;
-@property (strong) id imageRef;
 @property (strong) SKTexture *texture;
 
 #pragma mark - Methods
@@ -170,6 +168,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 - (void)loadSnapshot;
 - (void)loadZ80Snapshot;
 - (void)setupObservers;
+- (void)buildContentionTable;
 
 void updateScreenWithTStates(int numberTs, void *m);
 

@@ -15,6 +15,14 @@
 #pragma mark - Private interface
 
 @interface AudioCore ()
+{
+    int         samplesPerFrame;
+    UInt32      formatBytesPerFrame;
+    UInt32      formatChannelsPerFrame;
+    UInt32      formatBitsPerChannel;
+    UInt32      formatFramesPerPacket;
+    UInt32      formatBytesPerPacket;
+}
 
 // Reference to the machine using the audio core
 @property (weak) ZXSpectrum *machine;
@@ -33,22 +41,12 @@
 @property (assign) AUNode highPassNode;
 @property (assign) AudioUnit convert;
 
-@end
-
-#pragma mark - C Variables
-
 // Signature of the CoreAudio render callback. This is called by CoreAudio when it needs more data in its buffer.
 // By using AudioQueue we can generate another new frame of data at 50.08 fps making sure that the audio stays in
 // sync with the frames.
 static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionFlags,const AudioTimeStamp *inTimeStamp,UInt32 inBusNumber,UInt32 inNumberFrames,AudioBufferList *ioData);
 
-// Used to store audio values used in both Obj-C and C functions
-int         samplesPerFrame;
-UInt32      formatBytesPerFrame;
-UInt32      formatChannelsPerFrame;
-UInt32      formatBitsPerChannel;
-UInt32      formatFramesPerPacket;
-UInt32      formatBytesPerPacket;
+@end
 
 #pragma mark - Implementation
 
@@ -56,7 +54,7 @@ UInt32      formatBytesPerPacket;
 
 - (void)dealloc
 {
-    NSLog(@"AC Dealloc");
+    NSLog(@"AudioCore Deallocating");
 }
 
 - (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum *)machine
@@ -148,7 +146,7 @@ UInt32      formatBytesPerPacket;
 
 - (void)stop
 {
-    CheckError(AUGraphStop(_graph), "AUGraphStart");
+    CheckError(AUGraphStop(_graph), "AUGraphStop");
 }
 
 #pragma mark - Observers
@@ -188,7 +186,7 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
     [audioCore.queue read:buffer count:(inNumberFrames << 1)];
     
     // Check if we have used a frames worth of buffer storage and if so then its time to generate another frame.
-    if ([audioCore.queue used] < (samplesPerFrame << 1))
+    if ([audioCore.queue used] < (audioCore->samplesPerFrame << 1))
     {
         dispatch_sync(audioCore.emulationQueue, ^
         {
@@ -197,7 +195,7 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
         
         // Populate the audio buffer on the same thread as the Core Audio callback otherwise there are timing
         // problems
-        [audioCore.queue write:audioCore.machine.audioBuffer count:(samplesPerFrame << 1)];
+        [audioCore.queue write:audioCore.machine.audioBuffer count:(audioCore->samplesPerFrame << 1)];
     }
     
     // Set the size of the buffer to be the number of frames requested by the Core Audio callback. This is

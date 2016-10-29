@@ -28,15 +28,17 @@
 
 - (void)dealloc
 {
+    NSLog(@"Deallocating ZXSpectrum128");
     delete core;
     free (memory);
     free (rom);
+    free(emuDisplayBuffer);
+    free(self.audioBuffer);
 }
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
-    self = [super init];
-    if (self)
+    if (self = [super init])
     {
         // We need 64k of memory total for the 128k Speccy
         memory = (unsigned char *)malloc(128 * 1024);
@@ -57,9 +59,7 @@
         
         borderColour = 7;
         frameCounter = 0;
-        
-        self.colourSpace = CGColorSpaceCreateDeviceRGB();
-        
+                
         tsPerFrame = 70908;
         tsToOrigin = 14361;
         tsPerLine = 228;
@@ -438,19 +438,16 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     
     if ( (address & 0x8002) == 0 && !machine->disablePaging)
     {
-        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
-        {
-//            updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
-        }
+//        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
+//        {
+            updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
+//        }
     
         // This is the paging port
         machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
         machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
         machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
         machine->currentRAMPage = (data & 0x07);
-
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
-        
     }
 }
 
@@ -508,29 +505,6 @@ static unsigned char floatingBus(void *m)
     }
     
     return 0xff;
-}
-
-#pragma mark - Contention Tables
-
-- (void)buildContentionTable
-{
-    for (int i = 0; i < tsPerFrame; i++)
-    {
-        memoryContentionTable[i] = 0;
-        ioContentionTable[i] = 0;
-        
-        if (i >= tsToOrigin)
-        {
-            uint32 line = (i - tsToOrigin) / tsPerLine;
-            uint32 ts = (i - tsToOrigin) % tsPerLine;
-            
-            if (line < 192 && ts < 128)
-            {
-                memoryContentionTable[i] = contentionValues[ ts & 0x07 ];
-                ioContentionTable[i] = contentionValues[ ts & 0x07 ];
-            }
-        }
-    }
 }
 
 #pragma mark - Load ROM

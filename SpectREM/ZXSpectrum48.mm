@@ -28,15 +28,17 @@
 
 - (void)dealloc
 {
+    NSLog(@"Deallocating ZXSpectrum48");
     delete core;
     free (memory);
     free (rom);
+    free(emuDisplayBuffer);
+    free(self.audioBuffer);
 }
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
-    self = [super init];
-    if (self)
+    if (self = [super init])
     {
         // We need 64k of memory total for the 48k Speccy
         memory = (unsigned char*)malloc(64 * 1024);
@@ -52,8 +54,6 @@
                          coreIOContention,
                          (__bridge void *)self);
         
-        self.colourSpace = CGColorSpaceCreateDeviceRGB();
-
         event = None;
 
         borderColour = 7;
@@ -447,29 +447,6 @@ static unsigned char floatingBus(void *m)
     return 0xff;
 }
 
-#pragma mark - Contention Tables
-
-- (void)buildContentionTable
-{
-    for (int i = 0; i < tsPerFrame; i++)
-    {
-        memoryContentionTable[i] = 0;
-        ioContentionTable[i] = 0;
-        
-        if (i >= tsToOrigin)
-        {
-            uint32 line = (i - tsToOrigin) / tsPerLine;
-            uint32 ts = (i - tsToOrigin) % tsPerLine;
-            
-            if (line < 192 && ts < 128)
-            {
-                memoryContentionTable[i] = contentionValues[ ts & 0x07 ];
-                ioContentionTable[i] = contentionValues[ ts & 0x07 ];
-            }
-        }
-    }
-}
-
 #pragma mark - Load ROM
 
 - (void)loadDefaultROM
@@ -540,10 +517,8 @@ static unsigned char floatingBus(void *m)
     [self resetFrame];
 }
 
-
 - (void)loadZ80Snapshot
 {
-
     NSData *data = [NSData dataWithContentsOfFile:self.snapshotPath];
     const char *fileBytes = (const char*)[data bytes];
     

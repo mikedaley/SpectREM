@@ -16,6 +16,8 @@
 @property (assign) double lowPassFilter;
 @property (assign) double highPassFilter;
 
+#pragma mark - Methods
+
 /*! @method initWithSampleRate:fps
 	@abstract
  Initialize the audio engine
