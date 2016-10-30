@@ -55,7 +55,7 @@
                          coreIOContention,
                          (__bridge void *)self);
         
-        event = None;
+        event = eNone;
         
         borderColour = 7;
         frameCounter = 0;
@@ -493,12 +493,12 @@ static unsigned char floatingBus(void *m)
         int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
         int x = currentTs >> 2;
         
-        if (ulaValueType == Pixel)
+        if (ulaValueType == ePixel)
         {
             return machine->memory[(machine->displayPage * 16384) + machine->emuTsLine[y] + x];
         }
         
-        if (ulaValueType == Attribute)
+        if (ulaValueType == eAttribute)
         {
             return machine->memory[(machine->displayPage * 16384) + kBitmapSize + ((y >> 3) << 5) + x];
         }

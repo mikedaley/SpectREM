@@ -54,7 +54,7 @@
                          coreIOContention,
                          (__bridge void *)self);
         
-        event = None;
+        event = eNone;
 
         borderColour = 7;
         frameCounter = 0;
@@ -433,12 +433,12 @@ static unsigned char floatingBus(void *m)
         int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
         int x = currentTs >> 2;
         
-        if (ulaValueType == Pixel)
+        if (ulaValueType == ePixel)
         {
             return machine->memory[kBitmapAddress + machine->emuTsLine[y] + x];
         }
         
-        if (ulaValueType == Attribute)
+        if (ulaValueType == eAttribute)
         {
             return machine->memory[kBitmapAddress + kBitmapSize + ((y >> 3) << 5) + x];
         }
@@ -451,7 +451,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)loadDefaultROM
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"48" ofType:@"rom"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Open_SEBASIC_3.12" ofType:@"rom"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     
     const char *fileBytes = (const char*)[data bytes];

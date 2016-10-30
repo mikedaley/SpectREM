@@ -194,6 +194,7 @@
             _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
             _emulationScene.keyboardDelegate = _machine;
             [self setupMachineBindings];
+            [self setupSceneBindings];
         }
     }];
 
@@ -213,6 +214,7 @@
             _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
             _emulationScene.keyboardDelegate = _machine;
             [self setupMachineBindings];
+            [self setupSceneBindings];
         }
     }];
 }

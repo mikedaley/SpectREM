@@ -35,16 +35,16 @@ static unsigned char const floatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 
 typedef NS_ENUM(NSUInteger, EventType)
 {
-    None,
-    Reset,
-    Snapshot,
-    Z80Snapshot
+    eNone,
+    eReset,
+    eSnapshot,
+    eZ80Snapshot
 };
 
 typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 {
-    Pixel = 1,
-    Attribute = 2
+    ePixel = 1,
+    eAttribute = 2
 };
 
 #pragma mark - Interface

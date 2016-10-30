@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995657F21DC1327100114FC9 /* ZXSpectrum.mm */; };
+		996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */ = {isa = PBXBuildFile; fileRef = 996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */; };
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
 		99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */; };
 		99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */ = {isa = PBXBuildFile; fileRef = 99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */; };
@@ -47,6 +48,7 @@
 /* Begin PBXFileReference section */
 		995657F11DC1327100114FC9 /* ZXSpectrum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum.h; sourceTree = "<group>"; };
 		995657F21DC1327100114FC9 /* ZXSpectrum.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum.mm; sourceTree = "<group>"; };
+		996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = Open_SEBASIC_3.12.rom; sourceTree = "<group>"; };
 		99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
 		99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
 		99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigViewController.xib; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 				99A79E6C1DC2295000B8D4CD /* 128-0.rom */,
 				99A79E6D1DC2295000B8D4CD /* 128-1.rom */,
 				EDF3A4DD1DB0D7BB00511BAF /* 48.rom */,
+				996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */,
 			);
 			name = ROMS;
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
+				996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */,
 				EDF3A4F81DB0F25F00511BAF /* CRT.fsh in Resources */,
 				99A265291DB6A8E300E7DFB3 /* ConfigViewController.xib in Resources */,
 				99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */,

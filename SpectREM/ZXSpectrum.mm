@@ -135,24 +135,24 @@ struct PixelData pallette[] = {
                    {
                        switch (event)
                        {
-                           case None:
+                           case eNone:
                                break;
                                
-                           case Reset:
-                               event = None;
+                           case eReset:
+                               event = eNone;
                                [self reset];
                                break;
                                
-                           case Snapshot:
+                           case eSnapshot:
                                [self reset];
                                [self loadSnapshot];
-                               event = None;
+                               event = eNone;
                                break;
                                
-                           case Z80Snapshot:
+                           case eZ80Snapshot:
                                [self reset];
                                [self loadZ80Snapshot];
-                               event = None;
+                               event = eNone;
                                break;
                                
                            default:
@@ -356,12 +356,12 @@ void updateScreenWithTStates(int numberTs, void *m)
         
         if ([extension isEqualToString:@"sna"])
         {
-            event = Snapshot;
+            event = eSnapshot;
         }
         
         if ([extension isEqualToString:@"z80"])
         {
-            event = Z80Snapshot;
+            event = eZ80Snapshot;
         }
     });
 }

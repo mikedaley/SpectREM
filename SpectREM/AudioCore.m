@@ -16,12 +16,30 @@
 
 @interface AudioCore ()
 {
-    int         samplesPerFrame;
-    UInt32      formatBytesPerFrame;
-    UInt32      formatChannelsPerFrame;
-    UInt32      formatBitsPerChannel;
-    UInt32      formatFramesPerPacket;
-    UInt32      formatBytesPerPacket;
+    int             samplesPerFrame;
+    UInt32          formatBytesPerFrame;
+    UInt32          formatChannelsPerFrame;
+    UInt32          formatBitsPerChannel;
+    UInt32          formatFramesPerPacket;
+    UInt32          formatBytesPerPacket;
+    
+    
+    unsigned int    random;
+    unsigned int    AYOutput;
+    unsigned int    AYChannelCount[3];
+    unsigned int    noiseCount;
+    unsigned int    envelopeCount;
+    int             envelopeStep;
+    unsigned char	AYRegisters[eAY_MAX_REGISTERS];
+    unsigned char	currentAYRegister;
+    signed short	AYVolumes[16];
+    signed int		channelOutput[3];
+    unsigned int	channelOutputCount;
+    bool			envelopeHolding;
+    bool			envelopeHold;
+    bool			envelopeAlt;
+    bool			envelope;
+    unsigned int	ettackEndVol;
 }
 
 // Reference to the machine using the audio core
@@ -48,6 +66,10 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
 
 @end
 
+#pragma mark - Static
+
+static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618f, 0.0847f, 0.1369f, 0.1691f, 0.2647f, 0.3527f, 0.4499f, 0.5704f, 0.6873f, 0.8482f, 1.0000f};
+
 #pragma mark - Implementation
 
 @implementation AudioCore
@@ -66,6 +88,15 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
         _queue = [AudioQueue queue];
         _machine = machine;
         samplesPerFrame = sampleRate / fps;
+
+        // Generate AY volumes
+        for (int i = 0; i < 16; i++)
+        {
+            AYVolumes[i] = (signed short)(fAYVolBase[i] * 8192);
+        }
+        
+        
+        
         
         CheckError(NewAUGraph(&_graph), "NewAUGraph");
         
