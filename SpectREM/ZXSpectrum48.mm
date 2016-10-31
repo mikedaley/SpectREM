@@ -451,7 +451,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)loadDefaultROM
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Open_SEBASIC_3.12" ofType:@"rom"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"48" ofType:@"rom"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     
     const char *fileBytes = (const char*)[data bytes];

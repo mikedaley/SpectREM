@@ -33,6 +33,8 @@
         [preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
         
+        [preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:nil];
+        
         // Apply default values
         NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
         NSDictionary *userDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsPath];
@@ -63,6 +65,8 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
+    NSLog(@"%@", keyPath);
+    
     for (NSString *key in [self observableFloatKeys]) {
         if ([keyPath isEqualToString:key])
         {

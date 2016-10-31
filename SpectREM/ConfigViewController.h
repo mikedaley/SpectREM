@@ -18,12 +18,14 @@
 @property (assign) double displayBrightness;
 @property (assign) double displayVignetteX;
 @property (assign) double displayVignetteY;
-@property (assign) double displayA;
 
 // Sound properties
 @property (assign) double soundVolume;
 @property (assign) double soundHighPassFilter;
 @property (assign) double soundLowPassFilter;
+
+// Emulation Properties
+@property (assign) NSUInteger currentMachineType;
 
 - (void)resetPreferences;
 

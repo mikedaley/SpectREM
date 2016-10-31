@@ -16,9 +16,17 @@
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
 
+NS_ENUM(NSUInteger, MachineType)
+{
+    eZXSpectrum48 = 0,
+    eZXSpectrum128
+};
+
 #pragma mark - Private Interface
 
 @interface EmulationViewController () <NSWindowDelegate>
+
+
 
 @end
 
@@ -26,13 +34,12 @@
 
 @implementation EmulationViewController
 {
-    EmulationScene *_emulationScene;
-    ZXSpectrum *_machine;
-    ConfigViewController *_configViewController;
-    NSPopover *_configPopover;
-    NSTrackingArea *trackingArea;
-    BOOL _firstUpdate;
-    IOHIDManagerRef hidManager;
+    EmulationScene          *_emulationScene;
+    ZXSpectrum              *_machine;
+    ConfigViewController    *_configViewController;
+    NSPopover               *_configPopover;
+    BOOL                    _firstUpdate;
+    IOHIDManagerRef         _hidManager;
 }
 
 - (void)viewDidLoad {
@@ -45,10 +52,13 @@
     _configPopover = [NSPopover new];
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
-    
+
+    [self setupLocalBindings];
+
     //Setup the machine to be emulated
-    _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
-    _emulationScene.keyboardDelegate = _machine;
+//    _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
+//    _emulationScene.keyboardDelegate = _machine;
+//    _currentMachineType = eZXSpectrum48;
 
     // Ensure that the view is the same size as the parent window before presenting the scene. Not
     // doing this causes the view to appear breifly at the size it is defined in the story board.
@@ -59,6 +69,7 @@
 
     [self setupMachineBindings];
     [self setupSceneBindings];
+    
     _firstUpdate = YES;
     
     [_machine start];
@@ -85,6 +96,11 @@
     [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
 }
 
+- (void)setupLocalBindings
+{
+//    [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:nil];
+}
+
 - (void)removeBindings
 {
     [_emulationScene unbind:@"displayCurve"];
@@ -99,6 +115,16 @@
     [_machine unbind:@"soundHighPassFilter"];
     [_machine unbind:@"soundLowPassFilter"];
     [_machine unbind:@"soundVolume"];
+}
+
+#pragma mark - Observers
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"currentMachineType"])
+    {
+        [self switchToMachine:[[change valueForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
+    }
 }
 
 #pragma mark - View events
@@ -180,7 +206,7 @@
     [_configViewController resetPreferences];
 }
 
-- (IBAction)start48Machine:(id)sender
+- (IBAction)switchMachine:(id)sender
 {
     NSAlert *alert = [NSAlert new];
     alert.informativeText = @"Are you sure you want to switch machines?";
@@ -189,34 +215,29 @@
     [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
         if (returnCode == NSAlertSecondButtonReturn)
         {
-            [_machine stop];
-            [self removeBindings];
-            _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
-            _emulationScene.keyboardDelegate = _machine;
-            [self setupMachineBindings];
-            [self setupSceneBindings];
+            [self switchToMachine:[sender tag]];
         }
     }];
-
 }
 
-- (IBAction)start128Machine:(id)sender
+- (void)switchToMachine:(NSUInteger)machineType
 {
-    NSAlert *alert = [NSAlert new];
-    alert.informativeText = @"Are you sure you want to switch machines?";
-    [alert addButtonWithTitle:@"No"];
-    [alert addButtonWithTitle:@"Yes"];
-    [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
-        if (returnCode == NSAlertSecondButtonReturn)
-        {
-            [_machine stop];
-            [self removeBindings];
+    [_machine stop];
+    [self removeBindings];
+    switch (machineType) {
+        case eZXSpectrum48:
+            _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
+            break;
+        case eZXSpectrum128:
             _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
-            _emulationScene.keyboardDelegate = _machine;
-            [self setupMachineBindings];
-            [self setupSceneBindings];
-        }
-    }];
+            break;
+            
+        default:
+            break;
+    }
+    _emulationScene.keyboardDelegate = _machine;
+    [self setupMachineBindings];
+    [self setupSceneBindings];
 }
 
 #pragma mark - USB Controllers
@@ -238,16 +259,16 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
 }
 
 -(void) setupGamepad {
-    hidManager = IOHIDManagerCreate( kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+    _hidManager = IOHIDManagerCreate( kCFAllocatorDefault, kIOHIDOptionsTypeNone);
     NSMutableDictionary* criterion = [[NSMutableDictionary alloc] init];
     [criterion setObject: [NSNumber numberWithInt: kHIDPage_GenericDesktop] forKey: (NSString*)CFSTR(kIOHIDDeviceUsagePageKey)];
     //    [criterion setObject: [NSNumber numberWithInt: kHIDUsage_GD_GamePad] forKey: (NSString*)CFSTR(kIOHIDDeviceUsageKey)];
-    IOHIDManagerSetDeviceMatching(hidManager, (CFDictionaryRef)criterion);
-    IOHIDManagerRegisterDeviceMatchingCallback(hidManager, gamepadWasAdded, (void*)self);
-    IOHIDManagerRegisterDeviceRemovalCallback(hidManager, gamepadWasRemoved, (void*)self);
-    IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    IOHIDManagerSetDeviceMatching(_hidManager, (CFDictionaryRef)criterion);
+    IOHIDManagerRegisterDeviceMatchingCallback(_hidManager, gamepadWasAdded, (void*)self);
+    IOHIDManagerRegisterDeviceRemovalCallback(_hidManager, gamepadWasRemoved, (void*)self);
+    IOHIDManagerScheduleWithRunLoop(_hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     //    IOReturn tIOReturn = IOHIDManagerOpen(hidManager, kIOHIDOptionsTypeNone);
-    IOHIDManagerRegisterInputValueCallback(hidManager, gamepadAction, (void*)self);
+    IOHIDManagerRegisterInputValueCallback(_hidManager, gamepadAction, (void*)self);
 }
 
 @end

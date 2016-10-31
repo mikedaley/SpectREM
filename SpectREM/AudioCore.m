@@ -94,10 +94,7 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
         {
             AYVolumes[i] = (signed short)(fAYVolBase[i] * 8192);
         }
-        
-        
-        
-        
+    
         CheckError(NewAUGraph(&_graph), "NewAUGraph");
         
         // Output Node
@@ -150,13 +147,13 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
         bufferFormat.mFramesPerPacket = formatFramesPerPacket;
         bufferFormat.mBytesPerPacket = formatBytesPerPacket;
         
-        // Set the frames per slice property on the converter node
         CheckError(AUGraphNodeInfo(_graph, _converterNode, NULL, &_convert), "AUGraphNodeInfo");
         CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &bufferFormat, sizeof(bufferFormat)), "AudioUnitSetProperty");
         
-        uint32 framesPerSlice = 882;
+        // Set the frames per slice property on the converter node
+        uint32 framesPerSlice = 4096;
         CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Input, 0, &framesPerSlice, sizeof(framesPerSlice)), "AudioUnitSetProperty");
-        
+
         // define the callback for rendering audio
         AURenderCallbackStruct renderCallbackStruct;
         renderCallbackStruct.inputProc = renderAudio;

@@ -22,5 +22,7 @@
 	<integer>3500</integer>
 	<key>soundHighPassFilter</key>
 	<integer>1</integer>
+	<key>currentMachineType</key>
+	<integer>0</integer>
 </dict>
 </plist>

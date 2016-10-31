@@ -105,13 +105,13 @@
                                         <menuItem title="Start 48k" id="4lp-F0-xvQ" userLabel="Restart">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="start48Machine:" target="Ady-hI-5gd" id="thB-HS-WSJ"/>
+                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="9Db-zP-nCg"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Start 128k" id="u63-kA-a0P" userLabel="Restart">
+                                        <menuItem title="Start 128k" tag="1" id="u63-kA-a0P" userLabel="Restart">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="start128Machine:" target="Ady-hI-5gd" id="TwI-U5-hxp"/>
+                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="5dN-wt-aah"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="HPY-CQ-paw"/>
