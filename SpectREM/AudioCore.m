@@ -76,7 +76,10 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
 
 - (void)dealloc
 {
-    NSLog(@"AudioCore Deallocating");
+    NSLog(@"Deallocating AudioCore");
+    AUGraphStop(_graph);
+    AUGraphUninitialize(_graph);
+    AUGraphClose(_graph);
 }
 
 - (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum *)machine
@@ -151,7 +154,7 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
         CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &bufferFormat, sizeof(bufferFormat)), "AudioUnitSetProperty");
         
         // Set the frames per slice property on the converter node
-        uint32 framesPerSlice = 4096;
+        uint32 framesPerSlice = 882;
         CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Input, 0, &framesPerSlice, sizeof(framesPerSlice)), "AudioUnitSetProperty");
 
         // define the callback for rendering audio

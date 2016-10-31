@@ -87,7 +87,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hYr-Q3-1RG">
-                                <rect key="frame" x="17" y="15" width="231" height="25"/>
+                                <rect key="frame" x="17" y="15" width="231" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="ZX Spectrum 48k" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="nIg-SR-nU5" id="vzU-Mf-DCo">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -100,7 +100,7 @@
                                     </menu>
                                 </popUpButtonCell>
                                 <connections>
-                                    <binding destination="ZJD-Fu-un9" name="selectedIndex" keyPath="values.currentMachineType" id="cVj-UK-UBk"/>
+                                    <binding destination="ZJD-Fu-un9" name="selectedIndex" keyPath="values.currentMachineType" id="RAP-MD-UMG"/>
                                 </connections>
                             </popUpButton>
                         </subviews>

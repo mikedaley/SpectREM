@@ -10,14 +10,11 @@
 #import <SpriteKit/SpriteKit.h>
 #import <GameplayKit/GameplayKit.h>
 
-#pragma mark - Enums
-
 @class EmulationView;
 
 @interface EmulationViewController : NSViewController
 
 @property (assign) IBOutlet EmulationView *skView;
-@property (assign) NSUInteger currentMachineType;
 
 #pragma mark - Methods
 

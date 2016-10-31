@@ -53,12 +53,6 @@ NS_ENUM(NSUInteger, MachineType)
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
 
-    [self setupLocalBindings];
-
-    //Setup the machine to be emulated
-//    _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
-//    _emulationScene.keyboardDelegate = _machine;
-//    _currentMachineType = eZXSpectrum48;
 
     // Ensure that the view is the same size as the parent window before presenting the scene. Not
     // doing this causes the view to appear breifly at the size it is defined in the story board.
@@ -67,8 +61,10 @@ NS_ENUM(NSUInteger, MachineType)
     // Present the scene
     [self.skView presentScene:_emulationScene];
 
+    [self setupLocalBindings];
     [self setupMachineBindings];
     [self setupSceneBindings];
+    [self switchToMachine:_configViewController.currentMachineType];
     
     _firstUpdate = YES;
     
@@ -98,7 +94,7 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)setupLocalBindings
 {
-//    [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:nil];
+    [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)removeBindings
@@ -223,16 +219,16 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)switchToMachine:(NSUInteger)machineType
 {
     [_machine stop];
+    _emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithImageNamed:@"tvTestImage"];
     [self removeBindings];
+    _machine = nil;
     switch (machineType) {
+        default:
         case eZXSpectrum48:
             _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
             break;
         case eZXSpectrum128:
             _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
-            break;
-            
-        default:
             break;
     }
     _emulationScene.keyboardDelegate = _machine;

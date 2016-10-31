@@ -33,7 +33,7 @@
         [preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
         
-        [preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:nil];
+        [preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
         
         // Apply default values
         NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
@@ -65,12 +65,19 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-    NSLog(@"%@", keyPath);
-    
     for (NSString *key in [self observableFloatKeys]) {
-        if ([keyPath isEqualToString:key])
+        if ([keyPath isEqualToString:key] && [[self valueForKey:key] floatValue] != [change[NSKeyValueChangeNewKey] floatValue])
         {
             [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            return;
+        }
+    }
+
+    for (NSString *key in [self observableUIntKeys]) {
+        if ([keyPath isEqualToString:key] && [[self valueForKey:key] unsignedIntegerValue] != [change[NSKeyValueChangeNewKey] unsignedIntegerValue])
+        {
+            [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            return;
         }
     }
 }
@@ -87,7 +94,14 @@
              @"displayVignetteY",
              @"soundVolume",
              @"soundLowPassFilter",
-             @"soundHighPassFilter"
+             @"soundHighPassFilter",
+             ];
+}
+
+- (NSArray *)observableUIntKeys
+{
+    return @[
+             @"currentMachineType"
              ];
 }
 

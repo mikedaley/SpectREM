@@ -41,8 +41,8 @@
     if (self = [super init])
     {
         // We need 64k of memory total for the 128k Speccy
-        memory = (unsigned char *)malloc(128 * 1024);
-        rom = (unsigned char *)malloc(32 * 1024);
+        memory = (unsigned char*)calloc(128 * 1024, sizeof(unsigned char));
+        rom = (unsigned char*)calloc(32 * 1024, sizeof(unsigned char));
         
         self.emulationViewController = emulationViewController;
         
@@ -94,7 +94,7 @@
         
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * emuDisplayBytesPerPx;
-        emuDisplayBuffer = (unsigned char *)malloc(emuDisplayBufferLength);
+        emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char*));
         
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
         

@@ -38,10 +38,10 @@
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
-    if (self = [super init])
+    if (self = [super initWithEmulationViewController:emulationViewController])
     {
         // We need 64k of memory total for the 48k Speccy
-        memory = (unsigned char*)malloc(64 * 1024);
+        memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
 
         self.emulationViewController = emulationViewController;
         
@@ -97,7 +97,7 @@
         
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * emuDisplayBytesPerPx;
-        emuDisplayBuffer = (unsigned char *)malloc(emuDisplayBufferLength);
+        emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
 
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
 
