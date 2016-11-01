@@ -38,7 +38,6 @@ NS_ENUM(NSUInteger, MachineType)
     ZXSpectrum              *_machine;
     ConfigViewController    *_configViewController;
     NSPopover               *_configPopover;
-    BOOL                    _firstUpdate;
     IOHIDManagerRef         _hidManager;
 }
 
@@ -52,8 +51,10 @@ NS_ENUM(NSUInteger, MachineType)
     _configPopover = [NSPopover new];
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
+//    _configPopover.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
 
-
+    [self setupViewConstraints];
+    
     // Ensure that the view is the same size as the parent window before presenting the scene. Not
     // doing this causes the view to appear breifly at the size it is defined in the story board.
     self.skView.frame = self.skView.window.frame;
@@ -65,8 +66,6 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupMachineBindings];
     [self setupSceneBindings];
     [self switchToMachine:_configViewController.currentMachineType];
-    
-    _firstUpdate = YES;
     
     [_machine start];
     
@@ -80,6 +79,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_emulationScene bind:@"displaySaturation" toObject:_configViewController withKeyPath:@"displaySaturation" options:nil];
     [_emulationScene bind:@"displayContrast" toObject:_configViewController withKeyPath:@"displayContrast" options:nil];
     [_emulationScene bind:@"displayBrightness" toObject:_configViewController withKeyPath:@"displayBrightness" options:nil];
+    [_emulationScene bind:@"displayShowVignette" toObject:_configViewController withKeyPath:@"displayShowVignette" options:nil];
     [_emulationScene bind:@"displayVignetteX" toObject:_configViewController withKeyPath:@"displayVignetteX" options:nil];
     [_emulationScene bind:@"displayVignetteY" toObject:_configViewController withKeyPath:@"displayVignetteY" options:nil];
 }
@@ -130,6 +130,44 @@ NS_ENUM(NSUInteger, MachineType)
     [_emulationScene sceneViewSizeChanged:self.view.frame.size];
 }
 
+#pragma mark - Constraints
+
+- (void)setupViewConstraints
+{
+    [self.view setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                                    attribute:NSLayoutAttributeTop
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.view.superview
+                                                                    attribute:NSLayoutAttributeTop
+                                                                   multiplier:1
+                                                                     constant:0]];
+    
+    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                                    attribute:NSLayoutAttributeRight
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.view.superview
+                                                                    attribute:NSLayoutAttributeRight
+                                                                   multiplier:1
+                                                                     constant:0]];
+
+    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                                    attribute:NSLayoutAttributeBottom
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.view.superview
+                                                                    attribute:NSLayoutAttributeBottom
+                                                                   multiplier:1
+                                                                     constant:0]];
+
+    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                                    attribute:NSLayoutAttributeLeft
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.view.superview
+                                                                    attribute:NSLayoutAttributeLeft
+                                                                   multiplier:1
+                                                                     constant:0]];
+}
+
 #pragma mark - Keyboard events
 
 - (void)flagsChanged:(NSEvent *)event
@@ -140,11 +178,6 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture
 {
     _emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
-    if (_firstUpdate)
-    {
-        _emulationScene.emulationDisplaySprite.hidden = NO;
-        _firstUpdate = NO;
-    }
 }
 
 #pragma mark - UI Actions
@@ -219,7 +252,6 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)switchToMachine:(NSUInteger)machineType
 {
     [_machine stop];
-    _emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithImageNamed:@"tvTestImage"];
     [self removeBindings];
     _machine = nil;
     switch (machineType) {
@@ -234,6 +266,11 @@ NS_ENUM(NSUInteger, MachineType)
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
     [self setupSceneBindings];
+}
+
+- (IBAction)setWindowSize:(id)sender
+{
+    [self.view.animator setFrameSize:(NSSize){320, 156}];
 }
 
 #pragma mark - USB Controllers

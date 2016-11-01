@@ -50,8 +50,14 @@ void main()
     float r = texture2D( u_texture, vec2( texCoord.x + o, texCoord.y + o ) ).x;
     float g = texture2D( u_texture, vec2( texCoord.x - o, texCoord.y + o ) ).y;
     float b = texture2D( u_texture, vec2( texCoord.x  , texCoord.y - o ) ).z;
+    
+    vec4 finalColor = (vec4(colorCorrect, 1));
+    if (u_show_vignette == 1.0)
+    {
+        finalColor *= vec4(vignette, 1);
+    }
 
-    gl_FragColor = (vec4(colorCorrect, 1)) ;
+    gl_FragColor = finalColor;
     
     
 }

@@ -102,16 +102,9 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Machine" id="9kf-Gy-LJf">
                                     <items>
-                                        <menuItem title="Start 48k" id="4lp-F0-xvQ" userLabel="Restart">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Size 1" tag="1" keyEquivalent="1" id="u63-kA-a0P" userLabel="Restart">
                                             <connections>
-                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="9Db-zP-nCg"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Start 128k" tag="1" id="u63-kA-a0P" userLabel="Restart">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="5dN-wt-aah"/>
+                                                <action selector="setWindowSize:" target="Ady-hI-5gd" id="pgf-l0-RaB"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="HPY-CQ-paw"/>
@@ -186,7 +179,7 @@
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" customClass="EmulationWindowController" sceneMemberID="viewController">
-                    <window key="window" title="SpectREM" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="IQv-IB-iLA">
+                    <window key="window" title="SpectREM" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="SpectREMWindow" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>

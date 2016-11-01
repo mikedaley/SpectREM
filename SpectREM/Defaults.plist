@@ -24,5 +24,7 @@
 	<integer>1</integer>
 	<key>currentMachineType</key>
 	<integer>0</integer>
+	<key>displayShowVignette</key>
+	<integer>0</integer>
 </dict>
 </plist>

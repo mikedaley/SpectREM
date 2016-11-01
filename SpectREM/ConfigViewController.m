@@ -26,6 +26,7 @@
         [preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
         
@@ -90,6 +91,7 @@
              @"displaySaturation",
              @"displayBrightness",
              @"displayContrast",
+             @"displayShowVignette",
              @"displayVignetteX",
              @"displayVignetteY",
              @"soundVolume",

@@ -16,6 +16,7 @@
 @property (assign) double displaySaturation;
 @property (assign) double displayContrast;
 @property (assign) double displayBrightness;
+@property (assign) double displayShowVignette;
 @property (assign) double displayVignetteX;
 @property (assign) double displayVignetteY;
 
