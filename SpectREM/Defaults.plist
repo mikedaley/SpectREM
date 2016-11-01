@@ -26,5 +26,7 @@
 	<integer>0</integer>
 	<key>displayShowVignette</key>
 	<integer>0</integer>
+	<key>sceneScaleMode</key>
+	<integer>0</integer>
 </dict>
 </plist>

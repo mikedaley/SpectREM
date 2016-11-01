@@ -1,5 +1,5 @@
 //
-//  ZXSpectrum128.m
+//  ZXSpectrum48.m
 //  ZXRetroEmu
 //
 //  Created by Mike Daley on 02/09/2016.
@@ -7,28 +7,28 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZXSpectrum128.h"
+#import "ZXSpectrumSE.h"
 #import "Z80Core.h"
 
-#pragma mark - Private Interface
+#define kBorderDrawingOffset 10
+#define kPaperDrawingOffset 16
 
-@interface ZXSpectrum128 ()
+#pragma mark - Extension Interface
+
+@interface ZXSpectrumSE ()
 {
     CZ80Core *core;
 }
 
 @end
 
-#define kBorderDrawingOffset 10 //10
-#define kPaperDrawingOffset 16   //16
-
 #pragma mark - Implementation
 
-@implementation ZXSpectrum128
+@implementation ZXSpectrumSE
 
 - (void)dealloc
 {
-    NSLog(@"Deallocating ZXSpectrum128");
+    NSLog(@"Deallocating ZXSpectrum48");
     delete core;
     free (memory);
     free (rom);
@@ -38,11 +38,10 @@
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
-    if (self = [super init])
+    if (self = [super initWithEmulationViewController:emulationViewController])
     {
-        // We need 64k of memory total for the 128k Speccy
-        memory = (unsigned char*)calloc(128 * 1024, sizeof(unsigned char));
-        rom = (unsigned char*)calloc(32 * 1024, sizeof(unsigned char));
+        // We need 64k of memory total for the 48k Speccy
+        memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
         
         self.emulationViewController = emulationViewController;
         
@@ -59,21 +58,22 @@
         
         borderColour = 7;
         frameCounter = 0;
-                
-        tsPerFrame = 70908;
-        tsToOrigin = 14361;
-        tsPerLine = 228;
+        
+        tsPerFrame = 69888;
+        tsToOrigin = 14335;
+        tsPerLine = 224;
         tsTopBorder = 56 * tsPerLine;
-        tsVerticalBlank = 7 * tsPerLine;
+        tsVerticalBlank = 8 * tsPerLine;
         tsVerticalDisplay = 192 * tsPerLine;
         tsHorizontalDisplay = 128;
         tsPerChar = 4;
+        
         pxTopBorder = 56;
-        pxVerticalBlank = 7;
+        pxVerticalBlank = 8;
         pxHorizontalDisplay = 256;
         pxVerticalDisplay = 192;
         pxHorizontalTotal = 448;
-        pxVerticalTotal = 311;
+        pxVerticalTotal = 312;
         
         emuLeftBorderPx = 32;
         emuRightBorderPx = 64;
@@ -84,17 +84,21 @@
         emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
         emuShouldInterpolate = NO;
-    
+        
         emuHScale = 1.0 / emuDisplayPxWidth;
         emuVScale = 1.0 / emuDisplayPxHeight;
         
         emuDisplayTs = 0;
+        
+        displayPage = 1;
+        disablePaging = YES;
         
         [self resetFrame];
         
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * emuDisplayBytesPerPx;
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
+        emuCurrentDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
         
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
         
@@ -104,11 +108,6 @@
         audioBufferSize = (audioSampleRate / fps) * 6;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
-        
-        currentROMPage = 0;
-        currentRAMPage = 0;
-        displayPage = 5;
-        disablePaging = NO;
         
         [self resetSound];
         [self buildContentionTable];
@@ -130,19 +129,16 @@
 - (void)start
 {
     [super start];
-    currentROMPage = 0;
-    currentRAMPage = 0;
-    displayPage = 5;
-    disablePaging = NO;    
+    displayPage = 1;
 }
 
 - (void)reset
 {
     [super reset];
-    currentROMPage = 0;
     currentRAMPage = 0;
-    displayPage = 5;
-    disablePaging = NO;
+    currentROMPage = 0;
+    displayPage = 1;
+    disablePaging = YES;
     core->Reset();
 }
 
@@ -238,63 +234,25 @@
 
 static unsigned char coreMemoryRead(unsigned short address, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
-    
-    int page = address / 16384;
-    address &= 16383;
-    
-    if (page == 0)
-    {
-        return (machine->rom[(machine->currentROMPage * 16384) + address]);
-    }
-    else if (page == 1)
-    {
-        return (machine->memory[(5 * 16384) + address]);
-    }
-    else if (page == 2)
-    {
-        return (machine->memory[(2 * 16384) + address]);
-    }
-    else if (page == 3)
-    {
-        return (machine->memory[(machine->currentRAMPage * 16384) + address]);
-    }
-    
-    return 0;
+    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
+    return machine->memory[address];
 }
 
 static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
     
-    int page = address / 16384;
-    address &= 16383;
-    
-    if (page == 0)
+    if (address < 16384)
     {
         return;
     }
-    else if (page == 1)
-    {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
-        machine->memory[(5 * 16384) + address] = data;
-    }
-    else if (page == 2)
-    {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
-        machine->memory[(2 * 16384) + address] = data;
-    }
-    else if (page == 3)
-    {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
-        machine->memory[(machine->currentRAMPage * 16384) + address] = data;
-    }
-    
+    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
+    machine->memory[address] = data;
 }
 
 static unsigned char coreIORead(unsigned short address, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
     
     // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
     // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
@@ -308,8 +266,7 @@ static unsigned char coreIORead(unsigned short address, void *m)
     //		Yes   |  Reset  | C:1, C:3
     //		Yes   |   Set   | C:1, C:1, C:1, C:1
     //
-    int page = address / 16384;
-    if (page == 1 || page == 3 || page == 5 || page == 7)
+    if (address >= 16384 && address <= 32767)
     {
         if ((address & 1) == 0)
         {
@@ -372,7 +329,7 @@ static unsigned char coreIORead(unsigned short address, void *m)
 
 static void coreIOWrite(unsigned short address, unsigned char data, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
     
     // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
     // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
@@ -386,8 +343,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     //		Yes   |  Reset  | C:1, C:3
     //		Yes   |   Set   | C:1, C:1, C:1, C:1
     //
-    int page = address / 16384;
-    if (page == 1 || page == 3 || page == 5 || page == 7)
+    if (address >= 16384 && address <= 32767)
     {
         if ((address & 1) == 0)
         {
@@ -421,7 +377,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
             machine->core->AddTStates(4);
         }
     }
-
+    
     // Port: 0xFE
     //   7   6   5   4   3   2   1   0
     // +---+---+---+---+---+-----------+
@@ -435,28 +391,13 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->audioMic = (data & 0x08) >> 3;
         machine->borderColour = data & 0x07;
     }
-    
-    if ( (address & 0x8002) == 0 && !machine->disablePaging)
-    {
-//        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
-//        {
-            updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
-//        }
-    
-        // This is the paging port
-        machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
-        machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
-        machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
-        machine->currentRAMPage = (data & 0x07);
-    }
 }
 
 static void coreMemoryContention(unsigned short address, unsigned int tstates, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
     
-    int page = address / 16384;
-    if (page == 1 || page == 3 || page == 5 || page == 7)
+    if (address >= 16384 && address <= 32767)
     {
         machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
     }
@@ -476,7 +417,7 @@ static void coreIOContention(unsigned short address, unsigned int tstates, void 
 // This routine works out what would be on the ULA bus for a given t-state and returns the result
 static unsigned char floatingBus(void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
     
     int cpuTs = machine->core->GetTStates() - 1;
     int currentDisplayLine = (cpuTs / machine->tsPerLine);
@@ -495,12 +436,12 @@ static unsigned char floatingBus(void *m)
         
         if (ulaValueType == ePixel)
         {
-            return machine->memory[(machine->displayPage * 16384) + machine->emuTsLine[y] + x];
+            return machine->memory[kBitmapAddress + machine->emuTsLine[y] + x];
         }
         
         if (ulaValueType == eAttribute)
         {
-            return machine->memory[(machine->displayPage * 16384) + kBitmapSize + ((y >> 3) << 5) + x];
+            return machine->memory[kBitmapAddress + kBitmapSize + ((y >> 3) << 5) + x];
         }
     }
     
@@ -511,24 +452,14 @@ static unsigned char floatingBus(void *m)
 
 - (void)loadDefaultROM
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"128-0" ofType:@"rom"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Open_SEBASIC_3.12" ofType:@"rom"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     
     const char *fileBytes = (const char*)[data bytes];
     
     for (int addr = 0; addr < data.length; addr++)
     {
-        rom[addr] = fileBytes[addr];
-    }
-
-    path = [[NSBundle mainBundle] pathForResource:@"128-1" ofType:@"rom"];
-    data = [NSData dataWithContentsOfFile:path];
-    
-    fileBytes = (const char*)[data bytes];
-    
-    for (int addr = 0; addr < data.length; addr++)
-    {
-        rom[addr + 16384] = fileBytes[addr];
+        memory[addr] = fileBytes[addr];
     }
 }
 
@@ -565,7 +496,7 @@ static unsigned char floatingBus(void *m)
     // Do both on bit 2 as a RETN copies IFF2 to IFF1
     core->SetIFF1((fileBytes[19] >> 2) & 1);
     core->SetIFF2((fileBytes[19] >> 2) & 1);
-
+    
     if (data.length == (48 * 1024) + 27)
     {
         int snaAddr = 27;
@@ -579,64 +510,16 @@ static unsigned char floatingBus(void *m)
         unsigned char pc_msb = memory[core->GetRegister(CZ80Core::eREG_SP) + 1];
         core->SetRegister(CZ80Core::eREG_PC, (pc_msb << 8) | pc_lsb);
         core->SetRegister(CZ80Core::eREG_SP, core->GetRegister(CZ80Core::eREG_SP) + 2);
-        
     }
-    else if (data.length == ((128 * 1024) + 27 + 4) || data.length == ((144 * 1024) + 27 + 4))
-    {
-        int snaAddr = (3 * 16384) + 27;
-        
-        disablePaging = ((fileBytes[snaAddr + 2] & 0x20) == 0x20) ? YES : NO;
-        currentROMPage = ((fileBytes[snaAddr + 2] & 0x10) == 0x10) ? 1 : 0;
-        displayPage = ((fileBytes[snaAddr + 2] & 0x08) == 0x08) ? 7 : 5;
-        currentRAMPage = (fileBytes[snaAddr + 2] & 0x07);
-        
-        core->SetRegister(CZ80Core::eREG_PC, (fileBytes[snaAddr + 1] << 8) | fileBytes[snaAddr]);
-        
-        snaAddr = 27;
-        
-        int memoryAddr = 5 * 16384;
-        for (int i = 0; i < 16384; i++)
-        {
-            memory[memoryAddr++] = fileBytes[snaAddr++];
-        }
-        
-        memoryAddr = 2 * 16384;
-        for (int i = 0; i < 16384; i++)
-        {
-            memory[memoryAddr++] = fileBytes[snaAddr++];
-        }
-        
-        memoryAddr = currentRAMPage * 16384;
-        for (int i = 0; i < 16384; i++)
-        {
-            memory[memoryAddr++] = fileBytes[snaAddr++];
-        }
-        
-        snaAddr += 4;
-        
-        for (int p = 0; p < 8; p++)
-        {
-            if (p != 5 && p != 2 && p != currentRAMPage)
-            {
-                memoryAddr = p * 16384;
-                for (int i = 0; i < 16384; i++)
-                {
-                    memory[memoryAddr++] = fileBytes[snaAddr++];
-                }
-            }
-        }
-    }
+    
     
     [self resetSound];
     [self resetKeyboardMap];
     [self resetFrame];
-
 }
-
 
 - (void)loadZ80Snapshot
 {
-    
     NSData *data = [NSData dataWithContentsOfFile:self.snapshotPath];
     const char *fileBytes = (const char*)[data bytes];
     
@@ -712,29 +595,14 @@ static unsigned char floatingBus(void *m)
             int pageId = fileBytes[offset + 2];
             
             switch (pageId) {
-                case 3:
-                    [self extractMemoryBlock:fileBytes memAddr:(0 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
-                    break;
                 case 4:
-                    [self extractMemoryBlock:fileBytes memAddr:(1 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    [self extractMemoryBlock:fileBytes memAddr:32768 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
                     break;
                 case 5:
-                    [self extractMemoryBlock:fileBytes memAddr:(2 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
-                    break;
-                case 6:
-                    [self extractMemoryBlock:fileBytes memAddr:(3 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
-                    break;
-                case 7:
-                    [self extractMemoryBlock:fileBytes memAddr:(4 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    [self extractMemoryBlock:fileBytes memAddr:49152 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
                     break;
                 case 8:
-                    [self extractMemoryBlock:fileBytes memAddr:(5 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
-                    break;
-                case 9:
-                    [self extractMemoryBlock:fileBytes memAddr:(6 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
-                    break;
-                case 10:
-                    [self extractMemoryBlock:fileBytes memAddr:(7 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
+                    [self extractMemoryBlock:fileBytes memAddr:16384 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384];
                     break;
                 default:
                     break;

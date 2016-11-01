@@ -9,38 +9,6 @@
 #import "ZXSpectrum.h"
 #import "KeyboardMatrix.h"
 
-// Structure of pixel data used in the emulation display buffer
-struct PixelData {
-    uint8 r;
-    uint8 g;
-    uint8 b;
-    uint8 a;
-};
-
-// Pallette
-struct PixelData pallette[] = {
-    
-    // Normal colours
-    {0, 0, 0, 255},         // Black
-    {0, 0, 205, 255},       // Blue
-    {205, 0, 0, 255},       // Red
-    {205, 0, 205, 255},     // Green
-    {0, 205, 0, 255},       // Magenta
-    {0, 205, 205, 255},     // Cyan
-    {205, 205, 0, 255},     // Yellow
-    {205, 205, 205, 255},   // White
-    
-    // Bright colours
-    {0, 0, 0, 255},
-    {0, 0, 255, 255},
-    {255, 0, 0, 255},
-    {255, 0, 255, 255},
-    {0, 255, 0, 255},
-    {0, 255, 255, 255},
-    {255, 255, 0, 255},
-    {255, 255, 255, 255}
-};
-
 @interface ZXSpectrum ()
 
 @end

@@ -19,6 +19,7 @@
 		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
+		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
 		EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A61DB0D60700511BAF /* EmulationScene.sks */; };
@@ -64,6 +65,8 @@
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		ED619C851DC0BC97004A60CA /* CALayer+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+Actions.h"; sourceTree = "<group>"; };
 		ED619C861DC0BC97004A60CA /* CALayer+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Actions.m"; sourceTree = "<group>"; };
+		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
+		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF3A4A01DB0D60700511BAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDF3A4A11DB0D60700511BAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -284,6 +287,8 @@
 				EDF3A4EF1DB0D7D000511BAF /* ZXSpectrum48.mm */,
 				99A79E6B1DC14A2E00B8D4CD /* ZXSpectrum128.h */,
 				99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */,
+				EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */,
+				EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */,
 			);
 			name = Machines;
 			sourceTree = "<group>";
@@ -450,6 +455,7 @@
 				EDF3A4EB1DB0D7C700511BAF /* AudioCore.m in Sources */,
 				EDF3A4D71DB0D7AB00511BAF /* Z80Core_EDOpcodes.cpp in Sources */,
 				EDF3A4D41DB0D7AB00511BAF /* Z80Core.cpp in Sources */,
+				EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */,
 				EDF3A4FD1DB7745700511BAF /* NSViewController+Bindings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -31,6 +31,38 @@ static unsigned char const contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 // Floating bus
 static unsigned char const floatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 
+// Structure of pixel data used in the emulation display buffer
+struct PixelData {
+    uint8 r;
+    uint8 g;
+    uint8 b;
+    uint8 a;
+};
+
+// Pallette
+static struct PixelData pallette[] = {
+    
+    // Normal colours
+    {0, 0, 0, 255},         // Black
+    {0, 0, 205, 255},       // Blue
+    {205, 0, 0, 255},       // Red
+    {205, 0, 205, 255},     // Green
+    {0, 205, 0, 255},       // Magenta
+    {0, 205, 205, 255},     // Cyan
+    {205, 205, 0, 255},     // Yellow
+    {205, 205, 205, 255},   // White
+    
+    // Bright colours
+    {0, 0, 0, 255},
+    {0, 0, 255, 255},
+    {255, 0, 0, 255},
+    {255, 0, 255, 255},
+    {0, 255, 0, 255},
+    {0, 255, 255, 255},
+    {255, 255, 0, 255},
+    {255, 255, 255, 255}
+};
+
 #pragma mark - Type Definitions
 
 typedef NS_ENUM(NSUInteger, EventType)
@@ -94,6 +126,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 
     // Image buffer array buffer, its length and current index into the buffer used when drawing
     unsigned char *emuDisplayBuffer;
+    unsigned char *emuCurrentDisplayBuffer;
     unsigned int emuDisplayBufferLength;
     unsigned int emuDisplayBufferIndex;
     

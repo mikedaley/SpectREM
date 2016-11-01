@@ -35,6 +35,7 @@
                                         <items>
                                             <menuItem title="ZX Spectrum 48k" state="on" id="nIg-SR-nU5"/>
                                             <menuItem title="ZX Spectrum 128k" id="eod-E4-n0a"/>
+                                            <menuItem title="ZX Spectrum SE" id="qXb-I4-sbU"/>
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
@@ -172,7 +173,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MTT-yY-NGI">
-                                <rect key="frame" x="29" y="59" width="81" height="14"/>
+                                <rect key="frame" x="18" y="59" width="92" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Show Vignette:" id="LQf-GA-ojC">
                                     <font key="font" metaFont="smallSystem"/>

@@ -15,18 +15,22 @@
 
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
+#import "ZXSpectrumSE.h"
+
+#pragma mark - Enums
 
 NS_ENUM(NSUInteger, MachineType)
 {
     eZXSpectrum48 = 0,
-    eZXSpectrum128
+    eZXSpectrum128,
+    eZXSpectrumSE
 };
 
 #pragma mark - Private Interface
 
 @interface EmulationViewController () <NSWindowDelegate>
 
-
+@property (strong) EmulationScene *emulationScene;
 
 @end
 
@@ -34,24 +38,25 @@ NS_ENUM(NSUInteger, MachineType)
 
 @implementation EmulationViewController
 {
-    EmulationScene          *_emulationScene;
     ZXSpectrum              *_machine;
     ConfigViewController    *_configViewController;
     NSPopover               *_configPopover;
     IOHIDManagerRef         _hidManager;
+    NSUserDefaults          *preferences;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    _emulationScene.scaleMode = SKSceneScaleModeFill;
-    
     _configViewController = [ConfigViewController new];
     _configPopover = [NSPopover new];
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
-//    _configPopover.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+
+    preferences = [NSUserDefaults standardUserDefaults];
+    
+    _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
+    _emulationScene.scaleMode = [[preferences valueForKey:@"sceneScaleMode"] unsignedIntegerValue];
 
     [self setupViewConstraints];
     
@@ -70,7 +75,6 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine start];
     
     [self setupGamepad];
-    
 }
 
 - (void)setupSceneBindings
@@ -134,38 +138,8 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)setupViewConstraints
 {
-    [self.view setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
-                                                                    attribute:NSLayoutAttributeTop
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.view.superview
-                                                                    attribute:NSLayoutAttributeTop
-                                                                   multiplier:1
-                                                                     constant:0]];
-    
-    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
-                                                                    attribute:NSLayoutAttributeRight
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.view.superview
-                                                                    attribute:NSLayoutAttributeRight
-                                                                   multiplier:1
-                                                                     constant:0]];
+//    [self.view setTranslatesAutoresizingMaskIntoConstraints:NO];
 
-    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
-                                                                    attribute:NSLayoutAttributeBottom
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.view.superview
-                                                                    attribute:NSLayoutAttributeBottom
-                                                                   multiplier:1
-                                                                     constant:0]];
-
-    [self.view.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.view
-                                                                    attribute:NSLayoutAttributeLeft
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.view.superview
-                                                                    attribute:NSLayoutAttributeLeft
-                                                                   multiplier:1
-                                                                     constant:0]];
 }
 
 #pragma mark - Keyboard events
@@ -184,12 +158,16 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)setAspectFitMode:(id)sender
 {
-    _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
+    self.emulationScene.scaleMode = SKSceneScaleModeAspectFit;
+    [preferences setValue:@(SKSceneScaleModeAspectFit) forKey:@"sceneScaleMode"];
+    [preferences synchronize];
 }
 
 - (IBAction)setFillMode:(id)sender
 {
-    _emulationScene.scaleMode = SKSceneScaleModeFill;
+    self.emulationScene.scaleMode = SKSceneScaleModeFill;
+    [preferences setValue:@(SKSceneScaleModeFill) forKey:@"sceneScaleMode"];
+    [preferences synchronize];
 }
 
 - (IBAction)machineRestart:(id)sender
@@ -262,6 +240,9 @@ NS_ENUM(NSUInteger, MachineType)
         case eZXSpectrum128:
             _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
             break;
+        case eZXSpectrumSE:
+            _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self];
+            break;
     }
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
@@ -276,15 +257,14 @@ NS_ENUM(NSUInteger, MachineType)
 #pragma mark - USB Controllers
 
 void gamepadWasAdded(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef device) {
-    NSLog(@"Gamepad was plugged in");
+    NSLog(@"USB Device Found: %@", IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey)));
 }
 
 void gamepadWasRemoved(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef device) {
-    NSLog(@"Gamepad was unplugged");
+    NSLog(@"USB Device Unplugged: %@", IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey)));
 }
 
 void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValueRef value) {
-    NSLog(@"Gamepad talked!");
     IOHIDElementRef element = IOHIDValueGetElement(value);
     NSLog(@"Element: %@", element);
     int elementValue = (int)IOHIDValueGetIntegerValue(value);
@@ -300,7 +280,9 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
     IOHIDManagerRegisterDeviceMatchingCallback(_hidManager, gamepadWasAdded, (void*)self);
     IOHIDManagerRegisterDeviceRemovalCallback(_hidManager, gamepadWasRemoved, (void*)self);
     IOHIDManagerScheduleWithRunLoop(_hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    //    IOReturn tIOReturn = IOHIDManagerOpen(hidManager, kIOHIDOptionsTypeNone);
+
+    // Uncomment line below to get device input details
+//    IOReturn tIOReturn = IOHIDManagerOpen(_hidManager, kIOHIDOptionsTypeNone);
     IOHIDManagerRegisterInputValueCallback(_hidManager, gamepadAction, (void*)self);
 }
 
