@@ -40,7 +40,6 @@ NS_ENUM(NSUInteger, MachineType)
 {
     ZXSpectrum              *_machine;
     ConfigViewController    *_configViewController;
-    NSPopover               *_configPopover;
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *preferences;
 }
@@ -52,6 +51,7 @@ NS_ENUM(NSUInteger, MachineType)
     _configPopover = [NSPopover new];
     _configPopover.contentViewController = _configViewController;
     _configPopover.behavior = NSPopoverBehaviorTransient;
+    _configPopover.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
 
     preferences = [NSUserDefaults standardUserDefaults];
     
@@ -149,6 +149,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine flagsChanged:event];
 }
 
+#pragma mark - 
 - (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture
 {
     _emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;

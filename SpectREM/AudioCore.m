@@ -16,6 +16,7 @@
 
 @interface AudioCore ()
 {
+@public
     int             samplesPerFrame;
     UInt32          formatBytesPerFrame;
     UInt32          formatChannelsPerFrame;
@@ -33,13 +34,13 @@
     unsigned char	AYRegisters[eAY_MAX_REGISTERS];
     unsigned char	currentAYRegister;
     signed short	AYVolumes[16];
-    signed int		channelOutput[3];
     unsigned int	channelOutputCount;
+    signed int		channelOutput[3];
     bool			envelopeHolding;
     bool			envelopeHold;
     bool			envelopeAlt;
     bool			envelope;
-    unsigned int	ettackEndVol;
+    unsigned int	attackEndVol;
 }
 
 // Reference to the machine using the audio core
@@ -77,9 +78,9 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
 - (void)dealloc
 {
     NSLog(@"Deallocating AudioCore");
-    AUGraphStop(_graph);
-    AUGraphUninitialize(_graph);
-    AUGraphClose(_graph);
+    CheckError(AUGraphStop(_graph), "AUGraphStop");
+    CheckError(AUGraphUninitialize(_graph), "AUGraphUninitilize");
+    CheckError(AUGraphClose(_graph), "AUGraphClose");
 }
 
 - (instancetype)initWithSampleRate:(int)sampleRate framesPerSecond:(float)fps emulationQueue:queue machine:(ZXSpectrum *)machine
@@ -202,7 +203,238 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
     }
 }
 
-#pragma mark - C Functions
+#pragma mark - AY Chip
+
+- (void)setAYRegister:(unsigned char)reg
+{
+    if (reg < eAY_MAX_REGISTERS)
+    {
+        currentAYRegister = reg;
+    }
+}
+
+- (void)writeAYData:(unsigned char)data
+{
+    switch (currentAYRegister) {
+        case eAYREGISTER_A_FINE:
+        case eAYREGISTER_B_FINE:
+        case eAYREGISTER_C_FINE:
+        case eAYREGISTER_ENABLE:
+        case eAYREGISTER_E_FINE:
+        case eAYREGISTER_E_COARSE:
+        case eAYREGISTER_PORT_A:
+        case eAYREGISTER_PORT_B:
+            break;
+
+        case eAYREGISTER_A_COARSE:
+        case eAYREGISTER_B_COARSE:
+        case eAYREGISTER_C_COARSE:
+            data &= 0x0f;
+            break;
+            
+        case eAYREGISTER_E_SHAPE:
+            envelopeHolding = NO;
+            envelopeStep = 15;
+            data &= 0x0f;
+            
+            // Set the end volume
+            attackEndVol = (data & eENVFLAG_ATTACK) != 0 ? 15 : 0;
+            
+            // If we are not continuous then we hold but with alternate set if attack = 0
+            if ((data & eENVFLAG_CONTINUE) == 0)
+            {
+                envelopeHold = YES;
+                envelopeAlt = (data & eENVFLAG_ATTACK) ? YES: NO;
+            }
+            else
+            {
+                envelopeHold = (data & eENVFLAG_HOLD) ? YES : NO;
+                envelopeAlt = (data & eENVFLAG_ALTERNATE) ? YES : NO;
+            }
+            break;
+            
+        case eAYREGISTER_NOISEPER:
+        case eAYREGISTER_A_VOL:
+        case eAYREGISTER_B_VOL:
+        case eAYREGISTER_C_VOL:
+            data &= 0x1f;
+            break;
+            
+        default:
+            break;
+    }
+    
+    AYRegisters[ currentAYRegister ] = data;
+}
+
+- (unsigned char)readAYData
+{
+    return AYRegisters[ currentAYRegister ];
+}
+
+- (unsigned int)getNoiseFrequency
+{
+    int freq = AYRegisters[ eAYREGISTER_NOISEPER ];
+    
+    // A 0 is assumed to be 1
+    if (freq == 0)
+    {
+        freq = 1;
+    }
+    
+    return freq;
+}
+
+unsigned int getChannelFrequency(int c, void* ac)
+{
+    AudioCore *audioCore = (__bridge AudioCore *)ac;
+    
+    int freq = audioCore->AYRegisters[ (c << 1) + eAYREGISTER_A_FINE ] | (audioCore->AYRegisters[ (c << 1) + eAYREGISTER_A_COARSE] << 8);
+    
+    if (freq == 0)
+    {
+        freq = 1;
+    }
+    
+    return freq;
+}
+
+unsigned int getEnvelopePeriod(void* ac)
+{
+    AudioCore *audioCore = (__bridge AudioCore *)ac;
+    return (audioCore->AYRegisters[ eAYREGISTER_E_FINE ] | (audioCore->AYRegisters[ eAYREGISTER_E_COARSE] << 8));
+}
+
+- (void)updateAY:(int)audioSteps
+{
+    while (audioSteps != 0)
+    {
+        // Process the envelope
+        if (!envelopeHolding)
+        {
+            envelopeCount++;
+            
+            if ( envelopeCount >= getEnvelopePeriod((__bridge void*)self))
+            {
+                // Go through the step
+                envelopeCount = 0;
+                envelopeStep--;
+                
+                // Step on?
+                if (envelopeStep < 0)
+                {
+                    // Reset
+                    envelopeStep = 15;
+                    
+                    // Do we need to flip our attack
+                    if ( envelopeAlt )
+                    {
+                        attackEndVol ^= 15;
+                    }
+                    
+                    // Should we hold here
+                    if (envelopeHold)
+                    {
+                        envelopeHolding = true;
+                    }
+                }
+            }
+        }
+        
+        // Process the noise (only if one is enabled - remember the enable flag is /enable)
+        if ((AYRegisters[eAYREGISTER_ENABLE] & 0x38) != 0x38)
+        {
+            noiseCount++;
+            
+            if (noiseCount >= [self getNoiseFrequency])
+            {
+                noiseCount = 0;
+                
+                // Is the output going to flip
+                if (((random & 1) ^ ((random >> 1) & 1)) == 1)
+                {
+                    // Yes
+                    AYOutput ^= (1 << 3);
+                }
+                
+                // Now the doc says 'The Random Number Generator of the 8910 is a 17-bit shift register. The input to the shift register is bit0 XOR bit3 (bit0 is the output)'
+                random = (((random & 1) ^ ((random >> 3) & 1)) << 16) | ((random >> 1) & 0x1ffff);
+            }
+        }
+        
+        // Process the Tone frequency and mix the final output
+        for (int c = 0; c < 3; c++)
+        {
+            // Update the channel
+            AYChannelCount[c] += 2;
+            
+            // Get the frequency
+            if (AYChannelCount[c] >= getChannelFrequency(c, (__bridge void*)self))
+            {
+                // Reset and flip the output bit
+                AYChannelCount[c]  -= getChannelFrequency(c, (__bridge void*)self);
+                AYOutput ^= (1 << c);
+            }
+            
+            // If the enable bit is 0 for tone and/or noise then we need to handle the output, docs say disabled output (a 1 bit in the /enable) should write a hi value out
+            unsigned int tone_output = ((AYOutput >> c) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> c) & 1);
+            unsigned int noise_output = ((AYOutput >> 3) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> (c + 3)) & 1);
+            
+            if ((tone_output & noise_output) == 1)
+            {
+                int vol = AYRegisters[eAYREGISTER_A_VOL + c];
+                
+                // Fixed or Envelope?
+                if ((vol & 0x10) != 0)
+                {
+                    // This should be the envelope stuff
+                    vol = envelopeStep ^ attackEndVol;
+                }
+                
+                // Write out this data
+                channelOutput[c] += AYVolumes[vol];
+            }
+        }
+        
+        // Mark we have updated the audio some more
+        channelOutputCount++;
+        
+        audioSteps--;
+    }
+}
+
+- (signed int)getChannel0
+{
+    return channelOutput[0] / channelOutputCount;
+}
+
+- (signed int)getChannel1
+{
+    return channelOutput[1] / channelOutputCount;
+}
+
+- (signed int)getChannel2
+{
+    return channelOutput[2] / channelOutputCount;
+}
+
+//void reset()
+//{
+//    channelOutput[0] = 0;
+//    channelOutput[1] = 0;
+//    channelOutput[2] = 0;
+//    channelOutputCount = 0;
+//}
+
+- (void)reset
+{
+    channelOutput[0] = 0;
+    channelOutput[1] = 0;
+    channelOutput[2] = 0;
+    channelOutputCount = 0;
+}
+
+#pragma mark - Audio Render
 
 static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionFlags,const AudioTimeStamp *inTimeStamp,UInt32 inBusNumber,UInt32 inNumberFrames,AudioBufferList *ioData)
 {

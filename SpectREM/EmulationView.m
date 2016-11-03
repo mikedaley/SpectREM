@@ -20,6 +20,7 @@
     if (self)
     {
         self.wantsLayer = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configPopoverClosed:) name:NSPopoverDidCloseNotification object: NULL];
     }
     
     return self;
@@ -56,16 +57,32 @@
 
 - (void)updateButtonWithMouseLocation:(NSPoint)point
 {
-//    EmulationViewController *emulationViewController = (EmulationViewController *)[self.window contentViewController];
+    EmulationViewController *emulationViewController = (EmulationViewController *)[self.window contentViewController];
     
-    CGFloat x = fabs(NSMaxX(self.window.contentView.bounds) - point.x);
-    CGFloat y = fabs(NSMinY(self.window.contentView.bounds) - point.y);
+    CGFloat x = fabs(NSMaxX(self.configButton.frame) - (self.configButton.bounds.size.width / 2) - point.x);
+    CGFloat y = fabs(NSMaxY(self.configButton.frame) - (self.configButton.bounds.size.height / 2) - point.y);
+    float distance = hypotf(x, y);
     
-    CGFloat distance = MAX(0, MAX(x, y) - 50);
-    
-    CGFloat intensity = 0.3 / 50.0 * (distance - 100);
-    
-    _configButton.alphaValue = MAX(1.0 - intensity, 0.3);
+    if (![emulationViewController.configPopover isShown])
+    {
+        if (distance > 50)
+        {
+            [_configButton.animator setAlphaValue:0.3];
+        }
+        else
+        {
+            [_configButton.animator setAlphaValue:1.0];
+        }
+    }
+    else
+    {
+        _configButton.alphaValue = 1.0;
+    }
+}
+
+- (void)configPopoverClosed:(NSNotification *)notification
+{
+    [self updateButtonWithMouseLocation:self.window.mouseLocationOutsideOfEventStream];
 }
 
 @end

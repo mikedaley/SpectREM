@@ -38,11 +38,6 @@
     [self setupObservers];
 }
 
-- (void)didMoveToView:(SKView *)view
-{
-
-}
-
 #pragma mark - Observers
 
 - (void)setupObservers

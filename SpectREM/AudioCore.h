@@ -43,6 +43,8 @@ typedef NS_ENUM(NSUInteger, ENVELOPE_FLAGS)
 };
 
 @interface AudioCore : NSObject
+{
+}
 
 @property (assign) float volume;
 @property (assign) double lowPassFilter;
@@ -62,7 +64,10 @@ typedef NS_ENUM(NSUInteger, ENVELOPE_FLAGS)
 - (void)writeAYData:(unsigned char)data;
 - (unsigned char)readAYData;
 - (void)updateAY:(int)audioSteps;
-
-
+- (signed int)getChannel0;
+- (signed int)getChannel1;
+- (signed int)getChannel2;
+- (void)reset;
 - (void)stop;
+
 @end

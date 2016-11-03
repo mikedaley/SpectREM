@@ -98,7 +98,6 @@
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * emuDisplayBytesPerPx;
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
-        emuCurrentDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
 
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
 
@@ -154,7 +153,7 @@
         
         count -= tsCPU;
         
-        [self updateAudioWithTStates:tsCPU];
+        updateAudioWithTStates(tsCPU, (__bridge void *)self);
         
         if (core->GetTStates() >= tsPerFrame )
         {
@@ -179,6 +178,7 @@
             self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                  size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
                                               flipped:YES];
+            self.texture.filteringMode = SKTextureFilteringLinear;
             
             CFRelease(dataRef);
             
@@ -194,38 +194,44 @@
 
 #pragma mark - Audio
 
-- (void)updateAudioWithTStates:(int)numberTs
+static void updateAudioWithTStates(int numberTs, void *m)
 {
+    ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
+    
     // Loop over each tState so that the necessary audio samples can be generated
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output
-        double beeperLevel = audioEar;
+        double beeperLevel = machine->audioEar;
+        
+//        [machine.audioCore updateAY:1];
+//        beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
+//        [machine.audioCore reset];
         
         // If we have done more cycles now than the audio step counter, generate a new sample
-        if (audioTsCounter++ >= audioTsStepCounter)
+        if (machine->audioTsCounter++ >= machine->audioTsStepCounter)
         {
             // Quantize the value loaded into the audio buffer e.g. if cycles = 19 and step size is 18.2
             // 0.2 of the beeper value goes into this sample and 0.8 goes into the next sample
-            double delta1 = fabs(audioTsStepCounter - (audioTsCounter - 1));
+            double delta1 = fabs(machine->audioTsStepCounter - (machine->audioTsCounter - 1));
             double delta2 = (1 - delta1);
             
             // Quantize for the current sample
-            audioBeeperValue += (beeperLevel * delta1);
+            machine->audioBeeperValue += (beeperLevel * delta1);
             
             // Load the buffer with the sample for both left and right channels
-            self.audioBuffer[ audioBufferIndex++ ] = (int16_t)(audioBeeperValue * 512);
-            self.audioBuffer[ audioBufferIndex++ ] = (int16_t)(audioBeeperValue * 512);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 512);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 512);
             
             // Quantize for the next sample
-            audioBeeperValue = (beeperLevel * delta2);
+            machine->audioBeeperValue = (beeperLevel * delta2);
             
             // Increment the step counter so that the next sample will be taken after another 18.2 T-States
-            audioTsStepCounter += audioTsStep;
+            machine->audioTsStepCounter += machine->audioTsStep;
         }
         else
         {
-            audioBeeperValue += beeperLevel;
+            machine->audioBeeperValue += beeperLevel;
         }
     }
 }
@@ -311,7 +317,11 @@ static unsigned char coreIORead(unsigned short address, void *m)
         
         return floatingBus(m);
     }
-    
+//    else if ((address & 0xc002) == 0xc000)
+//    {
+//        return [machine.audioCore readAYData];
+//    }
+
     // Default return value
     __block int result = 0xff;
     
@@ -391,6 +401,16 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->audioMic = (data & 0x08) >> 3;
         machine->borderColour = data & 0x07;
     }
+    
+//    if((address & 0xc002) == 0xc000)
+//    {
+//        [machine.audioCore setAYRegister:(data & 0x0f)];
+//    }
+//    else if ((address & 0xc002) == 0x8000)
+//    {
+//        [machine.audioCore writeAYData:data];
+//    }
+
 }
 
 static void coreMemoryContention(unsigned short address, unsigned int tstates, void *m)

@@ -83,6 +83,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 
 @interface ZXSpectrum : NSObject <KeyboardEventProtocol>
 {
+@public
     // Main RAM and ROM for the 48k and 128k
     unsigned char *memory;
     unsigned char *rom;
@@ -126,7 +127,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 
     // Image buffer array buffer, its length and current index into the buffer used when drawing
     unsigned char *emuDisplayBuffer;
-    unsigned char *emuCurrentDisplayBuffer;
     unsigned int emuDisplayBufferLength;
     unsigned int emuDisplayBufferIndex;
     
