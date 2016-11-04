@@ -69,7 +69,24 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
 
 #pragma mark - Static
 
-static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618f, 0.0847f, 0.1369f, 0.1691f, 0.2647f, 0.3527f, 0.4499f, 0.5704f, 0.6873f, 0.8482f, 1.0000f};
+static float fAYVolBase[] = {
+    0.0000,
+    0.0079,
+    0.0141,
+    0.0202,
+    0.0299,
+    0.0404,
+    0.0580,
+    0.0773,
+    0.1107,
+    0.1485,
+    0.2109,
+    0.2812,
+    0.4007,
+    0.5351,
+    0.7583,
+    1.0000
+};
 
 #pragma mark - Implementation
 
@@ -96,7 +113,7 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
         // Generate AY volumes
         for (int i = 0; i < 16; i++)
         {
-            AYVolumes[i] = (signed short)(fAYVolBase[i] * 512);
+            AYVolumes[i] = (signed short)(fAYVolBase[i] * 32);
         }
     
         CheckError(NewAUGraph(&_graph), "NewAUGraph");

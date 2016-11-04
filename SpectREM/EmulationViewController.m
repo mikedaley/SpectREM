@@ -47,6 +47,8 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    
     _configViewController = [ConfigViewController new];
     _configPopover = [NSPopover new];
     _configPopover.contentViewController = _configViewController;

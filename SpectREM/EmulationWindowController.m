@@ -17,9 +17,7 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-    [self.window center];
     [self.window setAcceptsMouseMovedEvents:YES];
-
 }
 
 @end

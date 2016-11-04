@@ -119,6 +119,7 @@
                                            framesPerSecond:fps
                                             emulationQueue:self.emulationQueue
                                                    machine:self];
+        [self.audioCore reset];
         
         [self setupObservers];
     }
@@ -204,15 +205,21 @@ static void updateAudioWithTStates(int numberTs, void *m)
         // Grab the current state of the audio ear output
         double beeperLevel = machine->audioEar;
 
+#ifdef AY
+        machine->audioAYTStates++;
+        if (machine->audioAYTStates >= 32)
+        {
+            [machine.audioCore updateAY:1];
+            beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
+            [machine.audioCore endFrame];
+            machine->audioAYTStates -= 32;
+            
+        }
+#endif
+        
         // If we have done more cycles now than the audio step counter, generate a new sample
         if (machine->audioTsCounter++ >= machine->audioTsStepCounter)
         {
-#ifdef AY
-            [machine.audioCore updateAY:18];
-            beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
-            [machine.audioCore endFrame];
-#endif
-
             // Quantize the value loaded into the audio buffer e.g. if cycles = 19 and step size is 18.2
             // 0.2 of the beeper value goes into this sample and 0.8 goes into the next sample
             double delta1 = fabs(machine->audioTsStepCounter - (machine->audioTsCounter - 1));

@@ -61,7 +61,7 @@
         frameCounter = 0;
                 
         tsPerFrame = 70908;
-        tsToOrigin = 14361;
+        tsToOrigin = 14368;
         tsPerLine = 228;
         tsTopBorder = 56 * tsPerLine;
         tsVerticalBlank = 7 * tsPerLine;
@@ -121,7 +121,8 @@
                                                framesPerSecond:fps
                                                 emulationQueue:self.emulationQueue
                                                        machine:self];
-        
+        [self.audioCore reset];
+
         [self setupObservers];
     }
     return self;
@@ -207,17 +208,22 @@ static void updateAudioWithTStates(int numberTs, void *m)
     {
         // Grab the current state of the audio ear output
         double beeperLevel = machine->audioEar;
-        
+    
+#ifdef AY
+        machine->audioAYTStates++;
+        if (machine->audioAYTStates >= 32)
+        {
+            [machine.audioCore updateAY:1];
+            beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
+            [machine.audioCore endFrame];
+            machine->audioAYTStates -= 32;
+            
+        }
+#endif
+
         // If we have done more cycles now than the audio step counter, generate a new sample
         if (machine->audioTsCounter++ >= machine->audioTsStepCounter)
         {
-
-#ifdef AY
-            [machine.audioCore updateAY:18];
-            beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
-            [machine.audioCore endFrame];
-#endif
-
             // Quantize the value loaded into the audio buffer e.g. if cycles = 19 and step size is 18.2
             // 0.2 of the beeper value goes into this sample and 0.8 goes into the next sample
             double delta1 = fabs(machine->audioTsStepCounter - (machine->audioTsCounter - 1));
@@ -351,6 +357,11 @@ static unsigned char coreIORead(unsigned short address, void *m)
         }
     }
     
+    if (address == 0xfffd)
+    {
+        return [machine.audioCore readAYData];
+    }
+    
     // If the address does not belong to the ULA then return the floating bus value
     if (address & 0x01)
     {
@@ -362,10 +373,6 @@ static unsigned char coreIORead(unsigned short address, void *m)
         }
         
         return floatingBus(m);
-    }
-    else if ((address & 0xc002) == 0xc000)
-    {
-        return [machine.audioCore readAYData];
     }
     
     // Default return value

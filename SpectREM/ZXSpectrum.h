@@ -14,7 +14,7 @@
 
 #pragma mark - Constants
 
-//#define AY 1
+#define AY 1
 
 static int const kDisplayBorder = 1;
 static int const kDisplayPaper = 2;
@@ -158,6 +158,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     double          audioTsStepCounter;
     double          audioTsStep;
     int             audioBufferSize;
+    int             audioAYTStates;
     
     EventType       event;
     
