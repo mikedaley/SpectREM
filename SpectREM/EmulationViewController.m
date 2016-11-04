@@ -175,6 +175,7 @@ NS_ENUM(NSUInteger, MachineType)
 {
     dispatch_sync(_machine.emulationQueue, ^{
         [self.view.window setTitle:@"SpectREM"];
+        [_machine.audioCore reset];
         [_machine reset];
     });
 }

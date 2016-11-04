@@ -203,14 +203,16 @@ static void updateAudioWithTStates(int numberTs, void *m)
     {
         // Grab the current state of the audio ear output
         double beeperLevel = machine->audioEar;
-        
-//        [machine.audioCore updateAY:1];
-//        beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
-//        [machine.audioCore reset];
-        
+
         // If we have done more cycles now than the audio step counter, generate a new sample
         if (machine->audioTsCounter++ >= machine->audioTsStepCounter)
         {
+#ifdef AY
+            [machine.audioCore updateAY:18];
+            beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
+            [machine.audioCore endFrame];
+#endif
+
             // Quantize the value loaded into the audio buffer e.g. if cycles = 19 and step size is 18.2
             // 0.2 of the beeper value goes into this sample and 0.8 goes into the next sample
             double delta1 = fabs(machine->audioTsStepCounter - (machine->audioTsCounter - 1));
@@ -220,8 +222,8 @@ static void updateAudioWithTStates(int numberTs, void *m)
             machine->audioBeeperValue += (beeperLevel * delta1);
             
             // Load the buffer with the sample for both left and right channels
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 512);
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 512);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 256);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 256);
             
             // Quantize for the next sample
             machine->audioBeeperValue = (beeperLevel * delta2);
@@ -317,10 +319,10 @@ static unsigned char coreIORead(unsigned short address, void *m)
         
         return floatingBus(m);
     }
-//    else if ((address & 0xc002) == 0xc000)
-//    {
-//        return [machine.audioCore readAYData];
-//    }
+    else if ((address & 0xc002) == 0xc000)
+    {
+        return [machine.audioCore readAYData];
+    }
 
     // Default return value
     __block int result = 0xff;
@@ -401,15 +403,14 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->audioMic = (data & 0x08) >> 3;
         machine->borderColour = data & 0x07;
     }
-    
-//    if((address & 0xc002) == 0xc000)
-//    {
-//        [machine.audioCore setAYRegister:(data & 0x0f)];
-//    }
-//    else if ((address & 0xc002) == 0x8000)
-//    {
-//        [machine.audioCore writeAYData:data];
-//    }
+    else if((address & 0xc002) == 0xc000)
+    {
+        [machine.audioCore setAYRegister:(data & 0x0f)];
+    }
+    else if ((address & 0xc002) == 0x8000)
+    {
+        [machine.audioCore writeAYData:data];
+    }
 
 }
 

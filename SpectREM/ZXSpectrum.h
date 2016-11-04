@@ -14,6 +14,8 @@
 
 #pragma mark - Constants
 
+//#define AY 1
+
 static int const kDisplayBorder = 1;
 static int const kDisplayPaper = 2;
 static int const kDisplayRetrace = 3;

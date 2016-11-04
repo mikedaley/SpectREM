@@ -96,7 +96,7 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
         // Generate AY volumes
         for (int i = 0; i < 16; i++)
         {
-            AYVolumes[i] = (signed short)(fAYVolBase[i] * 8192);
+            AYVolumes[i] = (signed short)(fAYVolBase[i] * 512);
         }
     
         CheckError(NewAUGraph(&_graph), "NewAUGraph");
@@ -244,7 +244,7 @@ static float fAYVolBase[] = {0.0000f, 0.0137f, 0.0205f, 0.0291f, 0.0423f, 0.0618
             if ((data & eENVFLAG_CONTINUE) == 0)
             {
                 envelopeHold = YES;
-                envelopeAlt = (data & eENVFLAG_ATTACK) ? YES: NO;
+                envelopeAlt = (data & eENVFLAG_ATTACK) ? NO: YES;
             }
             else
             {
@@ -307,100 +307,96 @@ unsigned int getEnvelopePeriod(void* ac)
 
 - (void)updateAY:(int)audioSteps
 {
-    while (audioSteps != 0)
+    // Process the envelope
+    if (!envelopeHolding)
     {
-        // Process the envelope
-        if (!envelopeHolding)
+        envelopeCount++;
+        
+        if ( envelopeCount >= getEnvelopePeriod((__bridge void*)self))
         {
-            envelopeCount++;
+            // Go through the step
+            envelopeCount = 0;
+            envelopeStep--;
             
-            if ( envelopeCount >= getEnvelopePeriod((__bridge void*)self))
+            // Step on?
+            if (envelopeStep < 0)
             {
-                // Go through the step
-                envelopeCount = 0;
-                envelopeStep--;
+                // Reset
+                envelopeStep = 15;
                 
-                // Step on?
-                if (envelopeStep < 0)
+                // Do we need to flip our attack
+                if ( envelopeAlt )
                 {
-                    // Reset
-                    envelopeStep = 15;
-                    
-                    // Do we need to flip our attack
-                    if ( envelopeAlt )
-                    {
-                        attackEndVol ^= 15;
-                    }
-                    
-                    // Should we hold here
-                    if (envelopeHold)
-                    {
-                        envelopeHolding = true;
-                    }
+                    attackEndVol ^= 15;
+                }
+                
+                // Should we hold here
+                if (envelopeHold)
+                {
+                    envelopeHolding = true;
                 }
             }
         }
-        
-        // Process the noise (only if one is enabled - remember the enable flag is /enable)
-        if ((AYRegisters[eAYREGISTER_ENABLE] & 0x38) != 0x38)
-        {
-            noiseCount++;
-            
-            if (noiseCount >= [self getNoiseFrequency])
-            {
-                noiseCount = 0;
-                
-                // Is the output going to flip
-                if (((random & 1) ^ ((random >> 1) & 1)) == 1)
-                {
-                    // Yes
-                    AYOutput ^= (1 << 3);
-                }
-                
-                // Now the doc says 'The Random Number Generator of the 8910 is a 17-bit shift register. The input to the shift register is bit0 XOR bit3 (bit0 is the output)'
-                random = (((random & 1) ^ ((random >> 3) & 1)) << 16) | ((random >> 1) & 0x1ffff);
-            }
-        }
-        
-        // Process the Tone frequency and mix the final output
-        for (int c = 0; c < 3; c++)
-        {
-            // Update the channel
-            AYChannelCount[c] += 2;
-            
-            // Get the frequency
-            if (AYChannelCount[c] >= getChannelFrequency(c, (__bridge void*)self))
-            {
-                // Reset and flip the output bit
-                AYChannelCount[c]  -= getChannelFrequency(c, (__bridge void*)self);
-                AYOutput ^= (1 << c);
-            }
-            
-            // If the enable bit is 0 for tone and/or noise then we need to handle the output, docs say disabled output (a 1 bit in the /enable) should write a hi value out
-            unsigned int tone_output = ((AYOutput >> c) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> c) & 1);
-            unsigned int noise_output = ((AYOutput >> 3) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> (c + 3)) & 1);
-            
-            if ((tone_output & noise_output) == 1)
-            {
-                int vol = AYRegisters[eAYREGISTER_A_VOL + c];
-                
-                // Fixed or Envelope?
-                if ((vol & 0x10) != 0)
-                {
-                    // This should be the envelope stuff
-                    vol = envelopeStep ^ attackEndVol;
-                }
-                
-                // Write out this data
-                channelOutput[c] += AYVolumes[vol];
-            }
-        }
-        
-        // Mark we have updated the audio some more
-        channelOutputCount++;
-        
-        audioSteps--;
     }
+    
+    // Process the noise (only if one is enabled - remember the enable flag is /enable)
+    if ((AYRegisters[eAYREGISTER_ENABLE] & 0x38) != 0x38)
+    {
+        noiseCount++;
+        
+        if (noiseCount >= [self getNoiseFrequency])
+        {
+            noiseCount = 0;
+            
+            // Is the output going to flip
+            if (((random & 1) ^ ((random >> 1) & 1)) == 1)
+            {
+                // Yes
+                AYOutput ^= (1 << 3);
+            }
+            
+            // Now the doc says 'The Random Number Generator of the 8910 is a 17-bit shift register. The input to the shift register is bit0 XOR bit3 (bit0 is the output)'
+            random = (((random & 1) ^ ((random >> 3) & 1)) << 16) | ((random >> 1) & 0x1ffff);
+        }
+    }
+    
+    // Process the Tone frequency and mix the final output
+    for (int c = 0; c < 3; c++)
+    {
+        // Update the channel
+        AYChannelCount[c] += 2;
+        
+        // Get the frequency
+        if (AYChannelCount[c] >= getChannelFrequency(c, (__bridge void*)self))
+        {
+            // Reset and flip the output bit
+            AYChannelCount[c]  -= getChannelFrequency(c, (__bridge void*)self);
+            AYOutput ^= (1 << c);
+        }
+        
+        // If the enable bit is 0 for tone and/or noise then we need to handle the output, docs say disabled output (a 1 bit in the /enable) should write a hi value out
+        unsigned int tone_output = ((AYOutput >> c) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> c) & 1);
+        unsigned int noise_output = ((AYOutput >> 3) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> (c + 3)) & 1);
+        
+        if ((tone_output & noise_output) == 1)
+        {
+            int vol = AYRegisters[eAYREGISTER_A_VOL + c];
+            
+            // Fixed or Envelope?
+            if ((vol & 0x10) != 0)
+            {
+                // This should be the envelope stuff
+                vol = envelopeStep ^ attackEndVol;
+            }
+            
+            // Write out this data
+            channelOutput[c] += AYVolumes[vol];
+        }
+    }
+    
+    // Mark we have updated the audio some more
+    channelOutputCount++;
+
 }
 
 - (signed int)getChannel0
@@ -418,20 +414,35 @@ unsigned int getEnvelopePeriod(void* ac)
     return channelOutput[2] / channelOutputCount;
 }
 
-//void reset()
-//{
-//    channelOutput[0] = 0;
-//    channelOutput[1] = 0;
-//    channelOutput[2] = 0;
-//    channelOutputCount = 0;
-//}
-
-- (void)reset
+- (void)endFrame
 {
     channelOutput[0] = 0;
     channelOutput[1] = 0;
     channelOutput[2] = 0;
     channelOutputCount = 0;
+}
+
+- (void)reset
+{
+    AYOutput = 0;
+    random = 1;
+    channelOutputCount = 0;
+    channelOutput[0] = 0;
+    channelOutput[1] = 0;
+    channelOutput[2] = 0;
+    AYChannelCount[0] = 0;
+    AYChannelCount[1] = 0;
+    AYChannelCount[2] = 0;
+    noiseCount = 0;
+    envelopeCount = 0;
+    envelopeStep = 15;
+    envelopeHolding = NO;
+    
+    for (int i = 0; i < eAY_MAX_REGISTERS; i++)
+    {
+        [self setAYRegister:i];
+        [self writeAYData:0];
+    }
 }
 
 #pragma mark - Audio Render

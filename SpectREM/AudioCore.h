@@ -68,6 +68,7 @@ typedef NS_ENUM(NSUInteger, ENVELOPE_FLAGS)
 - (signed int)getChannel1;
 - (signed int)getChannel2;
 - (void)reset;
+- (void)endFrame;
 - (void)stop;
 
 @end
