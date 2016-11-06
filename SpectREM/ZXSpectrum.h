@@ -138,29 +138,30 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     float emuVScale;
     
     // Holds the current border colour as set by the ULA
-    int             borderColour;
+    int borderColour;
     
     // Tracks the number of tStates used for drawing the screen. This is compared with the number of tStates that have passed
     // in the current frame so that the right number of 8x1 screen chunks are drawn
-    int             emuDisplayTs;
+    int emuDisplayTs;
 
     // Used to track the flash phase
-    int             frameCounter;
+    int frameCounter;
     
     // Audio
-    double          audioBeeperValue;
-    int             audioEar;
-    int             audioMic;
-    int             audioSampleRate;
-    int             audioBufferIndex;
-    int             audioTStates;
-    int             audioTsCounter;
-    double          audioTsStepCounter;
-    double          audioTsStep;
-    int             audioBufferSize;
-    int             audioAYTStates;
+    double audioBeeperValue;
+    int audioEar;
+    int audioMic;
+    int audioSampleRate;
+    int audioBufferIndex;
+    int audioTStates;
+    int audioTsCounter;
+    double audioTsStepCounter;
+    double audioTsStep;
+    int audioBufferSize;
+    int audioAYTStates;
+    int audioAYTStatesStep;
     
-    EventType       event;
+    EventType event;
     
     unsigned char memoryContentionTable[80000];
     unsigned char ioContentionTable[80000];

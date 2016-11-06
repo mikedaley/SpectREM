@@ -83,6 +83,7 @@
     audioTsCounter = 0;
     audioTsStepCounter = 0;
     audioBeeperValue = 0;
+    [self.audioCore reset];
 }
 
 - (void)resetFrame

@@ -104,6 +104,7 @@
         audioBufferSize = (audioSampleRate / fps) * 6;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
+        audioAYTStatesStep = 32;
         
         currentROMPage = 0;
         currentRAMPage = 0;
@@ -207,19 +208,17 @@ static void updateAudioWithTStates(int numberTs, void *m)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output
-        double beeperLevel = machine->audioEar;
-    
-#ifdef AY
+        double beeperLevel = machine->audioEar * 384;
+        
         machine->audioAYTStates++;
-        if (machine->audioAYTStates >= 32)
+        if (machine->audioAYTStates >= machine->audioAYTStatesStep)
         {
             [machine.audioCore updateAY:1];
-            beeperLevel += [machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2];
+            beeperLevel += ([machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2]) * 256;
             [machine.audioCore endFrame];
-            machine->audioAYTStates -= 32;
+            machine->audioAYTStates -= machine->audioAYTStatesStep;
             
         }
-#endif
 
         // If we have done more cycles now than the audio step counter, generate a new sample
         if (machine->audioTsCounter++ >= machine->audioTsStepCounter)
@@ -233,8 +232,8 @@ static void updateAudioWithTStates(int numberTs, void *m)
             machine->audioBeeperValue += (beeperLevel * delta1);
             
             // Load the buffer with the sample for both left and right channels
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 256);
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue * 256);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue);
             
             // Quantize for the next sample
             machine->audioBeeperValue = (beeperLevel * delta2);
