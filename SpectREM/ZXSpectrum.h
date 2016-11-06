@@ -188,6 +188,9 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (weak) EmulationViewController *emulationViewController;
 @property (strong) SKTexture *texture;
 
+@property (strong) id imageRef;
+@property (assign) CGColorSpaceRef colorSpace;
+
 #pragma mark - Methods
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController;

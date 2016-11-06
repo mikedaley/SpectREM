@@ -29,6 +29,7 @@
 - (void)dealloc
 {
     NSLog(@"Deallocating ZXSpectrum128");
+    CGColorSpaceRelease(self.colorSpace);
     delete core;
     free (memory);
     free (rom);
@@ -89,6 +90,7 @@
         emuVScale = 1.0 / emuDisplayPxHeight;
         
         emuDisplayTs = 0;
+        self.colorSpace = CGColorSpaceCreateDeviceRGB();
         
         [self resetFrame];
         
@@ -181,12 +183,29 @@
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
+            CGDataProviderRef dataProviderRef = CGDataProviderCreateWithCFData(dataRef);
             
-            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
-                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
-                                              flipped:YES];
+            self.imageRef = CFBridgingRelease(CGImageCreate(emuDisplayPxWidth,
+                                                            emuDisplayPxHeight,
+                                                            emuDisplayBitsPerComponent,
+                                                            emuDisplayBitsPerPx,
+                                                            emuDisplayPxWidth * emuDisplayBytesPerPx,
+                                                            self.colorSpace,
+                                                            (CGBitmapInfo)kCGImageAlphaPremultipliedLast,
+                                                            dataProviderRef,
+                                                            nil,
+                                                            emuShouldInterpolate,
+                                                            kCGRenderingIntentDefault));
+            CGDataProviderRelease(dataProviderRef);
+            
+            //            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+            //                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
+            //                                              flipped:YES];
+            //            self.texture.filteringMode = SKTextureFilteringLinear;
             
             CFRelease(dataRef);
+            
+            self.texture = [SKTexture textureWithCGImage:(__bridge CGImageRef)self.imageRef];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.emulationViewController updateEmulationDisplayTextureWithImage:[SKTexture textureWithRect:textureRect
@@ -210,15 +229,15 @@ static void updateAudioWithTStates(int numberTs, void *m)
         // Grab the current state of the audio ear output
         double beeperLevel = machine->audioEar * 384;
         
-        machine->audioAYTStates++;
         if (machine->audioAYTStates >= machine->audioAYTStatesStep)
         {
             [machine.audioCore updateAY:1];
             beeperLevel += ([machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2]) * 256;
             [machine.audioCore endFrame];
             machine->audioAYTStates -= machine->audioAYTStatesStep;
-            
         }
+
+        machine->audioAYTStates++;
 
         // If we have done more cycles now than the audio step counter, generate a new sample
         if (machine->audioTsCounter++ >= machine->audioTsStepCounter)
