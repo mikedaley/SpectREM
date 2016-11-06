@@ -17,7 +17,7 @@
 
 }
 
-- (void)sceneDidLoad
+- (void)didMoveToView:(SKView *)view
 {
     self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
     self.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringLinear;
@@ -36,6 +36,11 @@
     self.emulationDisplaySprite.shader = _shader;
     
     [self setupObservers];
+}
+
+- (void)sceneDidLoad
+{
+
 }
 
 #pragma mark - Observers

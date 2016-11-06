@@ -176,29 +176,10 @@
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
-            CGDataProviderRef dataProviderRef = CGDataProviderCreateWithCFData(dataRef);
-            
-            self.imageRef = CFBridgingRelease(CGImageCreate(emuDisplayPxWidth,
-                                                            emuDisplayPxHeight,
-                                                            emuDisplayBitsPerComponent,
-                                                            emuDisplayBitsPerPx,
-                                                            emuDisplayPxWidth * emuDisplayBytesPerPx,
-                                                            self.colorSpace,
-                                                            (CGBitmapInfo)kCGImageAlphaPremultipliedLast,
-                                                            dataProviderRef,
-                                                            nil,
-                                                            emuShouldInterpolate,
-                                                            kCGRenderingIntentDefault));
-            CGDataProviderRelease(dataProviderRef);
-            
-            //            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
-            //                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
-            //                                              flipped:YES];
-            //            self.texture.filteringMode = SKTextureFilteringLinear;
-            
+            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
+                                              flipped:YES];
             CFRelease(dataRef);
-            
-            self.texture = [SKTexture textureWithCGImage:(__bridge CGImageRef)self.imageRef];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.emulationViewController updateEmulationDisplayTextureWithImage:[SKTexture textureWithRect:textureRect
