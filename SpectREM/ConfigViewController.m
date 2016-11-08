@@ -30,6 +30,9 @@
     [preferences removeObserver:self forKeyPath:@"soundVolume"];
     [preferences removeObserver:self forKeyPath:@"soundLowPassFilter"];
     [preferences removeObserver:self forKeyPath:@"soundHighPassFilter"];
+    [preferences removeObserver:self forKeyPath:@"AYChannel1"];
+    [preferences removeObserver:self forKeyPath:@"AYChannel2"];
+    [preferences removeObserver:self forKeyPath:@"AYChannel3"];
 
     [preferences removeObserver:self forKeyPath:@"currentMachineType"];
 }
@@ -53,6 +56,9 @@
         [preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannel1" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannel2" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannel3" options:NSKeyValueObservingOptionNew context:NULL];
         
         [preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
         
@@ -108,6 +114,15 @@
             return;
         }
     }
+
+    for (NSString *key in [self observableBoolKeys])
+    {
+        if ([keyPath isEqualToString:key] && [[self valueForKey:key] boolValue] != [change[NSKeyValueChangeNewKey] boolValue])
+        {
+            [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            return;
+        }
+    }
 }
 
 - (NSArray *)observableFloatKeys
@@ -131,6 +146,15 @@
 {
     return @[
              @"currentMachineType"
+             ];
+}
+
+- (NSArray *)observableBoolKeys
+{
+    return @[
+             @"AYChannel1",
+             @"AYChannel2",
+             @"AYChannel3"
              ];
 }
 

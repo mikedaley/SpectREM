@@ -24,6 +24,9 @@
 @property (assign) double soundVolume;
 @property (assign) double soundHighPassFilter;
 @property (assign) double soundLowPassFilter;
+@property (assign) bool AYChannel1;
+@property (assign) bool AYChannel2;
+@property (assign) bool AYChannel3;
 
 // Emulation Properties
 @property (assign) NSUInteger currentMachineType;

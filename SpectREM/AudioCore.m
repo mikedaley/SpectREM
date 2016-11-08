@@ -214,10 +214,6 @@ static float fAYVolBase[] = {
         AUGraphNodeInfo(_graph, _highPassNode, NULL, &filterUnit);
         AudioUnitSetParameter(filterUnit, 0, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
     }
-    else if ([keyPath isEqualToString:@"soundVolume"])
-    {
-        CheckError(AudioUnitSetParameter (_convert, kHALOutputParam_Volume, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] floatValue], 0), "AudioUnitSetProperty");
-    }
 }
 
 #pragma mark - AY Chip

@@ -43,10 +43,7 @@ typedef NS_ENUM(NSUInteger, ENVELOPE_FLAGS)
 };
 
 @interface AudioCore : NSObject
-{
-}
 
-@property (assign) float volume;
 @property (assign) double lowPassFilter;
 @property (assign) double highPassFilter;
 

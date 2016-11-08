@@ -28,5 +28,11 @@
 	<integer>0</integer>
 	<key>sceneScaleMode</key>
 	<integer>0</integer>
+	<key>AYChannel1</key>
+	<true/>
+	<key>AYChannel2</key>
+	<true/>
+	<key>AYChannel3</key>
+	<true/>
 </dict>
 </plist>

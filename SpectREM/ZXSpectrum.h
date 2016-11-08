@@ -8,9 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
+
 #import "KeyboardEventProtocol.h"
-#import "AudioCore.h"
 #import "EmulationViewController.h"
+#import "AudioCore.h"
 
 #pragma mark - Constants
 
@@ -26,6 +27,9 @@ static int const kBitmapSize = 6144;
 static int const emuDisplayBitsPerPx = 32;
 static int const emuDisplayBitsPerComponent = 8;
 static int const emuDisplayBytesPerPx = 4;
+
+static int const audioBeeperVolumeMultiplier = 384;
+static int const audioAYVolumeMultiplier = 256;
 
 // Memory and IO contention tables
 static unsigned char const contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
@@ -183,6 +187,10 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (assign) float soundVolume;
 @property (assign) double soundLowPassFilter;
 @property (assign) double soundHighPassFilter;
+@property (assign) BOOL AYChannel1;
+@property (assign) BOOL AYChannel2;
+@property (assign) BOOL AYChannel3;
+
 @property (strong) NSString *snapshotPath;
 
 @property (weak) EmulationViewController *emulationViewController;

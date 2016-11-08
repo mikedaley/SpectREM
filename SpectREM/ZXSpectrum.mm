@@ -8,6 +8,7 @@
 
 #import "ZXSpectrum.h"
 #import "KeyboardMatrix.h"
+#import "Z80Core.h"
 
 @interface ZXSpectrum ()
 
@@ -22,7 +23,10 @@
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
-    self = [super init];
+    if (self == [super init])
+    {
+        
+    }
     return self;
 }
 
@@ -143,16 +147,26 @@ void updateAudioWithTStates(int numberTs, void *m)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output
-        double beeperLevel = (machine->audioEar * 384) * machine.soundVolume;
+        double beeperLevel = (machine->audioEar * audioBeeperVolumeMultiplier) * machine.soundVolume;
         
         machine->audioAYTStates++;
         if (machine->audioAYTStates >= machine->audioAYTStatesStep)
         {
             [machine.audioCore updateAY:1];
-            beeperLevel += (([machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2]) * 256) * machine.soundVolume;
+            if (machine.AYChannel1)
+            {
+                beeperLevel += ([machine.audioCore getChannel0] * audioAYVolumeMultiplier) * machine.soundVolume;
+            }
+            if (machine.AYChannel2)
+            {
+                beeperLevel += ([machine.audioCore getChannel1] * audioAYVolumeMultiplier) * machine.soundVolume;
+            }
+            if (machine.AYChannel3)
+            {
+                beeperLevel += ([machine.audioCore getChannel2] * audioAYVolumeMultiplier) * machine.soundVolume;
+            }
             [machine.audioCore endFrame];
             machine->audioAYTStates -= machine->audioAYTStatesStep;
-            
         }
         
         // If we have done more cycles now than the audio step counter, generate a new sample

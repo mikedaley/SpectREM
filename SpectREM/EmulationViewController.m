@@ -63,7 +63,7 @@ NS_ENUM(NSUInteger, MachineType)
     preferences = [NSUserDefaults standardUserDefaults];
     
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    _emulationScene.scaleMode = [[preferences valueForKey:@"sceneScaleMode"] unsignedIntegerValue];
+    _emulationScene.scaleMode = [[preferences valueForKey:@"sceneScaleMode"] integerValue];
 
     // Ensure that the view is the same size as the parent window before presenting the scene. Not
     // doing this causes the view to appear breifly at the size it is defined in the story board.
@@ -99,6 +99,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:@"soundHighPassFilter" toObject:_configViewController withKeyPath:@"soundHighPassFilter" options:nil];
     [_machine bind:@"soundLowPassFilter" toObject:_configViewController withKeyPath:@"soundLowPassFilter" options:nil];
     [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
+    [_machine bind:@"AYChannel1" toObject:_configViewController withKeyPath:@"AYChannel1" options:nil];
+    [_machine bind:@"AYChannel2" toObject:_configViewController withKeyPath:@"AYChannel2" options:nil];
+    [_machine bind:@"AYChannel3" toObject:_configViewController withKeyPath:@"AYChannel3" options:nil];
 }
 
 - (void)setupLocalBindings
@@ -120,6 +123,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine unbind:@"soundHighPassFilter"];
     [_machine unbind:@"soundLowPassFilter"];
     [_machine unbind:@"soundVolume"];
+    [_machine unbind:@"AYChannel1"];
+    [_machine unbind:@"AYChannel2"];
+    [_machine unbind:@"AYChannel3"];
 }
 
 #pragma mark - Observers

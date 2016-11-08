@@ -156,6 +156,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel2" id="1XC-o1-XXg"/>
+                                </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="khe-XE-aNn">
                                 <rect key="frame" x="229" y="11" width="18" height="20"/>
@@ -164,6 +167,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel3" id="7dQ-m0-yhE"/>
+                                </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T87-ca-7nM">
                                 <rect key="frame" x="113" y="11" width="18" height="20"/>
@@ -172,6 +178,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel1" id="X1r-4v-z47"/>
+                                </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MHB-qC-wrz">
                                 <rect key="frame" x="219" y="31" width="38" height="14"/>

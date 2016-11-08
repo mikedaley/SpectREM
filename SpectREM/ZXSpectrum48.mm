@@ -172,10 +172,11 @@
             core->SignalInterrupt();
             
             // Adjust how much of the full texture is to be displayed based on the defined border width
-            CGRect textureRect = CGRectMake((32 - self.displayBorderWidth) * emuHScale,
-                                            (56 - self.displayBorderWidth) * emuVScale,
-                                            1.0 - ((32 - self.displayBorderWidth) * emuHScale + ((64 - self.displayBorderWidth) * emuHScale)),
-                                            1.0 - (((56 - self.displayBorderWidth) * emuVScale) * 2));
+            float borderWidth = self.displayBorderWidth - 0.5;
+            CGRect textureRect = CGRectMake((32 - borderWidth) * emuHScale,
+                                            (56 - borderWidth) * emuVScale,
+                                            1.0 - ((32 - borderWidth) * emuHScale + ((64 - borderWidth) * emuHScale)),
+                                            1.0 - (((56 - borderWidth) * emuVScale) * 2));
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);

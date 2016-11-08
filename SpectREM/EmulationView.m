@@ -38,13 +38,6 @@
     [self updateButtonWithMouseLocation:mouseLocation];    
 }
 
-- (void)drawRect:(NSRect)dirtyRect
-{
-    [super drawRect:dirtyRect];
-    
-    // Drawing code here.
-}
-
 - (void)mouseMoved:(NSEvent *)event
 {
     [super mouseMoved:event];
@@ -67,7 +60,7 @@
     {
         if (distance > 50)
         {
-            [_configButton.animator setAlphaValue:0.3];
+            [_configButton.animator setAlphaValue:0.25];
         }
         else
         {
