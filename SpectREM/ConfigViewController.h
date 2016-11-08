@@ -27,6 +27,8 @@
 
 // Emulation Properties
 @property (assign) NSUInteger currentMachineType;
+@property (strong) IBOutlet NSView *scrollDocView;
+@property (weak) IBOutlet NSScrollView *scrollView;
 
 - (void)resetPreferences;
 

@@ -156,7 +156,7 @@
         
         count -= tsCPU;
         
-        [self updateAudioWithTStates:tsCPU];
+        updateAudioWithTStates(tsCPU, (__bridge void*)self);
         
         if (core->GetTStates() >= tsPerFrame )
         {
@@ -188,44 +188,6 @@
             });
             
             frameCounter++;
-        }
-    }
-}
-
-#pragma mark - Audio
-
-- (void)updateAudioWithTStates:(int)numberTs
-{
-    // Loop over each tState so that the necessary audio samples can be generated
-    for(int i = 0; i < numberTs; i++)
-    {
-        // Grab the current state of the audio ear output
-        double beeperLevel = audioEar;
-        
-        // If we have done more cycles now than the audio step counter, generate a new sample
-        if (audioTsCounter++ >= audioTsStepCounter)
-        {
-            // Quantize the value loaded into the audio buffer e.g. if cycles = 19 and step size is 18.2
-            // 0.2 of the beeper value goes into this sample and 0.8 goes into the next sample
-            double delta1 = fabs(audioTsStepCounter - (audioTsCounter - 1));
-            double delta2 = (1 - delta1);
-            
-            // Quantize for the current sample
-            audioBeeperValue += (beeperLevel * delta1);
-            
-            // Load the buffer with the sample for both left and right channels
-            self.audioBuffer[ audioBufferIndex++ ] = (int16_t)(audioBeeperValue * 512);
-            self.audioBuffer[ audioBufferIndex++ ] = (int16_t)(audioBeeperValue * 512);
-            
-            // Quantize for the next sample
-            audioBeeperValue = (beeperLevel * delta2);
-            
-            // Increment the step counter so that the next sample will be taken after another 18.2 T-States
-            audioTsStepCounter += audioTsStep;
-        }
-        else
-        {
-            audioBeeperValue += beeperLevel;
         }
     }
 }

@@ -66,6 +66,11 @@
     return self;
 }
 
+- (void)viewWillAppear
+{
+    self.scrollView.documentView = self.scrollDocView;
+}
+
 - (void)resetPreferences
 {
     NSWindow *window = [[NSApplication sharedApplication] mainWindow];

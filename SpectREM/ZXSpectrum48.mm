@@ -194,56 +194,6 @@
     }
 }
 
-#pragma mark - Audio
-
-static void updateAudioWithTStates(int numberTs, void *m)
-{
-    ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
-    
-    // Loop over each tState so that the necessary audio samples can be generated
-    for(int i = 0; i < numberTs; i++)
-    {
-        // Grab the current state of the audio ear output
-        double beeperLevel = machine->audioEar * 384;
-        
-        machine->audioAYTStates++;
-        if (machine->audioAYTStates >= machine->audioAYTStatesStep)
-        {
-            [machine.audioCore updateAY:1];
-            beeperLevel += ([machine.audioCore getChannel0] + [machine.audioCore getChannel1] + [machine.audioCore getChannel2]) * 256;
-            [machine.audioCore endFrame];
-            machine->audioAYTStates -= machine->audioAYTStatesStep;
-            
-        }
-        
-        // If we have done more cycles now than the audio step counter, generate a new sample
-        if (machine->audioTsCounter++ >= machine->audioTsStepCounter)
-        {
-            // Quantize the value loaded into the audio buffer e.g. if cycles = 19 and step size is 18.2
-            // 0.2 of the beeper value goes into this sample and 0.8 goes into the next sample
-            double delta1 = fabs(machine->audioTsStepCounter - (machine->audioTsCounter - 1));
-            double delta2 = (1 - delta1);
-            
-            // Quantize for the current sample
-            machine->audioBeeperValue += (beeperLevel * delta1);
-            
-            // Load the buffer with the sample for both left and right channels
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue);
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue);
-            
-            // Quantize for the next sample
-            machine->audioBeeperValue = (beeperLevel * delta2);
-            
-            // Increment the step counter so that the next sample will be taken after another 18.2 T-States
-            machine->audioTsStepCounter += machine->audioTsStep;
-        }
-        else
-        {
-            machine->audioBeeperValue += beeperLevel;
-        }
-    }
-}
-
 #pragma mark - Memory & IO methods
 
 static unsigned char coreMemoryRead(unsigned short address, void *m)

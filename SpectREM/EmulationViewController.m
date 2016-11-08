@@ -65,8 +65,6 @@ NS_ENUM(NSUInteger, MachineType)
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     _emulationScene.scaleMode = [[preferences valueForKey:@"sceneScaleMode"] unsignedIntegerValue];
 
-    [self setupViewConstraints];
-    
     // Ensure that the view is the same size as the parent window before presenting the scene. Not
     // doing this causes the view to appear breifly at the size it is defined in the story board.
     self.skView.frame = self.skView.window.frame;
@@ -139,13 +137,6 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)viewDidLayout
 {
     [_emulationScene sceneViewSizeChanged:self.view.frame.size];
-}
-
-#pragma mark - Constraints
-
-- (void)setupViewConstraints
-{
-//    [self.view setTranslatesAutoresizingMaskIntoConstraints:NO];
 }
 
 #pragma mark - Keyboard events

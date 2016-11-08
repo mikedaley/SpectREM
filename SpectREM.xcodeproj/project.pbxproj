@@ -19,6 +19,7 @@
 		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
+		ED804FD31DD1D014004B6F31 /* ConfigClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD21DD1D014004B6F31 /* ConfigClipView.m */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
@@ -65,6 +66,8 @@
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		ED619C851DC0BC97004A60CA /* CALayer+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+Actions.h"; sourceTree = "<group>"; };
 		ED619C861DC0BC97004A60CA /* CALayer+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Actions.m"; sourceTree = "<group>"; };
+		ED804FD11DD1D014004B6F31 /* ConfigClipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigClipView.h; sourceTree = "<group>"; };
+		ED804FD21DD1D014004B6F31 /* ConfigClipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigClipView.m; sourceTree = "<group>"; };
 		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +162,8 @@
 				99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */,
 				99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */,
 				99A265271DB6A8E300E7DFB3 /* ConfigViewController.xib */,
+				ED804FD11DD1D014004B6F31 /* ConfigClipView.h */,
+				ED804FD21DD1D014004B6F31 /* ConfigClipView.m */,
 			);
 			name = "Config View Controller";
 			sourceTree = "<group>";
@@ -443,6 +448,7 @@
 				995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */,
 				99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */,
 				EDF3A4EC1DB0D7C700511BAF /* AudioQueue.m in Sources */,
+				ED804FD31DD1D014004B6F31 /* ConfigClipView.m in Sources */,
 				EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */,
 				EDF3A4F01DB0D7D000511BAF /* ZXSpectrum48.mm in Sources */,
 				99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */,

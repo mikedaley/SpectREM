@@ -211,5 +211,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 - (void)buildContentionTable;
 
 void updateScreenWithTStates(int numberTs, void *m);
+void updateAudioWithTStates(int tsCPU, void *m);
 
 @end
