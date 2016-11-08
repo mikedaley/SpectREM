@@ -121,7 +121,8 @@
                                                framesPerSecond:fps
                                                 emulationQueue:self.emulationQueue
                                                        machine:self];
-        
+        [self.audioCore reset];
+
         [self setupObservers];
     }
     return self;

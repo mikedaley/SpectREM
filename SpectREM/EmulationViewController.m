@@ -44,10 +44,15 @@ NS_ENUM(NSUInteger, MachineType)
     NSUserDefaults          *preferences;
 }
 
+- (void)dealloc
+{
+    NSLog(@"Deallocating EmulationViewController");
+    [self removeBindings];
+    [_configViewController removeObserver:self forKeyPath:@"currentMachineType"];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
     
     _configViewController = [ConfigViewController new];
     _configPopover = [NSPopover new];
@@ -141,7 +146,6 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)setupViewConstraints
 {
 //    [self.view setTranslatesAutoresizingMaskIntoConstraints:NO];
-
 }
 
 #pragma mark - Keyboard events

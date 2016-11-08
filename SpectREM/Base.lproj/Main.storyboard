@@ -194,9 +194,9 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="EmulationViewController" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="EmulationView">
+                    <view key="view" id="m2S-Jp-Qdl" customClass="EmulationView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="256"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="unB-Bl-LlC">
                                 <rect key="frame" x="279" y="9" width="32" height="32"/>

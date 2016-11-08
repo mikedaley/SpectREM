@@ -14,6 +14,26 @@
 
 @implementation ConfigViewController
 
+- (void)dealloc
+{
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    [preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
+    [preferences removeObserver:self forKeyPath:@"displayCurve"];
+    [preferences removeObserver:self forKeyPath:@"displaySaturation"];
+    [preferences removeObserver:self forKeyPath:@"displayContrast"];
+    [preferences removeObserver:self forKeyPath:@"displayBrightness"];
+    [preferences removeObserver:self forKeyPath:@"displayShowVignette"];
+    [preferences removeObserver:self forKeyPath:@"displayVignetteX"];
+    [preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
+    [preferences removeObserver:self forKeyPath:@"displayVignetteY"];
+
+    [preferences removeObserver:self forKeyPath:@"soundVolume"];
+    [preferences removeObserver:self forKeyPath:@"soundLowPassFilter"];
+    [preferences removeObserver:self forKeyPath:@"soundHighPassFilter"];
+
+    [preferences removeObserver:self forKeyPath:@"currentMachineType"];
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -43,7 +63,6 @@
         NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
         [defaultsController setInitialValues:userDefaults];
     }
-    
     return self;
 }
 
@@ -55,7 +74,8 @@
     alert.informativeText = @"Are you sure you want to reset your preferences?";
     [alert addButtonWithTitle:@"No"];
     [alert addButtonWithTitle:@"Yes"];
-    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode)
+    {
         if (returnCode == NSAlertSecondButtonReturn)
         {
             NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
@@ -66,7 +86,8 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-    for (NSString *key in [self observableFloatKeys]) {
+    for (NSString *key in [self observableFloatKeys])
+    {
         if ([keyPath isEqualToString:key] && [[self valueForKey:key] floatValue] != [change[NSKeyValueChangeNewKey] floatValue])
         {
             [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
@@ -74,7 +95,8 @@
         }
     }
 
-    for (NSString *key in [self observableUIntKeys]) {
+    for (NSString *key in [self observableUIntKeys])
+    {
         if ([keyPath isEqualToString:key] && [[self valueForKey:key] unsignedIntegerValue] != [change[NSKeyValueChangeNewKey] unsignedIntegerValue])
         {
             [self setValue:change[NSKeyValueChangeNewKey] forKey:key];

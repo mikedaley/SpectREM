@@ -17,30 +17,42 @@
 
 }
 
-- (void)didMoveToView:(SKView *)view
+- (void)dealloc
 {
-    self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
-    self.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringLinear;
-    
-    _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
-    _shader.attributes = @[
-                           [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_contrast" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_show_vignette" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
-                           ];
-    self.emulationDisplaySprite.shader = _shader;
-    
-    [self setupObservers];
+    NSLog(@"Deallocating Scene");
+    [self removeObserver:self forKeyPath:@"displayCurve"];
+    [self removeObserver:self forKeyPath:@"displaySaturation"];
+    [self removeObserver:self forKeyPath:@"displayContrast"];
+    [self removeObserver:self forKeyPath:@"displayBrightness"];
+    [self removeObserver:self forKeyPath:@"displayShowVignette"];
+    [self removeObserver:self forKeyPath:@"displayVignetteX"];
+    [self removeObserver:self forKeyPath:@"displayVignetteY"];
+    [self removeObserver:self forKeyPath:@"screenHeight"];
 }
 
-- (void)sceneDidLoad
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
-
+    if (self = [super initWithCoder:aDecoder])
+    {
+        // Only need to run this code once, regardless of how many times the scene is presented to the user.
+        self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
+        self.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringLinear;
+        
+        _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
+        _shader.attributes = @[
+                               [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_contrast" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_show_vignette" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
+                               ];
+        self.emulationDisplaySprite.shader = _shader;
+        [self setupObservers];
+    }
+    return self;
 }
 
 #pragma mark - Observers
