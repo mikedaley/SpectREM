@@ -191,6 +191,8 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (assign) BOOL AYChannel2;
 @property (assign) BOOL AYChannel3;
 
+@property (strong) NSString *corePC;
+
 @property (strong) NSString *snapshotPath;
 
 @property (weak) EmulationViewController *emulationViewController;

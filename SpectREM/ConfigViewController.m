@@ -8,10 +8,6 @@
 
 #import "ConfigViewController.h"
 
-@interface ConfigViewController ()
-
-@end
-
 @implementation ConfigViewController
 
 - (void)dealloc

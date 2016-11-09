@@ -635,4 +635,11 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+#pragma mark - Core getters
+
+- (NSString *)corePC
+{
+    return [NSString stringWithFormat:@"0x%04x", core->GetRegister(CZ80Core::eREG_PC)];
+}
+
 @end

@@ -203,19 +203,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="598" height="256"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" misplaced="YES" id="unB-Bl-LlC">
-                                <rect key="frame" x="566" y="0.0" width="32" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="gear" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="XdC-XW-2cP">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system" size="26"/>
-                                    <string key="keyEquivalent">C</string>
-                                    <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="configButtonPressed:" target="rPt-NT-nkU" id="w8U-91-FKH"/>
-                                </connections>
-                            </button>
                             <visualEffectView wantsLayer="YES" appearanceType="vibrantDark" misplaced="YES" blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
                                 <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
@@ -245,9 +232,6 @@
                                 </subviews>
                             </visualEffectView>
                         </subviews>
-                        <connections>
-                            <outlet property="configButton" destination="unB-Bl-LlC" id="sex-Za-99U"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="configEffectsView" destination="qoy-KM-Y5t" id="kgF-7C-d2k"/>
@@ -260,7 +244,4 @@
             <point key="canvasLocation" x="75" y="692"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="gear" width="128" height="128"/>
-    </resources>
 </document>

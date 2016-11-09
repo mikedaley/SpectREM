@@ -11,6 +11,7 @@
 #import "EmulationViewController.h"
 #import "EmulationScene.h"
 #import "ConfigViewController.h"
+#import "CPUViewController.h"
 #import "EmulationView.h"
 
 #import "ZXSpectrum48.h"
@@ -26,22 +27,19 @@ NS_ENUM(NSUInteger, MachineType)
     eZXSpectrumSE
 };
 
-#pragma mark - Private Interface
-
-@interface EmulationViewController () <NSWindowDelegate>
-
-@property (strong) EmulationScene *emulationScene;
-
-@end
-
 #pragma mark - Implementation
 
 @implementation EmulationViewController
 {
     ZXSpectrum              *_machine;
+    EmulationScene          *_emulationScene;
     ConfigViewController    *_configViewController;
+    CPUViewController       *_cpuViewController;
+    
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *preferences;
+    dispatch_queue_t        _UITimerQueue;
+    dispatch_source_t       _UITimer;
 }
 
 - (void)dealloc
@@ -49,15 +47,18 @@ NS_ENUM(NSUInteger, MachineType)
     NSLog(@"Deallocating EmulationViewController");
     [self removeBindings];
     [_configViewController removeObserver:self forKeyPath:@"currentMachineType"];
+    dispatch_source_cancel(_UITimer);
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
+    _cpuViewController = [CPUViewController new];
+
     _configViewController = [ConfigViewController new];
     [self.configEffectsView setFrameOrigin:(NSPoint){-self.configEffectsView.frame.size.width, 0}];
-    self.configScrollView.documentView = _configViewController.view;
-
+    self.configScrollView.documentView = _cpuViewController.view;
+    
     preferences = [NSUserDefaults standardUserDefaults];
     
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
@@ -70,15 +71,34 @@ NS_ENUM(NSUInteger, MachineType)
     // Present the scene
     [self.skView presentScene:_emulationScene];
 
-    [self setupLocalBindings];
+    [self setupLocalObservers];
     [self setupMachineBindings];
     [self setupSceneBindings];
     [self switchToMachine:_configViewController.currentMachineType];
+    [self setupGamepad];
+    [self setupCPUViewTimer];
     
     [_machine start];
-    
-    [self setupGamepad];
 }
+
+#pragma mark - CPU View Timer
+
+- (void)setupCPUViewTimer
+{
+    _UITimerQueue = dispatch_queue_create("UITimerQueue", nil);
+    _UITimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _UITimerQueue);
+    dispatch_source_set_timer(_UITimer, DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC, 0);
+    
+    dispatch_source_set_event_handler(_UITimer, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _cpuViewController.corePC = _machine.corePC;
+        });
+    });
+    
+    dispatch_resume(_UITimer);
+}
+
+#pragma mark - Bindings/Observers
 
 - (void)setupSceneBindings
 {
@@ -102,7 +122,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:@"AYChannel3" toObject:_configViewController withKeyPath:@"AYChannel3" options:nil];
 }
 
-- (void)setupLocalBindings
+- (void)setupLocalObservers
 {
     [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
 }
@@ -160,14 +180,14 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)setAspectFitMode:(id)sender
 {
-    self.emulationScene.scaleMode = SKSceneScaleModeAspectFit;
+    _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
     [preferences setValue:@(SKSceneScaleModeAspectFit) forKey:@"sceneScaleMode"];
     [preferences synchronize];
 }
 
 - (IBAction)setFillMode:(id)sender
 {
-    self.emulationScene.scaleMode = SKSceneScaleModeFill;
+    _emulationScene.scaleMode = SKSceneScaleModeFill;
     [preferences setValue:@(SKSceneScaleModeFill) forKey:@"sceneScaleMode"];
     [preferences synchronize];
 }
@@ -183,8 +203,6 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)configButtonPressed:(id)sender
 {
-//    CGRect rect = [(NSButton *)sender frame];
-//    [_configPopover showRelativeToRect:rect ofView:self.view preferredEdge:NSRectEdgeMaxY];
     NSRect configFrame = self.configEffectsView.frame;
     if (configFrame.origin.x == -configFrame.size.width)
     {
@@ -224,20 +242,6 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)resetPreferences:(id)sender
 {
     [_configViewController resetPreferences];
-}
-
-- (IBAction)switchMachine:(id)sender
-{
-    NSAlert *alert = [NSAlert new];
-    alert.informativeText = @"Are you sure you want to switch machines?";
-    [alert addButtonWithTitle:@"No"];
-    [alert addButtonWithTitle:@"Yes"];
-    [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
-        if (returnCode == NSAlertSecondButtonReturn)
-        {
-            [self switchToMachine:[sender tag]];
-        }
-    }];
 }
 
 - (void)switchToMachine:(NSUInteger)machineType

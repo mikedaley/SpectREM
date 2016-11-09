@@ -7,7 +7,6 @@
 //
 
 #import "EmulationScene.h"
-#import "CALayer+Actions.h"
 
 #pragma mark - Implementation
 
@@ -34,7 +33,6 @@
 {
     if (self = [super initWithCoder:aDecoder])
     {
-        // Only need to run this code once, regardless of how many times the scene is presented to the user.
         self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
         self.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringLinear;
 
@@ -99,7 +97,6 @@
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_y"];
     }
-
 }
 
 #pragma mark - Keyboard Events
