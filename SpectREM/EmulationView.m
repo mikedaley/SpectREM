@@ -11,7 +11,7 @@
 
 @implementation EmulationView
 {
-
+    BOOL isFaded;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -21,6 +21,7 @@
     {
         self.wantsLayer = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configPopoverClosed:) name:NSPopoverDidCloseNotification object: NULL];
+        isFaded = YES;
     }
     
     return self;
@@ -56,21 +57,28 @@
     CGFloat y = fabs(NSMaxY(self.configButton.frame) - (self.configButton.bounds.size.height / 2) - point.y);
     float distance = hypotf(x, y);
     
-    if (![emulationViewController.configPopover isShown])
-    {
-        if (distance > 50)
+//    if (![emulationViewController.configPopover isShown])
+//    {
+        NSRect configButtonFrame = _configButton.frame;
+        if (distance > 50 && !isFaded)
         {
+            isFaded = YES;
             [_configButton.animator setAlphaValue:0.25];
+            configButtonFrame.origin.y = -32;
+            [_configButton.animator setFrame:configButtonFrame];
         }
-        else
+        else if (distance <= 50 && isFaded)
         {
+            isFaded = NO;
             [_configButton.animator setAlphaValue:1.0];
+            configButtonFrame.origin.y = 0;
+            [_configButton.animator setFrame:configButtonFrame];
         }
-    }
-    else
-    {
-        _configButton.alphaValue = 1.0;
-    }
+//    }
+//    else
+//    {
+//        _configButton.alphaValue = 1.0;
+//    }
 }
 
 - (void)configPopoverClosed:(NSNotification *)notification

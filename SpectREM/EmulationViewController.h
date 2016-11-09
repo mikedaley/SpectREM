@@ -15,7 +15,8 @@
 @interface EmulationViewController : NSViewController
 
 @property (assign) IBOutlet EmulationView *skView;
-@property (strong) NSPopover *configPopover;
+@property (weak) IBOutlet NSVisualEffectView *configEffectsView;
+@property (weak) IBOutlet NSScrollView *configScrollView;
 
 #pragma mark - Methods
 

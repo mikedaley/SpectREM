@@ -55,10 +55,8 @@ NS_ENUM(NSUInteger, MachineType)
     [super viewDidLoad];
     
     _configViewController = [ConfigViewController new];
-    _configPopover = [NSPopover new];
-    _configPopover.contentViewController = _configViewController;
-    _configPopover.behavior = NSPopoverBehaviorTransient;
-    _configPopover.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+    [self.configEffectsView setFrameOrigin:(NSPoint){-self.configEffectsView.frame.size.width, 0}];
+    self.configScrollView.documentView = _configViewController.view;
 
     preferences = [NSUserDefaults standardUserDefaults];
     
@@ -185,8 +183,18 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)configButtonPressed:(id)sender
 {
-    CGRect rect = [(NSButton *)sender frame];
-    [_configPopover showRelativeToRect:rect ofView:self.view preferredEdge:NSRectEdgeMaxY];
+//    CGRect rect = [(NSButton *)sender frame];
+//    [_configPopover showRelativeToRect:rect ofView:self.view preferredEdge:NSRectEdgeMaxY];
+    NSRect configFrame = self.configEffectsView.frame;
+    if (configFrame.origin.x == -configFrame.size.width)
+    {
+        configFrame.origin.x = 0;
+    }
+    else
+    {
+        configFrame.origin.x = -configFrame.size.width;
+    }
+    [self.configEffectsView.animator setFrame:configFrame];
 }
 
 - (IBAction)openFile:(id)sender

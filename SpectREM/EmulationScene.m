@@ -37,7 +37,7 @@
         // Only need to run this code once, regardless of how many times the scene is presented to the user.
         self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
         self.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringLinear;
-        
+
         _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
         _shader.attributes = @[
                                [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
