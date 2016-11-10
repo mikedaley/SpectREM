@@ -117,12 +117,12 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:@"soundHighPassFilter" toObject:_configViewController withKeyPath:@"soundHighPassFilter" options:nil];
     [_machine bind:@"soundLowPassFilter" toObject:_configViewController withKeyPath:@"soundLowPassFilter" options:nil];
     [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
-    [_machine bind:@"AYChannel1" toObject:_configViewController withKeyPath:@"AYChannel1" options:nil];
-    [_machine bind:@"AYChannel2" toObject:_configViewController withKeyPath:@"AYChannel2" options:nil];
-    [_machine bind:@"AYChannel3" toObject:_configViewController withKeyPath:@"AYChannel3" options:nil];
-    [_machine bind:@"AYChannel1Balance" toObject:_configViewController withKeyPath:@"AYChannel1Balance" options:nil];
-    [_machine bind:@"AYChannel2Balance" toObject:_configViewController withKeyPath:@"AYChannel2Balance" options:nil];
-    [_machine bind:@"AYChannel3Balance" toObject:_configViewController withKeyPath:@"AYChannel3Balance" options:nil];
+    [_machine bind:@"AYChannelA" toObject:_configViewController withKeyPath:@"AYChannelA" options:nil];
+    [_machine bind:@"AYChannelB" toObject:_configViewController withKeyPath:@"AYChannelB" options:nil];
+    [_machine bind:@"AYChannelC" toObject:_configViewController withKeyPath:@"AYChannelC" options:nil];
+    [_machine bind:@"AYChannelABalance" toObject:_configViewController withKeyPath:@"AYChannelABalance" options:nil];
+    [_machine bind:@"AYChannelBBalance" toObject:_configViewController withKeyPath:@"AYChannelBBalance" options:nil];
+    [_machine bind:@"AYChannelCBalance" toObject:_configViewController withKeyPath:@"AYChannelCBalance" options:nil];
 }
 
 - (void)setupLocalObservers
@@ -144,9 +144,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine unbind:@"soundHighPassFilter"];
     [_machine unbind:@"soundLowPassFilter"];
     [_machine unbind:@"soundVolume"];
-    [_machine unbind:@"AYChannel1"];
-    [_machine unbind:@"AYChannel2"];
-    [_machine unbind:@"AYChannel3"];
+    [_machine unbind:@"AYChannelA"];
+    [_machine unbind:@"AYChannelB"];
+    [_machine unbind:@"AYChannelC"];
 }
 
 #pragma mark - Observers

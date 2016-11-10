@@ -10,9 +10,6 @@
 #import "ZXSpectrumSE.h"
 #import "Z80Core.h"
 
-#define kBorderDrawingOffset 10
-#define kPaperDrawingOffset 16
-
 #pragma mark - Extension Interface
 
 @interface ZXSpectrumSE ()
@@ -98,7 +95,7 @@
         [self resetFrame];
         
         // Setup the display buffer and length used to store the output from the emulator
-        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * emuDisplayBytesPerPx;
+        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * cEmuDisplayBytesPerPx;
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
 
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
@@ -169,12 +166,11 @@
             core->ResetTStates( tsPerFrame );
             core->SignalInterrupt();
             
-            // Adjust how much of the full texture is to be displayed based on the defined border width
             float borderWidth = self.displayBorderWidth - 0.5;
-            CGRect textureRect = CGRectMake((32 - borderWidth) * emuHScale,
-                                            (56 - borderWidth) * emuVScale,
-                                            1.0 - ((32 - borderWidth) * emuHScale + ((64 - borderWidth) * emuHScale)),
-                                            1.0 - (((56 - borderWidth) * emuVScale) * 2));
+            CGRect textureRect = CGRectMake((emuLeftBorderPx - borderWidth) * emuHScale,
+                                            (emuBottomBorderPx - borderWidth) * emuVScale,
+                                            1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
+                                            1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2));
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
@@ -209,7 +205,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     {
         return;
     }
-    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
+    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
     machine->memory[address] = data;
 }
 
@@ -271,7 +267,11 @@ static unsigned char coreIORead(unsigned short address, void *m)
         {
             return 0x0;
         }
-        
+        else if ((address & 0xc002) == 0xc000)
+        {
+            return [machine.audioCore readAYData];
+        }
+
         return floatingBus(m);
     }
     
@@ -348,7 +348,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
         
         machine->audioEar = (data & 0x10) >> 4;
         machine->audioMic = (data & 0x08) >> 3;
@@ -399,12 +399,12 @@ static unsigned char floatingBus(void *m)
         
         if (ulaValueType == ePixel)
         {
-            return machine->memory[kBitmapAddress + machine->emuTsLine[y] + x];
+            return machine->memory[cBitmapAddress + machine->emuTsLine[y] + x];
         }
         
         if (ulaValueType == eAttribute)
         {
-            return machine->memory[kBitmapAddress + kBitmapSize + ((y >> 3) << 5) + x];
+            return machine->memory[cBitmapAddress + cBitmapSize + ((y >> 3) << 5) + x];
         }
     }
     

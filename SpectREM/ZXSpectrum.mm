@@ -59,11 +59,6 @@
     [self doFrame];
 }
 
-- (void)pause
-{
-    
-}
-
 - (void)stop
 {
     [self removeObservers];
@@ -148,7 +143,7 @@ void updateAudioWithTStates(int numberTs, void *m)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output
-        double beeperLevelLeft = (machine->audioEar * audioBeeperVolumeMultiplier) * machine.soundVolume;
+        double beeperLevelLeft = (machine->audioEar * cAudioBeeperVolumeMultiplier) * machine.soundVolume;
         double beeperLevelRight = beeperLevelLeft;
         double leftMix = 0.5;
         double rightMix = 0.5;
@@ -157,59 +152,61 @@ void updateAudioWithTStates(int numberTs, void *m)
         if (machine->audioAYTStates >= machine->audioAYTStatesStep)
         {
             [machine.audioCore updateAY:1];
-            if (machine.AYChannel1)
+            if (machine.AYChannelA)
             {
-                if (machine.AYChannel1Balance > 0.5)
+                if (machine.AYChannelABalance > 0.5)
                 {
-                    leftMix = 1.0 - machine.AYChannel1Balance;
-                    rightMix = machine.AYChannel1Balance;
+                    leftMix = 1.0 - machine.AYChannelABalance;
+                    rightMix = machine.AYChannelABalance;
                 }
-                else if (machine.AYChannel1Balance < 0.5)
+                else if (machine.AYChannelABalance < 0.5)
                 {
-                    leftMix = 1.0 - (machine.AYChannel1Balance * 2);
-                    rightMix = 1.0 - (1.0 - machine.AYChannel1Balance);
+                    leftMix = 1.0 - (machine.AYChannelABalance * 2);
+                    rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
                 }
 
-                beeperLevelLeft += (([machine.audioCore getChannel0] * audioAYVolumeMultiplier) * machine.soundVolume) * leftMix;
-                beeperLevelRight += (([machine.audioCore getChannel0] * audioAYVolumeMultiplier) * machine.soundVolume) * rightMix;
+                beeperLevelLeft += [machine.audioCore getChannelA] * leftMix;
+                beeperLevelRight += [machine.audioCore getChannelA] * rightMix;
+            }
+            if (machine.AYChannelB)
+            {
+                leftMix = 0.5;
+                rightMix = 0.5;
+                if (machine.AYChannelBBalance > 0.5)
+                {
+                    leftMix = 1.0 - machine.AYChannelBBalance;
+                    rightMix = machine.AYChannelBBalance;
+                }
+                else if (machine.AYChannelBBalance < 0.5)
+                {
+                    leftMix = 1.0 - (machine.AYChannelBBalance * 2);
+                    rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
+                }
+                
+                beeperLevelLeft += [machine.audioCore getChannelB] * leftMix;
+                beeperLevelRight += [machine.audioCore getChannelB] * rightMix;
+            }
+            if (machine.AYChannelC)
+            {
+                leftMix = 0.5;
+                rightMix = 0.5;
+                if (machine.AYChannelCBalance > 0.5)
+                {
+                    leftMix = 1.0 - machine.AYChannelCBalance;
+                    rightMix = machine.AYChannelCBalance;
+                }
+                else if (machine.AYChannelCBalance < 0.5)
+                {
+                    leftMix = 1.0 - (machine.AYChannelCBalance * 2);
+                    rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
+                }
+                
+                beeperLevelLeft += [machine.audioCore getChannelC] * leftMix;
+                beeperLevelRight += [machine.audioCore getChannelC] * rightMix;
+            }
             
-            }
-            if (machine.AYChannel2)
-            {
-                leftMix = 0.5;
-                rightMix = 0.5;
-                if (machine.AYChannel2Balance > 0.5)
-                {
-                    leftMix = 1.0 - machine.AYChannel2Balance;
-                    rightMix = machine.AYChannel2Balance;
-                }
-                else if (machine.AYChannel2Balance < 0.5)
-                {
-                    leftMix = 1.0 - (machine.AYChannel2Balance * 2);
-                    rightMix = 1.0 - (1.0 - machine.AYChannel2Balance);
-                }
-                
-                beeperLevelLeft += (([machine.audioCore getChannel1] * audioAYVolumeMultiplier) * machine.soundVolume) * leftMix;
-                beeperLevelRight += (([machine.audioCore getChannel1] * audioAYVolumeMultiplier) * machine.soundVolume) * rightMix;
-            }
-            if (machine.AYChannel3)
-            {
-                leftMix = 0.5;
-                rightMix = 0.5;
-                if (machine.AYChannel3Balance > 0.5)
-                {
-                    leftMix = 1.0 - machine.AYChannel3Balance;
-                    rightMix = machine.AYChannel3Balance;
-                }
-                else if (machine.AYChannel3Balance < 0.5)
-                {
-                    leftMix = 1.0 - (machine.AYChannel3Balance * 2);
-                    rightMix = 1.0 - (1.0 - machine.AYChannel3Balance);
-                }
-                
-                beeperLevelLeft += (([machine.audioCore getChannel2] * audioAYVolumeMultiplier) * machine.soundVolume) * leftMix;
-                beeperLevelRight += (([machine.audioCore getChannel2] * audioAYVolumeMultiplier) * machine.soundVolume) * rightMix;
-            }
+            beeperLevelLeft = beeperLevelLeft * machine.soundVolume;
+            beeperLevelRight = beeperLevelRight * machine.soundVolume;
             
             [machine.audioCore endFrame];
             machine->audioAYTStates -= machine->audioAYTStatesStep;
@@ -228,8 +225,8 @@ void updateAudioWithTStates(int numberTs, void *m)
             machine->audioBeeperRight += (beeperLevelRight * delta1);
             
             // Load the buffer with the sample for both left and right channels
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperLeft);
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperRight);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (short)(machine->audioBeeperLeft);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (short)(machine->audioBeeperRight);
             
             // Quantize for the next sample
             machine->audioBeeperLeft = (beeperLevelLeft * delta2);
@@ -258,10 +255,10 @@ void updateScreenWithTStates(int numberTs, void *m)
         int ts = machine->emuDisplayTs % machine->tsPerLine;
         
         switch (machine->emuDisplayTsTable[line][ts]) {
-            case kDisplayRetrace:
+            case cDisplayRetrace:
                 break;
                 
-            case kDisplayBorder:
+            case cDisplayBorder:
                 for (int i = 0; i < 8; i++)
                 {
                     machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColour].r;
@@ -271,13 +268,13 @@ void updateScreenWithTStates(int numberTs, void *m)
                 }
                 break;
                 
-            case kDisplayPaper:
+            case cDisplayPaper:
             {
                 int y = line - (machine->pxVerticalBlank + machine->pxTopBorder);
                 int x = (ts >> 2) - 4;
                 
                 uint pixelAddress = machine->emuTsLine[y] + x;
-                uint attributeAddress = kBitmapSize + ((y >> 3) << 5) + x;
+                uint attributeAddress = cBitmapSize + ((y >> 3) << 5) + x;
                 
                 int pixelByte = machine->memory[(machine->displayPage * 16384) + pixelAddress];
                 int attributeByte = machine->memory[(machine->displayPage * 16384) + attributeAddress];
@@ -346,18 +343,18 @@ void updateScreenWithTStates(int numberTs, void *m)
         {
             if (line >= 0  && line < pxVerticalBlank)
             {
-                emuDisplayTsTable[line][ts] = kDisplayRetrace;
+                emuDisplayTsTable[line][ts] = cDisplayRetrace;
             }
             
             if (line >= pxVerticalBlank  && line < pxVerticalBlank + pxTopBorder)
             {
                 if (ts >= 176 && ts < tsPerLine)
                 {
-                    emuDisplayTsTable[line][ts] = kDisplayRetrace;
+                    emuDisplayTsTable[line][ts] = cDisplayRetrace;
                 }
                 else
                 {
-                    emuDisplayTsTable[line][ts] = kDisplayBorder;
+                    emuDisplayTsTable[line][ts] = cDisplayBorder;
                 }
             }
             
@@ -365,11 +362,11 @@ void updateScreenWithTStates(int numberTs, void *m)
             {
                 if (ts >= 176 && ts < tsPerLine)
                 {
-                    emuDisplayTsTable[line][ts] = kDisplayRetrace;
+                    emuDisplayTsTable[line][ts] = cDisplayRetrace;
                 }
                 else
                 {
-                    emuDisplayTsTable[line][ts] = kDisplayBorder;
+                    emuDisplayTsTable[line][ts] = cDisplayBorder;
                 }
             }
             
@@ -377,15 +374,15 @@ void updateScreenWithTStates(int numberTs, void *m)
             {
                 if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 176))
                 {
-                    emuDisplayTsTable[line][ts] = kDisplayBorder;
+                    emuDisplayTsTable[line][ts] = cDisplayBorder;
                 }
                 else if (ts >= 176 && ts < tsPerLine)
                 {
-                    emuDisplayTsTable[line][ts] = kDisplayRetrace;
+                    emuDisplayTsTable[line][ts] = cDisplayRetrace;
                 }
                 else
                 {
-                    emuDisplayTsTable[line][ts] = kDisplayPaper;
+                    emuDisplayTsTable[line][ts] = cDisplayPaper;
                 }
             }
         }

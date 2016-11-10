@@ -61,9 +61,9 @@ typedef NS_ENUM(NSUInteger, ENVELOPE_FLAGS)
 - (void)writeAYData:(unsigned char)data;
 - (unsigned char)readAYData;
 - (void)updateAY:(int)audioSteps;
-- (signed int)getChannel0;
-- (signed int)getChannel1;
-- (signed int)getChannel2;
+- (signed int)getChannelA;
+- (signed int)getChannelB;
+- (signed int)getChannelC;
 - (void)reset;
 - (void)endFrame;
 - (void)stop;

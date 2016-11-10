@@ -28,17 +28,17 @@
 	<integer>0</integer>
 	<key>sceneScaleMode</key>
 	<integer>0</integer>
-	<key>AYChannel1</key>
+	<key>AYChannelA</key>
 	<true/>
-	<key>AYChannel2</key>
+	<key>AYChannelB</key>
 	<true/>
-	<key>AYChannel3</key>
+	<key>AYChannelC</key>
 	<true/>
-	<key>AYChannel1Balance</key>
-	<integer>0</integer>
-	<key>AYChannel2Balance</key>
-	<integer>0</integer>
-	<key>AYChannel3Balance</key>
+	<key>AYChannelABalance</key>
+	<integer>1</integer>
+	<key>AYChannelBBalance</key>
+	<real>0.5</real>
+	<key>AYChannelCBalance</key>
 	<integer>0</integer>
 </dict>
 </plist>

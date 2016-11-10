@@ -19,9 +19,6 @@
 
 @end
 
-#define kBorderDrawingOffset 10 //10
-#define kPaperDrawingOffset 16   //16
-
 #pragma mark - Implementation
 
 @implementation ZXSpectrum128
@@ -95,7 +92,7 @@
         [self resetFrame];
         
         // Setup the display buffer and length used to store the output from the emulator
-        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * emuDisplayBytesPerPx;
+        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * cEmuDisplayBytesPerPx;
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
         
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
@@ -175,12 +172,11 @@
             core->ResetTStates( tsPerFrame );
             core->SignalInterrupt();
             
-            // Adjust how much of the full texture is to be displayed based on the defined border width
             float borderWidth = self.displayBorderWidth - 0.5;
-            CGRect textureRect = CGRectMake((32 - borderWidth) * emuHScale,
-                                            (56 - borderWidth) * emuVScale,
-                                            1.0 - ((32 - borderWidth) * emuHScale + ((64 - borderWidth) * emuHScale)),
-                                            1.0 - (((56 - borderWidth) * emuVScale) * 2));
+            CGRect textureRect = CGRectMake((emuLeftBorderPx - borderWidth) * emuHScale,
+                                            (emuBottomBorderPx - borderWidth) * emuVScale,
+                                            1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
+                                            1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2));
 
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
@@ -241,17 +237,17 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     }
     else if (page == 1)
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
         machine->memory[(5 * 16384) + address] = data;
     }
     else if (page == 2)
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
         machine->memory[(2 * 16384) + address] = data;
     }
     else if (page == 3)
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kPaperDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
         machine->memory[(machine->currentRAMPage * 16384) + address] = data;
     }
     
@@ -306,12 +302,7 @@ static unsigned char coreIORead(unsigned short address, void *m)
             machine->core->AddTStates(4);
         }
     }
-    
-    if (address == 0xfffd)
-    {
-        return [machine.audioCore readAYData];
-    }
-    
+        
     // If the address does not belong to the ULA then return the floating bus value
     if (address & 0x01)
     {
@@ -320,6 +311,10 @@ static unsigned char coreIORead(unsigned short address, void *m)
         if ((address & 0xff) == 0x1f)
         {
             return 0x0;
+        }
+        else if ((address & 0xc002) == 0xc000)
+        {
+            return [machine.audioCore readAYData];
         }
         
         return floatingBus(m);
@@ -399,7 +394,7 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
         
         machine->audioEar = (data & 0x10) >> 4;
         machine->audioMic = (data & 0x08) >> 3;
@@ -408,10 +403,10 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
     
     if ( (address & 0x8002) == 0 && !machine->disablePaging)
     {
-//        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
-//        {
-            updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + kBorderDrawingOffset, m);
-//        }
+        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
+        {
+            updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
+        }
     
         // This is the paging port
         machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
@@ -478,7 +473,7 @@ static unsigned char floatingBus(void *m)
         
         if (ulaValueType == eAttribute)
         {
-            return machine->memory[(machine->displayPage * 16384) + kBitmapSize + ((y >> 3) << 5) + x];
+            return machine->memory[(machine->displayPage * 16384) + cBitmapSize + ((y >> 3) << 5) + x];
         }
     }
     

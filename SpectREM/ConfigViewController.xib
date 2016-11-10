@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
         <capability name="box content view" minToolsVersion="7.0"/>
@@ -13,7 +13,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView misplaced="YES" id="Hz6-mo-xeY">
+        <customView wantsLayer="YES" misplaced="YES" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="236" height="527"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
@@ -248,7 +248,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="3" sliderType="linear" id="LIv-5S-af4"/>
                                 <connections>
-                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel1Balance" id="Oe7-7K-43c"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannelABalance" id="h3m-IL-D5h"/>
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" misplaced="YES" id="X6m-q1-am3">
@@ -256,7 +256,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="3" sliderType="linear" id="eBN-cr-QrI"/>
                                 <connections>
-                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel2Balance" id="wBd-bJ-0bq"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannelBBalance" id="wdd-ET-ezf"/>
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="xCI-SU-Vjs">
@@ -330,7 +330,7 @@
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
                                 <connections>
-                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel2" id="1XC-o1-XXg"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannelB" id="lbV-ry-g4M"/>
                                 </connections>
                             </button>
                             <button misplaced="YES" id="khe-XE-aNn">
@@ -341,7 +341,7 @@
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
                                 <connections>
-                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel3" id="7dQ-m0-yhE"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannelC" id="n41-7T-Tjb"/>
                                 </connections>
                             </button>
                             <button misplaced="YES" id="T87-ca-7nM">
@@ -352,7 +352,7 @@
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
                                 <connections>
-                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel1" id="X1r-4v-z47"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannelA" id="R2U-XL-wqe"/>
                                 </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="MHB-qC-wrz">
@@ -382,7 +382,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="3" sliderType="linear" id="Im4-og-Lhs"/>
                                 <connections>
-                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannel3Balance" id="jc8-U4-ES3"/>
+                                    <binding destination="ZJD-Fu-un9" name="value" keyPath="values.AYChannelCBalance" id="eeV-2g-TkL"/>
                                 </connections>
                             </slider>
                         </subviews>

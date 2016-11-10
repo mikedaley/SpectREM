@@ -26,12 +26,12 @@
     [preferences removeObserver:self forKeyPath:@"soundVolume"];
     [preferences removeObserver:self forKeyPath:@"soundLowPassFilter"];
     [preferences removeObserver:self forKeyPath:@"soundHighPassFilter"];
-    [preferences removeObserver:self forKeyPath:@"AYChannel1"];
-    [preferences removeObserver:self forKeyPath:@"AYChannel2"];
-    [preferences removeObserver:self forKeyPath:@"AYChannel3"];
-    [preferences removeObserver:self forKeyPath:@"AYChannel1Balance"];
-    [preferences removeObserver:self forKeyPath:@"AYChannel2Balance"];
-    [preferences removeObserver:self forKeyPath:@"AYChannel3Balance"];
+    [preferences removeObserver:self forKeyPath:@"AYChannelA"];
+    [preferences removeObserver:self forKeyPath:@"AYChannelB"];
+    [preferences removeObserver:self forKeyPath:@"AYChannelC"];
+    [preferences removeObserver:self forKeyPath:@"AYChannelABalance"];
+    [preferences removeObserver:self forKeyPath:@"AYChannelBBalance"];
+    [preferences removeObserver:self forKeyPath:@"AYChannelCBalance"];
 
     [preferences removeObserver:self forKeyPath:@"currentMachineType"];
 }
@@ -55,12 +55,12 @@
         [preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannel1" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannel2" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannel3" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannel1Balance" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannel2Balance" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannel3Balance" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannelA" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannelB" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannelC" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannelABalance" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannelBBalance" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"AYChannelCBalance" options:NSKeyValueObservingOptionNew context:NULL];
         
         [preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
         
@@ -136,9 +136,9 @@
              @"soundVolume",
              @"soundLowPassFilter",
              @"soundHighPassFilter",
-             @"AYChannel1Balance",
-             @"AYChannel2Balance",
-             @"AYChannel3Balance"
+             @"AYChannelABalance",
+             @"AYChannelBBalance",
+             @"AYChannelCBalance"
              ];
 }
 
@@ -152,9 +152,9 @@
 - (NSArray *)observableBoolKeys
 {
     return @[
-             @"AYChannel1",
-             @"AYChannel2",
-             @"AYChannel3"
+             @"AYChannelA",
+             @"AYChannelB",
+             @"AYChannelC"
              ];
 }
 

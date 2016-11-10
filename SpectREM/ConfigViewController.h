@@ -24,12 +24,12 @@
 @property (assign) double soundVolume;
 @property (assign) double soundHighPassFilter;
 @property (assign) double soundLowPassFilter;
-@property (assign) bool AYChannel1;
-@property (assign) bool AYChannel2;
-@property (assign) bool AYChannel3;
-@property (assign) float AYChannel1Balance;
-@property (assign) float AYChannel2Balance;
-@property (assign) float AYChannel3Balance;
+@property (assign) bool AYChannelA;
+@property (assign) bool AYChannelB;
+@property (assign) bool AYChannelC;
+@property (assign) float AYChannelABalance;
+@property (assign) float AYChannelBBalance;
+@property (assign) float AYChannelCBalance;
 
 // Emulation Properties
 @property (assign) NSUInteger currentMachineType;

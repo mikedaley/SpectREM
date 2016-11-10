@@ -17,19 +17,21 @@
 
 #define AY 1
 
-static int const kDisplayBorder = 1;
-static int const kDisplayPaper = 2;
-static int const kDisplayRetrace = 3;
+static int const cDisplayBorder = 1;
+static int const cDisplayPaper = 2;
+static int const cDisplayRetrace = 3;
 
-static int const kBitmapAddress = 16384;
-static int const kBitmapSize = 6144;
+static int const cBitmapAddress = 16384;
+static int const cBitmapSize = 6144;
 
-static int const emuDisplayBitsPerPx = 32;
-static int const emuDisplayBitsPerComponent = 8;
-static int const emuDisplayBytesPerPx = 4;
+static int const cEmuDisplayBitsPerPx = 32;
+static int const cEmuDisplayBitsPerComponent = 8;
+static int const cEmuDisplayBytesPerPx = 4;
 
-static int const audioBeeperVolumeMultiplier = 384;
-static int const audioAYVolumeMultiplier = 512;
+static int const cAudioBeeperVolumeMultiplier = 512;
+
+static int const cBorderDrawingOffset = 10;
+static int const cPaperDrawingOffset = 16;
 
 // Memory and IO contention tables
 static unsigned char const contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
@@ -176,7 +178,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 
 
 // Buffer used to hold the sound samples generated for each emulation frame
-@property (assign) int16_t *audioBuffer;
+@property (assign) short *audioBuffer;
 
 // Reference to the audio core instance
 @property (strong) AudioCore *audioCore;
@@ -188,12 +190,12 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (assign) float soundVolume;
 @property (assign) double soundLowPassFilter;
 @property (assign) double soundHighPassFilter;
-@property (assign) BOOL AYChannel1;
-@property (assign) BOOL AYChannel2;
-@property (assign) BOOL AYChannel3;
-@property (assign) float AYChannel1Balance;
-@property (assign) float AYChannel2Balance;
-@property (assign) float AYChannel3Balance;
+@property (assign) BOOL AYChannelA;
+@property (assign) BOOL AYChannelB;
+@property (assign) BOOL AYChannelC;
+@property (assign) float AYChannelABalance;
+@property (assign) float AYChannelBBalance;
+@property (assign) float AYChannelCBalance;
 
 @property (strong) NSString *corePC;
 
