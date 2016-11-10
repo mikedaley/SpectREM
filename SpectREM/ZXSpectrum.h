@@ -29,7 +29,7 @@ static int const emuDisplayBitsPerComponent = 8;
 static int const emuDisplayBytesPerPx = 4;
 
 static int const audioBeeperVolumeMultiplier = 384;
-static int const audioAYVolumeMultiplier = 256;
+static int const audioAYVolumeMultiplier = 512;
 
 // Memory and IO contention tables
 static unsigned char const contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
@@ -152,7 +152,8 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     int frameCounter;
     
     // Audio
-    double audioBeeperValue;
+    double audioBeeperLeft;
+    double audioBeeperRight;
     int audioEar;
     int audioMic;
     int audioSampleRate;
@@ -190,6 +191,9 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (assign) BOOL AYChannel1;
 @property (assign) BOOL AYChannel2;
 @property (assign) BOOL AYChannel3;
+@property (assign) float AYChannel1Balance;
+@property (assign) float AYChannel2Balance;
+@property (assign) float AYChannel3Balance;
 
 @property (strong) NSString *corePC;
 

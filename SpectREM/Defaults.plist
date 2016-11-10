@@ -34,5 +34,11 @@
 	<true/>
 	<key>AYChannel3</key>
 	<true/>
+	<key>AYChannel1Balance</key>
+	<integer>0</integer>
+	<key>AYChannel2Balance</key>
+	<integer>0</integer>
+	<key>AYChannel3Balance</key>
+	<integer>0</integer>
 </dict>
 </plist>

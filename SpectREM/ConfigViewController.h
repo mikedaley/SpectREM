@@ -27,6 +27,9 @@
 @property (assign) bool AYChannel1;
 @property (assign) bool AYChannel2;
 @property (assign) bool AYChannel3;
+@property (assign) float AYChannel1Balance;
+@property (assign) float AYChannel2Balance;
+@property (assign) float AYChannel3Balance;
 
 // Emulation Properties
 @property (assign) NSUInteger currentMachineType;

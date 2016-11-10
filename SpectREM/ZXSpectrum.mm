@@ -86,7 +86,8 @@
     audioBufferIndex = 0;
     audioTsCounter = 0;
     audioTsStepCounter = 0;
-    audioBeeperValue = 0;
+    audioBeeperLeft = 0;
+    audioBeeperRight = 0;
     [self.audioCore reset];
 }
 
@@ -105,36 +106,36 @@
 - (void)doFrame
 {
     dispatch_async(self.emulationQueue, ^
-                   {
-                       switch (event)
-                       {
-                           case eNone:
-                               break;
-                               
-                           case eReset:
-                               event = eNone;
-                               [self reset];
-                               break;
-                               
-                           case eSnapshot:
-                               [self reset];
-                               [self loadSnapshot];
-                               event = eNone;
-                               break;
-                               
-                           case eZ80Snapshot:
-                               [self reset];
-                               [self loadZ80Snapshot];
-                               event = eNone;
-                               break;
-                               
-                           default:
-                               break;
-                       }
-                       
-                       [self resetFrame];
-                       [self generateFrame];
-                   });
+    {
+       switch (event)
+       {
+           case eNone:
+               break;
+               
+           case eReset:
+               event = eNone;
+               [self reset];
+               break;
+               
+           case eSnapshot:
+               [self reset];
+               [self loadSnapshot];
+               event = eNone;
+               break;
+               
+           case eZ80Snapshot:
+               [self reset];
+               [self loadZ80Snapshot];
+               event = eNone;
+               break;
+               
+           default:
+               break;
+       }
+       
+       [self resetFrame];
+       [self generateFrame];
+    });
 }
 
 #pragma mark - Audio
@@ -147,7 +148,10 @@ void updateAudioWithTStates(int numberTs, void *m)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output
-        double beeperLevel = (machine->audioEar * audioBeeperVolumeMultiplier) * machine.soundVolume;
+        double beeperLevelLeft = (machine->audioEar * audioBeeperVolumeMultiplier) * machine.soundVolume;
+        double beeperLevelRight = beeperLevelLeft;
+        double leftMix = 0.5;
+        double rightMix = 0.5;
         
         machine->audioAYTStates++;
         if (machine->audioAYTStates >= machine->audioAYTStatesStep)
@@ -155,16 +159,58 @@ void updateAudioWithTStates(int numberTs, void *m)
             [machine.audioCore updateAY:1];
             if (machine.AYChannel1)
             {
-                beeperLevel += ([machine.audioCore getChannel0] * audioAYVolumeMultiplier) * machine.soundVolume;
+                if (machine.AYChannel1Balance > 0.5)
+                {
+                    leftMix = 1.0 - machine.AYChannel1Balance;
+                    rightMix = machine.AYChannel1Balance;
+                }
+                else if (machine.AYChannel1Balance < 0.5)
+                {
+                    leftMix = 1.0 - (machine.AYChannel1Balance * 2);
+                    rightMix = 1.0 - (1.0 - machine.AYChannel1Balance);
+                }
+
+                beeperLevelLeft += (([machine.audioCore getChannel0] * audioAYVolumeMultiplier) * machine.soundVolume) * leftMix;
+                beeperLevelRight += (([machine.audioCore getChannel0] * audioAYVolumeMultiplier) * machine.soundVolume) * rightMix;
+            
             }
             if (machine.AYChannel2)
             {
-                beeperLevel += ([machine.audioCore getChannel1] * audioAYVolumeMultiplier) * machine.soundVolume;
+                leftMix = 0.5;
+                rightMix = 0.5;
+                if (machine.AYChannel2Balance > 0.5)
+                {
+                    leftMix = 1.0 - machine.AYChannel2Balance;
+                    rightMix = machine.AYChannel2Balance;
+                }
+                else if (machine.AYChannel2Balance < 0.5)
+                {
+                    leftMix = 1.0 - (machine.AYChannel2Balance * 2);
+                    rightMix = 1.0 - (1.0 - machine.AYChannel2Balance);
+                }
+                
+                beeperLevelLeft += (([machine.audioCore getChannel1] * audioAYVolumeMultiplier) * machine.soundVolume) * leftMix;
+                beeperLevelRight += (([machine.audioCore getChannel1] * audioAYVolumeMultiplier) * machine.soundVolume) * rightMix;
             }
             if (machine.AYChannel3)
             {
-                beeperLevel += ([machine.audioCore getChannel2] * audioAYVolumeMultiplier) * machine.soundVolume;
+                leftMix = 0.5;
+                rightMix = 0.5;
+                if (machine.AYChannel3Balance > 0.5)
+                {
+                    leftMix = 1.0 - machine.AYChannel3Balance;
+                    rightMix = machine.AYChannel3Balance;
+                }
+                else if (machine.AYChannel3Balance < 0.5)
+                {
+                    leftMix = 1.0 - (machine.AYChannel3Balance * 2);
+                    rightMix = 1.0 - (1.0 - machine.AYChannel3Balance);
+                }
+                
+                beeperLevelLeft += (([machine.audioCore getChannel2] * audioAYVolumeMultiplier) * machine.soundVolume) * leftMix;
+                beeperLevelRight += (([machine.audioCore getChannel2] * audioAYVolumeMultiplier) * machine.soundVolume) * rightMix;
             }
+            
             [machine.audioCore endFrame];
             machine->audioAYTStates -= machine->audioAYTStatesStep;
         }
@@ -178,21 +224,24 @@ void updateAudioWithTStates(int numberTs, void *m)
             double delta2 = (1 - delta1);
             
             // Quantize for the current sample
-            machine->audioBeeperValue += (beeperLevel * delta1);
+            machine->audioBeeperLeft += (beeperLevelLeft * delta1);
+            machine->audioBeeperRight += (beeperLevelRight * delta1);
             
             // Load the buffer with the sample for both left and right channels
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue);
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperValue);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperLeft);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (int16_t)(machine->audioBeeperRight);
             
             // Quantize for the next sample
-            machine->audioBeeperValue = (beeperLevel * delta2);
+            machine->audioBeeperLeft = (beeperLevelLeft * delta2);
+            machine->audioBeeperRight = (beeperLevelRight * delta2);
             
             // Increment the step counter so that the next sample will be taken after another 18.2 T-States
             machine->audioTsStepCounter += machine->audioTsStep;
         }
         else
         {
-            machine->audioBeeperValue += beeperLevel;
+            machine->audioBeeperLeft += beeperLevelLeft;
+            machine->audioBeeperRight += beeperLevelRight;
         }
     }
 }
@@ -269,7 +318,6 @@ void updateScreenWithTStates(int numberTs, void *m)
         }
         
         machine->emuDisplayTs += machine->tsPerChar;
-        
         numberTs -= machine->tsPerChar;
     }
 }
@@ -289,6 +337,7 @@ void updateScreenWithTStates(int numberTs, void *m)
         }
     }
 }
+
 - (void)buildDisplayTsTable
 {
     for(int line = 0; line < pxVerticalTotal; line++)

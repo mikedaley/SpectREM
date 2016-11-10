@@ -57,7 +57,7 @@ NS_ENUM(NSUInteger, MachineType)
 
     _configViewController = [ConfigViewController new];
     [self.configEffectsView setFrameOrigin:(NSPoint){-self.configEffectsView.frame.size.width, 0}];
-    self.configScrollView.documentView = _cpuViewController.view;
+    self.configScrollView.documentView = _configViewController.view;
     
     preferences = [NSUserDefaults standardUserDefaults];
     
@@ -120,6 +120,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:@"AYChannel1" toObject:_configViewController withKeyPath:@"AYChannel1" options:nil];
     [_machine bind:@"AYChannel2" toObject:_configViewController withKeyPath:@"AYChannel2" options:nil];
     [_machine bind:@"AYChannel3" toObject:_configViewController withKeyPath:@"AYChannel3" options:nil];
+    [_machine bind:@"AYChannel1Balance" toObject:_configViewController withKeyPath:@"AYChannel1Balance" options:nil];
+    [_machine bind:@"AYChannel2Balance" toObject:_configViewController withKeyPath:@"AYChannel2Balance" options:nil];
+    [_machine bind:@"AYChannel3Balance" toObject:_configViewController withKeyPath:@"AYChannel3Balance" options:nil];
 }
 
 - (void)setupLocalObservers
