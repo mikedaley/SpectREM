@@ -230,7 +230,6 @@ NS_ENUM(NSUInteger, MachineType)
             if (result == NSModalResponseOK)
             {
                 [self loadFileWithURL:openPanel.URLs[0]];
-                [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:openPanel.URLs[0]];
             }
         }];
     });
@@ -239,6 +238,7 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)loadFileWithURL:(NSURL *)url
 {
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
+    [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
     [_machine loadSnapshotWithPath:url.path];
 }
 
