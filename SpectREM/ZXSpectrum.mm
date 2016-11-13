@@ -428,14 +428,14 @@ void updateScreenWithTStates(int numberTs, void *m)
     {
         
         self.snapshotPath = path;
-        NSString *extension = [[path pathExtension] lowercaseString];
+        NSString *extension = [[path pathExtension] uppercaseString];
         
-        if ([extension isEqualToString:@"sna"])
+        if ([extension isEqualToString:@"SNA"])
         {
             event = eSnapshot;
         }
         
-        if ([extension isEqualToString:@"z80"])
+        if ([extension isEqualToString:@"Z80"])
         {
             event = eZ80Snapshot;
         }

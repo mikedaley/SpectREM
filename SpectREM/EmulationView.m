@@ -11,7 +11,7 @@
 
 @implementation EmulationView
 {
-    BOOL isFaded;
+
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -19,21 +19,51 @@
     self = [super initWithCoder:coder];
     if (self)
     {
-        isFaded = YES;
+        [self registerForDraggedTypes:@[NSFilenamesPboardType]];
     }
     
     return self;
 }
 
-- (void)mouseMoved:(NSEvent *)event
+- (NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender
 {
-    [super mouseMoved:event];
+    NSPasteboard *pBoard;
+    NSDragOperation sourceDragMask;
+    sourceDragMask = [sender draggingSourceOperationMask];
+    pBoard = [sender draggingPasteboard];
     
-//    NSPoint mouseLocation = [NSEvent mouseLocation];
-//    NSPoint windowLocation = self.window.frame.origin;
-//    mouseLocation = (NSPoint){mouseLocation.x - windowLocation.x, mouseLocation.y - windowLocation.y};
-//    [self updateButtonWithMouseLocation:mouseLocation];
+    if ([[pBoard types] containsObject:NSFilenamesPboardType])
+    {
+        if (sourceDragMask * NSDragOperationCopy)
+        {
+            NSURL *fileURL = [NSURL URLFromPasteboard:pBoard];
+            if ([[fileURL.pathExtension uppercaseString] isEqualToString:@"Z80"] || [[fileURL.pathExtension uppercaseString]isEqualToString:@"SNA"])
+            {
+                return NSDragOperationCopy;
+            }
+            else
+            {
+                return NSDragOperationNone;
+            }
+        }
+    }
+    return NSDragOperationNone;
 }
 
+- (BOOL)performDragOperation:(id<NSDraggingInfo>)sender
+{
+    NSPasteboard *pBoard = [sender draggingPasteboard];
+    if ([[pBoard types] containsObject:NSURLPboardType])
+    {
+        NSURL *fileURL = [NSURL URLFromPasteboard:pBoard];
+        if ([[fileURL.pathExtension uppercaseString] isEqualToString:@"Z80"] || [[fileURL.pathExtension uppercaseString] isEqualToString:@"SNA"])
+        {
+            EmulationViewController *emulationViewController = (EmulationViewController *)[self.window contentViewController];
+            [emulationViewController loadFileWithURL:fileURL];
+            return YES;
+        }
+    }
+    return NO;
+}
 
 @end

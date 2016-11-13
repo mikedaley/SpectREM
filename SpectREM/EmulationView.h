@@ -8,7 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface EmulationView : SKView
+@interface EmulationView : SKView <NSDraggingDestination>
 
 @property (weak) IBOutlet NSButton *configButton;
 

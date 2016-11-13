@@ -223,7 +223,7 @@ NS_ENUM(NSUInteger, MachineType)
     NSOpenPanel *openPanel = [NSOpenPanel new];
     openPanel.canChooseDirectories = NO;
     openPanel.allowsMultipleSelection = NO;
-    openPanel.allowedFileTypes = @[@"sna", @"z80"];
+    openPanel.allowedFileTypes = @[@"SNA", @"Z80"];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [openPanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
