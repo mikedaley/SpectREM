@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -112,6 +113,32 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="80P-ky-wSs"/>
+                                        <menuItem title="Screen 1x" tag="1" keyEquivalent="1" id="sGW-QG-gYl" userLabel="Screen 1x">
+                                            <connections>
+                                                <action selector="setWindowSize:" target="Ady-hI-5gd" id="yEp-I4-6KL"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Screen 2x" tag="2" keyEquivalent="2" id="etC-e1-S6j" userLabel="Screen 2x">
+                                            <connections>
+                                                <action selector="setWindowSize:" target="Ady-hI-5gd" id="8l3-oK-2gv"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Screen 3x" tag="3" keyEquivalent="3" id="Zc8-aR-SLC" userLabel="Screen 3x">
+                                            <connections>
+                                                <action selector="setWindowSize:" target="Ady-hI-5gd" id="4Vc-na-fxX"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Screen 4x" tag="4" keyEquivalent="4" id="yoP-IA-UvW" userLabel="Screen 5x">
+                                            <connections>
+                                                <action selector="setWindowSize:" target="Ady-hI-5gd" id="ocZ-xi-6pq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Screen 5x" tag="5" keyEquivalent="5" id="aAd-oR-nkV" userLabel="Screen 4x">
+                                            <connections>
+                                                <action selector="setWindowSize:" target="Ady-hI-5gd" id="fnb-rk-a3j"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="6zp-Sm-KF5"/>
                                         <menuItem title="Screen Aspect Fit Mode" keyEquivalent="a" id="Lfw-At-DEi" userLabel="Screen Fit">
                                             <connections>
                                                 <action selector="setAspectFitMode:" target="Ady-hI-5gd" id="ZlJ-LB-s0W"/>
@@ -199,22 +226,22 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="EmulationViewController" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" misplaced="YES" id="m2S-Jp-Qdl" customClass="EmulationView">
+                    <view key="view" id="m2S-Jp-Qdl" customClass="EmulationView">
                         <rect key="frame" x="0.0" y="0.0" width="598" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView wantsLayer="YES" appearanceType="vibrantDark" misplaced="YES" blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
+                            <visualEffectView wantsLayer="YES" appearanceType="vibrantDark" fixedFrame="YES" blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="qoy-KM-Y5t" userLabel="Config Effects View">
                                 <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <scrollView misplaced="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="xUN-0b-oUb">
+                                    <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xUN-0b-oUb">
                                         <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="OWE-w8-B8B">
+                                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="OWE-w8-B8B">
                                             <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <view id="n6U-4O-gc5">
+                                                <view fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n6U-4O-gc5">
                                                     <rect key="frame" x="0.0" y="0.0" width="221" height="241"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </view>

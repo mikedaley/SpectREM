@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, ENVELOPE_FLAGS)
 
 @property (assign) double lowPassFilter;
 @property (assign) double highPassFilter;
+@property (assign) double soundVolume;
 
 #pragma mark - Methods
 

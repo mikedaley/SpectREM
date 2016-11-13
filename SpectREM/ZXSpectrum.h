@@ -15,8 +15,6 @@
 
 #pragma mark - Constants
 
-#define AY 1
-
 static int const cDisplayBorder = 1;
 static int const cDisplayPaper = 2;
 static int const cDisplayRetrace = 3;
@@ -33,11 +31,10 @@ static int const cAudioBeeperVolumeMultiplier = 512;
 static int const cBorderDrawingOffset = 10;
 static int const cPaperDrawingOffset = 16;
 
-// Memory and IO contention tables
-static unsigned char const contentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
+static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
+static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 
-// Floating bus
-static unsigned char const floatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
+#pragma mark - Structures
 
 // Structure of pixel data used in the emulation display buffer
 struct PixelData {

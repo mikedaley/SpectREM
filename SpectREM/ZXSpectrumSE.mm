@@ -392,7 +392,7 @@ static unsigned char floatingBus(void *m)
         && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
         && currentTs <= machine->tsHorizontalDisplay)
     {
-        unsigned char ulaValueType = floatingBusTable[ currentTs & 0x07 ];
+        unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
         
         int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
         int x = currentTs >> 2;

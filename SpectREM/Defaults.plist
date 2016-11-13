@@ -17,7 +17,7 @@
 	<key>displayVignetteY</key>
 	<real>0.25</real>
 	<key>soundVolume</key>
-	<real>0.5</real>
+	<real>1</real>
 	<key>soundLowPassFilter</key>
 	<integer>3500</integer>
 	<key>soundHighPassFilter</key>

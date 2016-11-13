@@ -53,10 +53,14 @@
 // Properties used to store the CoreAudio graph and nodes, including the high and low pass effects nodes
 @property (assign) AUGraph graph;
 @property (assign) AUNode outNode;
+@property (assign) AUNode mixerNode;
 @property (assign) AUNode converterNode;
 @property (assign) AUNode lowPassNode;
 @property (assign) AUNode highPassNode;
-@property (assign) AudioUnit convert;
+@property (assign) AudioUnit convertUnit;
+@property (assign) AudioUnit mixerUnit;
+@property (assign) AudioUnit lowPassFilterUnit;
+@property (assign) AudioUnit highPassFilterUnit;
 
 // Signature of the CoreAudio render callback. This is called by CoreAudio when it needs more data in its buffer.
 // By using AudioQueue we can generate another new frame of data at 50.08 fps making sure that the audio stays in
@@ -121,32 +125,36 @@ static float fAYVolBase[] = {
         componentDescription.componentType = kAudioUnitType_Output;
         componentDescription.componentSubType = kAudioUnitSubType_DefaultOutput;
         componentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-        CheckError(AUGraphAddNode(_graph, &componentDescription, &_outNode), "AUGraphAddNode");
+        CheckError(AUGraphAddNode(_graph, &componentDescription, &_outNode), "AUGraphAddNode[kAudioUnitSubType_DefaultOutput]");
         
+        // Mixer node
+        componentDescription.componentType = kAudioUnitType_Mixer;
+        componentDescription.componentSubType = kAudioUnitSubType_StereoMixer;
+        componentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
+        CheckError(AUGraphAddNode(_graph, &componentDescription, &_mixerNode), "AUGraphAddNode[kAudioUnitSubType_StereoMixer]");
+        CheckError(AUGraphConnectNodeInput(_graph, _mixerNode, 0, _outNode, 0), "AUGraphConnectNodeInput[kAudioUnitSubType_StereoMixer]");
+
         // Low pass effect node
         componentDescription.componentType = kAudioUnitType_Effect;
         componentDescription.componentSubType = kAudioUnitSubType_LowPassFilter;
         componentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-        CheckError(AUGraphAddNode(_graph, &componentDescription, &_lowPassNode), "AUGraphAddNode");
-        
-        CheckError(AUGraphConnectNodeInput(_graph, _lowPassNode, 0, _outNode, 0), "AUGraphConnectNodeInput");
+        CheckError(AUGraphAddNode(_graph, &componentDescription, &_lowPassNode), "AUGraphAddNode[kAudioUnitSubType_LowPassFilter]");
+        CheckError(AUGraphConnectNodeInput(_graph, _lowPassNode, 0, _mixerNode, 0), "AUGraphConnectNodeInput[kAudioUnitSubType_LowPassFilter]");
         
         // High pass effect node
         componentDescription.componentType = kAudioUnitType_Effect;
         componentDescription.componentSubType = kAudioUnitSubType_HighPassFilter;
         componentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-        CheckError(AUGraphAddNode(_graph, &componentDescription, &_highPassNode), "AUGraphAddNode");
-        
-        CheckError(AUGraphConnectNodeInput(_graph, _highPassNode, 0, _lowPassNode, 0), "AUGraphConnectNodeInput");
+        CheckError(AUGraphAddNode(_graph, &componentDescription, &_highPassNode), "AUGraphAddNode[kAudioUnitSubType_HighPassFilter]");
+        CheckError(AUGraphConnectNodeInput(_graph, _highPassNode, 0, _lowPassNode, 0), "AUGraphConnectNodeInput[kAudioUnitSubType_HighPassFilter]");
         
         // Converter node
         componentDescription.componentType = kAudioUnitType_FormatConverter;
         componentDescription.componentSubType = kAudioUnitSubType_AUConverter;
         componentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-        CheckError(AUGraphAddNode(_graph, &componentDescription, &_converterNode), "AUGraphAddNode");
-        
-        CheckError(AUGraphConnectNodeInput(_graph, _converterNode, 0, _highPassNode, 0), "AUGraphConnectNodeInput");
-        
+        CheckError(AUGraphAddNode(_graph, &componentDescription, &_converterNode), "AUGraphAddNode[kAudioUnitSubType_AUConverter]");
+        CheckError(AUGraphConnectNodeInput(_graph, _converterNode, 0, _highPassNode, 0), "AUGraphConnectNodeInput[kAudioUnitSubType_AUConverter]");
+
         CheckError(AUGraphOpen(_graph), "AUGraphOpen");
         
         // Buffer format
@@ -166,12 +174,12 @@ static float fAYVolBase[] = {
         bufferFormat.mFramesPerPacket = formatFramesPerPacket;
         bufferFormat.mBytesPerPacket = formatBytesPerPacket;
         
-        CheckError(AUGraphNodeInfo(_graph, _converterNode, NULL, &_convert), "AUGraphNodeInfo");
-        CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &bufferFormat, sizeof(bufferFormat)), "AudioUnitSetProperty");
+        CheckError(AUGraphNodeInfo(_graph, _converterNode, NULL, &_convertUnit), "AUGraphNodeInfo");
+        CheckError(AudioUnitSetProperty(_convertUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &bufferFormat, sizeof(bufferFormat)), "AudioUnitSetProperty[kAudioUnitProperty_StreamFormat]");
         
         // Set the frames per slice property on the converter node
         uint32 framesPerSlice = 882;
-        CheckError(AudioUnitSetProperty(_convert, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Input, 0, &framesPerSlice, sizeof(framesPerSlice)), "AudioUnitSetProperty");
+        CheckError(AudioUnitSetProperty(_convertUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Input, 0, &framesPerSlice, sizeof(framesPerSlice)), "AudioUnitSetProperty[kAudioUnitProperty_MaximumFramesPerSlice]");
 
         // define the callback for rendering audio
         AURenderCallbackStruct renderCallbackStruct;
@@ -183,10 +191,11 @@ static float fAYVolBase[] = {
         CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
         CheckError(AUGraphStart(_graph), "AUGraphStart");
         
-        // Initial filter settings
-        self.lowPassFilter = 3500;
-        self.highPassFilter = 1;
-        
+        // Get a reference to the graphics autio units
+        AUGraphNodeInfo(_graph, _mixerNode, 0, &_mixerUnit);
+        AUGraphNodeInfo(_graph, _lowPassNode, 0, &_lowPassFilterUnit);
+        AUGraphNodeInfo(_graph, _highPassNode, 0, &_highPassFilterUnit);
+                
     }
     return self;
 }
@@ -202,15 +211,15 @@ static float fAYVolBase[] = {
 {
     if ([keyPath isEqualToString:@"soundLowPassFilter"])
     {
-        AudioUnit filterUnit;
-        AUGraphNodeInfo(_graph, _lowPassNode, NULL, &filterUnit);
-        AudioUnitSetParameter(filterUnit, 0, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
+        AudioUnitSetParameter(_lowPassFilterUnit, 0, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
     }
     else if ([keyPath isEqualToString:@"soundHighPassFilter"])
     {
-        AudioUnit filterUnit;
-        AUGraphNodeInfo(_graph, _highPassNode, NULL, &filterUnit);
-        AudioUnitSetParameter(filterUnit, 0, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
+        AudioUnitSetParameter(_highPassFilterUnit, 0, kAudioUnitScope_Global, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
+    }
+    else if ([keyPath isEqualToString:@"soundVolume"])
+    {
+        AudioUnitSetParameter(_mixerUnit, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, [change[NSKeyValueChangeNewKey] doubleValue], 0);
     }
 }
 

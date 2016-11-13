@@ -143,8 +143,8 @@ void updateAudioWithTStates(int numberTs, void *m)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output
-        double beeperLevelLeft = (machine->audioEar * cAudioBeeperVolumeMultiplier) * machine.soundVolume;
-        double beeperLevelRight = beeperLevelLeft;
+        signed int beeperLevelLeft = (machine->audioEar * cAudioBeeperVolumeMultiplier) * machine.soundVolume;
+        signed int beeperLevelRight = beeperLevelLeft;
         double leftMix = 0.5;
         double rightMix = 0.5;
         
@@ -164,9 +164,9 @@ void updateAudioWithTStates(int numberTs, void *m)
                     leftMix = 1.0 - (machine.AYChannelABalance * 2);
                     rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
                 }
-
-                beeperLevelLeft += [machine.audioCore getChannelA] * leftMix;
-                beeperLevelRight += [machine.audioCore getChannelA] * rightMix;
+                signed int channelA = [machine.audioCore getChannelA];
+                beeperLevelLeft += channelA * leftMix;
+                beeperLevelRight += channelA * rightMix;
             }
             if (machine.AYChannelB)
             {
@@ -182,9 +182,9 @@ void updateAudioWithTStates(int numberTs, void *m)
                     leftMix = 1.0 - (machine.AYChannelBBalance * 2);
                     rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
                 }
-                
-                beeperLevelLeft += [machine.audioCore getChannelB] * leftMix;
-                beeperLevelRight += [machine.audioCore getChannelB] * rightMix;
+                signed int channelB = [machine.audioCore getChannelB];
+                beeperLevelLeft += channelB * leftMix;
+                beeperLevelRight += channelB * rightMix;
             }
             if (machine.AYChannelC)
             {
@@ -200,13 +200,10 @@ void updateAudioWithTStates(int numberTs, void *m)
                     leftMix = 1.0 - (machine.AYChannelCBalance * 2);
                     rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
                 }
-                
-                beeperLevelLeft += [machine.audioCore getChannelC] * leftMix;
-                beeperLevelRight += [machine.audioCore getChannelC] * rightMix;
+                signed int channelC = [machine.audioCore getChannelC];
+                beeperLevelLeft += channelC * leftMix;
+                beeperLevelRight += channelC * rightMix;
             }
-            
-            beeperLevelLeft = beeperLevelLeft * machine.soundVolume;
-            beeperLevelRight = beeperLevelRight * machine.soundVolume;
             
             [machine.audioCore endFrame];
             machine->audioAYTStates -= machine->audioAYTStatesStep;
@@ -221,16 +218,16 @@ void updateAudioWithTStates(int numberTs, void *m)
             double delta2 = (1 - delta1);
             
             // Quantize for the current sample
-            machine->audioBeeperLeft += (beeperLevelLeft * delta1);
-            machine->audioBeeperRight += (beeperLevelRight * delta1);
+            machine->audioBeeperLeft += beeperLevelLeft * delta1;
+            machine->audioBeeperRight += beeperLevelRight * delta1;
             
             // Load the buffer with the sample for both left and right channels
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (short)(machine->audioBeeperLeft);
-            machine.audioBuffer[ machine->audioBufferIndex++ ] = (short)(machine->audioBeeperRight);
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (signed short)machine->audioBeeperLeft;
+            machine.audioBuffer[ machine->audioBufferIndex++ ] = (signed short)machine->audioBeeperRight;
             
             // Quantize for the next sample
-            machine->audioBeeperLeft = (beeperLevelLeft * delta2);
-            machine->audioBeeperRight = (beeperLevelRight * delta2);
+            machine->audioBeeperLeft = beeperLevelLeft * delta2;
+            machine->audioBeeperRight = beeperLevelRight * delta2;
             
             // Increment the step counter so that the next sample will be taken after another 18.2 T-States
             machine->audioTsStepCounter += machine->audioTsStep;
@@ -405,8 +402,8 @@ void updateScreenWithTStates(int numberTs, void *m)
             
             if (line < 192 && ts < 128)
             {
-                memoryContentionTable[i] = contentionValues[ ts & 0x07 ];
-                ioContentionTable[i] = contentionValues[ ts & 0x07 ];
+                memoryContentionTable[i] = cContentionValues[ ts & 0x07 ];
+                ioContentionTable[i] = cContentionValues[ ts & 0x07 ];
             }
         }
     }
