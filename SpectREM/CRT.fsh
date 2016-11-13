@@ -34,22 +34,20 @@ vec3 vegnetteColor(vec3 color, vec2 coord, float vig_x, float vig_y)
 void main()
 {
     vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
-    
     vec3 colorCorrect = colorCorrection(texture2D(u_texture, texCoord).rgb, u_saturation, u_contrast, u_brightness);
-    
     vec3 vignette = vegnetteColor(v_color_mix.rgb, texCoord, u_vignette_x, u_vignette_y);
     
-    float f  = sin( texCoord.y * (304 * 3.14));
-    // scale to per pixel
-    float o  = f * (0.05 / 304.0);
-    // scale for subtle effect
-    float s  = f * 0.05 + 1.2;
-    // scan line fading
-    float l  = sin( u_time * 32 ) * 0.03 + 0.97;
-    // sample in 3 colour offset
-    float r = texture2D( u_texture, vec2( texCoord.x + o, texCoord.y + o ) ).x;
-    float g = texture2D( u_texture, vec2( texCoord.x - o, texCoord.y + o ) ).y;
-    float b = texture2D( u_texture, vec2( texCoord.x  , texCoord.y - o ) ).z;
+//    float f  = sin( texCoord.y * (304 * 3.14));
+//    // scale to per pixel
+//    float o  = f * (0.05 / 304.0);
+//    // scale for subtle effect
+//    float s  = f * 0.05 + 1.2;
+//    // scan line fading
+//    float l  = sin( u_time * 32 ) * 0.03 + 0.97;
+//    // sample in 3 colour offset
+//    float r = texture2D( u_texture, vec2( texCoord.x + o, texCoord.y + o ) ).x;
+//    float g = texture2D( u_texture, vec2( texCoord.x - o, texCoord.y + o ) ).y;
+//    float b = texture2D( u_texture, vec2( texCoord.x  , texCoord.y - o ) ).z;
     
     vec4 finalColor = (vec4(colorCorrect, 1));
     if (u_show_vignette == 1.0)
