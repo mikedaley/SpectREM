@@ -14,7 +14,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="Hz6-mo-xeY">
+        <customView wantsLayer="YES" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="236" height="527"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
@@ -480,7 +480,7 @@
                 <constraint firstItem="nJ0-cP-1ta" firstAttribute="trailing" secondItem="0G6-UU-kFR" secondAttribute="trailing" id="jcn-Qc-3MU"/>
                 <constraint firstItem="HRY-WS-PUv" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="10" id="qbB-Dp-eki"/>
             </constraints>
-            <point key="canvasLocation" x="-1246" y="-806"/>
+            <point key="canvasLocation" x="-927" y="-827"/>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="ZJD-Fu-un9"/>
     </objects>

@@ -135,7 +135,7 @@
 
 #pragma mark - Audio
 
-void updateAudioWithTStates(int numberTs, void *m)
+void updateAudioWithTStates(int numberTs, void *m, bool ay)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     
@@ -148,65 +148,68 @@ void updateAudioWithTStates(int numberTs, void *m)
         double leftMix = 0.5;
         double rightMix = 0.5;
         
-        machine->audioAYTStates++;
-        if (machine->audioAYTStates >= machine->audioAYTStatesStep)
+        if (ay)
         {
-            [machine.audioCore updateAY:1];
-            if (machine.AYChannelA)
+            machine->audioAYTStates++;
+            if (machine->audioAYTStates >= machine->audioAYTStatesStep)
             {
-                if (machine.AYChannelABalance > 0.5)
+                [machine.audioCore updateAY:1];
+                if (machine.AYChannelA)
                 {
-                    leftMix = 1.0 - machine.AYChannelABalance;
-                    rightMix = machine.AYChannelABalance;
+                    if (machine.AYChannelABalance > 0.5)
+                    {
+                        leftMix = 1.0 - machine.AYChannelABalance;
+                        rightMix = machine.AYChannelABalance;
+                    }
+                    else if (machine.AYChannelABalance < 0.5)
+                    {
+                        leftMix = 1.0 - (machine.AYChannelABalance * 2);
+                        rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
+                    }
+                    signed int channelA = [machine.audioCore getChannelA];
+                    beeperLevelLeft += channelA * leftMix;
+                    beeperLevelRight += channelA * rightMix;
                 }
-                else if (machine.AYChannelABalance < 0.5)
+                if (machine.AYChannelB)
                 {
-                    leftMix = 1.0 - (machine.AYChannelABalance * 2);
-                    rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
+                    leftMix = 0.5;
+                    rightMix = 0.5;
+                    if (machine.AYChannelBBalance > 0.5)
+                    {
+                        leftMix = 1.0 - machine.AYChannelBBalance;
+                        rightMix = machine.AYChannelBBalance;
+                    }
+                    else if (machine.AYChannelBBalance < 0.5)
+                    {
+                        leftMix = 1.0 - (machine.AYChannelBBalance * 2);
+                        rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
+                    }
+                    signed int channelB = [machine.audioCore getChannelB];
+                    beeperLevelLeft += channelB * leftMix;
+                    beeperLevelRight += channelB * rightMix;
                 }
-                signed int channelA = [machine.audioCore getChannelA];
-                beeperLevelLeft += channelA * leftMix;
-                beeperLevelRight += channelA * rightMix;
+                if (machine.AYChannelC)
+                {
+                    leftMix = 0.5;
+                    rightMix = 0.5;
+                    if (machine.AYChannelCBalance > 0.5)
+                    {
+                        leftMix = 1.0 - machine.AYChannelCBalance;
+                        rightMix = machine.AYChannelCBalance;
+                    }
+                    else if (machine.AYChannelCBalance < 0.5)
+                    {
+                        leftMix = 1.0 - (machine.AYChannelCBalance * 2);
+                        rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
+                    }
+                    signed int channelC = [machine.audioCore getChannelC];
+                    beeperLevelLeft += channelC * leftMix;
+                    beeperLevelRight += channelC * rightMix;
+                }
+                
+                [machine.audioCore endFrame];
+                machine->audioAYTStates -= machine->audioAYTStatesStep;
             }
-            if (machine.AYChannelB)
-            {
-                leftMix = 0.5;
-                rightMix = 0.5;
-                if (machine.AYChannelBBalance > 0.5)
-                {
-                    leftMix = 1.0 - machine.AYChannelBBalance;
-                    rightMix = machine.AYChannelBBalance;
-                }
-                else if (machine.AYChannelBBalance < 0.5)
-                {
-                    leftMix = 1.0 - (machine.AYChannelBBalance * 2);
-                    rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
-                }
-                signed int channelB = [machine.audioCore getChannelB];
-                beeperLevelLeft += channelB * leftMix;
-                beeperLevelRight += channelB * rightMix;
-            }
-            if (machine.AYChannelC)
-            {
-                leftMix = 0.5;
-                rightMix = 0.5;
-                if (machine.AYChannelCBalance > 0.5)
-                {
-                    leftMix = 1.0 - machine.AYChannelCBalance;
-                    rightMix = machine.AYChannelCBalance;
-                }
-                else if (machine.AYChannelCBalance < 0.5)
-                {
-                    leftMix = 1.0 - (machine.AYChannelCBalance * 2);
-                    rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
-                }
-                signed int channelC = [machine.audioCore getChannelC];
-                beeperLevelLeft += channelC * leftMix;
-                beeperLevelRight += channelC * rightMix;
-            }
-            
-            [machine.audioCore endFrame];
-            machine->audioAYTStates -= machine->audioAYTStatesStep;
         }
         
         // If we have done more cycles now than the audio step counter, generate a new sample

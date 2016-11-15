@@ -227,6 +227,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 - (void *)getCore;
 
 void updateScreenWithTStates(int numberTs, void *m);
-void updateAudioWithTStates(int tsCPU, void *m);
+void updateAudioWithTStates(int tsCPU, void *m, bool ay);
 
 @end

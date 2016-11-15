@@ -101,17 +101,20 @@ NS_ENUM(NSUInteger, MachineType)
 {
     _debugTimerQueue = dispatch_queue_create("DebugTimerQueue", nil);
     _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
-    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC, 0);
+    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC, 0);
     
     dispatch_source_set_event_handler(_debugTimer, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([_graphicalMemoryWindowController.window isVisible])
+            if (_machine)
             {
-                [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
-            }
-            if ([_cpuWindowController.window isVisible])
-            {
-                [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
+                if ([_graphicalMemoryWindowController.window isVisible])
+                {
+                    [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
+                }
+                if ([_cpuWindowController.window isVisible])
+                {
+                    [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
+                }
             }
         });
     });
@@ -313,7 +316,13 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)showCPUWindow:(id)sender
 {
-    [_cpuWindowController.window makeKeyAndOrderFront:nil];
+    [self.view.window addChildWindow:_cpuWindowController.window ordered:NSWindowAbove];
+//    [_cpuWindowController.window setLevel:NSPopUpMenuWindowLevel];
+}
+
+- (IBAction)switchHexDecValues:(id)sender
+{
+    _cpuViewController.decimalFormat = (_cpuViewController.decimalFormat) ? NO : YES;
 }
 
 #pragma mark - USB Controllers

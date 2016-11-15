@@ -156,7 +156,7 @@
         
         count -= tsCPU;
         
-        updateAudioWithTStates(tsCPU, (__bridge void *)self);
+        updateAudioWithTStates(tsCPU, (__bridge void *)self, true);
         
         if (core->GetTStates() >= tsPerFrame )
         {
@@ -187,7 +187,6 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
                                                                                                       inTexture:self.texture]];
-//                [self.emulationViewController updateEmulationDisplayWithTexture:self.texture];
             });
             
             frameCounter++;

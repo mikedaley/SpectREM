@@ -159,7 +159,7 @@
         
         count -= tsCPU;
         
-        updateAudioWithTStates(tsCPU, (__bridge void*)self);
+        updateAudioWithTStates(tsCPU, (__bridge void*)self, true);
         
         if (core->GetTStates() >= tsPerFrame )
         {
@@ -760,6 +760,11 @@ static unsigned char floatingBus(void *m)
             }
         }
     }
+}
+
+- (void *)getCore
+{
+    return (void*)core;
 }
 
 @end

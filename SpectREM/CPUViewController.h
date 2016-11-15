@@ -39,6 +39,15 @@
 @property (strong) NSString *hh;
 @property (strong) NSString *ll;
 
+@property (strong) NSString *fs;
+@property (strong) NSString *fz;
+@property (strong) NSString *f5;
+@property (strong) NSString *fh;
+@property (strong) NSString *f3;
+@property (strong) NSString *fpv;
+@property (strong) NSString *fn;
+@property (strong) NSString *fc;
+
 #pragma mark - Methods
 
 - (void)updateViewWithMachine:(void *)m;
