@@ -297,8 +297,8 @@
         <scene sceneID="sUf-y6-rXa">
             <objects>
                 <windowController storyboardIdentifier="GraphicalMemoryView" id="Fqr-BV-rhB" sceneMemberID="viewController">
-                    <window key="window" title="Memory (Graphical)" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="graphcialMemView" animationBehavior="default" id="kBN-yL-jn0">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                    <window key="window" title="Memory (Graphical)" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="graphcialMemView" animationBehavior="default" id="kBN-yL-jn0" customClass="NSPanel">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
@@ -316,7 +316,7 @@
             <objects>
                 <windowController storyboardIdentifier="CPUView" id="Jdx-mp-AoU" sceneMemberID="viewController">
                     <window key="window" title="CPU" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="cpuView" animationBehavior="default" id="LMu-dd-4Bh" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES" HUD="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="163" y="199" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
@@ -1065,11 +1065,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="100" usesPredominantAxisScrolling="NO" id="JTv-zp-NZ9">
+                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="100" usesPredominantAxisScrolling="NO" id="JTv-zp-NZ9">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <clipView key="contentView" id="GzV-Tg-T5g" customClass="CenteredClipView">
-                                    <rect key="frame" x="1" y="1" width="478" height="254"/>
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="GzV-Tg-T5g" customClass="CenteredClipView">
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view id="EEQ-b5-FS1" customClass="RedView">
@@ -1086,11 +1086,11 @@
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="WWC-dQ-nEZ">
-                                    <rect key="frame" x="1" y="239" width="478" height="16"/>
+                                    <rect key="frame" x="0.0" y="240" width="480" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="mN8-Oh-oN8">
-                                    <rect key="frame" x="463" y="1" width="16" height="254"/>
+                                    <rect key="frame" x="464" y="0.0" width="16" height="256"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
