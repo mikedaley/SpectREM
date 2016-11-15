@@ -200,6 +200,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 
 @property (weak) EmulationViewController *emulationViewController;
 @property (strong) SKTexture *texture;
+@property (strong) SKTexture *memoryTexture;
 
 @property (strong) id imageRef;
 @property (assign) CGColorSpaceRef colorSpace;

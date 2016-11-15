@@ -21,7 +21,7 @@
 #pragma mark - Methods
 
 // Called by the machine being emulated when a new display image is ready to be displayed
-- (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture;
+- (void)updateEmulationDisplayWithTexture:(SKTexture *)emulationDisplayTexture;
 
 - (void)loadFileWithURL:(NSURL *)url;
 

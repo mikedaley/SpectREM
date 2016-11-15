@@ -180,7 +180,7 @@
             CFRelease(dataRef);
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.emulationViewController updateEmulationDisplayTextureWithImage:[SKTexture textureWithRect:textureRect
+                [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
                                                                                                       inTexture:self.texture]];
             });
             

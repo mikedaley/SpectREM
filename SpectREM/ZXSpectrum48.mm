@@ -91,7 +91,7 @@
         displayPage = 1;
         disablePaging = YES;
         
-        self.colorSpace = CGColorSpaceCreateDeviceRGB();
+        self.colorSpace = CGColorSpaceCreateDeviceGray();
         
         [self resetFrame];
         
@@ -176,14 +176,17 @@
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
+            
             self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                  size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
                                               flipped:YES];
+                        
             CFRelease(dataRef);
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.emulationViewController updateEmulationDisplayTextureWithImage:[SKTexture textureWithRect:textureRect
+                [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
                                                                                                       inTexture:self.texture]];
+//                [self.emulationViewController updateEmulationDisplayWithTexture:self.texture];
             });
             
             frameCounter++;

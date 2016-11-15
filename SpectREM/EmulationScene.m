@@ -34,7 +34,7 @@
     if (self = [super initWithCoder:aDecoder])
     {
         self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
-        self.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringLinear;
+        self.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringNearest;
 
         _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
         _shader.attributes = @[

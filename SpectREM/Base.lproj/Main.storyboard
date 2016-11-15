@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
@@ -152,6 +152,18 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Debug" id="axf-p4-Hq2" userLabel="Debug">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Debug" id="JY9-nv-SyR">
+                                    <items>
+                                        <menuItem title="Graphical Memory View" keyEquivalent="M" id="g99-zk-gwB" userLabel="Graphical Memory View">
+                                            <connections>
+                                                <action selector="showGraphicalMemoryWindow:" target="Ady-hI-5gd" id="yLg-8K-qOZ"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Window" id="aUF-d1-5bR">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
@@ -230,18 +242,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="598" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView wantsLayer="YES" appearanceType="vibrantDark" fixedFrame="YES" blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="qoy-KM-Y5t" userLabel="Config Effects View">
+                            <visualEffectView wantsLayer="YES" appearanceType="vibrantDark" blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
                                 <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xUN-0b-oUb">
+                                    <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="xUN-0b-oUb">
                                         <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="OWE-w8-B8B">
+                                        <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="OWE-w8-B8B">
                                             <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <view fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n6U-4O-gc5">
+                                                <view id="n6U-4O-gc5">
                                                     <rect key="frame" x="0.0" y="0.0" width="221" height="241"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </view>
@@ -269,6 +281,75 @@
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="692"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="sUf-y6-rXa">
+            <objects>
+                <windowController storyboardIdentifier="GraphicalMemoryView" id="Fqr-BV-rhB" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="kBN-yL-jn0">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="425" y="461" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+                    </window>
+                    <connections>
+                        <segue destination="od2-Ix-aGU" kind="relationship" relationship="window.shadowedContentViewController" id="x9T-DV-C2l"/>
+                    </connections>
+                </windowController>
+                <customObject id="QM7-Fj-LRw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="813" y="216"/>
+        </scene>
+        <!--Graphical Mem View Controller-->
+        <scene sceneID="KMB-hG-mTJ">
+            <objects>
+                <viewController id="od2-Ix-aGU" customClass="GraphicalMemViewController" sceneMemberID="viewController">
+                    <view key="view" id="4w0-ib-ifK">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="100" usesPredominantAxisScrolling="NO" id="JTv-zp-NZ9">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <clipView key="contentView" id="GzV-Tg-T5g">
+                                    <rect key="frame" x="1" y="1" width="478" height="268"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <view id="EEQ-b5-FS1">
+                                            <rect key="frame" x="0.0" y="0.0" width="463" height="253"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="3EE-aT-WHx" userLabel="Memory Image View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="463" height="253"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="lTV-AM-Mq0"/>
+                                                    <connections>
+                                                        <binding destination="od2-Ix-aGU" name="value" keyPath="self.memoryImage" id="JZ6-rc-gxy"/>
+                                                    </connections>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="WWC-dQ-nEZ">
+                                    <rect key="frame" x="1" y="253" width="478" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="mN8-Oh-oN8">
+                                    <rect key="frame" x="463" y="1" width="16" height="268"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="3EE-aT-WHx" id="3zs-Rd-zaT"/>
+                    </connections>
+                </viewController>
+                <customObject id="K6x-f1-4c5" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="nPd-DA-0F7"/>
+            </objects>
+            <point key="canvasLocation" x="813" y="699"/>
         </scene>
     </scenes>
 </document>

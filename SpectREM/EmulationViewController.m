@@ -11,7 +11,7 @@
 #import "EmulationViewController.h"
 #import "EmulationScene.h"
 #import "ConfigViewController.h"
-#import "CPUViewController.h"
+#import "GraphicalMemViewController.h"
 #import "EmulationView.h"
 
 #import "ZXSpectrum48.h"
@@ -34,12 +34,14 @@ NS_ENUM(NSUInteger, MachineType)
     ZXSpectrum              *_machine;
     EmulationScene          *_emulationScene;
     ConfigViewController    *_configViewController;
-    CPUViewController       *_cpuViewController;
+    NSStoryboard            *_storyBoard;
+    NSWindowController      *_graphicalMemoryWindowController;
+    GraphicalMemViewController *_graphicalMemViewController;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *preferences;
-    dispatch_queue_t        _UITimerQueue;
-    dispatch_source_t       _UITimer;
+    dispatch_queue_t        _debugTimerQueue;
+    dispatch_source_t       _debugTimer;
 }
 
 - (void)dealloc
@@ -47,14 +49,21 @@ NS_ENUM(NSUInteger, MachineType)
     NSLog(@"Deallocating EmulationViewController");
     [self removeBindings];
     [_configViewController removeObserver:self forKeyPath:@"currentMachineType"];
-    dispatch_source_cancel(_UITimer);
+    if (_debugTimer)
+    {
+        dispatch_source_cancel(_debugTimer);
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _cpuViewController = [CPUViewController new];
-
+    _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
+    
+    _graphicalMemoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"GraphicalMemoryView"];
+    _graphicalMemViewController = (GraphicalMemViewController *)_graphicalMemoryWindowController.contentViewController;
+    
+    
     _configViewController = [ConfigViewController new];
     [self.configEffectsView setFrameOrigin:(NSPoint){-self.configEffectsView.frame.size.width, 0}];
     self.configScrollView.documentView = _configViewController.view;
@@ -76,26 +85,29 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupSceneBindings];
     [self switchToMachine:_configViewController.currentMachineType];
     [self setupGamepad];
-    [self setupCPUViewTimer];
+    [self setupDebugTimer];
     
     [_machine start];
 }
 
 #pragma mark - CPU View Timer
 
-- (void)setupCPUViewTimer
+- (void)setupDebugTimer
 {
-    _UITimerQueue = dispatch_queue_create("UITimerQueue", nil);
-    _UITimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _UITimerQueue);
-    dispatch_source_set_timer(_UITimer, DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC, 0);
+    _debugTimerQueue = dispatch_queue_create("DebugTimerQueue", nil);
+    _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
+    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC, 0);
     
-    dispatch_source_set_event_handler(_UITimer, ^{
+    dispatch_source_set_event_handler(_debugTimer, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            _cpuViewController.corePC = _machine.corePC;
+            if ([_graphicalMemoryWindowController.window isVisible])
+            {
+                [_graphicalMemViewController updateImageFromMachine:(__bridge void*)_machine];
+            }
         });
     });
     
-    dispatch_resume(_UITimer);
+    dispatch_resume(_debugTimer);
 }
 
 #pragma mark - Bindings/Observers
@@ -174,8 +186,9 @@ NS_ENUM(NSUInteger, MachineType)
 }
 
 #pragma mark - 
-- (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture
+- (void)updateEmulationDisplayWithTexture:(SKTexture *)emulationDisplayTexture
 {
+    emulationDisplayTexture.filteringMode = SKTextureFilteringNearest;
     _emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
 }
 
@@ -280,8 +293,13 @@ NS_ENUM(NSUInteger, MachineType)
         float originX = self.view.window.frame.origin.x;
         float originY = self.view.window.frame.origin.y - (height - self.view.window.frame.size.height);
         NSRect windowFrame = CGRectMake(originX, originY, width, height);
-        [self.view.window.animator setFrame:windowFrame display:YES animate:YES];
+        [self.view.window.animator setFrame:windowFrame display:YES animate:NO];
     }
+}
+
+- (IBAction)showGraphicalMemoryWindow:(id)sender
+{
+    [_graphicalMemoryWindowController.window makeKeyAndOrderFront:nil];
 }
 
 #pragma mark - USB Controllers
