@@ -14,6 +14,7 @@
 
 @interface ZXSpectrum48 ()
 {
+@public
     CZ80Core *core;
 }
 
@@ -639,6 +640,11 @@ static unsigned char floatingBus(void *m)
 - (NSString *)corePC
 {
     return [NSString stringWithFormat:@"0x%04x", core->GetRegister(CZ80Core::eREG_PC)];
+}
+
+- (void *)getCore
+{
+    return (void*)core;
 }
 
 @end

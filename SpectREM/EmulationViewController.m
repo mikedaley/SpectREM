@@ -12,6 +12,7 @@
 #import "EmulationScene.h"
 #import "ConfigViewController.h"
 #import "GraphicalMemViewController.h"
+#import "CPUViewController.h"
 #import "EmulationView.h"
 
 #import "ZXSpectrum48.h"
@@ -37,6 +38,8 @@ NS_ENUM(NSUInteger, MachineType)
     NSStoryboard            *_storyBoard;
     NSWindowController      *_graphicalMemoryWindowController;
     GraphicalMemViewController *_graphicalMemViewController;
+    NSWindowController      *_cpuWindowController;
+    CPUViewController       *_cpuViewController;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *preferences;
@@ -63,6 +66,8 @@ NS_ENUM(NSUInteger, MachineType)
     _graphicalMemoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"GraphicalMemoryView"];
     _graphicalMemViewController = (GraphicalMemViewController *)_graphicalMemoryWindowController.contentViewController;
     
+    _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
+    _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
     
     _configViewController = [ConfigViewController new];
     [self.configEffectsView setFrameOrigin:(NSPoint){-self.configEffectsView.frame.size.width, 0}];
@@ -102,7 +107,11 @@ NS_ENUM(NSUInteger, MachineType)
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([_graphicalMemoryWindowController.window isVisible])
             {
-                [_graphicalMemViewController updateImageFromMachine:(__bridge void*)_machine];
+                [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
+            }
+            if ([_cpuWindowController.window isVisible])
+            {
+                [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
             }
         });
     });
@@ -300,6 +309,11 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)showGraphicalMemoryWindow:(id)sender
 {
     [_graphicalMemoryWindowController.window makeKeyAndOrderFront:nil];
+}
+
+- (IBAction)showCPUWindow:(id)sender
+{
+    [_cpuWindowController.window makeKeyAndOrderFront:nil];
 }
 
 #pragma mark - USB Controllers

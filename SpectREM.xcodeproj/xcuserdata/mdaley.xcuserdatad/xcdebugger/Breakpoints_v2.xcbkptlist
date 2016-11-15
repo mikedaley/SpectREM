@@ -23,30 +23,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SpectREM/ZXSpectrum.mm"
-            timestampString = "500467250.299057"
+            filePath = "SpectREM/EmulationViewController.m"
+            timestampString = "500903924.503711"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "updateAudioWithTStates(int numberTs, void *m)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpectREM/ZXSpectrum.mm"
-            timestampString = "500467289.674299"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
-            landmarkName = "updateAudioWithTStates(int numberTs, void *m)"
-            landmarkType = "9">
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "-setupDebugTimer"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

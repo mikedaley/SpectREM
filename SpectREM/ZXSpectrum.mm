@@ -602,4 +602,9 @@ void updateScreenWithTStates(int numberTs, void *m)
     }
 }
 
+- (void *)getCore;
+{
+    return nil;
+}
+
 @end

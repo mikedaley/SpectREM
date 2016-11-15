@@ -29,7 +29,7 @@
     _colorSpace = CGColorSpaceCreateDeviceGray();
 }
 
-- (void)updateImageFromMachine:(void *)m
+- (void)updateViewWithMachine:(void *)m
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     

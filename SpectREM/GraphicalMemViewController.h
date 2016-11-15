@@ -12,6 +12,6 @@
 
 @property (strong) NSImage *memoryImage;
 
-- (void)updateImageFromMachine:(void *)m;
+- (void)updateViewWithMachine:(void *)m;
 
 @end
