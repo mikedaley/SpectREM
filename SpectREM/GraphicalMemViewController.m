@@ -49,6 +49,8 @@
                                         kCGRenderingIntentDefault);
     
     self.memoryImage = [[NSImage alloc] initWithCGImage:cgImage size:(NSSize){256, 2048}];
+    self.memoryView.memoryImage = self.memoryImage;
+    
     CGImageRelease(cgImage);
     CGDataProviderRelease(providerRef);
     CFRelease(memoryDataRef);

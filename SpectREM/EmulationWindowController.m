@@ -16,8 +16,9 @@
 
 - (void)windowDidLoad
 {
-    [super windowDidLoad];
     [self.window setAcceptsMouseMovedEvents:YES];
+    self.shouldCascadeWindows = NO;
+    [super windowDidLoad];
 }
 
 @end

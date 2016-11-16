@@ -221,7 +221,7 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="76" y="-68"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -243,14 +243,14 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="216"/>
+            <point key="canvasLocation" x="75" y="202"/>
         </scene>
         <!--Emulation View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="EmulationViewController" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl" customClass="EmulationView">
-                        <rect key="frame" x="0.0" y="0.0" width="598" height="256"/>
+                    <view key="view" misplaced="YES" id="m2S-Jp-Qdl" customClass="EmulationView">
+                        <rect key="frame" x="0.0" y="0.0" width="459" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <visualEffectView wantsLayer="YES" appearanceType="vibrantDark" blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
@@ -291,14 +291,14 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="692"/>
+            <point key="canvasLocation" x="76" y="692"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">
             <objects>
                 <windowController storyboardIdentifier="GraphicalMemoryView" id="Fqr-BV-rhB" sceneMemberID="viewController">
                     <window key="window" title="Memory (Graphical)" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="graphcialMemView" animationBehavior="default" id="kBN-yL-jn0" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" utility="YES" HUD="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
@@ -309,7 +309,7 @@
                 </windowController>
                 <customObject id="QM7-Fj-LRw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="645" y="209"/>
+            <point key="canvasLocation" x="596" y="209"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="QrI-Me-C3I">
@@ -327,13 +327,13 @@
                 </windowController>
                 <customObject id="akj-Wl-v3M" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1186" y="209"/>
+            <point key="canvasLocation" x="1133" y="209"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="9Af-Td-QZ7">
             <objects>
                 <viewController id="XRR-tF-FdY" customClass="CPUViewController" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="1Gp-mj-1pO">
+                    <view key="view" wantsLayer="YES" misplaced="YES" id="1Gp-mj-1pO">
                         <rect key="frame" x="0.0" y="0.0" width="405" height="248"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -1055,33 +1055,26 @@
                 <userDefaultsController id="Knd-cW-vAt"/>
                 <userDefaultsController id="v4N-c4-LQd"/>
             </objects>
-            <point key="canvasLocation" x="1186.5" y="682"/>
+            <point key="canvasLocation" x="1134" y="682"/>
         </scene>
         <!--Graphical Mem View Controller-->
         <scene sceneID="KMB-hG-mTJ">
             <objects>
                 <viewController id="od2-Ix-aGU" customClass="GraphicalMemViewController" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="4w0-ib-ifK">
+                    <view key="view" wantsLayer="YES" misplaced="YES" id="4w0-ib-ifK">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="100" usesPredominantAxisScrolling="NO" id="JTv-zp-NZ9">
+                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="100" scrollerKnobStyle="dark" id="JTv-zp-NZ9">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="GzV-Tg-T5g" customClass="CenteredClipView">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <view id="EEQ-b5-FS1" customClass="RedView">
-                                            <rect key="frame" x="0.0" y="0.0" width="463" height="253"/>
+                                        <view misplaced="YES" id="EEQ-b5-FS1" customClass="PixelImageView">
+                                            <rect key="frame" x="0.0" y="0.0" width="256" height="2048"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="SGO-qJ-PQt">
-                                                    <rect key="frame" x="207" y="103" width="48" height="48"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="xqW-Mo-zbq"/>
-                                                </imageView>
-                                            </subviews>
                                         </view>
                                     </subviews>
                                 </clipView>
@@ -1096,11 +1089,14 @@
                             </scrollView>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="memoryView" destination="EEQ-b5-FS1" id="VeH-pw-qJ3"/>
+                    </connections>
                 </viewController>
                 <customObject id="K6x-f1-4c5" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="nPd-DA-0F7"/>
             </objects>
-            <point key="canvasLocation" x="645" y="692"/>
+            <point key="canvasLocation" x="596" y="692"/>
         </scene>
     </scenes>
 </document>

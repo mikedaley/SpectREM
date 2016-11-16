@@ -7,10 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PixelImageView.h"
 
 @interface GraphicalMemViewController : NSViewController
 
 @property (strong) NSImage *memoryImage;
+@property (weak) IBOutlet PixelImageView *memoryView;
 
 - (void)updateViewWithMachine:(void *)m;
 

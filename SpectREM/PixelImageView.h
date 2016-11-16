@@ -8,8 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface RedView : NSView
+@interface PixelImageView : NSView
 
-
+@property (strong, nonatomic) NSImage *memoryImage;
 
 @end
