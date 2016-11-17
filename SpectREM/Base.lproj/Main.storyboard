@@ -302,6 +302,7 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+                        <value key="minSize" type="size" width="256" height="256"/>
                     </window>
                     <connections>
                         <segue destination="od2-Ix-aGU" kind="relationship" relationship="window.shadowedContentViewController" id="x9T-DV-C2l"/>
@@ -1065,11 +1066,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="100" scrollerKnobStyle="dark" id="JTv-zp-NZ9">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
+                            <scrollView misplaced="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" allowsMagnification="YES" maxMagnification="100" scrollerKnobStyle="dark" id="JTv-zp-NZ9">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="213"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="GzV-Tg-T5g" customClass="CenteredClipView">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="256"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="213"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view misplaced="YES" id="EEQ-b5-FS1" customClass="PixelImageView">
@@ -1079,14 +1080,43 @@
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="WWC-dQ-nEZ">
-                                    <rect key="frame" x="0.0" y="240" width="480" height="16"/>
+                                    <rect key="frame" x="0.0" y="197" width="480" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="mN8-Oh-oN8">
-                                    <rect key="frame" x="464" y="0.0" width="16" height="256"/>
+                                    <rect key="frame" x="464" y="0.0" width="16" height="213"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <textField focusRingType="none" verticalHuggingPriority="750" misplaced="YES" id="0cq-Tr-yqC">
+                                <rect key="frame" x="88" y="221" width="55" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" alignment="center" title="32" drawsBackground="YES" id="9vD-bS-wbm">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="od2-Ix-aGU" name="value" keyPath="self.displayByteWidth" id="OfV-HV-Iqs"/>
+                                </connections>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="f9L-c5-b1y">
+                                <rect key="frame" x="18" y="224" width="75" height="14"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Byte Width:" id="guM-Ql-0hg">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" id="Mnu-1f-TvV">
+                                <rect key="frame" x="143" y="219" width="15" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="128" doubleValue="32" id="0NP-uh-KS6"/>
+                                <connections>
+                                    <binding destination="od2-Ix-aGU" name="value" keyPath="self.displayByteWidth" id="83Z-aI-b20"/>
+                                </connections>
+                            </stepper>
                         </subviews>
                     </view>
                     <connections>

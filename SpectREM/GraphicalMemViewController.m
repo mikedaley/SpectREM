@@ -12,6 +12,7 @@
 @interface GraphicalMemViewController ()
 {
     CGColorSpaceRef _colorSpace;
+    NSImage *_memoryImage;
 }
 
 @end
@@ -27,6 +28,7 @@
     [super viewDidLoad];
     // Do view setup here.
     _colorSpace = CGColorSpaceCreateDeviceGray();
+    self.displayByteWidth = 32;
 }
 
 - (void)updateViewWithMachine:(void *)m
@@ -36,11 +38,14 @@
     CFDataRef memoryDataRef = CFDataCreate(kCFAllocatorDefault, machine->memory, 65536);
     CGDataProviderRef providerRef = CGDataProviderCreateWithCFData(memoryDataRef);
 
-    CGImageRef cgImage = CGImageCreate(256,
-                                        2048,
+    NSUInteger displayWidth = self.displayByteWidth * 8;
+    NSUInteger displayHeight = 65536 / self.displayByteWidth;
+    
+    CGImageRef cgImage = CGImageCreate(displayWidth,
+                                        displayHeight,
                                         1,
                                         1,
-                                        32,
+                                        _displayByteWidth,
                                         _colorSpace,
                                         (CGBitmapInfo)kCGBitmapByteOrderDefault,
                                         providerRef,
@@ -48,12 +53,15 @@
                                         NO,
                                         kCGRenderingIntentDefault);
     
-    self.memoryImage = [[NSImage alloc] initWithCGImage:cgImage size:(NSSize){256, 2048}];
-    self.memoryView.memoryImage = self.memoryImage;
+    _memoryImage = [[NSImage alloc] initWithCGImage:cgImage size:(NSSize){displayWidth, displayHeight}];
+    [self.memoryView setFrameSize:(NSSize){displayWidth, displayHeight}];
+    self.memoryView.memoryImage = _memoryImage;
     
     CGImageRelease(cgImage);
     CGDataProviderRelease(providerRef);
     CFRelease(memoryDataRef);
 }
+
+
 
 @end

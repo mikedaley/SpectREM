@@ -11,8 +11,9 @@
 
 @interface GraphicalMemViewController : NSViewController
 
-@property (strong) NSImage *memoryImage;
 @property (weak) IBOutlet PixelImageView *memoryView;
+
+@property (assign) int displayByteWidth;
 
 - (void)updateViewWithMachine:(void *)m;
 
