@@ -27,7 +27,6 @@
 - (void)dealloc
 {
     NSLog(@"Deallocating ZXSpectrum48");
-    CGColorSpaceRelease(self.colorSpace);
     delete core;
     free (memory);
     free (rom);
@@ -91,8 +90,6 @@
         
         displayPage = 1;
         disablePaging = YES;
-        
-        self.colorSpace = CGColorSpaceCreateDeviceGray();
         
         [self resetFrame];
         

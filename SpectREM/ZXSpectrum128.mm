@@ -26,7 +26,6 @@
 - (void)dealloc
 {
     NSLog(@"Deallocating ZXSpectrum128");
-    CGColorSpaceRelease(self.colorSpace);
     delete core;
     free (memory);
     free (rom);
@@ -87,7 +86,6 @@
         emuVScale = 1.0 / emuDisplayPxHeight;
         
         emuDisplayTs = 0;
-        self.colorSpace = CGColorSpaceCreateDeviceRGB();
         
         [self resetFrame];
         

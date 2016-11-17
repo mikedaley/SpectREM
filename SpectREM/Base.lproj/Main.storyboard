@@ -507,7 +507,7 @@
                                 </connections>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="0cJ-0t-ef9">
-                                <rect key="frame" x="212" y="161" width="18" height="17"/>
+                                <rect key="frame" x="211" y="161" width="23" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="D'" id="KGX-ul-9wm">
                                     <font key="font" metaFont="system"/>
@@ -1056,7 +1056,7 @@
                 <userDefaultsController id="Knd-cW-vAt"/>
                 <userDefaultsController id="v4N-c4-LQd"/>
             </objects>
-            <point key="canvasLocation" x="1134" y="682"/>
+            <point key="canvasLocation" x="1133.5" y="682"/>
         </scene>
         <!--Graphical Mem View Controller-->
         <scene sceneID="KMB-hG-mTJ">
@@ -1088,18 +1088,6 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <textField focusRingType="none" verticalHuggingPriority="750" misplaced="YES" id="0cq-Tr-yqC">
-                                <rect key="frame" x="88" y="221" width="55" height="19"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" alignment="center" title="32" drawsBackground="YES" id="9vD-bS-wbm">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <binding destination="od2-Ix-aGU" name="value" keyPath="self.displayByteWidth" id="OfV-HV-Iqs"/>
-                                </connections>
-                            </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="f9L-c5-b1y">
                                 <rect key="frame" x="18" y="224" width="75" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1117,6 +1105,22 @@
                                     <binding destination="od2-Ix-aGU" name="value" keyPath="self.displayByteWidth" id="83Z-aI-b20"/>
                                 </connections>
                             </stepper>
+                            <textField focusRingType="none" verticalHuggingPriority="750" misplaced="YES" id="6UK-Hb-DfK">
+                                <rect key="frame" x="91" y="221" width="53" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" alignment="center" drawsBackground="YES" id="rOy-V9-Bdv">
+                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="s9e-S5-Gmz">
+                                        <real key="minimum" value="0.0"/>
+                                        <real key="maximum" value="256"/>
+                                    </numberFormatter>
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="od2-Ix-aGU" name="value" keyPath="self.displayByteWidth" id="005-Y4-RuK"/>
+                                </connections>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>

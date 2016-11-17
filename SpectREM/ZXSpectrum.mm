@@ -23,7 +23,7 @@
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
-    if (self == [super init])
+    if (self = [super init])
     {
         
     }
