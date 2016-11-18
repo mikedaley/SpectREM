@@ -171,6 +171,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine unbind:@"AYChannelA"];
     [_machine unbind:@"AYChannelB"];
     [_machine unbind:@"AYChannelC"];
+    [_machine unbind:@"AYChannelABalance"];
+    [_machine unbind:@"AYChannelBBalance"];
+    [_machine unbind:@"AYChannelCBalance"];
 }
 
 #pragma mark - Observers
@@ -276,7 +279,6 @@ NS_ENUM(NSUInteger, MachineType)
 {
     [_machine stop];
     [self removeBindings];
-    _machine = nil;
     switch (machineType) {
         default:
         case eZXSpectrum48:
