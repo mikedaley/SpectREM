@@ -161,8 +161,7 @@
         
         if (core->GetTStates() >= tsPerFrame )
         {
-            // The frame is finished so break out of the while loop. Not doing this caused drawing ts and core
-            // ts to slowly go out of sync
+            // Must reset count leave the while loop
             count = 0;
             
             updateScreenWithTStates(tsPerFrame - emuDisplayTs, (__bridge void *)self);
@@ -193,7 +192,7 @@
     }
 }
 
-#pragma mark - Memory & IO methods
+#pragma mark - Memory Access
 
 static unsigned char coreMemoryRead(unsigned short address, void *m)
 {
@@ -251,22 +250,24 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     
 }
 
+#pragma mark - IO Access
+
+// Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
+// All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
+// C:x means that contention should be calculated based on the current tState value and then x tStates are to be
+// added to the current tState count
+//
+// in 40 - 7F?| Low bit | Contention pattern
+//------------+---------+-------------------
+//		No    |  Reset  | N:1, C:3
+//		No    |   Set   | N:4
+//		Yes   |  Reset  | C:1, C:3
+//		Yes   |   Set   | C:1, C:1, C:1, C:1
+//
 static unsigned char coreIORead(unsigned short address, void *m)
 {
     ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
     
-    // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
-    // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
-    // C:x means that contention should be calculated based on the current tState value and then x tStates are to be
-    // added to the current tState count
-    //
-    // in 40 - 7F?| Low bit | Contention pattern
-    //------------+---------+-------------------
-    //		No    |  Reset  | N:1, C:3
-    //		No    |   Set   | N:4
-    //		Yes   |  Reset  | C:1, C:3
-    //		Yes   |   Set   | C:1, C:1, C:1, C:1
-    //
     int page = address / 16384;
     if (page == 1 || page == 3 || page == 5 || page == 7)
     {
@@ -337,18 +338,6 @@ static void coreIOWrite(unsigned short address, unsigned char data, void *m)
 {
     ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
     
-    // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
-    // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
-    // C:x means that contention should be calculated based on the current tState value and then x tStates are to be
-    // added to the current tState count
-    //
-    // in 40 - 7F?| Low bit | Contention pattern
-    //------------+---------+-------------------
-    //		No    |  Reset  | N:1, C:3
-    //		No    |   Set   | N:4
-    //		Yes   |  Reset  | C:1, C:3
-    //		Yes   |   Set   | C:1, C:1, C:1, C:1
-    //
     int page = address / 16384;
     if (page == 1 || page == 3 || page == 5 || page == 7)
     {

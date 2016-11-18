@@ -25,7 +25,7 @@
 {
     if (self = [super init])
     {
-        
+        // Implemented in specific machine classes
     }
     return self;
 }

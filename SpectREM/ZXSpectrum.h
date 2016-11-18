@@ -205,6 +205,8 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (strong) id imageRef;
 @property (assign) CGColorSpaceRef colorSpace;
 
+@property (assign) bool stepping;
+
 #pragma mark - Methods
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController;

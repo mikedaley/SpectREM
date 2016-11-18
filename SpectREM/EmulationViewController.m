@@ -314,12 +314,14 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)showGraphicalMemoryWindow:(id)sender
 {
     [self.view.window addChildWindow:_graphicalMemoryWindowController.window ordered:NSWindowAbove];
+    [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
 //    [_graphicalMemoryWindowController.window makeKeyAndOrderFront:nil];
 }
 
 - (IBAction)showCPUWindow:(id)sender
 {
     [self.view.window addChildWindow:_cpuWindowController.window ordered:NSWindowAbove];
+    [_cpuViewController updateViewWithMachine:(__bridge void*)_machine];
 //    [_cpuWindowController.window orderFront:nil];
 //    [_cpuWindowController.window setLevel:NSPopUpMenuWindowLevel];
 }
