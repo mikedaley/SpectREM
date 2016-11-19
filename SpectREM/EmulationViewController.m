@@ -58,11 +58,13 @@ NS_ENUM(NSUInteger, MachineType)
     }
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 
     _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     
+    // Setup debug window and view controllers
     _graphicalMemoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"GraphicalMemoryView"];
     _graphicalMemViewController = (GraphicalMemViewController *)_graphicalMemoryWindowController.contentViewController;
     
@@ -103,8 +105,10 @@ NS_ENUM(NSUInteger, MachineType)
     _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
     dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC, 0);
     
-    dispatch_source_set_event_handler(_debugTimer, ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_source_set_event_handler(_debugTimer, ^
+    {
+        dispatch_async(dispatch_get_main_queue(), ^
+        {
             if (_machine)
             {
                 if ([_graphicalMemoryWindowController.window isVisible])
@@ -225,7 +229,8 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)machineRestart:(id)sender
 {
-    dispatch_sync(_machine.emulationQueue, ^{
+    dispatch_sync(_machine.emulationQueue, ^
+    {
         [self.view.window setTitle:@"SpectREM"];
         [_machine.audioCore reset];
         [_machine reset];
@@ -235,13 +240,14 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)configButtonPressed:(id)sender
 {
     NSRect configFrame = self.configEffectsView.frame;
-    if (configFrame.origin.x == -configFrame.size.width)
+    configFrame.origin.y = 0;
+    if (configFrame.origin.x == 0 - configFrame.size.width)
     {
         configFrame.origin.x = 0;
     }
     else
     {
-        configFrame.origin.x = -configFrame.size.width;
+        configFrame.origin.x = 0 - configFrame.size.width;
     }
     [self.configEffectsView.animator setFrame:configFrame];
 }
