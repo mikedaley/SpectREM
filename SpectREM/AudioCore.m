@@ -97,7 +97,12 @@ static float fAYVolBase[] = {
 - (void)dealloc
 {
     NSLog(@"Deallocating AudioCore");
-    CheckError(AUGraphStop(_graph), "AUGraphStop");
+    Boolean running;
+    AUGraphIsRunning(_graph, &running);
+    if (running)
+    {
+        CheckError(AUGraphStop(_graph), "AUGraphStop");
+    }
     CheckError(AUGraphUninitialize(_graph), "AUGraphUninitilize");
     CheckError(AUGraphClose(_graph), "AUGraphClose");
 }
