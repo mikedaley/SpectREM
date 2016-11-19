@@ -90,11 +90,10 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupLocalObservers];
     [self setupMachineBindings];
     [self setupSceneBindings];
-    [self switchToMachine:_configViewController.currentMachineType];
     [self setupGamepad];
     [self setupDebugTimer];
-    
-    [_machine start];
+
+    [self switchToMachine:_configViewController.currentMachineType];
 }
 
 #pragma mark - CPU View Timer
@@ -300,6 +299,7 @@ NS_ENUM(NSUInteger, MachineType)
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
     [self setupSceneBindings];
+    [_machine start];
 }
 
 - (IBAction)setWindowSize:(id)sender
@@ -335,6 +335,16 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)switchHexDecValues:(id)sender
 {
     _cpuViewController.decimalFormat = (_cpuViewController.decimalFormat) ? NO : YES;
+}
+
+- (IBAction)pause:(id)sender
+{
+    [_machine.audioCore stop];
+}
+
+- (IBAction)start:(id)sender
+{
+    [_machine.audioCore start];
 }
 
 #pragma mark - USB Controllers

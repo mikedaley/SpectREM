@@ -68,5 +68,6 @@ typedef NS_ENUM(NSUInteger, ENVELOPE_FLAGS)
 - (void)reset;
 - (void)endFrame;
 - (void)stop;
+- (void)start;
 
 @end

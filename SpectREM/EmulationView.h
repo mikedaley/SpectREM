@@ -10,6 +10,4 @@
 
 @interface EmulationView : SKView <NSDraggingDestination>
 
-@property (weak) IBOutlet NSButton *configButton;
-
 @end

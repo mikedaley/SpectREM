@@ -188,8 +188,8 @@ static float fAYVolBase[] = {
         
         // Attach the audio callback to the converterNode
         CheckError(AUGraphSetNodeInputCallback(_graph, _converterNode, 0, &renderCallbackStruct), "AUGraphNodeInputCallback");
+        
         CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
-        CheckError(AUGraphStart(_graph), "AUGraphStart");
         
         // Get a reference to the graphics autio units
         AUGraphNodeInfo(_graph, _mixerNode, 0, &_mixerUnit);
@@ -202,7 +202,22 @@ static float fAYVolBase[] = {
 
 - (void)stop
 {
-    CheckError(AUGraphStop(_graph), "AUGraphStop");
+    Boolean running;
+    AUGraphIsRunning(_graph, &running);
+    if (running)
+    {
+        CheckError(AUGraphStop(_graph), "AUGraphStop");
+    }
+}
+
+- (void)start
+{
+    Boolean running;
+    AUGraphIsRunning(_graph, &running);
+    if (!running)
+    {
+        CheckError(AUGraphStart(_graph), "AUGraphStart");
+    }
 }
 
 #pragma mark - Observers
@@ -471,7 +486,6 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
     ioData->mBuffers[0].mDataByteSize = (inNumberFrames << 2);
     
     return noErr;
-    
 }
 
 // Routine to help detect and display OSStatus errors generated when using the Core Audio API

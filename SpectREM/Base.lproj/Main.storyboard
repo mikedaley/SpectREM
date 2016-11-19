@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C41b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C48b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
@@ -156,6 +156,17 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Debug" id="JY9-nv-SyR">
                                     <items>
+                                        <menuItem title="Pause" keyEquivalent="p" id="SzU-5C-4Ft" userLabel="Pause">
+                                            <connections>
+                                                <action selector="pause:" target="Ady-hI-5gd" id="eTj-os-ojc"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Resume" keyEquivalent="P" id="Fn3-AE-Us1" userLabel="Resume">
+                                            <connections>
+                                                <action selector="start:" target="Ady-hI-5gd" id="09M-gk-1Fl"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="p14-En-gK3"/>
                                         <menuItem title="CPU View" keyEquivalent="Z" id="g99-zk-gwB" userLabel="Graphical Memory View">
                                             <connections>
                                                 <action selector="showCPUWindow:" target="Ady-hI-5gd" id="6kX-V0-bJz"/>
@@ -229,7 +240,7 @@
                 <windowController id="B8D-0N-5wS" customClass="EmulationWindowController" sceneMemberID="viewController">
                     <window key="window" title="SpectREM" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="spectrem" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="160" y="570" width="320" height="256"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <value key="minSize" type="size" width="320" height="256"/>

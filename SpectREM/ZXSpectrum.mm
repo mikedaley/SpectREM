@@ -55,6 +55,7 @@
 
 - (void)start
 {
+    [self.audioCore start];
     [self resetFrame];
     [self doFrame];
 }
