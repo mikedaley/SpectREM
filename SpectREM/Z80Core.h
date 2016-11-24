@@ -139,7 +139,10 @@ public:
 		bool			Halted;
 		bool			EIHandled;
 		bool			IntReq;
-
+        
+        bool            DDmultiByte;
+        bool            FDmultiByte;
+        
 		unsigned int	TStates;
 	} Z80State;
 

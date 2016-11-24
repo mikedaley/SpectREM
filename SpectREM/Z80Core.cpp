@@ -148,7 +148,11 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		// First process an interrupt
         if (m_CPURegisters.IntReq)
         {
-            if (m_CPURegisters.EIHandled == false && m_CPURegisters.IFF1 != 0 && m_CPURegisters.TStates < int_t_states )
+            if (m_CPURegisters.EIHandled == false &&
+                m_CPURegisters.DDmultiByte == false &&
+                m_CPURegisters.FDmultiByte == false &&
+                m_CPURegisters.IFF1 != 0 &&
+                m_CPURegisters.TStates < int_t_states )
             {
                 // First see if we are halted?
                 if ( m_CPURegisters.Halted )
@@ -160,7 +164,6 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
                 // Process the int required
                 m_CPURegisters.IFF1 = 0;
                 m_CPURegisters.IFF2 = 0;
-                m_CPURegisters.IntReq = false;
                 m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
                 
                 switch (m_CPURegisters.IM)
@@ -198,11 +201,14 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
         
         // Clear the EIHandle flag
 		m_CPURegisters.EIHandled = false;
+        m_CPURegisters.DDmultiByte = false;
+        m_CPURegisters.FDmultiByte = false;
 
 		Z80OpcodeTable *table = &Main_Opcodes;
 
 		// Read the opcode
 		unsigned char opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
+        
 		m_CPURegisters.regPC++;
 		m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
 
@@ -219,6 +225,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			break;
 
 		case 0xdd:
+            
 			// Get the next byte
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
@@ -239,6 +246,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			}
 			else
 			{
+                m_CPURegisters.DDmultiByte = true;
                 table = &DD_Opcodes;
 			}
 			break;
@@ -253,11 +261,12 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			break;
 
 		case 0xfd:
-			// Get the next byte
+                
+            // Get the next byte
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
 			m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-
+                
 			if (opcode == 0xcb)
 			{
 				table = &FDCB_Opcodes;
@@ -273,6 +282,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			}
 			else
 			{
+                m_CPURegisters.FDmultiByte = true;
                 table = &FD_Opcodes;
             }
             break;
@@ -281,8 +291,16 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		// We can now execute the instruction
 		if (table->entries[opcode].function != NULL)
 		{
-			(this->*table->entries[opcode].function)(opcode);
+            (this->*table->entries[opcode].function)(opcode);
 		}
+        else
+        {
+            if (m_CPURegisters.DDmultiByte || m_CPURegisters.FDmultiByte)
+            {
+                m_CPURegisters.regPC--;
+                m_CPURegisters.regR--;
+            }
+        }
 		
 	} while (m_CPURegisters.TStates - tstates < num_tstates);
 	
