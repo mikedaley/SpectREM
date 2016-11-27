@@ -142,7 +142,7 @@ void CZ80Core::Z80CoreIOContention(unsigned short address, unsigned int t_states
 int CZ80Core::Execute(int num_tstates, int int_t_states)
 {
 	int tstates = m_CPURegisters.TStates;
-
+    
 	do
 	{
 		// First process an interrupt
@@ -154,6 +154,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
                 m_CPURegisters.IFF1 != 0 &&
                 m_CPURegisters.TStates < int_t_states )
             {
+                
                 // First see if we are halted?
                 if ( m_CPURegisters.Halted )
                 {
@@ -201,13 +202,19 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
         
         // Clear the EIHandle flag
 		m_CPURegisters.EIHandled = false;
+        
+        // Clear the multibyte flags in case the next instruction is not part of a multibyte instruction
         m_CPURegisters.DDmultiByte = false;
         m_CPURegisters.FDmultiByte = false;
 
 		Z80OpcodeTable *table = &Main_Opcodes;
 
-		// Read the opcode
-		unsigned char opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
+        // Grab the current PC and tStates to output some debugging later
+        int tempTs = m_CPURegisters.TStates;
+        int tempPC = m_CPURegisters.regPC;
+        
+        // Read the opcode
+        unsigned char opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
         
 		m_CPURegisters.regPC++;
 		m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
@@ -217,12 +224,12 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		{
 		case 0xcb:
 			table = &CB_Opcodes;
-
+                
 			// Get the next byte
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
 			m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-			break;
+            break;
 
 		case 0xdd:
             
@@ -258,7 +265,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
 			m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-			break;
+            break;
 
 		case 0xfd:
                 
@@ -291,14 +298,23 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		// We can now execute the instruction
 		if (table->entries[opcode].function != NULL)
 		{
+            // Debug output
+//            if (m_CPURegisters.regPC >= 0xdddd && m_CPURegisters.TStates < 69888)
+//            {
+//                printf("%04X  %5i  %-21s - %2X\n", tempPC, tempTs, table->entries[opcode].format, opcode);
+//            }
+            // Execute the opcode
             (this->*table->entries[opcode].function)(opcode);
-		}
+        }
         else
         {
+            // If no function has been found for the second opcode of a DD/FD multibyte instruction
+            // then use it as a prefix. Drop the PC back 1 and carry on processing the next opcode.
             if (m_CPURegisters.DDmultiByte || m_CPURegisters.FDmultiByte)
             {
                 m_CPURegisters.regPC--;
                 m_CPURegisters.regR--;
+                m_CPURegisters.TStates -= 4;
             }
         }
 		

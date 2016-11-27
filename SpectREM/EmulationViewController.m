@@ -102,7 +102,7 @@ NS_ENUM(NSUInteger, MachineType)
 {
     _debugTimerQueue = dispatch_queue_create("DebugTimerQueue", nil);
     _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
-    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC, 0);
+    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC, 0);
     
     dispatch_source_set_event_handler(_debugTimer, ^
     {
@@ -283,6 +283,7 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)switchToMachine:(NSUInteger)machineType
 {
     [_machine stop];
+    
     [self removeBindings];
     switch (machineType) {
         default:
@@ -299,6 +300,7 @@ NS_ENUM(NSUInteger, MachineType)
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
     [self setupSceneBindings];
+    
     [_machine start];
 }
 

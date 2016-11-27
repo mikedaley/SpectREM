@@ -102,8 +102,8 @@
         
         audioSampleRate = 192000;
         audioBufferSize = (audioSampleRate / fps) * 6;
-        self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
+        self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         
         [self resetSound];
         [self buildContentionTable];
@@ -117,7 +117,6 @@
                                                 emulationQueue:self.emulationQueue
                                                        machine:self];
         [self.audioCore reset];
-
         [self setupObservers];
     }
     return self;
@@ -164,10 +163,12 @@
             core->SignalInterrupt();
             
             float borderWidth = self.displayBorderWidth - 0.5;
-            CGRect textureRect = CGRectMake((emuLeftBorderPx - borderWidth) * emuHScale,
-                                            (emuBottomBorderPx - borderWidth) * emuVScale,
-                                            1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
-                                            1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2));
+            CGRect textureRect = (CGRect){
+                (emuLeftBorderPx - borderWidth) * emuHScale,
+                (emuBottomBorderPx - borderWidth) * emuVScale,
+                1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
+                1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2)
+            };
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
@@ -176,9 +177,10 @@
                                               flipped:YES];
             CFRelease(dataRef);
             
+            // Updating the emulators texture must be done on the main thread
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
-                                                                                                      inTexture:self.texture]];
+                                                                                                 inTexture:self.texture]];
             });
             
             frameCounter++;

@@ -209,26 +209,94 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 
 #pragma mark - Methods
 
+/**
+Initialises the machine which then references the EmulationViewController provided to display the emulation output
+ */
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController;
+
+/**
+Starts the machines audio core callback which is used to generate a frame request 50x per second
+ */
 - (void)start;
+
+/**
+Stops the machines audio core callback which stops the machine from running
+ */
 - (void)stop;
+
+/**
+Resets the machine by resetting the keyboard map, resetting the sound variables and resetting the frame variables
+ */
 - (void)reset;
+
+/**
+Resets the frame variables to the start of a frame
+ */
 - (void)resetFrame;
+
+/**
+Clears the audio buffer and resets the audio counter variables
+ */
 - (void)resetSound;
-- (void)loadSnapshotWithPath:(NSString *)path;
-- (void)generateFrame;
+
+/**
+Do frame is called by the audio callback 50x per second. This method checks for any outstanding events such as resetting the machine or loading a snapshot file. Once these events have been performed it then calls the GenerateFrame method to generate a new frame.
+ */
 - (void)doFrame;
+
+/**
+Causes the machine to generate an entire frame. A frame is defined as being n tStates in length e.g. for a 48k machine this value is 69888.
+ */
+- (void)generateFrame;
+
+/**
+Resets the keyboard map buffer so that any current keypresses are removed
+ */
 - (void)resetKeyboardMap;
+
+/**
+Builds a tState table that identifies what screen activity should be happening based on the tstate vlaue e.g retrace, border or pixel drawing
+ */
 - (void)buildDisplayTsTable;
+
+/**
+Builds a table that contains the memory address for the start of each pixel line on screen
+ */
 - (void)buildScreenLineAddressTable;
-- (void)loadSnapshot;
-- (void)loadZ80Snapshot;
-- (void)setupObservers;
+
+/**
+Builds a memory contention table that identifies the number of tStates that should be added to a memory read/write instruction when the memory address is within memory addresses used by the ULA e.g. the screen.
+ */
 - (void)buildContentionTable;
 
+/**
+Loads an SNA based snapshot file with the path provided
+ */
+- (void)loadSnapshotWithPath:(NSString *)path;- (void)loadSnapshot;
+
+/**
+ Loads a Z80 based snapshot file with the path provided
+ */
+- (void)loadZ80Snapshot;
+
+/**
+Sets up observers between the machine and the audio core
+ */
+- (void)setupObservers;
+
+/**
+Returns a reference to the Z80 core being used inside the machine
+ */
 - (void *)getCore;
 
+/**
+Updates the screen buffer based on the number of tStates that have passed in the current frame
+ */
 void updateScreenWithTStates(int numberTs, void *m);
+
+/**
+Updates the audio buffer for both the beeper and AY chip based on the number of tStates that have passed in the current frame
+ */
 void updateAudioWithTStates(int tsCPU, void *m, bool ay);
 
 @end

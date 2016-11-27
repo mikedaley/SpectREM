@@ -48,6 +48,8 @@
 @property (strong) NSString *fn;
 @property (strong) NSString *fc;
 
+@property (strong) NSString *tStates;
+
 #pragma mark - Methods
 
 - (void)updateViewWithMachine:(void *)m;

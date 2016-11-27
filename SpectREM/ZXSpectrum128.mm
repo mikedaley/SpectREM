@@ -99,9 +99,9 @@
         
         audioSampleRate = 192000;
         audioBufferSize = (audioSampleRate / fps) * 6;
-        self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
         audioAYTStatesStep = 32;
+        self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         
         currentROMPage = 0;
         currentRAMPage = 0;
@@ -120,7 +120,6 @@
                                                 emulationQueue:self.emulationQueue
                                                        machine:self];
         [self.audioCore reset];
-
         [self setupObservers];
     }
     return self;
@@ -153,7 +152,7 @@
     
     while (count > 0)
     {
-        int tsCPU = core->Execute(1, 32);
+        int tsCPU = core->Execute(1, 36);
         
         count -= tsCPU;
         
@@ -170,10 +169,12 @@
             core->SignalInterrupt();
             
             float borderWidth = self.displayBorderWidth - 0.5;
-            CGRect textureRect = CGRectMake((emuLeftBorderPx - borderWidth) * emuHScale,
-                                            (emuBottomBorderPx - borderWidth) * emuVScale,
-                                            1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
-                                            1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2));
+            CGRect textureRect = (CGRect){
+                (emuLeftBorderPx - borderWidth) * emuHScale,
+                (emuBottomBorderPx - borderWidth) * emuVScale,
+                1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
+                1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2)
+            };
 
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
@@ -182,9 +183,10 @@
                                               flipped:YES];
             CFRelease(dataRef);
             
+            // Updating the emulators texture must be done on the main thread
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
-                                                                                                      inTexture:self.texture]];
+                                                                                                 inTexture:self.texture]];
             });
             
             frameCounter++;
@@ -593,14 +595,12 @@ static unsigned char floatingBus(void *m)
 
 }
 
-
 - (void)loadZ80Snapshot
 {
-    
     NSData *data = [NSData dataWithContentsOfFile:self.snapshotPath];
     const char *fileBytes = (const char*)[data bytes];
     
-    BOOL version1 = YES;
+    int version = 1;
     
     // Decode the header
     core->SetRegister(CZ80Core::eREG_A, (unsigned char)fileBytes[0]);
@@ -610,14 +610,23 @@ static unsigned char floatingBus(void *m)
     
     unsigned short pc = ((unsigned short *)&fileBytes[6])[0];
     
-    // Zero means it is a Version 2/3 snapshot
-    if (pc == 0)
-    {
-        version1 = NO;
-        pc = ((unsigned short *)&fileBytes[32])[0];
+    unsigned short headerLength = ((unsigned short *)&fileBytes[30])[0];
+    NSLog(@"Header Length: %i", headerLength);
+
+    switch (headerLength) {
+        case 23:
+            version = 2;
+            pc = ((unsigned short *)&fileBytes[32])[0];
+            break;
+        case 54:
+        case 55:
+            version = 3;
+            pc = ((unsigned short *)&fileBytes[32])[0];
+            break;
     }
+    NSLog(@"Z80 Snapshot Version %i", version);
+
     core->SetRegister(CZ80Core::eREG_PC, pc);
-    
     NSLog(@"PC: %#2x", pc);
     
     core->SetRegister(CZ80Core::eREG_SP, ((unsigned short *)&fileBytes[8])[0]);
@@ -645,19 +654,27 @@ static unsigned char floatingBus(void *m)
     
     NSLog(@"IFF1: %i IM Mode: %i", (unsigned char)fileBytes[27] & 1, (unsigned char)fileBytes[29] & 3);
     
-    // Deal with the extra data available in version 2 & 3 formats
-    if (version1)
+    if (version == 1)
     {
-        NSLog(@"Z80 Snapshot Version 1");
         [self extractMemoryBlock:fileBytes memAddr:16384 fileOffset:30 compressed:compressed unpackedLength:49152];
     }
     else
     {
-        NSLog(@"Z80 Snapshot Version 2");
+        unsigned char hardwareType = ((unsigned char *)&fileBytes[34])[0];
+        NSLog(@"Hardware Type: %i", hardwareType);
         
         int16_t additionHeaderBlockLength = 0;
         additionHeaderBlockLength = ((unsigned short *)&fileBytes[30])[0];
         int offset = 32 + additionHeaderBlockLength;
+        
+        if (hardwareType == 4)
+        {
+            unsigned char data = ((unsigned char *)&fileBytes[35])[0];
+            disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
+            currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
+            displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
+            currentRAMPage = (data & 0x07);
+        }
         
         while (offset < data.length)
         {
