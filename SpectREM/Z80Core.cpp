@@ -149,8 +149,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
         if (m_CPURegisters.IntReq)
         {
             if (m_CPURegisters.EIHandled == false &&
-                m_CPURegisters.DDmultiByte == false &&
-                m_CPURegisters.FDmultiByte == false &&
+                m_CPURegisters.DDFDmultiByte == false &&
                 m_CPURegisters.IFF1 != 0 &&
                 m_CPURegisters.TStates < int_t_states )
             {
@@ -204,14 +203,13 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		m_CPURegisters.EIHandled = false;
         
         // Clear the multibyte flags in case the next instruction is not part of a multibyte instruction
-        m_CPURegisters.DDmultiByte = false;
-        m_CPURegisters.FDmultiByte = false;
+        m_CPURegisters.DDFDmultiByte = false;
 
 		Z80OpcodeTable *table = &Main_Opcodes;
 
         // Grab the current PC and tStates to output some debugging later
-        int tempTs = m_CPURegisters.TStates;
-        int tempPC = m_CPURegisters.regPC;
+//        int tempTs = m_CPURegisters.TStates;
+//        int tempPC = m_CPURegisters.regPC;
         
         // Read the opcode
         unsigned char opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
@@ -253,7 +251,6 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			}
 			else
 			{
-                m_CPURegisters.DDmultiByte = true;
                 table = &DD_Opcodes;
 			}
 			break;
@@ -289,7 +286,6 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			}
 			else
 			{
-                m_CPURegisters.FDmultiByte = true;
                 table = &FD_Opcodes;
             }
             break;
@@ -309,13 +305,12 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
         else
         {
             // If no function has been found for the second opcode of a DD/FD multibyte instruction
-            // then use it as a prefix. Drop the PC back 1 and carry on processing the next opcode.
-            if (m_CPURegisters.DDmultiByte || m_CPURegisters.FDmultiByte)
-            {
-                m_CPURegisters.regPC--;
-                m_CPURegisters.regR--;
-                m_CPURegisters.TStates -= 4;
-            }
+            // then use it as a prefix. Drop the PC back 1 and carry on processing the next opcode and set
+            // the chaining flag so we can stop interrupts until the chain has finished
+            m_CPURegisters.DDFDmultiByte = true;
+            m_CPURegisters.regPC--;
+            m_CPURegisters.regR--;
+            m_CPURegisters.TStates -= 4;
         }
 		
 	} while (m_CPURegisters.TStates - tstates < num_tstates);

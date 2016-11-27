@@ -140,8 +140,7 @@ public:
 		bool			EIHandled;
 		bool			IntReq;
         
-        bool            DDmultiByte;
-        bool            FDmultiByte;
+        bool            DDFDmultiByte;
         
 		unsigned int	TStates;
 	} Z80State;
