@@ -72,7 +72,7 @@ NS_ENUM(NSUInteger, MachineType)
     _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
     
     _configViewController = [ConfigViewController new];
-    [self.configEffectsView setFrameOrigin:(NSPoint){-self.configEffectsView.frame.size.width, 0}];
+    self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width, 0, 236, 256};
     self.configScrollView.documentView = _configViewController.view;
     
     preferences = [NSUserDefaults standardUserDefaults];
@@ -82,7 +82,7 @@ NS_ENUM(NSUInteger, MachineType)
 
     // Ensure that the view is the same size as the parent window before presenting the scene. Not
     // doing this causes the view to appear breifly at the size it is defined in the story board.
-    self.skView.frame = self.skView.window.frame;
+    self.skView.frame = (CGRect){0, 0, 320, 256};
     
     // Present the scene
     [self.skView presentScene:_emulationScene];
@@ -243,10 +243,12 @@ NS_ENUM(NSUInteger, MachineType)
     if (configFrame.origin.x == 0 - configFrame.size.width)
     {
         configFrame.origin.x = 0;
+        configFrame.origin.y = 0;
     }
     else
     {
         configFrame.origin.x = 0 - configFrame.size.width;
+        configFrame.origin.y = 0;
     }
     [self.configEffectsView.animator setFrame:configFrame];
 }
