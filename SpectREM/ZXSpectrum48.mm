@@ -57,6 +57,7 @@
         borderColour = 7;
         frameCounter = 0;
         
+        interruptLength = 32;
         tsPerFrame = 69888;
         tsToOrigin = 14335;
         tsPerLine = 224;
@@ -106,6 +107,7 @@
         audioTsStep = tsPerFrame / (audioSampleRate / fps);
         audioAYTStatesStep = 32;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
+        useAY = true;
         
         [self resetSound];
         [self buildContentionTable];
@@ -137,57 +139,6 @@
     currentROMPage = 0;
     displayPage = 1;
     disablePaging = YES;
-    core->Reset();
-}
-
-#pragma mark - CPU
-
-- (void)generateFrame
-{
-    int count = tsPerFrame;
-    
-    while (count > 0)
-    {
-        int tsCPU = core->Execute(1, 32);
-    
-        count -= tsCPU;
-        
-        updateAudioWithTStates(tsCPU, (__bridge void *)self, true);
-        
-        if (core->GetTStates() >= tsPerFrame )
-        {
-            // Must reset count leave the while loop
-            count = 0;
-            
-            updateScreenWithTStates(tsPerFrame - emuDisplayTs, (__bridge void *)self);
-            
-            core->ResetTStates( tsPerFrame );
-            core->SignalInterrupt();
-            
-            float borderWidth = self.displayBorderWidth - 0.5;
-            CGRect textureRect = (CGRect){
-                (emuLeftBorderPx - borderWidth) * emuHScale,
-                (emuBottomBorderPx - borderWidth) * emuVScale,
-                1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
-                1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2)
-            };
-            
-            // Update the display texture using the data from the emulator display buffer
-            CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
-            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
-                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
-                                              flipped:YES];
-            CFRelease(dataRef);
-
-            // Updating the emulators texture must be done on the main thread
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
-                                                                                                 inTexture:self.texture]];
-            });
-            
-            frameCounter++;
-        }
-    }
 }
 
 #pragma mark - Memory Access

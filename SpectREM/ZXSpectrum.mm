@@ -31,11 +31,6 @@
     return self;
 }
 
-- (void)generateFrame
-{
-    // Implemented in specific machine classes
-}
-
 #pragma mark - Binding
 
 - (void)setupObservers
@@ -75,6 +70,8 @@
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
+    CZ80Core *c = (CZ80Core *)[self getCore];
+    c->Reset();
 }
 
 - (void)resetSound
@@ -133,6 +130,58 @@
        [self resetFrame];
        [self generateFrame];
     });
+}
+
+#pragma mark - CPU
+
+- (void)generateFrame
+{
+    CZ80Core *core = (CZ80Core *)[self getCore];
+
+    int count = tsPerFrame;
+    
+    while (count > 0)
+    {
+        int tsCPU = core->Execute(1, interruptLength);
+        
+        count -= tsCPU;
+        
+        updateAudioWithTStates(tsCPU, (__bridge void *)self, useAY);
+        
+        if (core->GetTStates() >= tsPerFrame )
+        {
+            // Must reset count leave the while loop
+            count = 0;
+            
+            updateScreenWithTStates(tsPerFrame - emuDisplayTs, (__bridge void *)self);
+            
+            core->ResetTStates( tsPerFrame );
+            core->SignalInterrupt();
+            
+            float borderWidth = self.displayBorderWidth - 0.5;
+            CGRect textureRect = (CGRect){
+                (emuLeftBorderPx - borderWidth) * emuHScale,
+                (emuBottomBorderPx - borderWidth) * emuVScale,
+                1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
+                1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2)
+            };
+            
+            // Update the display texture using the data from the emulator display buffer
+            CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
+            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
+                                              flipped:YES];
+            CFRelease(dataRef);
+            
+            // Updating the emulators texture must be done on the main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
+                                                                                                 inTexture:self.texture]];
+            });
+            
+            frameCounter++;
+        }
+    }
 }
 
 #pragma mark - Audio
