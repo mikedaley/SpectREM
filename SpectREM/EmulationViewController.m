@@ -61,7 +61,10 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
 
+- (void)viewWillAppear
+{
     _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     
     // Setup debug window and view controllers
@@ -76,14 +79,12 @@ NS_ENUM(NSUInteger, MachineType)
     self.configScrollView.documentView = _configViewController.view;
     
     preferences = [NSUserDefaults standardUserDefaults];
-    
+
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     _emulationScene.scaleMode = [[preferences valueForKey:@"sceneScaleMode"] integerValue];
 
-    // Ensure that the view is the same size as the parent window before presenting the scene. Not
-    // doing this causes the view to appear breifly at the size it is defined in the story board.
-    self.skView.frame = (CGRect){0, 0, 320, 256};
-    
+    [self.skView setFrameSize:self.skView.window.frame.size];
+
     // Present the scene
     [self.skView presentScene:_emulationScene];
 
@@ -92,7 +93,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupSceneBindings];
     [self setupGamepad];
     [self setupDebugTimer];
-
+    
     [self switchToMachine:_configViewController.currentMachineType];
 }
 
