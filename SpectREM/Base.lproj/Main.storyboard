@@ -264,11 +264,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="459" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView appearanceType="vibrantDark" blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
+                            <visualEffectView appearanceType="vibrantDark" blendingMode="withinWindow" material="ultraDark" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
                                 <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="dark" id="xUN-0b-oUb">
+                                    <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" horizontalScrollElasticity="none" scrollerKnobStyle="dark" id="xUN-0b-oUb">
                                         <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="OWE-w8-B8B">
@@ -285,7 +285,7 @@
                                             <rect key="frame" x="-100" y="-100" width="236" height="16"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="f9x-dH-21o">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="f9x-dH-21o">
                                             <rect key="frame" x="220" y="0.0" width="16" height="256"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
