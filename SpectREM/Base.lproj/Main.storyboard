@@ -107,6 +107,12 @@
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="ujU-zz-zhp"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Hard Restart" tag="1" keyEquivalent="R" id="qvx-Nm-tSo" userLabel="Restart">
+                                            <connections>
+                                                <action selector="machineRestart:" target="Ady-hI-5gd" id="Lyz-79-5Ov"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="srL-8x-Qy7"/>
                                         <menuItem title="Configuration" keyEquivalent="c" id="Csa-4F-pON" userLabel="Configuration">
                                             <connections>
                                                 <action selector="configButtonPressed:" target="Ady-hI-5gd" id="INc-zS-6nO"/>

@@ -28,7 +28,7 @@
                             <slider verticalHuggingPriority="750" id="dSh-mw-YFP">
                                 <rect key="frame" x="116" y="145" width="84" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.40000000000000002" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="elg-x2-pLW"/>
+                                <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="elg-x2-pLW"/>
                                 <connections>
                                     <binding destination="ZJD-Fu-un9" name="value" keyPath="values.displayCurve" id="lu3-3m-giu"/>
                                 </connections>
