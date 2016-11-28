@@ -28,7 +28,7 @@ static int const cEmuDisplayBytesPerPx = 4;
 
 static int const cAudioBeeperVolumeMultiplier = 512;
 
-static int const cBorderDrawingOffset = 12; //12;
+static int const cBorderDrawingOffset =12; //12;
 static int const cPaperDrawingOffset = 16; //16;
 
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
@@ -143,7 +143,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     float emuVScale;
     
     // Holds the current border colour as set by the ULA
-    int borderColour;
+    int borderColor;
     
     // Tracks the number of tStates used for drawing the screen. This is compared with the number of tStates that have passed
     // in the current frame so that the right number of 8x1 screen chunks are drawn
@@ -301,5 +301,9 @@ void updateScreenWithTStates(int numberTs, void *m);
 Updates the audio buffer for both the beeper and AY chip based on the number of tStates that have passed in the current frame
  */
 void updateAudioWithTStates(int tsCPU, void *m, bool ay);
+
+void coreIOWrite(unsigned short address, unsigned char data, void *m);
+
+unsigned char coreIORead(unsigned short address, void *m);
 
 @end

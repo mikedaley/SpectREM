@@ -53,7 +53,7 @@
         
         event = eNone;
         
-        borderColour = 7;
+        borderColor = 7;
         frameCounter = 0;
         
         interruptLength = 32;
@@ -96,9 +96,9 @@
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * cEmuDisplayBytesPerPx;
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
-
-        self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
         
+        self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
+
         float fps = 50;
         
         audioSampleRate = 192000;
@@ -159,143 +159,6 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     machine->memory[address] = data;
 }
 
-#pragma mark - IO Access
-
-// Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
-// All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
-// C:x means that contention should be calculated based on the current tState value and then x tStates are to be
-// added to the current tState count
-//
-// in 40 - 7F?| Low bit | Contention pattern
-//------------+---------+-------------------
-//		No    |  Reset  | N:1, C:3
-//		No    |   Set   | N:4
-//		Yes   |  Reset  | C:1, C:3
-//		Yes   |   Set   | C:1, C:1, C:1, C:1
-//
-static unsigned char coreIORead(unsigned short address, void *m)
-{
-    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
-
-    if (address >= 16384 && address <= 32767)
-    {
-        if ((address & 1) == 0)
-        {
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(3);
-        }
-        else
-        {
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-        }
-    } else {
-        if ((address & 1) == 0)
-        {
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(3);
-        }
-        else
-        {
-            machine->core->AddTStates(4);
-        }
-    }
-    
-    // If the address does not belong to the ULA then return the floating bus value
-    if (address & 0x01)
-    {
-        // TODO: Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
-        // format: 000FDULR. F = Fire, D = Down, U = Up, L = Left, R = Right
-        if ((address & 0xff) == 0x1f)
-        {
-            return 0x0;
-        }
-        else if ((address & 0xc002) == 0xc000)
-        {
-            return [machine.audioCore readAYData];
-        }
-
-        return floatingBus(m);
-    }
-    
-    // Default return value
-    __block int result = 0xff;
-    
-    // Check to see if any keys have been pressed
-    for (int i = 0; i < 8; i++)
-    {
-        if (!(address & (0x100 << i)))
-        {
-            result &= machine->keyboardMap[i];
-        }
-    }
-    
-    return result;
-}
-
-static void coreIOWrite(unsigned short address, unsigned char data, void *m)
-{
-    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
-    
-    if (address >= 16384 && address <= 32767)
-    {
-        if ((address & 1) == 0)
-        {
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(3);
-        }
-        else
-        {
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(1);
-        }
-    }
-    else
-    {
-        if ((address & 1) == 0)
-        {
-            machine->core->AddTStates(1);
-            machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
-            machine->core->AddTStates(3);
-        }
-        else
-        {
-            machine->core->AddTStates(4);
-        }
-    }
-    
-    // Port: 0xFE
-    //   7   6   5   4   3   2   1   0
-    // +---+---+---+---+---+-----------+
-    // |   |   |   | E | M |  BORDER   |
-    // +---+---+---+---+---+-----------+
-    if (!(address & 0x01))
-    {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
-        
-        machine->audioEar = (data & 0x10) >> 4;
-        machine->audioMic = (data & 0x08) >> 3;
-        machine->borderColour = data & 0x07;
-    }
-}
-
 static void coreMemoryContention(unsigned short address, unsigned int tstates, void *m)
 {
     ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
@@ -309,46 +172,6 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
 static void coreIOContention(unsigned short address, unsigned int tstates, void *m)
 {
     // NOT USED
-}
-
-#pragma mark - Floating Bus
-
-// When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
-// Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
-// is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
-// predict if the ULA is reading a pixel or attribute byte based on the current t-state.
-// This routine works out what would be on the ULA bus for a given t-state and returns the result
-static unsigned char floatingBus(void *m)
-{
-    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
-    
-    int cpuTs = machine->core->GetTStates() - 1;
-    int currentDisplayLine = (cpuTs / machine->tsPerLine);
-    int currentTs = (cpuTs % machine->tsPerLine);
-    
-    // If the line and tState are within the bitmap of the screen then grab the
-    // pixel or attribute value
-    if (currentDisplayLine >= (machine->pxTopBorder + machine->pxVerticalBlank)
-        && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
-        && currentTs <= machine->tsHorizontalDisplay)
-    {
-        unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
-        
-        int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
-        int x = currentTs >> 2;
-        
-        if (ulaValueType == ePixel)
-        {
-            return machine->memory[cBitmapAddress + machine->emuTsLine[y] + x];
-        }
-        
-        if (ulaValueType == eAttribute)
-        {
-            return machine->memory[cBitmapAddress + cBitmapSize + ((y >> 3) << 5) + x];
-        }
-    }
-    
-    return 0xff;
 }
 
 #pragma mark - Load ROM
@@ -391,7 +214,7 @@ static unsigned char floatingBus(void *m)
     core->SetRegister(CZ80Core::eREG_SP, ((unsigned short *)&fileBytes[21])[1]);
     
     // Border colour
-    borderColour = fileBytes[26] & 0x07;
+    borderColor = fileBytes[26] & 0x07;
     
     // Set the IM
     core->SetIMMode(fileBytes[25]);
@@ -452,7 +275,7 @@ static unsigned char floatingBus(void *m)
     
     // Info byte 12
     unsigned char byte12 = fileBytes[12];
-    borderColour = (fileBytes[12] & 14) >> 1;
+    borderColor = (fileBytes[12] & 14) >> 1;
     BOOL compressed = fileBytes[12] & 32;
     
     NSLog(@"RB7: %i Border: %i SamRom: %i Compressed: %i", byte12 & 1, (byte12 & 14) >> 1, byte12 & 16, byte12 & 32);

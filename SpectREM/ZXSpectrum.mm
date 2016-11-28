@@ -25,8 +25,8 @@
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
 {
     if (self = [super init])
-    {
-        // Implemented in specific machine classes
+    {        
+        // Remember to call super in the subclass!
     }
     return self;
 }
@@ -312,10 +312,10 @@ void updateScreenWithTStates(int numberTs, void *m)
             case cDisplayBorder:
                 for (int i = 0; i < 8; i++)
                 {
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColour].r;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColour].g;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColour].b;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColour].a;                    
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].r;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].g;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].b;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].a;                    
                 }
                 break;
                 
@@ -368,6 +368,170 @@ void updateScreenWithTStates(int numberTs, void *m)
         machine->emuDisplayTs += machine->tsPerChar;
         numberTs -= machine->tsPerChar;
     }
+}
+
+#pragma mark - IO Access
+
+// Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
+// All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
+// C:x means that contention should be calculated based on the current tState value and then x tStates are to be
+// added to the current tState count
+//
+// in 40 - 7F?| Low bit | Contention pattern
+//------------+---------+-------------------
+//		No    |  Reset  | N:1, C:3
+//		No    |   Set   | N:4
+//		Yes   |  Reset  | C:1, C:3
+//		Yes   |   Set   | C:1, C:1, C:1, C:1
+//
+unsigned char coreIORead(unsigned short address, void *m)
+{
+    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    CZ80Core *core = (CZ80Core *)[machine getCore];
+    
+    if (address >= 16384 && address <= 32767)
+    {
+        if ((address & 1) == 0)
+        {
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(3);
+        }
+        else
+        {
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+        }
+    } else {
+        if ((address & 1) == 0)
+        {
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(3);
+        }
+        else
+        {
+            core->AddTStates(4);
+        }
+    }
+    
+    // If the address does not belong to the ULA then return the floating bus value
+    if (address & 0x01)
+    {
+        // TODO: Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
+        // format: 000FDULR. F = Fire, D = Down, U = Up, L = Left, R = Right
+        if ((address & 0xff) == 0x1f)
+        {
+            return 0x0;
+        }
+        else if ((address & 0xc002) == 0xc000)
+        {
+            return [machine.audioCore readAYData];
+        }
+        
+        return floatingBus(m);
+    }
+    
+    // Default return value
+    __block int result = 0xff;
+    
+    // Check to see if any keys have been pressed
+    for (int i = 0; i < 8; i++)
+    {
+        if (!(address & (0x100 << i)))
+        {
+            result &= machine->keyboardMap[i];
+        }
+    }
+    
+    return result;
+}
+
+void coreIOWrite(unsigned short address, unsigned char data, void *m)
+{
+    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    CZ80Core *core = (CZ80Core *)[machine getCore];
+    
+    if (address >= 16384 && address <= 32767)
+    {
+        if ((address & 1) == 0)
+        {
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(3);
+        }
+        else
+        {
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(1);
+        }
+    }
+    else
+    {
+        if ((address & 1) == 0)
+        {
+            core->AddTStates(1);
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddTStates(3);
+        }
+        else
+        {
+            core->AddTStates(4);
+        }
+    }
+    
+    // Port: 0xFE
+    //   7   6   5   4   3   2   1   0
+    // +---+---+---+---+---+-----------+
+    // |   |   |   | E | M |  BORDER   |
+    // +---+---+---+---+---+-----------+
+    if (!(address & 0x01))
+    {
+        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
+        
+        machine->audioEar = (data & 0x10) >> 4;
+        machine->audioMic = (data & 0x08) >> 3;
+        machine->borderColor = data & 0x07;
+    }
+    
+    if ( (address & 0x8002) == 0 && !machine->disablePaging)
+    {
+        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
+        {
+            updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
+        }
+        
+        // This is the paging port
+        machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
+        machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
+        machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
+        machine->currentRAMPage = (data & 0x07);
+    }
+    
+    if((address & 0xc002) == 0xc000 && machine->useAY)
+    {
+        [machine.audioCore setAYRegister:(data & 0x0f)];
+    }
+    
+    if ((address & 0xc002) == 0x8000 && machine->useAY)
+    {
+        [machine.audioCore writeAYData:data];
+    }
+    
 }
 
 #pragma mark - Build Display Tables
@@ -438,6 +602,47 @@ void updateScreenWithTStates(int numberTs, void *m)
             }
         }
     }
+}
+
+#pragma mark - Floating Bus
+
+// When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
+// Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
+// is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
+// predict if the ULA is reading a pixel or attribute byte based on the current t-state.
+// This routine works out what would be on the ULA bus for a given t-state and returns the result
+static unsigned char floatingBus(void *m)
+{
+    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    CZ80Core *core = (CZ80Core *)[machine getCore];
+
+    int cpuTs = core->GetTStates() - 1;
+    int currentDisplayLine = (cpuTs / machine->tsPerLine);
+    int currentTs = (cpuTs % machine->tsPerLine);
+    
+    // If the line and tState are within the bitmap of the screen then grab the
+    // pixel or attribute value
+    if (currentDisplayLine >= (machine->pxTopBorder + machine->pxVerticalBlank)
+        && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
+        && currentTs <= machine->tsHorizontalDisplay)
+    {
+        unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
+        
+        int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
+        int x = currentTs >> 2;
+        
+        if (ulaValueType == ePixel)
+        {
+            return machine->memory[cBitmapAddress + machine->emuTsLine[y] + x];
+        }
+        
+        if (ulaValueType == eAttribute)
+        {
+            return machine->memory[cBitmapAddress + cBitmapSize + ((y >> 3) << 5) + x];
+        }
+    }
+    
+    return 0xff;
 }
 
 #pragma mark - Contention Tables
