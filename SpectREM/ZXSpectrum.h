@@ -28,8 +28,8 @@ static int const cEmuDisplayBytesPerPx = 4;
 
 static int const cAudioBeeperVolumeMultiplier = 512;
 
-static int const cBorderDrawingOffset = 12;
-static int const cPaperDrawingOffset = 16;
+static int const cBorderDrawingOffset = 12; //12;
+static int const cPaperDrawingOffset = 16; //16;
 
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
