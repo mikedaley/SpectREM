@@ -58,7 +58,7 @@
         frameCounter = 0;
                 
         tsPerFrame = 70908;
-        tsToOrigin = 14368;
+        tsToOrigin = 14362;
         tsPerLine = 228;
         tsTopBorder = 56 * tsPerLine;
         tsVerticalBlank = 7 * tsPerLine;
