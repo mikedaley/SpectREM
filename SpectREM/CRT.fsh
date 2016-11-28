@@ -7,7 +7,7 @@
 //
 vec2 radialDistortion(vec2 pos, float distortion)
 {
-    vec2 cc = pos - vec2(0.465, 0.5);
+    vec2 cc = pos - vec2(0.454, 0.5);
     float dist = dot(cc, cc) * distortion;
     return (pos + cc * (1.3 + dist) * dist);
 }
@@ -34,6 +34,12 @@ vec3 vegnetteColor(vec3 color, vec2 coord, float vig_x, float vig_y)
 void main()
 {
     vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
+    
+    // If the texture coordinate is outside of the texture coordinates then discard the texel
+    if (texCoord.x < 0 || texCoord.y < 0.0805 || texCoord.x > 0.9075 || texCoord.y > 0.9193)
+    {
+        discard;
+    }
     vec3 colorCorrect = colorCorrection(texture2D(u_texture, texCoord).rgb, u_saturation, u_contrast, u_brightness);
     vec3 vignette = vegnetteColor(v_color_mix.rgb, texCoord, u_vignette_x, u_vignette_y);
     
