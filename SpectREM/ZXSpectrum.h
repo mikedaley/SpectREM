@@ -102,6 +102,8 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     // Keyboard matrix data
     unsigned char keyboardMap[8];
     
+    int interruptLength;
+    
     // Machine specific tState and pixel values
     int tsPerFrame;
     int tsToOrigin;
@@ -164,6 +166,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     int audioBufferSize;
     int audioAYTStates;
     int audioAYTStatesStep;
+    bool useAY;
     
     EventType event;
     
