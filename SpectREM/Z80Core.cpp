@@ -300,10 +300,10 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		if (table->entries[opcode].function != NULL)
 		{
             // Debug output
-            if (m_CPURegisters.regPC == 0x877b)
-            {
-                printf("%04X  %5i  %-21s - %2X\n", tempPC, tempTs, table->entries[opcode].format, opcode);
-            }
+//            if (m_CPURegisters.regPC == 0x877b)
+//            {
+//                printf("%04X  %5i  %-21s - %2X\n", tempPC, tempTs, table->entries[opcode].format, opcode);
+//            }
             // Execute the opcode
             (this->*table->entries[opcode].function)(opcode);
         }
