@@ -208,11 +208,16 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		Z80OpcodeTable *table = &Main_Opcodes;
 
         // Grab the current PC and tStates to output some debugging later
-//        int tempTs = m_CPURegisters.TStates;
-//        int tempPC = m_CPURegisters.regPC;
+        int tempTs = m_CPURegisters.TStates;
+        int tempPC = m_CPURegisters.regPC;
         
         // Read the opcode
         unsigned char opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
+        
+//        if (m_CPURegisters.regPC == 0x8794)
+//        {
+//            printf("%04X  %5i  %-21s - %2X\n", tempPC, tempTs, table->entries[opcode].format, opcode);
+//        }
         
 		m_CPURegisters.regPC++;
 		m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
@@ -295,10 +300,10 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		if (table->entries[opcode].function != NULL)
 		{
             // Debug output
-//            if (m_CPURegisters.regPC >= 0xdddd && m_CPURegisters.TStates < 69888)
-//            {
-//                printf("%04X  %5i  %-21s - %2X\n", tempPC, tempTs, table->entries[opcode].format, opcode);
-//            }
+            if (m_CPURegisters.regPC == 0x877b)
+            {
+                printf("%04X  %5i  %-21s - %2X\n", tempPC, tempTs, table->entries[opcode].format, opcode);
+            }
             // Execute the opcode
             (this->*table->entries[opcode].function)(opcode);
         }
@@ -307,6 +312,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
             // If no function has been found for the second opcode of a DD/FD multibyte instruction
             // then use it as a prefix. Drop the PC back 1 and carry on processing the next opcode and set
             // the chaining flag so we can stop interrupts until the chain has finished
+            
+            // TODO: This could be run if an undocumented opcode is found which would break!!!
             m_CPURegisters.DDFDmultiByte = true;
             m_CPURegisters.regPC--;
             m_CPURegisters.regR--;
