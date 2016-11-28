@@ -169,8 +169,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
                     }
                     signed int channelA = [machine.audioCore getChannelA];
-                    beeperLevelLeft += channelA * leftMix;
-                    beeperLevelRight += channelA * rightMix;
+                    beeperLevelLeft += (channelA * leftMix) * machine.soundVolume;
+                    beeperLevelRight += (channelA * rightMix) * machine.soundVolume;
                 }
                 if (machine.AYChannelB)
                 {
@@ -187,8 +187,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
                     }
                     signed int channelB = [machine.audioCore getChannelB];
-                    beeperLevelLeft += channelB * leftMix;
-                    beeperLevelRight += channelB * rightMix;
+                    beeperLevelLeft += (channelB * leftMix) * machine.soundVolume;
+                    beeperLevelRight += (channelB * rightMix) * machine.soundVolume;
                 }
                 if (machine.AYChannelC)
                 {
@@ -205,8 +205,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
                     }
                     signed int channelC = [machine.audioCore getChannelC];
-                    beeperLevelLeft += channelC * leftMix;
-                    beeperLevelRight += channelC * rightMix;
+                    beeperLevelLeft += (channelC * leftMix) * machine.soundVolume;
+                    beeperLevelRight += (channelC * rightMix) * machine.soundVolume;
                 }
                 
                 [machine.audioCore endFrame];
