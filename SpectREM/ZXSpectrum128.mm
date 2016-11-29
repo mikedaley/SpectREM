@@ -51,62 +51,14 @@
                          coreMemoryContention,
                          coreIOContention,
                          (__bridge void *)self);
-        
-        event = eNone;
-        
-        borderColor = 7;
-        frameCounter = 0;
-        
-        emuLeftBorderPx = 32;
-        emuRightBorderPx = 64;
-        
-        emuBottomBorderPx = 56;
-        emuTopBorderPx = 56;
-        
-        emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
-        emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
-        emuShouldInterpolate = NO;
-    
-        emuHScale = 1.0 / emuDisplayPxWidth;
-        emuVScale = 1.0 / emuDisplayPxHeight;
-        
-        emuDisplayTs = 0;
-        
-        [self resetFrame];
-        
-        // Setup the display buffer and length used to store the output from the emulator
-        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * cEmuDisplayBytesPerPx;
-        emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
-        
-        self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
-
-        float fps = 50;
-        
-        audioSampleRate = 192000;
-        audioBufferSize = (audioSampleRate / fps) * 6;
-        audioTsStep = machineInfo.tsPerFrame / (audioSampleRate / fps);
-        audioAYTStatesStep = 32;
-        self.audioBuffer = (int16_t *)malloc(audioBufferSize);
-        useAY = true;
-        
+                        
         currentROMPage = 0;
         currentRAMPage = 0;
         displayPage = 5;
         disablePaging = NO;
         
-        [self resetSound];
-        [self buildContentionTable];
-        [self buildScreenLineAddressTable];
-        [self buildDisplayTsTable];
-        [self resetKeyboardMap];
         [self loadDefaultROM];
         
-        self.audioCore = [[AudioCore alloc] initWithSampleRate:audioSampleRate
-                                               framesPerSecond:fps
-                                                emulationQueue:self.emulationQueue
-                                                       machine:self];
-        [self.audioCore reset];
-        [self setupObservers];
     }
     return self;
 }

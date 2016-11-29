@@ -27,10 +27,12 @@ static int const cEmuDisplayBitsPerPx = 32;
 static int const cEmuDisplayBitsPerComponent = 8;
 static int const cEmuDisplayBytesPerPx = 4;
 
-static int const cAudioBeeperVolumeMultiplier = 512;
+static int const cAudioBeeperVolumeMultiplier = 256;
+static int const cAudioSampleRate = 192000;
 
-static int const cBorderDrawingOffset = 10; //12;
-static int const cPaperDrawingOffset = 16; //16;
+// These offset numbers work, but I don't completely understand why!!!!
+static int const cBorderDrawingOffset = 10;
+static int const cPaperDrawingOffset = 16;
 
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
@@ -142,7 +144,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     double audioBeeperRight;
     int audioEar;
     int audioMic;
-    int audioSampleRate;
     int audioBufferIndex;
     int audioTStates;
     int audioTsCounter;
@@ -151,7 +152,6 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     int audioBufferSize;
     int audioAYTStates;
     int audioAYTStatesStep;
-    bool useAY;
     
     EventType event;
     

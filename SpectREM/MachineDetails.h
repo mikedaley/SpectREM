@@ -13,6 +13,7 @@
 typedef struct
 {
     int intLength;
+    
     int tsPerFrame;
     int tsToOrigin;
     int tsPerLine;
