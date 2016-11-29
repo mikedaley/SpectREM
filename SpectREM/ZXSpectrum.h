@@ -12,6 +12,7 @@
 #import "KeyboardEventProtocol.h"
 #import "EmulationViewController.h"
 #import "AudioCore.h"
+#import "MachineDetails.h"
 
 #pragma mark - Constants
 
@@ -37,7 +38,8 @@ static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 #pragma mark - Structures
 
 // Structure of pixel data used in the emulation display buffer
-struct PixelData {
+struct PixelData
+{
     uint8 r;
     uint8 g;
     uint8 b;
@@ -99,27 +101,10 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     BOOL disablePaging;
     int displayPage;
     
+    MachineInfo machineInfo;
+    
     // Keyboard matrix data
     unsigned char keyboardMap[8];
-    
-    int interruptLength;
-    
-    // Machine specific tState and pixel values
-    int tsPerFrame;
-    int tsToOrigin;
-    int tsPerLine;
-    int tsTopBorder;
-    int tsVerticalBlank;
-    int tsVerticalDisplay;
-    int tsHorizontalDisplay;
-    int tsPerChar;
-    
-    int pxTopBorder;
-    int pxVerticalBlank;
-    int pxHorizontalDisplay;
-    int pxVerticalDisplay;
-    int pxHorizontalTotal;
-    int pxVerticalTotal;
     
     // Emulation display sizes
     int emuLeftBorderPx;
@@ -215,7 +200,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 /**
 Initialises the machine which then references the EmulationViewController provided to display the emulation output
  */
-- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController;
+- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info;
 
 /**
 Starts the machines audio core callback which is used to generate a frame request 50x per second

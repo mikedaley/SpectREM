@@ -33,9 +33,9 @@
     free(self.audioBuffer);
 }
 
-- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
+- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info
 {
-    if (self = [super init])
+    if (self = [super initWithEmulationViewController:emulationViewController machineInfo:info])
     {
         // We need 64k of memory total for the 128k Speccy
         memory = (unsigned char*)calloc(128 * 1024, sizeof(unsigned char));
@@ -56,22 +56,6 @@
         
         borderColor = 7;
         frameCounter = 0;
-                
-        interruptLength = 36;
-        tsPerFrame = 70908;
-        tsToOrigin = 14362;
-        tsPerLine = 228;
-        tsTopBorder = 56 * tsPerLine;
-        tsVerticalBlank = 7 * tsPerLine;
-        tsVerticalDisplay = 192 * tsPerLine;
-        tsHorizontalDisplay = 128;
-        tsPerChar = 4;
-        pxTopBorder = 56;
-        pxVerticalBlank = 7;
-        pxHorizontalDisplay = 256;
-        pxVerticalDisplay = 192;
-        pxHorizontalTotal = 448;
-        pxVerticalTotal = 311;
         
         emuLeftBorderPx = 32;
         emuRightBorderPx = 64;
@@ -100,7 +84,7 @@
         
         audioSampleRate = 192000;
         audioBufferSize = (audioSampleRate / fps) * 6;
-        audioTsStep = tsPerFrame / (audioSampleRate / fps);
+        audioTsStep = machineInfo.tsPerFrame / (audioSampleRate / fps);
         audioAYTStatesStep = 32;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         useAY = true;
@@ -210,7 +194,7 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
     int page = address / 16384;
     if (page == 1 || page == 3 || page == 5 || page == 7)
     {
-        machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
+        machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->machineInfo.tsPerFrame] );
     }
 }
 

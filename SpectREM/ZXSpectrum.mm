@@ -22,11 +22,13 @@
     NSLog(@"Deallocating ZXSpectrum");
 }
 
-- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
+- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info
 {
     if (self = [super init])
     {        
         // Remember to call super in the subclass!
+        machineInfo = info;
+        _emulationViewController = emulationViewController;
     }
     return self;
 }
@@ -138,24 +140,24 @@
 {
     CZ80Core *core = (CZ80Core *)[self getCore];
 
-    int count = tsPerFrame;
+    int count = machineInfo.tsPerFrame;
     
     while (count > 0)
     {
-        int tsCPU = core->Execute(1, interruptLength);
+        int tsCPU = core->Execute(1, machineInfo.intLength);
         
         count -= tsCPU;
         
-        updateAudioWithTStates(tsCPU, (__bridge void *)self, useAY);
+        updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
         
-        if (core->GetTStates() >= tsPerFrame )
+        if (core->GetTStates() >= machineInfo.tsPerFrame )
         {
-            // Must reset count leave the while loop
+            // Must reset count to ensure we leave the while loop at the correct point
             count = 0;
             
-            updateScreenWithTStates(tsPerFrame - emuDisplayTs, (__bridge void *)self);
+            updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
             
-            core->ResetTStates( tsPerFrame );
+            core->ResetTStates( machineInfo.tsPerFrame );
             core->SignalInterrupt();
             
             float borderWidth = self.displayBorderWidth - 0.5;
@@ -302,8 +304,8 @@ void updateScreenWithTStates(int numberTs, void *m)
     
     while (numberTs > 0)
     {
-        int line = machine->emuDisplayTs / machine->tsPerLine;
-        int ts = machine->emuDisplayTs % machine->tsPerLine;
+        int line = machine->emuDisplayTs / machine->machineInfo.tsPerLine;
+        int ts = machine->emuDisplayTs % machine->machineInfo.tsPerLine;
         
         switch (machine->emuDisplayTsTable[line][ts]) {
             case cDisplayRetrace:
@@ -321,7 +323,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                 
             case cDisplayPaper:
             {
-                int y = line - (machine->pxVerticalBlank + machine->pxTopBorder);
+                int y = line - (machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxTopBorder);
                 int x = (ts >> 2) - 4;
                 
                 uint pixelAddress = machine->emuTsLine[y] + x;
@@ -365,8 +367,8 @@ void updateScreenWithTStates(int numberTs, void *m)
                 break;
         }
         
-        machine->emuDisplayTs += machine->tsPerChar;
-        numberTs -= machine->tsPerChar;
+        machine->emuDisplayTs += machine->machineInfo.tsPerChar;
+        numberTs -= machine->machineInfo.tsPerChar;
     }
 }
 
@@ -393,27 +395,27 @@ unsigned char coreIORead(unsigned short address, void *m)
     {
         if ((address & 1) == 0)
         {
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(3);
         }
         else
         {
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
         }
     } else {
         if ((address & 1) == 0)
         {
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(3);
         }
         else
@@ -459,24 +461,24 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
-    if ((address >= 16384 && address <= 32767) || (address >= 49152 && machine->currentRAMPage % 2))
+    if ((address >= 16384 && address <= 32767) || (address >= 49152 && (machine->currentRAMPage % 2)))
     {
         if ((address & 1) == 0)
         {
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(3);
         }
         else
         {
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(1);
         }
     }
@@ -485,7 +487,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         if ((address & 1) == 0)
         {
             core->AddTStates(1);
-            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->tsPerFrame] );
+            core->AddContentionTStates( machine->memoryContentionTable[core->GetTStates() % machine->machineInfo.tsPerFrame] );
             core->AddTStates(3);
         }
         else
@@ -524,12 +526,12 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->currentRAMPage = (data & 0x07);
     }
     
-    if((address & 0xc002) == 0xc000 && machine->useAY)
+    if((address & 0xc002) == 0xc000 && machine->machineInfo.hasAY)
     {
         [machine.audioCore setAYRegister:(data & 0x0f)];
     }
     
-    if ((address & 0xc002) == 0x8000 && machine->useAY)
+    if ((address & 0xc002) == 0x8000 && machine->machineInfo.hasAY)
     {
         [machine.audioCore writeAYData:data];
     }
@@ -553,18 +555,18 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
 
 - (void)buildDisplayTsTable
 {
-    for(int line = 0; line < pxVerticalTotal; line++)
+    for(int line = 0; line < machineInfo.pxVerticalTotal; line++)
     {
-        for(int ts = 0 ; ts < tsPerLine; ts++)
+        for(int ts = 0 ; ts < machineInfo.tsPerLine; ts++)
         {
-            if (line >= 0  && line < pxVerticalBlank)
+            if (line >= 0  && line < machineInfo.pxVerticalBlank)
             {
                 emuDisplayTsTable[line][ts] = cDisplayRetrace;
             }
             
-            if (line >= pxVerticalBlank  && line < pxVerticalBlank + pxTopBorder)
+            if (line >= machineInfo.pxVerticalBlank  && line < machineInfo.pxVerticalBlank + machineInfo.pxTopBorder)
             {
-                if (ts >= 176 && ts < tsPerLine)
+                if (ts >= 176 && ts < machineInfo.tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = cDisplayRetrace;
                 }
@@ -574,9 +576,9 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                 }
             }
             
-            if (line >= (pxVerticalBlank + pxTopBorder + pxVerticalDisplay) && line < pxVerticalTotal)
+            if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay) && line < machineInfo.pxVerticalTotal)
             {
-                if (ts >= 176 && ts < tsPerLine)
+                if (ts >= 176 && ts < machineInfo.tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = cDisplayRetrace;
                 }
@@ -586,13 +588,13 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                 }
             }
             
-            if (line >= (pxVerticalBlank + pxTopBorder) && line < (pxVerticalBlank + pxTopBorder + pxVerticalDisplay))
+            if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder) && line < (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay))
             {
                 if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 176))
                 {
                     emuDisplayTsTable[line][ts] = cDisplayBorder;
                 }
-                else if (ts >= 176 && ts < tsPerLine)
+                else if (ts >= 176 && ts < machineInfo.tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = cDisplayRetrace;
                 }
@@ -618,18 +620,18 @@ static unsigned char floatingBus(void *m)
     CZ80Core *core = (CZ80Core *)[machine getCore];
 
     int cpuTs = core->GetTStates() - 1;
-    int currentDisplayLine = (cpuTs / machine->tsPerLine);
-    int currentTs = (cpuTs % machine->tsPerLine);
+    int currentDisplayLine = (cpuTs / machine->machineInfo.tsPerLine);
+    int currentTs = (cpuTs % machine->machineInfo.tsPerLine);
     
     // If the line and tState are within the bitmap of the screen then grab the
     // pixel or attribute value
-    if (currentDisplayLine >= (machine->pxTopBorder + machine->pxVerticalBlank)
-        && currentDisplayLine < (machine->pxTopBorder + machine->pxVerticalBlank + machine->pxVerticalDisplay)
-        && currentTs <= machine->tsHorizontalDisplay)
+    if (currentDisplayLine >= (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank)
+        && currentDisplayLine < (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
+        && currentTs <= machine->machineInfo.tsHorizontalDisplay)
     {
         unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
         
-        int y = currentDisplayLine - (machine->pxTopBorder + machine->pxVerticalBlank);
+        int y = currentDisplayLine - (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank);
         int x = currentTs >> 2;
         
         if (ulaValueType == ePixel)
@@ -650,15 +652,15 @@ static unsigned char floatingBus(void *m)
 
 - (void)buildContentionTable
 {
-    for (int i = 0; i < tsPerFrame; i++)
+    for (int i = 0; i < machineInfo.tsPerFrame; i++)
     {
         memoryContentionTable[i] = 0;
         ioContentionTable[i] = 0;
         
-        if (i >= tsToOrigin)
+        if (i >= machineInfo.tsToOrigin)
         {
-            uint32 line = (i - tsToOrigin) / tsPerLine;
-            uint32 ts = (i - tsToOrigin) % tsPerLine;
+            uint32 line = (i - machineInfo.tsToOrigin) / machineInfo.tsPerLine;
+            uint32 ts = (i - machineInfo.tsToOrigin) % machineInfo.tsPerLine;
             
             if (line < 192 && ts < 128)
             {

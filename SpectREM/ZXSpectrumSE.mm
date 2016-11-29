@@ -33,14 +33,12 @@
     free(self.audioBuffer);
 }
 
-- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController
+- (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info
 {
-    if (self = [super initWithEmulationViewController:emulationViewController])
+    if (self = [super initWithEmulationViewController:emulationViewController machineInfo:info])
     {
         // We need 64k of memory total for the 48k Speccy
         memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
-        
-        self.emulationViewController = emulationViewController;
         
         core = new CZ80Core;
         core->Initialise(coreMemoryRead,
@@ -55,23 +53,6 @@
         
         borderColor = 7;
         frameCounter = 0;
-        
-        interruptLength = 32;
-        tsPerFrame = 69888;
-        tsToOrigin = 14335;
-        tsPerLine = 224;
-        tsTopBorder = 56 * tsPerLine;
-        tsVerticalBlank = 8 * tsPerLine;
-        tsVerticalDisplay = 192 * tsPerLine;
-        tsHorizontalDisplay = 128;
-        tsPerChar = 4;
-        
-        pxTopBorder = 56;
-        pxVerticalBlank = 8;
-        pxHorizontalDisplay = 256;
-        pxVerticalDisplay = 192;
-        pxHorizontalTotal = 448;
-        pxVerticalTotal = 312;
         
         emuLeftBorderPx = 32;
         emuRightBorderPx = 64;
@@ -103,7 +84,7 @@
         
         audioSampleRate = 192000;
         audioBufferSize = (audioSampleRate / fps) * 6;
-        audioTsStep = tsPerFrame / (audioSampleRate / fps);
+        audioTsStep = machineInfo.tsPerFrame / (audioSampleRate / fps);
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         useAY = false;
         
@@ -165,7 +146,7 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
     
     if (address >= 16384 && address <= 32767)
     {
-        machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->tsPerFrame] );
+        machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->machineInfo.tsPerFrame] );
     }
 }
 

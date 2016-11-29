@@ -291,13 +291,13 @@ NS_ENUM(NSUInteger, MachineType)
     switch (machineType) {
         default:
         case eZXSpectrum48:
-            _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self];
+            _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self machineInfo:machines[0]];
             break;
         case eZXSpectrum128:
-            _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self];
+            _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self machineInfo:machines[1]];
             break;
         case eZXSpectrumSE:
-            _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self];
+            _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self machineInfo:machines[2]];
             break;
     }
     _emulationScene.keyboardDelegate = _machine;
