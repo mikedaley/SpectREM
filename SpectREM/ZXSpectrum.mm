@@ -459,7 +459,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
-    if (address >= 16384 && address <= 32767)
+    if ((address >= 16384 && address <= 32767) || (address >= 49152 && machine->currentRAMPage % 2))
     {
         if ((address & 1) == 0)
         {
@@ -503,6 +503,8 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     {
         updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
         
+//        NSLog(@"%04x : %02x", address, data);
+        
         machine->audioEar = (data & 0x10) >> 4;
         machine->audioMic = (data & 0x08) >> 3;
         machine->borderColor = data & 0x07;
@@ -531,7 +533,6 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     {
         [machine.audioCore writeAYData:data];
     }
-    
 }
 
 #pragma mark - Build Display Tables
