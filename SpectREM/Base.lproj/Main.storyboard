@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C48b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C53a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
@@ -119,6 +119,25 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="80P-ky-wSs"/>
+                                        <menuItem title="ZX Spectrum 48k" keyEquivalent="1" id="6EG-ZY-5u4">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="mRA-uK-Mun"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ZX Spectrum 128k" tag="1" keyEquivalent="2" id="Fps-8n-58X" userLabel="ZX Spectrum 128k">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="tXc-7S-WdG"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ZX Spectrum 48k SE" tag="2" keyEquivalent="3" id="4fI-rz-Ifv" userLabel="ZX Spectrum 48k SE">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="xEd-U9-PH0"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="FyH-IS-Ku3"/>
                                         <menuItem title="Screen 1x" tag="1" keyEquivalent="1" id="sGW-QG-gYl" userLabel="Screen 1x">
                                             <connections>
                                                 <action selector="setWindowSize:" target="Ady-hI-5gd" id="yEp-I4-6KL"/>

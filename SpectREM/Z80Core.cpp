@@ -208,8 +208,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		Z80OpcodeTable *table = &Main_Opcodes;
 
         // Grab the current PC and tStates to output some debugging later
-        int tempTs = m_CPURegisters.TStates;
-        int tempPC = m_CPURegisters.regPC;
+//        int tempTs = m_CPURegisters.TStates;
+//        int tempPC = m_CPURegisters.regPC;
         
         // Read the opcode
         unsigned char opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);

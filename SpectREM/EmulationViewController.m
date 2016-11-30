@@ -307,6 +307,12 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine start];
 }
 
+- (IBAction)switchMachine:(id)sender
+{
+    NSMenuItem *menuItem = (NSMenuItem *)sender;
+    [self switchToMachine:menuItem.tag];
+}
+
 - (IBAction)setWindowSize:(id)sender
 {
     // Only allow window resizing if not in full screen

@@ -44,7 +44,7 @@
 // Reference to the machine using the audio core
 @property (weak) ZXSpectrum *machine;
 
-// reference to the emulation queue that is being used to drive the emulation
+// Reference to the emulation queue that is being used to drive the emulation
 @property (assign) dispatch_queue_t emulationQueue;
 
 // Queue used to control the samples being provided to Core Audio
@@ -314,7 +314,7 @@ static float fAYVolBase[] = {
 {
     int freq = AYRegisters[ eAYREGISTER_NOISEPER ];
     
-    // A 0 is assumed to be 1
+    // 0 is assumed to be 1
     if (freq == 0)
     {
         freq = 1;
