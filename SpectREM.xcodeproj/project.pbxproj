@@ -26,6 +26,7 @@
 		ED804FD71DD32443004B6F31 /* NSClipView+Flipped.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */; };
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
+		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
 		EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A61DB0D60700511BAF /* EmulationScene.sks */; };
@@ -85,6 +86,8 @@
 		ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+Vibrancy.m"; sourceTree = "<group>"; };
 		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
+		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
+		EDEBA79F1DEEDCB000671446 /* Snapshot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Snapshot.mm; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF3A4A01DB0D60700511BAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDF3A4A11DB0D60700511BAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -209,6 +212,15 @@
 			name = "CPU View Controller";
 			sourceTree = "<group>";
 		};
+		EDEBA7A11DEEE6DE00671446 /* Snapshot */ = {
+			isa = PBXGroup;
+			children = (
+				EDEBA79E1DEEDCB000671446 /* Snapshot.h */,
+				EDEBA79F1DEEDCB000671446 /* Snapshot.mm */,
+			);
+			name = Snapshot;
+			sourceTree = "<group>";
+		};
 		EDF3A4941DB0D60700511BAF = {
 			isa = PBXGroup;
 			children = (
@@ -320,6 +332,7 @@
 		EDF3A4C21DB0D77D00511BAF /* Machines */ = {
 			isa = PBXGroup;
 			children = (
+				EDEBA7A11DEEE6DE00671446 /* Snapshot */,
 				EDFEB2941DED8D4100ED3C25 /* MachineDetails.h */,
 				995657F11DC1327100114FC9 /* ZXSpectrum.h */,
 				995657F21DC1327100114FC9 /* ZXSpectrum.mm */,
@@ -495,6 +508,7 @@
 				EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */,
 				ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */,
 				ED804FD71DD32443004B6F31 /* NSClipView+Flipped.m in Sources */,
+				EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */,
 				EDF3A4F01DB0D7D000511BAF /* ZXSpectrum48.mm in Sources */,
 				99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */,
 				99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */,
