@@ -310,7 +310,8 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)switchMachine:(id)sender
 {
     NSMenuItem *menuItem = (NSMenuItem *)sender;
-    [self switchToMachine:menuItem.tag];
+    preferences = [NSUserDefaults standardUserDefaults];
+    [preferences setValue:@(menuItem.tag) forKey:@"currentMachineType"];
 }
 
 - (IBAction)setWindowSize:(id)sender
