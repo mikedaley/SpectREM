@@ -247,6 +247,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
         // Grab the current state of the audio ear output
         signed int beeperLevelLeft = (machine->audioEar * cAudioBeeperVolumeMultiplier) * machine.soundVolume;
         signed int beeperLevelRight = beeperLevelLeft;
+        
+        // Setting the channel mix 0.5 causes the output to to be centered between left and right speakers
         double leftMix = 0.5;
         double rightMix = 0.5;
         
@@ -553,9 +555,6 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     if (!(address & 0x01))
     {
         updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
-        
-//        NSLog(@"%04x : %02x", address, data);
-        
         machine->audioEar = (data & 0x10) >> 4;
         machine->audioMic = (data & 0x08) >> 3;
         machine->borderColor = data & 0x07;

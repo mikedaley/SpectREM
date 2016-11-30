@@ -159,7 +159,7 @@
     unsigned char byte12 = fileBytes[12];
     
     // For campatibility reasons if byte 12 = 255 then is should be assumed to = 1
-    byte12 = (byte12 == 255) ? 1 : byte12;
+//    byte12 = (byte12 == 255) ? byte12 : 1;
     
     machine->borderColor = (fileBytes[12] & 14) >> 1;
     BOOL compressed = fileBytes[12] & 32;
@@ -194,7 +194,7 @@
             additionHeaderBlockLength = ((unsigned short *)&fileBytes[30])[0];
             int offset = 32 + additionHeaderBlockLength;
             
-            if (hardwareType == 4)
+            if ( (version == 2 && (hardwareType == 3 || hardwareType == 4)) || (version == 3 && (hardwareType == 4 || hardwareType == 5 || hardwareType == 6)) )
             {
                 // Decode byte 35 so that port 0x7ffd can be set on the 128k
                 unsigned char data = ((unsigned char *)&fileBytes[35])[0];
@@ -223,7 +223,7 @@
                 
                 int pageId = fileBytes[offset + 2];
                 
-                if (hardwareType != 4)
+                if (version == 1 || ((version == 2 || version == 3) && (hardwareType == 0 || hardwareType == 1)))
                 {
                     // 48k
                     switch (pageId) {
@@ -272,6 +272,7 @@
                             break;
                     }
                 }
+                
                 offset += compressedLength + 3;
             }
             break;
