@@ -27,7 +27,6 @@
 {
     if (self = [super init])
     {        
-        // Remember to call super in the subclass!
         machineInfo = info;
         _emulationViewController = emulationViewController;
         
@@ -44,7 +43,6 @@
         
         emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
-        emuShouldInterpolate = NO;
         
         emuHScale = 1.0 / emuDisplayPxWidth;
         emuVScale = 1.0 / emuDisplayPxHeight;
@@ -442,7 +440,8 @@ unsigned char coreIORead(unsigned short address, void *m)
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
-    if (address >= 16384 && address <= 32767)
+    if ((address >= 16384 && address <= 32767) ||
+        (address >= 49152 && (machine->currentRAMPage % 2) && machine->machineInfo.hasPaging))
     {
         if ((address & 1) == 0)
         {
@@ -493,7 +492,7 @@ unsigned char coreIORead(unsigned short address, void *m)
     }
     
     // Default return value
-    __block int result = 0xff;
+    int result = 0xff;
     
     // Check to see if any keys have been pressed
     for (int i = 0; i < 8; i++)
@@ -512,7 +511,8 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
-    if ((address >= 16384 && address <= 32767) || (address >= 49152 && (machine->currentRAMPage % 2) && machine->machineInfo.hasPaging))
+    if ((address >= 16384 && address <= 32767) ||
+        (address >= 49152 && (machine->currentRAMPage % 2) && machine->machineInfo.hasPaging))
     {
         if ((address & 1) == 0)
         {
@@ -554,17 +554,17 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
+        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
         machine->audioEar = (data & 0x10) >> 4;
         machine->audioMic = (data & 0x08) >> 3;
         machine->borderColor = data & 0x07;
     }
     
-    if ( (address & 0x8002) == 0 && !machine->disablePaging)
+    if ( (address & 0x8002) == 0 && machine->disablePaging == NO)
     {
         if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
         {
-            updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + cBorderDrawingOffset, m);
+            updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
         }
         
         // This is the paging port

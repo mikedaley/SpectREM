@@ -123,17 +123,17 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     }
     else if (page == 1)
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
         machine->memory[(5 * 16384) + address] = data;
     }
     else if (page == 2)
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
         machine->memory[(2 * 16384) + address] = data;
     }
     else if (page == 3)
     {
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
         machine->memory[(machine->currentRAMPage * 16384) + address] = data;
     }
     

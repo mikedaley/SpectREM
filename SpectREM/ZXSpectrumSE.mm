@@ -89,7 +89,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     {
         return;
     }
-    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
+    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
     machine->memory[address] = data;
 }
 

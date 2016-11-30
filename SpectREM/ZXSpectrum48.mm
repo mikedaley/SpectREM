@@ -92,7 +92,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     
     ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
 
-    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + cPaperDrawingOffset, m);
+    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
     machine->memory[address] = data;
 }
 
