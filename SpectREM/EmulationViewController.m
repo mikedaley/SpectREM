@@ -74,7 +74,7 @@ NS_ENUM(NSUInteger, MachineType)
     _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
     _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
     
-    _configViewController = [ConfigViewController new];
+    _configViewController = [_storyBoard instantiateControllerWithIdentifier:@"ConfigViewController"];
     self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width, 0, 236, 256};
     self.configScrollView.documentView = _configViewController.view;
     

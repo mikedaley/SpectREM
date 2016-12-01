@@ -36,9 +36,9 @@
     [preferences removeObserver:self forKeyPath:@"currentMachineType"];
 }
 
-- (instancetype)init
+- (instancetype)initWithCoder:(NSCoder *)coder
 {
-    self = [super init];
+    self = [super initWithCoder:coder];
     if (self)
     {
         NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
