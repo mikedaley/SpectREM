@@ -282,8 +282,19 @@ Updates the audio buffer for both the beeper and AY chip based on the number of 
  */
 void updateAudioWithTStates(int tsCPU, void *m, bool ay);
 
+/**
+Handles any port writes made by the CPU
+ */
 void coreIOWrite(unsigned short address, unsigned char data, void *m);
 
+/**
+ Handles any port reads made by the CPU
+ */
 unsigned char coreIORead(unsigned short address, void *m);
+
+/**
+ Returns the name of the machine
+ */
+- (NSString *)machineName;
 
 @end

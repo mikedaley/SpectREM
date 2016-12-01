@@ -187,4 +187,9 @@ static void coreIOContention(unsigned short address, unsigned int tstates, void 
     return (void*)core;
 }
 
+- (NSString *)machineName
+{
+    return @"ZX Spectrum 128k";
+}
+
 @end

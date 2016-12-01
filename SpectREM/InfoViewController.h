@@ -10,4 +10,8 @@
 
 @interface InfoViewController : NSViewController
 
+@property (strong) NSString *text;
+
+- (void)displayMessage;
+
 @end

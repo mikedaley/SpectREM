@@ -330,29 +330,32 @@
             </objects>
             <point key="canvasLocation" x="75.5" y="692"/>
         </scene>
-        <!--View Controller-->
+        <!--Info View Controller-->
         <scene sceneID="Ghy-Iy-lJ4">
             <objects>
-                <viewController storyboardIdentifier="InfoViewController" id="9tO-SO-LXj" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InfoViewController" id="9tO-SO-LXj" customClass="InfoViewController" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="Gf9-Ur-rL7">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="69"/>
+                        <rect key="frame" x="0.0" y="0.0" width="275" height="69"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="5es-Yf-py2">
-                                <rect key="frame" x="18" y="20" width="272" height="29"/>
+                                <rect key="frame" x="18" y="20" width="239" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="ZX Spectrum 48k SE" id="Hw2-IQ-RFb">
                                     <font key="font" metaFont="system" size="24"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
+                                <connections>
+                                    <binding destination="9tO-SO-LXj" name="value" keyPath="self.text" id="Tmd-tE-nBt"/>
+                                </connections>
                             </textField>
                         </subviews>
                     </view>
                 </viewController>
                 <customObject id="RxS-Ic-NaC" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="211" y="942"/>
+            <point key="canvasLocation" x="188.5" y="941.5"/>
         </scene>
         <!--Config View Controller-->
         <scene sceneID="suV-XS-mcE">

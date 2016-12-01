@@ -13,6 +13,7 @@
 #import "ConfigViewController.h"
 #import "GraphicalMemViewController.h"
 #import "CPUViewController.h"
+#import "InfoViewController.h"
 #import "EmulationView.h"
 
 #import "ZXSpectrum48.h"
@@ -35,9 +36,12 @@ NS_ENUM(NSUInteger, MachineType)
     ZXSpectrum              *_machine;
     EmulationScene          *_emulationScene;
     ConfigViewController    *_configViewController;
+    InfoViewController      *_infoViewController;
     NSStoryboard            *_storyBoard;
+    
     NSWindowController      *_graphicalMemoryWindowController;
     GraphicalMemViewController *_graphicalMemViewController;
+    
     NSWindowController      *_cpuWindowController;
     CPUViewController       *_cpuViewController;
     
@@ -78,6 +82,10 @@ NS_ENUM(NSUInteger, MachineType)
     self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width, 0, 236, 256};
     self.configScrollView.documentView = _configViewController.view;
     
+    _infoViewController = [_storyBoard instantiateControllerWithIdentifier:@"InfoViewController"];
+    [_infoViewController.view setFrameOrigin:(NSPoint){10,10}];
+    [self.skView addSubview:_infoViewController.view];
+    
     preferences = [NSUserDefaults standardUserDefaults];
 
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
@@ -91,6 +99,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupLocalObservers];
     [self setupMachineBindings];
     [self setupSceneBindings];
+    [self setupNotificationCenterObservers];
     [self setupGamepad];
     [self setupDebugTimer];
     
@@ -156,6 +165,11 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)setupLocalObservers
 {
     [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)setupNotificationCenterObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResize:) name:NSWindowDidResizeNotification object:nil];
 }
 
 - (void)removeBindings
@@ -304,6 +318,9 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupMachineBindings];
     [self setupSceneBindings];
     
+    _infoViewController.text = _machine.machineName;
+    [_infoViewController displayMessage];
+    
     [_machine start];
 }
 
@@ -389,6 +406,15 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
     // Uncomment line below to get device input details
 //    IOReturn tIOReturn = IOHIDManagerOpen(_hidManager, kIOHIDOptionsTypeNone);
     IOHIDManagerRegisterInputValueCallback(_hidManager, gamepadAction, (void*)self);
+}
+
+#pragma mark - Window Resize
+
+- (void)windowResize:(NSNotification *)notification
+{
+    float xx = (self.view.frame.size.width - _infoViewController.view.frame.size.width) / 2;
+    float yy = (self.view.frame.size.height - _infoViewController.view.frame.size.height) - 10;
+    [_infoViewController.view setFrameOrigin:(NSPoint){xx, yy}];
 }
 
 @end

@@ -885,21 +885,20 @@ static unsigned char floatingBus(void *m)
 {
     // This will be called from the main thread so it needs to by sync'd with the emulation queue
     dispatch_sync(self.emulationQueue, ^
-                  {
-                      
-                      self.snapshotPath = path;
-                      NSString *extension = [[path pathExtension] uppercaseString];
-                      
-                      if ([extension isEqualToString:@"SNA"])
-                      {
-                          event = eSnapshot;
-                      }
-                      
-                      if ([extension isEqualToString:@"Z80"])
-                      {
-                          event = eZ80Snapshot;
-                      }
-                  });
+      {
+          self.snapshotPath = path;
+          NSString *extension = [[path pathExtension] uppercaseString];
+          
+          if ([extension isEqualToString:@"SNA"])
+          {
+              event = eSnapshot;
+          }
+          
+          if ([extension isEqualToString:@"Z80"])
+          {
+              event = eZ80Snapshot;
+          }
+      });
 }
 
 - (void)loadSnapshot
@@ -921,6 +920,11 @@ static unsigned char floatingBus(void *m)
 - (void *)getCore;
 {
     return nil;
+}
+
+- (NSString *)machineName
+{
+    return @"Unknown";
 }
 
 @end
