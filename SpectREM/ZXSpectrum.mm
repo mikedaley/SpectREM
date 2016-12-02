@@ -474,7 +474,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         }
     }
     
-    // If the address does not belong to the ULA then return the floating bus value
+    // If the address is odd and does not belong to the ULA then return the floating bus value
     if (address & 0x01)
     {
         // TODO: Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
@@ -502,6 +502,10 @@ unsigned char coreIORead(unsigned short address, void *m)
             result &= machine->keyboardMap[i];
         }
     }
+
+    // To emulate a series 3, the result of reading a ULA port should have bits 5+7 set and bit 6 should be set
+    // to the last value of the bit 4 when writing to port 0xFE.
+    result = (result & 191) | (machine->audioEar << 6);
     
     return result;
 }
