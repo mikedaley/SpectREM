@@ -449,7 +449,7 @@ unsigned char coreIORead(unsigned short address, void *m)
     }
     
     if (machine->machineInfo.hasPaging &&
-        (page == 1 || page == 2 ||
+        (page == 1 ||
          (page == 3 && (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7))))
     {
         contended = true;
@@ -538,7 +538,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
     
     if (machine->machineInfo.hasPaging &&
-             (page == 1 || page == 2 ||
+             (page == 1 ||
               (page == 3 && (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7))))
     {
         contended = true;

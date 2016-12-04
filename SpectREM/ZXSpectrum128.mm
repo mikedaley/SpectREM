@@ -144,7 +144,7 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
     ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
     
     int page = address / 16384;
-    if (page == 1 || page == 2 ||
+    if (page == 1 ||
         (page == 3 &&
          (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7)))
     {
