@@ -440,8 +440,22 @@ unsigned char coreIORead(unsigned short address, void *m)
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
-    if ((address >= 16384 && address <= 32767) ||
-        (address >= 49152 && (machine->currentRAMPage % 2) && machine->machineInfo.hasPaging))
+    bool contended = false;
+    int page = address / 16384;
+    
+    if (!machine->machineInfo.hasPaging && page == 1)
+    {
+        contended = true;
+    }
+    
+    if (machine->machineInfo.hasPaging &&
+        (page == 1 || page == 2 ||
+         (page == 3 && (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7))))
+    {
+        contended = true;
+    }
+    
+    if (contended)
     {
         if ((address & 1) == 0)
         {
@@ -515,8 +529,22 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
-    if ((address >= 16384 && address <= 32767) ||
-        (address >= 49152 && (machine->currentRAMPage % 2) && machine->machineInfo.hasPaging))
+    bool contended = false;
+    int page = address / 16384;
+    
+    if (!machine->machineInfo.hasPaging && page == 1)
+    {
+        contended = true;
+    }
+    
+    if (machine->machineInfo.hasPaging &&
+             (page == 1 || page == 2 ||
+              (page == 3 && (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7))))
+    {
+        contended = true;
+    }
+    
+    if (contended)
     {
         if ((address & 1) == 0)
         {
