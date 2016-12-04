@@ -138,6 +138,12 @@
             break;
     }
     
+    if (pc == 0)
+    {
+        version = 2;
+        pc = ((unsigned short *)&fileBytes[32])[0];
+    }
+    
     NSLog(@"Z80 Snapshot Version %i", version);
     NSLog(@"PC: 0x%04X", pc);
     
