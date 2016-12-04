@@ -443,11 +443,13 @@ unsigned char coreIORead(unsigned short address, void *m)
     bool contended = false;
     int page = address / 16384;
     
+    // Identify contention on the 48k
     if (!machine->machineInfo.hasPaging && page == 1)
     {
         contended = true;
     }
     
+    // Identify contention on the 128k
     if (machine->machineInfo.hasPaging &&
         (page == 1 ||
          (page == 3 && (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7))))
@@ -532,11 +534,13 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     bool contended = false;
     int page = address / 16384;
     
+    // Identify contention in the 48k
     if (!machine->machineInfo.hasPaging && page == 1)
     {
         contended = true;
     }
     
+    // Identify contention in the 128k
     if (machine->machineInfo.hasPaging &&
              (page == 1 ||
               (page == 3 && (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7))))
