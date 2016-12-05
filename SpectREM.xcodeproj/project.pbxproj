@@ -301,9 +301,9 @@
 		EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				EDEBA7A21DF02C7600671446 /* Info View Controller */,
 				ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */,
 				ED619C881DC0BE39004A60CA /* Emulation View Controller */,
+				EDEBA7A21DF02C7600671446 /* Info View Controller */,
 				ED619C891DC0BE44004A60CA /* Config View Controller */,
 				ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */,
 				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,

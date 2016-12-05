@@ -21,7 +21,7 @@
     self.view.wantsLayer = YES;
     
     self.view.layer.frame = self.view.bounds;
-    self.view.layer.cornerRadius = 10;
+    self.view.layer.cornerRadius = 5;
     self.view.layer.backgroundColor = [NSColor colorWithRed:0 green:0 blue:0 alpha:0.6].CGColor;
     [self.view setAlphaValue:0.0];
 }
