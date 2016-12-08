@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C53a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C60b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
@@ -578,9 +578,10 @@
                                         <slider verticalHuggingPriority="750" id="J4X-nd-DCH">
                                             <rect key="frame" x="116" y="168" width="81" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="WeB-av-d05"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="WeB-av-d05"/>
                                             <connections>
-                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.soundVolume" id="7z6-jD-VdC"/>
+                                                <binding destination="eq9-hE-kE2" name="maxValue" keyPath="self.maxSoundVolume" id="ZBG-KZ-QS5"/>
+                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.soundVolume" previousBinding="ZBG-KZ-QS5" id="UjF-bi-1wU"/>
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" id="Okf-Fh-vE3">

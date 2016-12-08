@@ -243,7 +243,7 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output
-        signed int beeperLevelLeft = (machine->audioEar * cAudioBeeperVolumeMultiplier) * machine.soundVolume;
+        signed int beeperLevelLeft = (machine->audioEar * cAudioBeeperVolumeMultiplier);
         signed int beeperLevelRight = beeperLevelLeft;
         
         // Setting the channel mix 0.5 causes the output to to be centered between left and right speakers
@@ -269,8 +269,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
                     }
                     signed int channelA = [machine.audioCore getChannelA];
-                    beeperLevelLeft += (channelA * leftMix) * machine.soundVolume;
-                    beeperLevelRight += (channelA * rightMix) * machine.soundVolume;
+                    beeperLevelLeft += (channelA * leftMix);
+                    beeperLevelRight += (channelA * rightMix);
                 }
                 if (machine.AYChannelB)
                 {
@@ -287,8 +287,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
                     }
                     signed int channelB = [machine.audioCore getChannelB];
-                    beeperLevelLeft += (channelB * leftMix) * machine.soundVolume;
-                    beeperLevelRight += (channelB * rightMix) * machine.soundVolume;
+                    beeperLevelLeft += (channelB * leftMix);
+                    beeperLevelRight += (channelB * rightMix);
                 }
                 if (machine.AYChannelC)
                 {
@@ -305,8 +305,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
                     }
                     signed int channelC = [machine.audioCore getChannelC];
-                    beeperLevelLeft += (channelC * leftMix) * machine.soundVolume;
-                    beeperLevelRight += (channelC * rightMix) * machine.soundVolume;
+                    beeperLevelLeft += (channelC * leftMix);
+                    beeperLevelRight += (channelC * rightMix);
                 }
                 
                 [machine.audioCore endFrame];
@@ -457,6 +457,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         contended = true;
     }
     
+    // Apply contention
     if (contended)
     {
         if ((address & 1) == 0)
@@ -548,6 +549,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         contended = true;
     }
     
+    // Apply contention
     if (contended)
     {
         if ((address & 1) == 0)
