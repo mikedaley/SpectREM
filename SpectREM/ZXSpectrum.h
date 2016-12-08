@@ -16,20 +16,25 @@
 
 #pragma mark - Constants
 
+// Drawing actions based on tState in the current frame. These values are used inside the emuDisplayTsTable array
 static int const cDisplayBorder = 1;
 static int const cDisplayPaper = 2;
 static int const cDisplayRetrace = 3;
 
+// Commonly used memory addresses
 static int const cBitmapAddress = 16384;
 static int const cBitmapSize = 6144;
 
-static int const cEmuDisplayBitsPerPx = 32;
-static int const cEmuDisplayBitsPerComponent = 8;
+// Number of bytes needed to represent each pixel in the final screen texture
 static int const cEmuDisplayBytesPerPx = 4;
 
+// Used to increase the volume of the beeper output. Too high and the output is clipped
 static int const cAudioBeeperVolumeMultiplier = 256;
+
+// Sampled rate used to drive the update frequency in the audio engine which is then used to generate new frames e.g. 50.08 fps
 static int const cAudioSampleRate = 192000;
 
+// Static values used when building the contention and floating bus tables
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 
@@ -99,6 +104,7 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     BOOL disablePaging;
     int displayPage;
     
+    // Holds timing, display and audio data specific to each machine
     MachineInfo machineInfo;
     
     // Keyboard matrix data
@@ -112,7 +118,10 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     int emuDisplayPxWidth;
     int emuDisplayPxHeight;
 
+    // Stores the memory address for the first byte in each row of the bitmap screen
     uint16 emuTsLine[192];
+    
+    // Stores the screen action based on the current frames tstate e.g. draw border, draw bitmap or beam retrace
     uint8 emuDisplayTsTable[313][225];
 
     // Image buffer array buffer, its length and current index into the buffer used when drawing
@@ -120,7 +129,10 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     unsigned int emuDisplayBufferLength;
     unsigned int emuDisplayBufferIndex;
     
-    // Holds the texture horiz and vert scale used when only selecting a subset of the texture
+    // Holds the texture horiz and vert scale used when only selecting a subset of the texture to be displayed.
+    // The full Spectrum screen size is generated so to display equal border sizes a sub rect of the full texture
+    // is used for the display. Also reducing the size of the border is perfored in the same way e.g. making a smaller
+    // rect from which to take the texture data
     float emuHScale;
     float emuVScale;
     

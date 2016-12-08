@@ -103,12 +103,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Machine" id="9kf-Gy-LJf">
                                     <items>
-                                        <menuItem title="Restart" keyEquivalent="r" id="B7z-BB-OuW" userLabel="Restart">
+                                        <menuItem title="Reset" keyEquivalent="r" id="B7z-BB-OuW" userLabel="Restart">
                                             <connections>
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="ujU-zz-zhp"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hard Restart" tag="1" keyEquivalent="R" id="qvx-Nm-tSo" userLabel="Restart">
+                                        <menuItem title="Hard Reset" tag="1" keyEquivalent="R" id="qvx-Nm-tSo" userLabel="Restart">
                                             <connections>
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="Lyz-79-5Ov"/>
                                             </connections>
@@ -355,7 +355,7 @@
                 </viewController>
                 <customObject id="RxS-Ic-NaC" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="188.5" y="941.5"/>
+            <point key="canvasLocation" x="76" y="908"/>
         </scene>
         <!--Config View Controller-->
         <scene sceneID="suV-XS-mcE">
@@ -743,7 +743,7 @@
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s"/>
             </objects>
-            <point key="canvasLocation" x="-159" y="1176"/>
+            <point key="canvasLocation" x="-36" y="1269"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">

@@ -627,6 +627,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
 
 #pragma mark - Build Display Tables
 
+// Stores the memory address for the start of each bitmap line on the screen
 - (void)buildScreenLineAddressTable
 {
     for(int i = 0; i < 3; i++)
@@ -641,6 +642,8 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
 }
 
+// Generates a table that holds what screen activity should be happening based on each T-States within a Frame e.g. should the
+// border be drawn, bitmap screen or beam retrace
 - (void)buildDisplayTsTable
 {
     for(int line = 0; line < machineInfo.pxVerticalTotal; line++)
@@ -957,11 +960,13 @@ static unsigned char floatingBus(void *m)
 
 #pragma mark - Getters
 
+// This is implemented within each machine class and returna a reference to the core being used for that machinne
 - (void *)getCore;
 {
     return nil;
 }
 
+// Returns the string name for a machine. Each machine class implements this method and returns the appropriate machine name
 - (NSString *)machineName
 {
     return @"Unknown";
