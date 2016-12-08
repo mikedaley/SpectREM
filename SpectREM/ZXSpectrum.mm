@@ -30,7 +30,7 @@
         machineInfo = info;
         _emulationViewController = emulationViewController;
         
-        event = eNone;
+        event = EventType::eNone;
         
         borderColor = 7;
         frameCounter = 0;
@@ -50,7 +50,7 @@
         emuDisplayTs = 0;
 
         // Setup the display buffer and length used to store the output from the emulator
-        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * cEmuDisplayBytesPerPx;
+        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelData);
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
 
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
@@ -152,24 +152,24 @@
     {
        switch (event)
        {
-           case eNone:
+           case EventType::eNone:
                break;
                
-           case eReset:
-               event = eNone;
+           case EventType::eReset:
+               event = EventType::eNone;
                [self reset:NO];
                break;
                
-           case eSnapshot:
+           case EventType::eSnapshot:
                [self reset:NO];
                [self loadSnapshot];
-               event = eNone;
+               event = EventType::eNone;
                break;
                
-           case eZ80Snapshot:
+           case EventType::eZ80Snapshot:
                [self reset:NO];
                [self loadZ80Snapshot];
-               event = eNone;
+               event = EventType::eNone;
                break;
                
            default:
@@ -216,7 +216,7 @@
             };
             
             // Update the display texture using the data from the emulator display buffer
-            CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength);
+            CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength, kCFAllocatorNull);
             self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                  size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
                                               flipped:YES];
@@ -235,7 +235,7 @@
 
 #pragma mark - Audio
 
-void updateAudioWithTStates(int numberTs, void *m, bool ay)
+void updateAudioWithTStates(int numberTs, void *m, bool hasAY)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     
@@ -250,12 +250,13 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
         double leftMix = 0.5;
         double rightMix = 0.5;
         
-        if (ay)
+        if (hasAY)
         {
             machine->audioAYTStates++;
             if (machine->audioAYTStates >= machine->audioAYTStatesStep)
             {
                 [machine.audioCore updateAY:1];
+                
                 if (machine.AYChannelA)
                 {
                     if (machine.AYChannelABalance > 0.5)
@@ -268,7 +269,7 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         leftMix = 1.0 - (machine.AYChannelABalance * 2);
                         rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
                     }
-                    signed int channelA = [machine.audioCore getChannelA];
+                    signed int channelA = machine.audioCore.getChannelA;
                     beeperLevelLeft += (channelA * leftMix);
                     beeperLevelRight += (channelA * rightMix);
                 }
@@ -286,7 +287,7 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         leftMix = 1.0 - (machine.AYChannelBBalance * 2);
                         rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
                     }
-                    signed int channelB = [machine.audioCore getChannelB];
+                    signed int channelB = machine.audioCore.getChannelB;
                     beeperLevelLeft += (channelB * leftMix);
                     beeperLevelRight += (channelB * rightMix);
                 }
@@ -304,7 +305,7 @@ void updateAudioWithTStates(int numberTs, void *m, bool ay)
                         leftMix = 1.0 - (machine.AYChannelCBalance * 2);
                         rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
                     }
-                    signed int channelC = [machine.audioCore getChannelC];
+                    signed int channelC = machine.audioCore.getChannelC;
                     beeperLevelLeft += (channelC * leftMix);
                     beeperLevelRight += (channelC * rightMix);
                 }
@@ -357,10 +358,10 @@ void updateScreenWithTStates(int numberTs, void *m)
         int ts = machine->emuDisplayTs % machine->machineInfo.tsPerLine;
         
         switch (machine->emuDisplayTsTable[line][ts]) {
-            case cDisplayRetrace:
+            case DisplayAction::eDisplayRetrace:
                 break;
                 
-            case cDisplayBorder:
+            case DisplayAction::eDisplayBorder:
                 for (int i = 0; i < 8; i++)
                 {
                     machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].r;
@@ -370,7 +371,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                 }
                 break;
                 
-            case cDisplayPaper:
+            case DisplayAction::eDisplayPaper:
             {
                 int y = line - (machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxTopBorder);
                 int x = (ts >> 2) - 4;
@@ -652,18 +653,18 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         {
             if (line >= 0  && line < machineInfo.pxVerticalBlank)
             {
-                emuDisplayTsTable[line][ts] = cDisplayRetrace;
+                emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
             }
             
             if (line >= machineInfo.pxVerticalBlank  && line < machineInfo.pxVerticalBlank + machineInfo.pxTopBorder)
             {
                 if (ts >= 176 && ts < machineInfo.tsPerLine)
                 {
-                    emuDisplayTsTable[line][ts] = cDisplayRetrace;
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
                 else
                 {
-                    emuDisplayTsTable[line][ts] = cDisplayBorder;
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
             }
             
@@ -671,11 +672,11 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
             {
                 if (ts >= 176 && ts < machineInfo.tsPerLine)
                 {
-                    emuDisplayTsTable[line][ts] = cDisplayRetrace;
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
                 else
                 {
-                    emuDisplayTsTable[line][ts] = cDisplayBorder;
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
             }
             
@@ -683,15 +684,15 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
             {
                 if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 176))
                 {
-                    emuDisplayTsTable[line][ts] = cDisplayBorder;
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
                 else if (ts >= 176 && ts < machineInfo.tsPerLine)
                 {
-                    emuDisplayTsTable[line][ts] = cDisplayRetrace;
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
                 else
                 {
-                    emuDisplayTsTable[line][ts] = cDisplayPaper;
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayPaper;
                 }
             }
         }
@@ -725,12 +726,12 @@ static unsigned char floatingBus(void *m)
         int y = currentDisplayLine - (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank);
         int x = currentTs >> 2;
         
-        if (ulaValueType == ePixel)
+        if (ulaValueType == FloatingBusValueType::ePixel)
         {
             return machine->memory[cBitmapAddress + machine->emuTsLine[y] + x];
         }
         
-        if (ulaValueType == eAttribute)
+        if (ulaValueType == FloatingBusValueType::eAttribute)
         {
             return machine->memory[cBitmapAddress + cBitmapSize + ((y >> 3) << 5) + x];
         }
@@ -934,12 +935,12 @@ static unsigned char floatingBus(void *m)
           
           if ([extension isEqualToString:@"SNA"])
           {
-              event = eSnapshot;
+              event = EventType::eSnapshot;
           }
           
           if ([extension isEqualToString:@"Z80"])
           {
-              event = eZ80Snapshot;
+              event = EventType::eZ80Snapshot;
           }
       });
 }

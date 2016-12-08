@@ -16,20 +16,12 @@
 
 #pragma mark - Constants
 
-// Drawing actions based on tState in the current frame. These values are used inside the emuDisplayTsTable array
-static int const cDisplayBorder = 1;
-static int const cDisplayPaper = 2;
-static int const cDisplayRetrace = 3;
-
 // Commonly used memory addresses
 static int const cBitmapAddress = 16384;
 static int const cBitmapSize = 6144;
 
-// Number of bytes needed to represent each pixel in the final screen texture
-static int const cEmuDisplayBytesPerPx = 4;
-
 // Used to increase the volume of the beeper output. Too high and the output is clipped
-static int const cAudioBeeperVolumeMultiplier = 256;
+static int const cAudioBeeperVolumeMultiplier = 48;
 
 // Sampled rate used to drive the update frequency in the audio engine which is then used to generate new frames e.g. 50.08 fps
 static int const cAudioSampleRate = 192000;
@@ -43,10 +35,10 @@ static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 // Structure of pixel data used in the emulation display buffer
 struct PixelData
 {
-    uint8 r;
-    uint8 g;
-    uint8 b;
-    uint8 a;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
 };
 
 // Pallette
@@ -54,14 +46,14 @@ static struct PixelData pallette[] = {
     
     // Normal colours
     {0, 0, 0, 255},         // Black
-    {0, 0, 205, 255},       // Blue
-    {205, 0, 0, 255},       // Red
-    {205, 0, 205, 255},     // Green
-    {0, 205, 0, 255},       // Magenta
-    {0, 205, 205, 255},     // Cyan
-    {205, 205, 0, 255},     // Yellow
-    {205, 205, 205, 255},   // White
-    
+    {0, 0, 200, 255},       // Blue
+    {200, 0, 0, 255},       // Red
+    {200, 0, 200, 255},     // Green
+    {0, 200, 0, 255},       // Magenta
+    {0, 200, 200, 255},     // Cyan
+    {200, 200, 0, 255},     // Yellow
+    {195, 195, 195, 255},   // White
+
     // Bright colours
     {0, 0, 0, 255},
     {0, 0, 255, 255},
@@ -75,6 +67,15 @@ static struct PixelData pallette[] = {
 
 #pragma mark - Type Definitions
 
+// Defines an enum for each type of display action used when drawing the screen
+typedef NS_ENUM(NSUInteger, DisplayAction)
+{
+    eDisplayBorder = 1,
+    eDisplayPaper,
+    eDisplayRetrace
+};
+
+// Defines an enum for each event type that can be encountered
 typedef NS_ENUM(NSUInteger, EventType)
 {
     eNone,
@@ -83,6 +84,7 @@ typedef NS_ENUM(NSUInteger, EventType)
     eZ80Snapshot
 };
 
+// Defines an enum for the different values that are retrieved as part of the floating bus method
 typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 {
     ePixel = 1,
