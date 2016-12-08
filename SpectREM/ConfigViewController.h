@@ -21,6 +21,7 @@
 @property (assign) double displayVignetteY;
 
 // Sound properties
+@property (assign) double maxSoundVolume;
 @property (assign) double soundVolume;
 @property (assign) double soundHighPassFilter;
 @property (assign) double soundLowPassFilter;
