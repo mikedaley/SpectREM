@@ -113,14 +113,14 @@
 
 #pragma mark - Reset
 
-- (void)reset
+- (void)reset:(BOOL)hard
 {
     frameCounter = 0;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
-    CZ80Core *c = (CZ80Core *)[self getCore];
-    c->Reset();
+    CZ80Core *core = (CZ80Core *)[self getCore];
+    core->Reset(hard);
 }
 
 - (void)resetSound
@@ -157,17 +157,17 @@
                
            case eReset:
                event = eNone;
-               [self reset];
+               [self reset:NO];
                break;
                
            case eSnapshot:
-               [self reset];
+               [self reset:NO];
                [self loadSnapshot];
                event = eNone;
                break;
                
            case eZ80Snapshot:
-               [self reset];
+               [self reset:NO];
                [self loadZ80Snapshot];
                event = eNone;
                break;
@@ -496,6 +496,8 @@ unsigned char coreIORead(unsigned short address, void *m)
     {
         // TODO: Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
         // format: 000FDULR. F = Fire, D = Down, U = Up, L = Left, R = Right
+        // Joystick is read first as it takes priority if you read from a port that activates the keyboard as well on a
+        // real machine.
         if ((address & 0xff) == 0x1f)
         {
             return 0x0;

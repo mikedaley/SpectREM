@@ -52,6 +52,7 @@
         [preferences addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
         
+        // Set the maximum volume that the volume control can select. > 1.0 means we are amplifying the output
         self.maxSoundVolume = 3.0;
         
         [preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];

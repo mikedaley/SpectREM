@@ -66,9 +66,9 @@
     displayPage = 1;
 }
 
-- (void)reset
+- (void)reset:(BOOL)hard
 {
-    [super reset];
+    [super reset:hard];
     currentRAMPage = 0;
     currentROMPage = 0;
     displayPage = 1;

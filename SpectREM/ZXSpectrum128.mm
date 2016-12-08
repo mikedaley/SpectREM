@@ -72,9 +72,9 @@
     disablePaging = NO;    
 }
 
-- (void)reset
+- (void)reset:(BOOL)hard
 {
-    [super reset];
+    [super reset:hard];
     currentROMPage = 0;
     currentRAMPage = 0;
     displayPage = 5;

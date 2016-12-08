@@ -245,9 +245,10 @@ NS_ENUM(NSUInteger, MachineType)
 {
     dispatch_sync(_machine.emulationQueue, ^
     {
+        NSMenuItem *menuItem = (NSMenuItem *)sender;
         [self.view.window setTitle:@"SpectREM"];
         [_machine.audioCore reset];
-        [_machine reset];
+        [_machine reset:menuItem.tag];
     });
 }
 

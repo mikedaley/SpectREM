@@ -210,7 +210,7 @@ Stops the machines audio core callback which stops the machine from running
 /**
 Resets the machine by resetting the keyboard map, resetting the sound variables and resetting the frame variables
  */
-- (void)reset;
+- (void)reset:(BOOL)hard;
 
 /**
 Resets the frame variables to the start of a frame
