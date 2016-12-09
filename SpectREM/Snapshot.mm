@@ -11,9 +11,80 @@
 
 @implementation Snapshot
 
+#pragma mark - Snapshot info
+
++ (int)machineNeededForZ80SnapshotWithPath:(NSString *)snapshotPath
+{
+    NSData *data = [NSData dataWithContentsOfFile:snapshotPath];
+    const char *fileBytes = (const char*)[data bytes];
+ 
+    // Decode the header
+    unsigned short headerLength = ((unsigned short *)&fileBytes[30])[0];
+    int version;
+    unsigned char hardwareType;
+    unsigned short pc;
+    
+    switch (headerLength) {
+        case 23:
+            version = 2;
+            pc = ((unsigned short *)&fileBytes[32])[0];
+            break;
+        case 54:
+        case 55:
+            version = 3;
+            pc = ((unsigned short *)&fileBytes[32])[0];
+            break;
+        default:
+            version = 1;
+            pc = ((unsigned short *)&fileBytes[6])[0];
+            break;
+    }
+    
+    if (pc == 0)
+    {
+        version = 2;
+        pc = ((unsigned short *)&fileBytes[32])[0];
+    }
+    
+    if (version == 1)
+    {
+        return 0;
+    }
+    
+    if (version == 2)
+    {
+        hardwareType = ((unsigned char *)&fileBytes[34])[0];
+        if (hardwareType == 0 || hardwareType == 1)
+        {
+            return 0;
+        }
+        
+        if (hardwareType == 3 || hardwareType == 4)
+        {
+            return 1;
+        }
+    }
+    
+    if (version == 3)
+    {
+        hardwareType = ((unsigned char *)&fileBytes[34])[0];
+        if (hardwareType == 0 || hardwareType == 1 || hardwareType == 3)
+        {
+            return 0;
+        }
+        
+        if (hardwareType == 4 || hardwareType == 5 || hardwareType == 6)
+        {
+            return 1;
+        }
+    }
+    
+    return -1;
+}
+
 #pragma mark - SNA Snapshot
 
-+ (void)loadSnapshotWithPath:(NSString *)snapshotPath IntoMachine:(ZXSpectrum *)machine
++ (int)loadSnapshotWithPath:(NSString *)snapshotPath IntoMachine:(ZXSpectrum *)machine
 {
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
@@ -106,11 +177,13 @@
             }
         }
     }
+    
+    return 0;
 }
 
 #pragma mark - Z80 Snaphot
 
-+ (void)loadZ80SnapshotWithPath:(NSString *)snapshotpath intoMachine:(ZXSpectrum *)machine
++ (int)loadZ80SnapshotWithPath:(NSString *)snapshotpath intoMachine:(ZXSpectrum *)machine
 {
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
@@ -120,6 +193,7 @@
     // Decode the header
     unsigned short headerLength = ((unsigned short *)&fileBytes[30])[0];
     int version;
+    unsigned char hardwareType;
     unsigned short pc;
     
     switch (headerLength) {
@@ -145,8 +219,7 @@
     }
     
     NSLog(@"Z80 Snapshot Version %i", version);
-    NSLog(@"PC: 0x%04X", pc);
-    
+
     core->SetRegister(CZ80Core::eREG_A, (unsigned char)fileBytes[0]);
     core->SetRegister(CZ80Core::eREG_F, (unsigned char)fileBytes[1]);
     core->SetRegister(CZ80Core::eREG_BC, ((unsigned short *)&fileBytes[2])[0]);
@@ -193,7 +266,7 @@
             
         case 2:
         case 3:
-            unsigned char hardwareType = ((unsigned char *)&fileBytes[34])[0];
+            hardwareType = ((unsigned char *)&fileBytes[34])[0];
             NSLog(@"Hardware Type: %@", [self hardwareStringForVersion:version hardwareType:hardwareType]);
             
             int16_t additionHeaderBlockLength = 0;
@@ -283,6 +356,8 @@
             }
             break;
     }
+    
+    return 0;
 }
 
 #pragma mark - Extract Memory From Snapshot

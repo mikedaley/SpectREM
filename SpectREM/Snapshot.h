@@ -12,8 +12,9 @@
 
 @interface Snapshot : NSObject
 
-+ (void)loadSnapshotWithPath:(NSString *)snapshotPath IntoMachine:(ZXSpectrum *)machine;
-+ (void)loadZ80SnapshotWithPath:(NSString *)snapshotpath intoMachine:(ZXSpectrum *)machine;
++ (int)machineNeededForZ80SnapshotWithPath:(NSString *)snapshotPath;
++ (int)loadSnapshotWithPath:(NSString *)snapshotPath IntoMachine:(ZXSpectrum *)machine;
++ (int)loadZ80SnapshotWithPath:(NSString *)snapshotpath intoMachine:(ZXSpectrum *)machine;
 + (void)extractMemoryBlock:(const char*)fileBytes memAddr:(int)memAddr fileOffset:(int)fileOffset compressed:(BOOL)isCompressed unpackedLength:(int)unpackedLength intoMachine:(ZXSpectrum *)machine;
 + (NSString *)hardwareStringForVersion:(int)version hardwareType:(int)hardwareType;
 

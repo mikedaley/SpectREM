@@ -15,6 +15,7 @@
 #import "CPUViewController.h"
 #import "InfoViewController.h"
 #import "EmulationView.h"
+#import "Snapshot.h"
 
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
@@ -288,6 +289,14 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)loadFileWithURL:(NSURL *)url
 {
+    // Check to see if the snapshot being loaded is compatible with the current machine and if not then switch
+    // to the machine needed for the snapshot
+    int machineType = [Snapshot machineNeededForZ80SnapshotWithPath:url.path];
+    if (machineType != _machine->machineInfo.machineType)
+    {
+        [self switchToMachine:machineType];
+    }
+    
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
     [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
     [_machine loadSnapshotWithPath:url.path];
@@ -298,7 +307,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_configViewController resetPreferences];
 }
 
-- (void)switchToMachine:(NSUInteger)machineType
+- (void)switchToMachine:(int)machineType
 {
     [_machine stop];
     

@@ -96,7 +96,7 @@
     [self removeObserver:self.audioCore forKeyPath:@"soundVolume"];
 }
 
-#pragma mark -
+#pragma mark - Emulation Control
 
 - (void)start
 {
@@ -146,42 +146,37 @@
     audioTsStepCounter = 0;
 }
 
+#pragma mark - CPU
+
 - (void)doFrame
 {
+    // Ensure that the frame is run on the emulation queue
     dispatch_async(self.emulationQueue, ^
-    {
-       switch (event)
-       {
-           case EventType::eNone:
-               break;
-               
-           case EventType::eReset:
-               event = EventType::eNone;
-               [self reset:NO];
-               break;
-               
-           case EventType::eSnapshot:
-               [self reset:NO];
-               [self loadSnapshot];
-               event = EventType::eNone;
-               break;
-               
-           case EventType::eZ80Snapshot:
-               [self reset:NO];
-               [self loadZ80Snapshot];
-               event = EventType::eNone;
-               break;
-               
-           default:
-               break;
-       }
-       
-       [self resetFrame];
-       [self generateFrame];
-    });
+                   {
+                       switch (event)
+                       {
+                           case EventType::eNone:
+                               break;
+                               
+                           case EventType::eReset:
+                               break;
+                               
+                           case EventType::eSnapshot:
+                               [self loadSnapshot];
+                               break;
+                               
+                           case EventType::eZ80Snapshot:
+                               [self loadZ80Snapshot];
+                               break;
+                               
+                           default:
+                               break;
+                       }
+                       event = EventType::eNone;
+                       [self resetFrame];
+                       [self generateFrame];
+                   });
 }
-
-#pragma mark - CPU
 
 - (void)generateFrame
 {
@@ -947,16 +942,31 @@ static unsigned char floatingBus(void *m)
 
 - (void)loadSnapshot
 {
-    [Snapshot loadSnapshotWithPath:self.snapshotPath IntoMachine:self];
-    [self resetSound];
-    [self resetKeyboardMap];
+    [self reset:NO];
+    int status = [Snapshot loadSnapshotWithPath:self.snapshotPath IntoMachine:self];
+    [self verifySnapshotLoadWithStatus:status];
 }
 
 - (void)loadZ80Snapshot
 {
-    [Snapshot loadZ80SnapshotWithPath:self.snapshotPath intoMachine:self];
-    [self resetSound];
-    [self resetKeyboardMap];
+    [self reset:NO];
+    int status = [Snapshot loadZ80SnapshotWithPath:self.snapshotPath intoMachine:self];
+    [self verifySnapshotLoadWithStatus:status];
+}
+
+- (void)verifySnapshotLoadWithStatus:(int)status
+{
+    switch (status) {
+        case 0:
+            [self resetSound];
+            [self resetKeyboardMap];
+            break;
+            
+        case 1:
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark - Getters
