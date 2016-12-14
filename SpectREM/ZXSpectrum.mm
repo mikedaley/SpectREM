@@ -188,6 +188,32 @@
     {
         int tsCPU = core->Execute(1, machineInfo.intLength);
         
+        if (_tapePlaying)
+        {
+            if (pilotPulses < cPilotHeaderPulses)
+            {
+                // flipEar is set to YES when a tape is started
+                if (flipEar)
+                {
+                    audioEar ^= 1;
+                    flipEar = NO;
+                }
+                
+                if (pilotPulseTs >= cPilotPulseLength)
+                {
+                    pilotPulseTs = 0;
+                    flipEar = YES;
+                    pilotPulses += 1;
+                }
+            }
+            else
+            {
+                _tapePlaying = NO;
+            }
+            
+            pilotPulseTs += tsCPU;
+        }
+        
         count -= tsCPU;
         
         updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
@@ -967,6 +993,16 @@ static unsigned char floatingBus(void *m)
         default:
             break;
     }
+}
+
+#pragma mark - Tape Loading
+
+- (void)startTape
+{
+    pilotPulses = 0;
+    pilotPulseTs = 0;
+    flipEar = YES;
+    _tapePlaying = YES;
 }
 
 #pragma mark - Getters

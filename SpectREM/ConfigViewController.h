@@ -33,7 +33,7 @@
 @property (assign) float AYChannelCBalance;
 
 // Emulation Properties
-@property (assign) NSUInteger currentMachineType;
+@property (assign) NSInteger currentMachineType;
 @property (strong) IBOutlet NSView *scrollDocView;
 @property (weak) IBOutlet NSScrollView *scrollView;
 

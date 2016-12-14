@@ -50,6 +50,8 @@ NS_ENUM(NSUInteger, MachineType)
     NSUserDefaults          *preferences;
     dispatch_queue_t        _debugTimerQueue;
     dispatch_source_t       _debugTimer;
+    
+    BOOL                    startTape;
 }
 
 - (void)dealloc
@@ -307,7 +309,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_configViewController resetPreferences];
 }
 
-- (void)switchToMachine:(int)machineType
+- (void)switchToMachine:(NSInteger)machineType
 {
     [_machine stop];
     
@@ -384,6 +386,11 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)start:(id)sender
 {
     [_machine.audioCore start];
+}
+
+- (IBAction)testTAP:(id)sender
+{
+    [_machine startTape];
 }
 
 #pragma mark - USB Controllers

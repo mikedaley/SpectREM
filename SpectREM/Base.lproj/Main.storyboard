@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C60b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C63a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -290,7 +290,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="459" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView appearanceType="vibrantDark" misplaced="YES" blendingMode="withinWindow" material="ultraDark" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
+                            <visualEffectView appearanceType="vibrantDark" misplaced="YES" blendingMode="withinWindow" material="dark" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
                                 <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
@@ -318,6 +318,17 @@
                                     </scrollView>
                                 </subviews>
                             </visualEffectView>
+                            <button verticalHuggingPriority="750" misplaced="YES" id="gNh-TB-FnS">
+                                <rect key="frame" x="392" y="-3" width="66" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <buttonCell key="cell" type="push" title="Test" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5lX-qs-ydF">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="testTAP:" target="rPt-NT-nkU" id="kHp-Ic-vHI"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
@@ -328,7 +339,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75.5" y="692"/>
+            <point key="canvasLocation" x="76" y="692"/>
         </scene>
         <!--Info View Controller-->
         <scene sceneID="Ghy-Iy-lJ4">
@@ -355,13 +366,13 @@
                 </viewController>
                 <customObject id="RxS-Ic-NaC" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="908"/>
+            <point key="canvasLocation" x="76" y="927"/>
         </scene>
         <!--Config View Controller-->
         <scene sceneID="suV-XS-mcE">
             <objects>
                 <viewController storyboardIdentifier="ConfigViewController" id="eq9-hE-kE2" customClass="ConfigViewController" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="a97-VP-aKI">
+                    <view key="view" wantsLayer="YES" misplaced="YES" id="a97-VP-aKI">
                         <rect key="frame" x="0.0" y="0.0" width="236" height="537"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -743,7 +754,7 @@
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s"/>
             </objects>
-            <point key="canvasLocation" x="-36" y="1269"/>
+            <point key="canvasLocation" x="-322" y="693"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">

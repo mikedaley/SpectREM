@@ -30,6 +30,12 @@ static int const cAudioSampleRate = 192000;
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 
+static int cPilotHeaderPulses = 8063;
+static int cPilotDataPulses = 3223;
+static int cPilotPulseLength = 2168;
+static int cFirstSyncPulseDelay = 667;
+static int cSecondSyncPulseDelay = 735;
+
 #pragma mark - Structures
 
 // Structure of pixel data used in the emulation display buffer
@@ -166,6 +172,10 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     
     unsigned char memoryContentionTable[80000];
     unsigned char ioContentionTable[80000];
+    
+    int pilotPulseTs;
+    int pilotPulses;
+    BOOL flipEar;
 }
 
 #pragma mark - Properties
@@ -203,6 +213,8 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 @property (assign) CGColorSpaceRef colorSpace;
 
 @property (assign) bool stepping;
+
+@property (assign) BOOL tapePlaying;
 
 #pragma mark - Methods
 
@@ -310,5 +322,7 @@ unsigned char coreIORead(unsigned short address, void *m);
  Returns the name of the machine
  */
 - (NSString *)machineName;
+
+- (void)startTape;
 
 @end
