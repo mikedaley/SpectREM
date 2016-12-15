@@ -193,17 +193,17 @@
             if (pilotPulses < cPilotHeaderPulses)
             {
                 // flipEar is set to YES when a tape is started
-                if (flipEar)
+                if (flipTapeLevel)
                 {
-                    audioEar ^= 1;
-                    flipEar = NO;
+                    tapeLevel ^= 1;
+                    flipTapeLevel = NO;
                 }
                 
                 if (pilotPulseTs >= cPilotPulseLength)
                 {
-                    pilotPulseTs = 0;
-                    flipEar = YES;
                     pilotPulses += 1;
+                    pilotPulseTs = 0;
+                    flipTapeLevel = YES;
                 }
             }
             else
@@ -263,8 +263,8 @@ void updateAudioWithTStates(int numberTs, void *m, bool hasAY)
     // Loop over each tState so that the necessary audio samples can be generated
     for(int i = 0; i < numberTs; i++)
     {
-        // Grab the current state of the audio ear output
-        signed int beeperLevelLeft = (machine->audioEar * cAudioBeeperVolumeMultiplier);
+        // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes
+        signed int beeperLevelLeft = ((machine->audioEar | machine->tapeLevel) * cAudioBeeperVolumeMultiplier);
         signed int beeperLevelRight = beeperLevelLeft;
         
         // Setting the channel mix 0.5 causes the output to to be centered between left and right speakers
@@ -546,7 +546,7 @@ unsigned char coreIORead(unsigned short address, void *m)
 
     // To emulate a series 3, the result of reading a ULA port should have bits 5+7 set and bit 6 should be set
     // to the last value of the bit 4 when writing to port 0xFE.
-    result = (result & 191) | (machine->audioEar << 6);
+    result = (result & 191) | (machine->audioEar << 6) | (machine->tapeLevel << 6);
     
     return result;
 }
@@ -1001,7 +1001,7 @@ static unsigned char floatingBus(void *m)
 {
     pilotPulses = 0;
     pilotPulseTs = 0;
-    flipEar = YES;
+    flipTapeLevel = YES;
     _tapePlaying = YES;
 }
 

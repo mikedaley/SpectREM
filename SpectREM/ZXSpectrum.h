@@ -173,9 +173,11 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     unsigned char memoryContentionTable[80000];
     unsigned char ioContentionTable[80000];
     
+    // Tape loading
     int pilotPulseTs;
     int pilotPulses;
-    BOOL flipEar;
+    BOOL flipTapeLevel;
+    int tapeLevel;
 }
 
 #pragma mark - Properties
