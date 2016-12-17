@@ -13,6 +13,7 @@
 #import "EmulationViewController.h"
 #import "AudioCore.h"
 #import "MachineDetails.h"
+#import "ZXTape.h"
 
 #pragma mark - Constants
 
@@ -29,12 +30,6 @@ static int const cAudioSampleRate = 192000;
 // Static values used when building the contention and floating bus tables
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
-
-static int cPilotHeaderPulses = 8063;
-static int cPilotDataPulses = 3223;
-static int cPilotPulseLength = 2168;
-static int cFirstSyncPulseDelay = 667;
-static int cSecondSyncPulseDelay = 735;
 
 #pragma mark - Structures
 
@@ -58,7 +53,7 @@ static struct PixelData pallette[] = {
     {0, 200, 0, 255},       // Magenta
     {0, 200, 200, 255},     // Cyan
     {200, 200, 0, 255},     // Yellow
-    {195, 195, 195, 255},   // White
+    {200, 200, 200, 255},   // White
 
     // Bright colours
     {0, 0, 0, 255},
@@ -95,6 +90,15 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 {
     ePixel = 1,
     eAttribute = 2
+};
+
+typedef NS_ENUM(int, TapeLoadingState)
+{
+    ePilotPulseHeader = 0,
+    ePilotPulseData,
+    eFirstSyncPulse,
+    eSecondSyncPulse,
+    eDataPulse
 };
 
 #pragma mark - Interface
@@ -157,8 +161,8 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     // Audio
     double audioBeeperLeft;
     double audioBeeperRight;
-    int audioEar;
-    int audioMic;
+    int audioEarBit;
+    int audioMicBit;
     int audioBufferIndex;
     int audioTStates;
     int audioTsCounter;
@@ -174,10 +178,12 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
     unsigned char ioContentionTable[80000];
     
     // Tape loading
+    int tapeLoadingState;
+    int tapeLoadingSubState;
     int pilotPulseTs;
     int pilotPulses;
-    BOOL flipTapeLevel;
-    int tapeLevel;
+    BOOL flipTapeBit;
+    int tapeInputBit;
 }
 
 #pragma mark - Properties
@@ -188,6 +194,9 @@ typedef NS_ENUM(NSUInteger, FloatingBusValueType)
 
 // Reference to the audio core instance
 @property (strong) AudioCore *audioCore;
+
+// Reference to the ZXTape instance used for controlling tape loading
+@property (strong) ZXTape *zxTape;
 
 // Queue on which the emulation is run
 @property (strong) dispatch_queue_t emulationQueue;
@@ -324,7 +333,5 @@ unsigned char coreIORead(unsigned short address, void *m);
  Returns the name of the machine
  */
 - (NSString *)machineName;
-
-- (void)startTape;
 
 @end

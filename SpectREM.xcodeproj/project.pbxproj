@@ -24,6 +24,9 @@
 		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
 		ED804FD71DD32443004B6F31 /* NSClipView+Flipped.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */; };
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
+		EDAAD8BC1E040F950070153E /* tap_test.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8BB1E040F950070153E /* tap_test.tap */; };
+		EDAAD8C21E05893F0070153E /* ZXTape.m in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.m */; };
+		EDAAD8C41E058E280070153E /* BasicProg.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8C31E058E280070153E /* BasicProg.tap */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDEBA7A61DF02C9300671446 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA7A41DF02C9300671446 /* InfoViewController.m */; };
@@ -83,6 +86,10 @@
 		ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSClipView+Flipped.m"; sourceTree = "<group>"; };
 		ED804FD81DD32EAC004B6F31 /* NSView+Vibrancy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+Vibrancy.h"; sourceTree = "<group>"; };
 		ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+Vibrancy.m"; sourceTree = "<group>"; };
+		EDAAD8BB1E040F950070153E /* tap_test.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = tap_test.tap; sourceTree = "<group>"; };
+		EDAAD8C01E05893F0070153E /* ZXTape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXTape.h; sourceTree = "<group>"; };
+		EDAAD8C11E05893F0070153E /* ZXTape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXTape.m; sourceTree = "<group>"; };
+		EDAAD8C31E058E280070153E /* BasicProg.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = BasicProg.tap; sourceTree = "<group>"; };
 		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
@@ -212,13 +219,15 @@
 			name = "CPU View Controller";
 			sourceTree = "<group>";
 		};
-		EDEBA7A11DEEE6DE00671446 /* Snapshot */ = {
+		EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */ = {
 			isa = PBXGroup;
 			children = (
 				EDEBA79E1DEEDCB000671446 /* Snapshot.h */,
 				EDEBA79F1DEEDCB000671446 /* Snapshot.mm */,
+				EDAAD8C01E05893F0070153E /* ZXTape.h */,
+				EDAAD8C11E05893F0070153E /* ZXTape.m */,
 			);
-			name = Snapshot;
+			name = Snapshot/Tape;
 			sourceTree = "<group>";
 		};
 		EDEBA7A21DF02C7600671446 /* Info View Controller */ = {
@@ -251,6 +260,8 @@
 		EDF3A49F1DB0D60700511BAF /* SpectREM */ = {
 			isa = PBXGroup;
 			children = (
+				EDAAD8BB1E040F950070153E /* tap_test.tap */,
+				EDAAD8C31E058E280070153E /* BasicProg.tap */,
 				EDF3A4FE1DB77D0F00511BAF /* Class Extensions */,
 				EDF3A4F61DB0F23000511BAF /* Shaders */,
 				EDF3A4C41DB0D79100511BAF /* ROMS */,
@@ -342,7 +353,7 @@
 		EDF3A4C21DB0D77D00511BAF /* Machines */ = {
 			isa = PBXGroup;
 			children = (
-				EDEBA7A11DEEE6DE00671446 /* Snapshot */,
+				EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */,
 				EDFEB2941DED8D4100ED3C25 /* MachineDetails.h */,
 				995657F11DC1327100114FC9 /* ZXSpectrum.h */,
 				995657F21DC1327100114FC9 /* ZXSpectrum.mm */,
@@ -491,10 +502,12 @@
 				EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */,
 				EDF3A5021DB8EBD500511BAF /* Defaults.plist in Resources */,
 				EDF3A4B11DB0D60700511BAF /* Assets.xcassets in Resources */,
+				EDAAD8C41E058E280070153E /* BasicProg.tap in Resources */,
 				EDF3A4A91DB0D60700511BAF /* Actions.sks in Resources */,
 				EDF3A4E31DB0D7BB00511BAF /* 48.rom in Resources */,
 				99A79E6F1DC2295000B8D4CD /* 128-1.rom in Resources */,
 				EDF3A4B41DB0D60800511BAF /* Main.storyboard in Resources */,
+				EDAAD8BC1E040F950070153E /* tap_test.tap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +548,7 @@
 				EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */,
 				99F71A801DDB13CC0093CAE4 /* CenteredClipView.m in Sources */,
 				EDF3A4FD1DB7745700511BAF /* NSViewController+Bindings.m in Sources */,
+				EDAAD8C21E05893F0070153E /* ZXTape.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

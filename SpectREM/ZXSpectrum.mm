@@ -188,30 +188,9 @@
     {
         int tsCPU = core->Execute(1, machineInfo.intLength);
         
-        if (_tapePlaying)
+        if (self.zxTape.playing)
         {
-            if (pilotPulses < cPilotHeaderPulses)
-            {
-                // flipEar is set to YES when a tape is started
-                if (flipTapeLevel)
-                {
-                    tapeLevel ^= 1;
-                    flipTapeLevel = NO;
-                }
-                
-                if (pilotPulseTs >= cPilotPulseLength)
-                {
-                    pilotPulses += 1;
-                    pilotPulseTs = 0;
-                    flipTapeLevel = YES;
-                }
-            }
-            else
-            {
-                _tapePlaying = NO;
-            }
-            
-            pilotPulseTs += tsCPU;
+            [self.zxTape updateTapeWithTStates:tsCPU];
         }
         
         count -= tsCPU;
@@ -254,6 +233,8 @@
     }
 }
 
+#pragma mark - Tape processing
+
 #pragma mark - Audio
 
 void updateAudioWithTStates(int numberTs, void *m, bool hasAY)
@@ -264,7 +245,7 @@ void updateAudioWithTStates(int numberTs, void *m, bool hasAY)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes
-        signed int beeperLevelLeft = ((machine->audioEar | machine->tapeLevel) * cAudioBeeperVolumeMultiplier);
+        signed int beeperLevelLeft = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier);
         signed int beeperLevelRight = beeperLevelLeft;
         
         // Setting the channel mix 0.5 causes the output to to be centered between left and right speakers
@@ -546,7 +527,7 @@ unsigned char coreIORead(unsigned short address, void *m)
 
     // To emulate a series 3, the result of reading a ULA port should have bits 5+7 set and bit 6 should be set
     // to the last value of the bit 4 when writing to port 0xFE.
-    result = (result & 191) | (machine->audioEar << 6) | (machine->tapeLevel << 6);
+    result = (result & 191) | (machine->audioEarBit << 6) | (machine->_zxTape->tapeInputBit << 6);
     
     return result;
 }
@@ -617,8 +598,8 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     if (!(address & 0x01))
     {
         updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
-        machine->audioEar = (data & 0x10) >> 4;
-        machine->audioMic = (data & 0x08) >> 3;
+        machine->audioEarBit = (data & 0x10) >> 4;
+        machine->audioMicBit = (data & 0x08) >> 3;
         machine->borderColor = data & 0x07;
     }
     
@@ -993,16 +974,6 @@ static unsigned char floatingBus(void *m)
         default:
             break;
     }
-}
-
-#pragma mark - Tape Loading
-
-- (void)startTape
-{
-    pilotPulses = 0;
-    pilotPulseTs = 0;
-    flipTapeLevel = YES;
-    _tapePlaying = YES;
 }
 
 #pragma mark - Getters

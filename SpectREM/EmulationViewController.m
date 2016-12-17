@@ -16,6 +16,7 @@
 #import "InfoViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
+#import "ZXTape.h"
 
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
@@ -45,13 +46,14 @@ NS_ENUM(NSUInteger, MachineType)
     
     NSWindowController      *_cpuWindowController;
     CPUViewController       *_cpuViewController;
+
+    ZXTape                  *zxTape;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *preferences;
     dispatch_queue_t        _debugTimerQueue;
     dispatch_source_t       _debugTimer;
-    
-    BOOL                    startTape;
+
 }
 
 - (void)dealloc
@@ -105,6 +107,8 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupNotificationCenterObservers];
     [self setupGamepad];
     [self setupDebugTimer];
+    
+    zxTape = [ZXTape new];
     
     [self switchToMachine:_configViewController.currentMachineType];
 }
@@ -326,6 +330,7 @@ NS_ENUM(NSUInteger, MachineType)
             _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self machineInfo:machines[2]];
             break;
     }
+    _machine.zxTape = zxTape;
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
     [self setupSceneBindings];
@@ -390,7 +395,9 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)testTAP:(id)sender
 {
-    [_machine startTape];
+    NSURL *url = [[NSBundle mainBundle] URLForResource:@"BasicProg" withExtension:@"tap"];
+    [zxTape loadTapeWithURL:url];
+    [zxTape play];
 }
 
 #pragma mark - USB Controllers
