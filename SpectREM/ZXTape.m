@@ -18,11 +18,12 @@
     int syncPulseTStates;
     // How many Ts have passed since the start of the data pulse
     int dataPulseTStates;
-    // 
     // Should the tape bit be flipped
     BOOL flipTapeBit;
     // Current processing state e.g. generating pilot, streaming data
     int processingState;
+    // Next processing state to be used
+    int nextProcessingState;
     // Current byte location in the tape data being processed
     int currentBytePointer;
     // Which bit of the current byte in the data stream is being processed
@@ -31,24 +32,18 @@
     int blockPauseTStates;
     // How many tStates to pause when processing data bit pulses
     int dataBitTStates;
-
     // Temp storage for the number of bytes in a data block as specific by the preceeding header
     int dataBlockLength;
-    
     // How many pulses have been generated for the current data bit;
     int dataPulseCount;
-    
     // Array that contains all the data blocks within the TAP file
     NSMutableArray *tapBlocks;
-    
     // The current block within the tapBlocks array being processed
     int currentBlockIndex;
-    
-    // Next processing state to be used
-    int nextProcessingState;
-    
     // Is a new block about to start
     BOOL newBlock;
+    
+    NSData *tapeData;
 }
 
 - (instancetype)init
@@ -64,16 +59,37 @@
         currentBytePointer = 0;
         flipTapeBit = NO;
         tapeInputBit = 0;
+        _playing = NO;
     }
     return self;
 }
 
 - (BOOL)loadTapeWithURL:(NSURL *)url
 {
-    NSData *tapeData = [NSData dataWithContentsOfURL:url];
+    tapeData = [NSData dataWithContentsOfURL:url];
+    
+    [self processTAPFile];
+    
+    [self printTAPContents];
+    
+    return YES;
+}
+
+- (void)processTAPFile
+{
     const char *tapeBytes = (const char*)[tapeData bytes];
     
+    self.playing = NO;
+    pilotPulseTStates = 0;
+    syncPulseTStates = 0;
+    pilotPulses = 0;
+    processingState = eNoTape;
+    blockPauseTStates = 0;
+    tapeInputBit = 0;
     currentBytePointer = 0;
+    currentBlockIndex = 0;
+    self.bytesRemaining = 0;
+    newBlock = YES;
     tapBlocks = [NSMutableArray new];
     
     // Build an array of all the blocks in the TAP file
@@ -91,6 +107,7 @@
             memcpy(programHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             currentBytePointer += blockLength;
             dataBlockLength = [programHeader getDataLength];
+            self.bytesRemaining += 17;
             [tapBlocks addObject:programHeader];
         }
         
@@ -101,6 +118,7 @@
             memcpy(numericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             currentBytePointer += blockLength;
             dataBlockLength = [numericDataHeader getDataLength];
+            self.bytesRemaining += 17;
             [tapBlocks addObject:numericDataHeader];
         }
         
@@ -111,9 +129,10 @@
             memcpy(alphaNumericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             currentBytePointer += blockLength;
             dataBlockLength = [alphaNumericDataHeader getDataLength];
+            self.bytesRemaining += 17;
             [tapBlocks addObject:alphaNumericDataHeader];
         }
-
+        
         if (dataType == eByteHeader && flag != 255)
         {
             ByteHeader *byteHeader = [ByteHeader new];
@@ -121,9 +140,10 @@
             memcpy(byteHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             currentBytePointer += blockLength;
             dataBlockLength = [byteHeader getDataLength];
+            self.bytesRemaining += 17;
             [tapBlocks addObject:byteHeader];
         }
-
+        
         if (flag == 255)
         {
             DataBlock *dataBlock = [DataBlock new];
@@ -131,14 +151,11 @@
             dataBlock.blockData = calloc(dataBlockLength + 2, sizeof(unsigned char));
             memcpy(dataBlock.blockData, &tapeBytes[currentBytePointer], dataBlockLength + 2);
             currentBytePointer += dataBlockLength + 2;
+            self.bytesRemaining += dataBlockLength + 6;
             [tapBlocks addObject:dataBlock];
         }
-
     }
-    
-    [self printTAPContents];
-    
-    return YES;
+ 
 }
 
 - (void)updateTapeWithTStates:(int)tStates
@@ -148,7 +165,6 @@
     {
         newBlock = NO;
         
-        NSLog(@"Current Block Index: %i", currentBlockIndex);
         if (currentBlockIndex > tapBlocks.count - 1)
         {
             NSLog(@"TAPE STOPPED");
@@ -311,7 +327,6 @@
     
     if (syncPulseTStates >= cFirstSyncPulseTStateDelay)
     {
-        NSLog(@"Finished Generating Sync 1");
         syncPulseTStates = 0;
         flipTapeBit = YES;
         processingState = eSync2;
@@ -332,7 +347,6 @@
     
     if (syncPulseTStates >= cSecondSyncPulseTStateDelay)
     {
-        NSLog(@"Finished Generating Sync 2");
         syncPulseTStates = 0;
         currentBytePointer = 0;
         flipTapeBit = YES;
@@ -355,6 +369,9 @@
     {
         currentDataBit = 0;
         currentBytePointer += 1;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.bytesRemaining -= 1;
+        });
         if (currentBytePointer > currentBlockLength)
         {
             processingState = eBlockPause;
@@ -388,6 +405,9 @@
     {
         currentDataBit = 0;
         currentBytePointer += 1;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.bytesRemaining -= 1;
+        });
         if (currentBytePointer > currentBlockLength)
         {
             processingState = eBlockPause;
@@ -449,14 +469,17 @@
 
 - (void)play
 {
-    currentBlockIndex = 0;
-    newBlock = YES;
     self.playing = YES;
 }
 
 - (void)stop
 {
     self.playing = NO;
+}
+
+- (void)rewind
+{
+    [self processTAPFile];
 }
 
 - (void)printTAPContents

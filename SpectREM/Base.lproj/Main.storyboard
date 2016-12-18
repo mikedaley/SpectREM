@@ -178,6 +178,31 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Tape" id="Abp-Ka-O98" userLabel="Tape">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Tape" id="wel-Ye-3xa">
+                                    <items>
+                                        <menuItem title="Play" keyEquivalent="p" id="uHe-W5-ov1" userLabel="Play">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="playTape:" target="Ady-hI-5gd" id="1Gv-Pu-5JC"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Stop" keyEquivalent="s" id="cU7-vK-uqO">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="stopTape:" target="Ady-hI-5gd" id="4wb-pO-N8z"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Rewind" keyEquivalent="r" id="kvv-nr-xKz" userLabel="Rewind">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="rewindTape:" target="Ady-hI-5gd" id="5Ji-8J-Kbm"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Debug" id="axf-p4-Hq2" userLabel="Debug">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Debug" id="JY9-nv-SyR">
@@ -279,6 +304,7 @@
                     </connections>
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController id="gxt-EG-n24"/>
             </objects>
             <point key="canvasLocation" x="75" y="202"/>
         </scene>
@@ -318,17 +344,22 @@
                                     </scrollView>
                                 </subviews>
                             </visualEffectView>
-                            <button verticalHuggingPriority="750" misplaced="YES" id="gNh-TB-FnS">
-                                <rect key="frame" x="392" y="-3" width="66" height="32"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="qqb-wB-XLZ">
+                                <rect key="frame" x="390" y="6" width="65" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <buttonCell key="cell" type="push" title="Test" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5lX-qs-ydF">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="0000" drawsBackground="YES" id="TfU-y5-nOn">
+                                    <font key="font" size="12" name="Courier"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
                                 <connections>
-                                    <action selector="testTAP:" target="rPt-NT-nkU" id="kHp-Ic-vHI"/>
+                                    <binding destination="XfG-lQ-9wD" name="value" keyPath="self.zxTape.bytesRemaining" id="TSG-n4-XdW">
+                                        <dictionary key="options">
+                                            <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                        </dictionary>
+                                    </binding>
                                 </connections>
-                            </button>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
@@ -339,7 +370,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="692"/>
+            <point key="canvasLocation" x="75.5" y="692"/>
         </scene>
         <!--Info View Controller-->
         <scene sceneID="Ghy-Iy-lJ4">

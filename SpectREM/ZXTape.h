@@ -82,7 +82,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 #pragma mark - Properties
 
 @property (assign) BOOL playing;
-@property (assign) int blockNumber;
+@property (assign) NSUInteger bytesRemaining;
 
 #pragma mark - Methods
 
@@ -94,8 +94,10 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 // strams data
 - (void)updateTapeWithTStates:(int)tStates;
 
-// Start the currently loaded tape playing
+// Currently loaded tape controls
 - (void)play;
+- (void)stop;
+- (void)rewind;
 
 @end
 

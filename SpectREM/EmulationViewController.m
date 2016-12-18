@@ -47,8 +47,6 @@ NS_ENUM(NSUInteger, MachineType)
     NSWindowController      *_cpuWindowController;
     CPUViewController       *_cpuViewController;
 
-    ZXTape                  *zxTape;
-    
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *preferences;
     dispatch_queue_t        _debugTimerQueue;
@@ -108,8 +106,8 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupGamepad];
     [self setupDebugTimer];
     
-    zxTape = [ZXTape new];
-    
+    self.zxTape = [ZXTape new];
+
     [self switchToMachine:_configViewController.currentMachineType];
 }
 
@@ -254,6 +252,8 @@ NS_ENUM(NSUInteger, MachineType)
     {
         NSMenuItem *menuItem = (NSMenuItem *)sender;
         [self.view.window setTitle:@"SpectREM"];
+        self.zxTape = [ZXTape new];
+        _machine.zxTape = self.zxTape;
         [_machine.audioCore reset];
         [_machine reset:menuItem.tag];
     });
@@ -281,7 +281,7 @@ NS_ENUM(NSUInteger, MachineType)
     NSOpenPanel *openPanel = [NSOpenPanel new];
     openPanel.canChooseDirectories = NO;
     openPanel.allowsMultipleSelection = NO;
-    openPanel.allowedFileTypes = @[@"SNA", @"Z80"];
+    openPanel.allowedFileTypes = @[@"SNA", @"Z80", @"TAP"];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [openPanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
@@ -295,17 +295,26 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)loadFileWithURL:(NSURL *)url
 {
-    // Check to see if the snapshot being loaded is compatible with the current machine and if not then switch
-    // to the machine needed for the snapshot
-    int machineType = [Snapshot machineNeededForZ80SnapshotWithPath:url.path];
-    if (machineType != _machine->machineInfo.machineType)
+
+    if (![[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
     {
-        [self switchToMachine:machineType];
+        // Check to see if the snapshot being loaded is compatible with the current machine and if not then switch
+        // to the machine needed for the snapshot
+        int machineType = [Snapshot machineNeededForZ80SnapshotWithPath:url.path];
+        if (machineType != _machine->machineInfo.machineType)
+        {
+            [self switchToMachine:machineType];
+        }
+        [_machine loadSnapshotWithPath:url.path];
+    }
+    else
+    {
+        self.zxTape.playing = NO;
+        [self.zxTape loadTapeWithURL:url];
     }
     
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
     [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
-    [_machine loadSnapshotWithPath:url.path];
 }
 
 - (IBAction)resetPreferences:(id)sender
@@ -330,7 +339,7 @@ NS_ENUM(NSUInteger, MachineType)
             _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self machineInfo:machines[2]];
             break;
     }
-    _machine.zxTape = zxTape;
+    _machine.zxTape = self.zxTape;
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
     [self setupSceneBindings];
@@ -393,11 +402,19 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine.audioCore start];
 }
 
-- (IBAction)testTAP:(id)sender
+- (IBAction)playTape:(id)sender
 {
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"128BasicProg" withExtension:@"tap"];
-    [zxTape loadTapeWithURL:url];
-    [zxTape play];
+    [self.zxTape play];
+}
+
+- (IBAction)stopTape:(id)sender
+{
+    [self.zxTape stop];
+}
+
+- (IBAction)rewindTape:(id)sender
+{
+    [self.zxTape rewind];
 }
 
 #pragma mark - USB Controllers

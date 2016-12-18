@@ -10,6 +10,7 @@
 #import <SpriteKit/SpriteKit.h>
 
 @class EmulationView;
+@class ZXTape;
 
 @interface EmulationViewController : NSViewController
 
@@ -18,6 +19,7 @@
 
 @property (weak) IBOutlet NSVisualEffectView *configEffectsView;
 @property (weak) IBOutlet NSScrollView *configScrollView;
+@property (strong) ZXTape *zxTape;
 
 #pragma mark - Methods
 
