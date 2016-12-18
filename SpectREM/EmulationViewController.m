@@ -395,7 +395,7 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)testTAP:(id)sender
 {
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"BasicProg" withExtension:@"tap"];
+    NSURL *url = [[NSBundle mainBundle] URLForResource:@"128BasicProg" withExtension:@"tap"];
     [zxTape loadTapeWithURL:url];
     [zxTape play];
 }

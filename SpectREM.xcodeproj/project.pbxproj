@@ -27,6 +27,11 @@
 		EDAAD8BC1E040F950070153E /* tap_test.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8BB1E040F950070153E /* tap_test.tap */; };
 		EDAAD8C21E05893F0070153E /* ZXTape.m in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.m */; };
 		EDAAD8C41E058E280070153E /* BasicProg.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8C31E058E280070153E /* BasicProg.tap */; };
+		EDAAD8C61E06DF8B0070153E /* woot.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8C51E06DF8B0070153E /* woot.tap */; };
+		EDAAD8C81E070F080070153E /* tapetest.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8C71E070F080070153E /* tapetest.tap */; };
+		EDAAD8CA1E0710240070153E /* BorderTrix.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8C91E0710240070153E /* BorderTrix.tap */; };
+		EDAAD8CC1E0710960070153E /* aticatac.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8CB1E0710960070153E /* aticatac.tap */; };
+		EDAAD8CE1E0712BF0070153E /* 128BasicProg.tap in Resources */ = {isa = PBXBuildFile; fileRef = EDAAD8CD1E0712BF0070153E /* 128BasicProg.tap */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDEBA7A61DF02C9300671446 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA7A41DF02C9300671446 /* InfoViewController.m */; };
@@ -90,6 +95,11 @@
 		EDAAD8C01E05893F0070153E /* ZXTape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXTape.h; sourceTree = "<group>"; };
 		EDAAD8C11E05893F0070153E /* ZXTape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXTape.m; sourceTree = "<group>"; };
 		EDAAD8C31E058E280070153E /* BasicProg.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = BasicProg.tap; sourceTree = "<group>"; };
+		EDAAD8C51E06DF8B0070153E /* woot.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = woot.tap; sourceTree = "<group>"; };
+		EDAAD8C71E070F080070153E /* tapetest.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = tapetest.tap; sourceTree = "<group>"; };
+		EDAAD8C91E0710240070153E /* BorderTrix.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = BorderTrix.tap; sourceTree = "<group>"; };
+		EDAAD8CB1E0710960070153E /* aticatac.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = aticatac.tap; sourceTree = "<group>"; };
+		EDAAD8CD1E0712BF0070153E /* 128BasicProg.tap */ = {isa = PBXFileReference; lastKnownFileType = file; path = 128BasicProg.tap; sourceTree = "<group>"; };
 		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
@@ -262,6 +272,11 @@
 			children = (
 				EDAAD8BB1E040F950070153E /* tap_test.tap */,
 				EDAAD8C31E058E280070153E /* BasicProg.tap */,
+				EDAAD8C51E06DF8B0070153E /* woot.tap */,
+				EDAAD8C71E070F080070153E /* tapetest.tap */,
+				EDAAD8C91E0710240070153E /* BorderTrix.tap */,
+				EDAAD8CB1E0710960070153E /* aticatac.tap */,
+				EDAAD8CD1E0712BF0070153E /* 128BasicProg.tap */,
 				EDF3A4FE1DB77D0F00511BAF /* Class Extensions */,
 				EDF3A4F61DB0F23000511BAF /* Shaders */,
 				EDF3A4C41DB0D79100511BAF /* ROMS */,
@@ -495,17 +510,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDAAD8CE1E0712BF0070153E /* 128BasicProg.tap in Resources */,
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
 				996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */,
 				EDF3A4F81DB0F25F00511BAF /* CRT.fsh in Resources */,
 				99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */,
 				EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */,
+				EDAAD8C81E070F080070153E /* tapetest.tap in Resources */,
+				EDAAD8CA1E0710240070153E /* BorderTrix.tap in Resources */,
 				EDF3A5021DB8EBD500511BAF /* Defaults.plist in Resources */,
 				EDF3A4B11DB0D60700511BAF /* Assets.xcassets in Resources */,
 				EDAAD8C41E058E280070153E /* BasicProg.tap in Resources */,
 				EDF3A4A91DB0D60700511BAF /* Actions.sks in Resources */,
 				EDF3A4E31DB0D7BB00511BAF /* 48.rom in Resources */,
+				EDAAD8C61E06DF8B0070153E /* woot.tap in Resources */,
 				99A79E6F1DC2295000B8D4CD /* 128-1.rom in Resources */,
+				EDAAD8CC1E0710960070153E /* aticatac.tap in Resources */,
 				EDF3A4B41DB0D60800511BAF /* Main.storyboard in Resources */,
 				EDAAD8BC1E040F950070153E /* tap_test.tap in Resources */,
 			);

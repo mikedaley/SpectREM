@@ -17,6 +17,33 @@ static int cPilotDataPulses = 3223;
 static int cPilotPulseTStateLength = 2168;
 static int cFirstSyncPulseTStateDelay = 667;
 static int cSecondSyncPulseTStateDelay = 735;
+static int cDataBitZeroPulseTStateDelay = 855;
+static int cDataBitOnePulseTStateDelay = 1710;
+
+static int cHeaderFlagOffset = 0;
+static int cHeaderDataTypeOffset = 1;
+static int cHeaderFilenameOffset = 2;
+static int cHeaderDataLengthOffset = 12;
+static int cHeaderChecksumOffset = 17;
+
+static int cProgramHeaderAutostartLineOffset = 14;
+static int cProgramHeaderProgramLengthOffset = 16;
+static int cProgramHeaderChecksumOffset = 18;
+
+static int cNumericDataHeaderUnused1Offset = 14;
+static int cNumericDataHeaderVariableNameOffset = 15;
+static int cNumericDataHeaderUnused2Offset = 16;
+
+static int cAlphaNumericDataHeaderUnused1Offset = 14;
+static int cAlphaNumericDataHeaderVariableNameOffset = 15;
+static int cAlphaNumericDataHeaderUnused2Offset = 16;
+
+static int cByteHeaderStartAddressOffset = 14;
+static int cByteHeaderUnused1Offset = 16;
+
+static int cDataBlockDataLengthOffset = 1;
+
+static int cHeaderFilenameLength = 10;
 
 #pragma mark - Enums
 
@@ -28,7 +55,19 @@ typedef NS_ENUM(int, ProcessingState)
     eSync2,
     eDataPilot,
     eBlockPause,
-    eDataStream
+    eDataStream,
+    eHeaderDataStream,
+    eDataBit
+};
+
+typedef NS_ENUM(unsigned char, BlockDataType)
+{
+    eProgramHeader = 0,
+    eNumericDataHeader,
+    eAlphaNumericDataHeader,
+    eByteHeader,
+    eDataBlock,
+    eFragmentedDataBlock
 };
 
 #pragma mark - Interface
@@ -36,79 +75,8 @@ typedef NS_ENUM(int, ProcessingState)
 @interface ZXTape : NSObject
 {
 @public
-    // Data type 0
-    struct ProgHeader
-    {
-        unsigned short blockLength;
-        unsigned char flag;
-        unsigned char dataType;
-        unsigned char filename[10];
-        unsigned short dataLength;
-        unsigned short autoStartLine;
-        unsigned short programLength;
-        unsigned char checksum;
-    };
-    
-    // Data type 1
-    struct NumericDataHeader
-    {
-        unsigned short blockLength;
-        unsigned char flag;
-        unsigned char dataType;
-        unsigned char filename[10];
-        unsigned short dataLength;
-        unsigned char unused1;
-        unsigned char variableName;
-        unsigned short unused2;
-        unsigned char checksum;
-    };
-    
-    // Data type 2
-    struct AlphaNumericDataHeader
-    {
-        unsigned short blockLength;
-        unsigned char flag;
-        unsigned char dataType;
-        unsigned char filename[10];
-        unsigned short dataLength;
-        unsigned char unused1;
-        unsigned char variableName;
-        unsigned short unused2;
-        unsigned char checksum;
-    };
-    
-    // Data type 3
-    struct ByteHeader
-    {
-        unsigned short blockLength;
-        unsigned char flag;
-        unsigned char dataType;
-        unsigned char filename[10];
-        unsigned short dataLength;
-        unsigned short startAddress;
-        unsigned short unused;
-        unsigned char checksum;
-    };
-    
-    // Standard or custom data block
-    struct DataBlock
-    {
-        unsigned short blockLength;
-        unsigned char flag;
-        unsigned short dataLength;
-        unsigned char *data;
-        unsigned char checksum;
-    };
-    
-    // Fragmented data block
-    struct FragmentedDataBlock
-    {
-        unsigned char *data;
-    };
-    
     // Current tape input value to be ORd to the IO Read response and sound generation
     int tapeInputBit;
-    
 }
 
 #pragma mark - Properties
@@ -128,5 +96,60 @@ typedef NS_ENUM(int, ProcessingState)
 
 // Start the currently loaded tape playing
 - (void)play;
+
+@end
+
+#pragma mark - TAP Block
+
+@interface TAPBlock : NSObject
+
+@property (assign) unsigned char *blockData;
+
+- (unsigned char)getFlag;
+- (unsigned char)getDataType;
+- (NSString *)getFilename;
+- (unsigned short)getDataLength;
+- (unsigned char)getChecksum;
+
+@end
+
+#pragma mark - Programme Header
+
+@interface ProgramHeader : TAPBlock
+
+- (unsigned short)getAutostartLine;
+- (unsigned short)getProgramLength;
+
+@end
+
+#pragma mark - Numeric Data Header
+
+@interface NumericDataHeader : TAPBlock
+
+- (unsigned char)getVariableName;
+
+@end
+
+#pragma mark - Numeric Data Header
+
+@interface AlphaNumericDataHeader : TAPBlock
+
+- (unsigned char)getVariableName;
+
+@end
+
+#pragma mark - Byte Header
+
+@interface ByteHeader : TAPBlock
+
+- (unsigned short)getStartAddress;
+
+@end
+
+#pragma mark - Data Block
+
+@interface DataBlock : TAPBlock
+
+@property (assign) int dataBlockLength;
 
 @end
