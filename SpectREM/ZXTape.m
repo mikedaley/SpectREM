@@ -67,11 +67,8 @@
 - (BOOL)loadTapeWithURL:(NSURL *)url
 {
     tapeData = [NSData dataWithContentsOfURL:url];
-    
     [self processTAPFile];
-    
     [self printTAPContents];
-    
     return YES;
 }
 
@@ -155,7 +152,6 @@
             [tapBlocks addObject:dataBlock];
         }
     }
- 
 }
 
 - (void)updateTapeWithTStates:(int)tStates

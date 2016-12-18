@@ -51,7 +51,8 @@ NS_ENUM(NSUInteger, MachineType)
     NSUserDefaults          *preferences;
     dispatch_queue_t        _debugTimerQueue;
     dispatch_source_t       _debugTimer;
-
+    
+    ZXTape                  *zxTape;
 }
 
 - (void)dealloc
@@ -106,7 +107,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupGamepad];
     [self setupDebugTimer];
     
-    self.zxTape = [ZXTape new];
+    zxTape = [ZXTape new];
 
     [self switchToMachine:_configViewController.currentMachineType];
 }
@@ -117,7 +118,7 @@ NS_ENUM(NSUInteger, MachineType)
 {
     _debugTimerQueue = dispatch_queue_create("DebugTimerQueue", nil);
     _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
-    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC, 0);
+    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC, 0);
     
     dispatch_source_set_event_handler(_debugTimer, ^
     {
@@ -133,6 +134,8 @@ NS_ENUM(NSUInteger, MachineType)
                 {
                     [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
                 }
+                
+                self.tapeBytesRemaining = _machine.zxTape.bytesRemaining;
             }
         });
     });
@@ -252,8 +255,8 @@ NS_ENUM(NSUInteger, MachineType)
     {
         NSMenuItem *menuItem = (NSMenuItem *)sender;
         [self.view.window setTitle:@"SpectREM"];
-        self.zxTape = [ZXTape new];
-        _machine.zxTape = self.zxTape;
+        zxTape = [ZXTape new];
+        _machine.zxTape = zxTape;
         [_machine.audioCore reset];
         [_machine reset:menuItem.tag];
     });
@@ -309,8 +312,8 @@ NS_ENUM(NSUInteger, MachineType)
     }
     else
     {
-        self.zxTape.playing = NO;
-        [self.zxTape loadTapeWithURL:url];
+        zxTape.playing = NO;
+        [zxTape loadTapeWithURL:url];
     }
     
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
@@ -339,7 +342,7 @@ NS_ENUM(NSUInteger, MachineType)
             _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self machineInfo:machines[2]];
             break;
     }
-    _machine.zxTape = self.zxTape;
+    _machine.zxTape = zxTape;
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
     [self setupSceneBindings];
@@ -404,17 +407,17 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)playTape:(id)sender
 {
-    [self.zxTape play];
+    [zxTape play];
 }
 
 - (IBAction)stopTape:(id)sender
 {
-    [self.zxTape stop];
+    [zxTape stop];
 }
 
 - (IBAction)rewindTape:(id)sender
 {
-    [self.zxTape rewind];
+    [zxTape rewind];
 }
 
 #pragma mark - USB Controllers

@@ -19,7 +19,8 @@
 
 @property (weak) IBOutlet NSVisualEffectView *configEffectsView;
 @property (weak) IBOutlet NSScrollView *configScrollView;
-@property (strong) ZXTape *zxTape;
+
+@property (assign) NSUInteger tapeBytesRemaining;
 
 #pragma mark - Methods
 

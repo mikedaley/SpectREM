@@ -353,7 +353,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                                 <connections>
-                                    <binding destination="XfG-lQ-9wD" name="value" keyPath="self.zxTape.bytesRemaining" id="TSG-n4-XdW">
+                                    <binding destination="XfG-lQ-9wD" name="value" keyPath="self.tapeBytesRemaining" id="VNk-de-NMO">
                                         <dictionary key="options">
                                             <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                         </dictionary>
