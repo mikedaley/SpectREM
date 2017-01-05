@@ -255,7 +255,8 @@ NS_ENUM(NSUInteger, MachineType)
     {
         NSMenuItem *menuItem = (NSMenuItem *)sender;
         [self.view.window setTitle:@"SpectREM"];
-        zxTape = [ZXTape new];
+        [zxTape reset];
+        self.tapeBytesLabel.hidden = YES;
         _machine.zxTape = zxTape;
         [_machine.audioCore reset];
         [_machine reset:menuItem.tag];
@@ -314,6 +315,7 @@ NS_ENUM(NSUInteger, MachineType)
     {
         zxTape.playing = NO;
         [zxTape loadTapeWithURL:url];
+        [self.tapeBytesLabel.animator setHidden:NO];
     }
     
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
@@ -407,17 +409,38 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)playTape:(id)sender
 {
+    if (![zxTape isTapeLoaded])
+    {
+        [_infoViewController setText:@"No Tape Loaded"];
+        [_infoViewController displayMessage];
+        return;
+    }
     [zxTape play];
+    [_infoViewController setText:@"Tape Playing"];
+    [_infoViewController displayMessage];
 }
 
 - (IBAction)stopTape:(id)sender
 {
     [zxTape stop];
+    [_infoViewController setText:@"Tape Stopped"];
+    [_infoViewController displayMessage];
 }
 
 - (IBAction)rewindTape:(id)sender
 {
     [zxTape rewind];
+    [_infoViewController setText:@"Tape Rewound"];
+    [_infoViewController displayMessage];
+}
+
+- (IBAction)ejectTape:(id)sender
+{
+    [zxTape eject];
+    [self.tapeBytesLabel.animator setHidden:YES];
+    [self.view.window setTitle:@"SpectREM"];
+    [_infoViewController setText:@"Tape Ejected"];
+    [_infoViewController displayMessage];
 }
 
 #pragma mark - USB Controllers

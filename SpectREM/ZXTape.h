@@ -81,6 +81,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 
 #pragma mark - Properties
 
+@property (assign, getter=isTapeLoaded) BOOL tapeLoaded;
 @property (assign) BOOL playing;
 @property (assign) NSUInteger bytesRemaining;
 
@@ -90,14 +91,18 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 -(BOOL)loadTapeWithURL:(NSURL *)url;
 
 // Called by the emulators main loop if a tape is playing. It passes in the number of tStates that have been used by the last
-// instruction so that the tape processing can keep track of timings necessary to generate header pulses, syns, pauses and
-// strams data
+// instruction so that the tape processing can keep track of timings necessary to generate header pulses, syncs, pauses and
+// stream data
 - (void)updateTapeWithTStates:(int)tStates;
 
 // Currently loaded tape controls
 - (void)play;
 - (void)stop;
 - (void)rewind;
+- (void)eject;
+
+// Reset the tape loader removing any current tape loaded and stopping the tape if it is playing
+- (void)reset;
 
 @end
 

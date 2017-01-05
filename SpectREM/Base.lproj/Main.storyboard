@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D12b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D17a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -200,6 +200,12 @@
                                                 <action selector="rewindTape:" target="Ady-hI-5gd" id="5Ji-8J-Kbm"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Eject" keyEquivalent="e" id="jue-20-2LA">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="ejectTape:" target="Ady-hI-5gd" id="vYr-VJ-Hhs"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -344,7 +350,7 @@
                                     </scrollView>
                                 </subviews>
                             </visualEffectView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="qqb-wB-XLZ">
+                            <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="qqb-wB-XLZ">
                                 <rect key="frame" x="390" y="6" width="65" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="0000" drawsBackground="YES" id="TfU-y5-nOn">
@@ -366,6 +372,7 @@
                         <outlet property="configEffectsView" destination="qoy-KM-Y5t" id="kgF-7C-d2k"/>
                         <outlet property="configScrollView" destination="xUN-0b-oUb" id="z4c-9C-R2W"/>
                         <outlet property="skView" destination="m2S-Jp-Qdl" id="qux-te-cT3"/>
+                        <outlet property="tapeBytesLabel" destination="qqb-wB-XLZ" id="6b1-Ng-2OI"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

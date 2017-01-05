@@ -69,6 +69,7 @@
     tapeData = [NSData dataWithContentsOfURL:url];
     [self processTAPFile];
     [self printTAPContents];
+    self.tapeLoaded = YES;
     return YES;
 }
 
@@ -476,6 +477,20 @@
 - (void)rewind
 {
     [self processTAPFile];
+}
+
+- (void)eject
+{
+    tapBlocks = nil;
+    self.tapeLoaded = NO;
+}
+
+
+- (void)reset
+{
+    self.tapeLoaded = NO;
+    self.playing = NO;
+    [tapBlocks removeAllObjects];
 }
 
 - (void)printTAPContents
