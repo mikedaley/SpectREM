@@ -83,7 +83,11 @@ NS_ENUM(NSUInteger, MachineType)
     _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
     
     _configViewController = [_storyBoard instantiateControllerWithIdentifier:@"ConfigViewController"];
-    self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width, 0, 236, 256};
+    self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width,
+        0,
+        self.configEffectsView.frame.size.width,
+        self.configEffectsView.frame.size.height};
+    
     self.configScrollView.documentView = _configViewController.view;
     
     _infoViewController = [_storyBoard instantiateControllerWithIdentifier:@"InfoViewController"];
