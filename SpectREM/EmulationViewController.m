@@ -97,7 +97,6 @@ NS_ENUM(NSUInteger, MachineType)
 
     [self.skView setFrameSize:self.skView.window.frame.size];
 
-    // Present the scene
     [self.skView presentScene:_emulationScene];
 
     [self setupLocalObservers];
