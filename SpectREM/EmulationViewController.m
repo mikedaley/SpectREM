@@ -307,7 +307,9 @@ NS_ENUM(NSUInteger, MachineType)
         int machineType = [Snapshot machineNeededForZ80SnapshotWithPath:url.path];
         if (machineType != _machine->machineInfo.machineType)
         {
-            [self switchToMachine:machineType];
+            preferences = [NSUserDefaults standardUserDefaults];
+            [preferences setValue:@(machineType) forKey:@"currentMachineType"];
+//[self switchToMachine:machineType];
         }
         [_machine loadSnapshotWithPath:url.path];
     }
