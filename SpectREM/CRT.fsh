@@ -7,9 +7,9 @@
 //
 vec2 radialDistortion(vec2 pos, float distortion)
 {
-    vec2 cc = pos - vec2(0.454, 0.5);
+    vec2 cc = pos - vec2(0.4544, 0.5);
     float dist = dot(cc, cc) * distortion;
-    return (pos + cc * (1.3 + dist) * dist);
+    return (pos + cc * (0.5 + dist) * dist);
 }
 
 vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightness)
@@ -27,30 +27,17 @@ vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightn
 
 vec3 vegnetteColor(vec3 color, vec2 coord, float vig_x, float vig_y)
 {
-    float dist = distance(coord, vec2(0.465,0.5));
+    float dist = distance(coord, vec2(0.4544, 0.5));
     return vec3(smoothstep(vig_x, vig_y, dist));
 }
 
 void main()
 {
     vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
-    
     vec3 colorCorrect = colorCorrection(texture2D(u_texture, texCoord).rgb, u_saturation, u_contrast, u_brightness);
     vec3 vignette = vegnetteColor(v_color_mix.rgb, texCoord, u_vignette_x, u_vignette_y);
-    
-//    float f  = sin( texCoord.y * (304 * 3.14));
-//    // scale to per pixel
-//    float o  = f * (0.05 / 304.0);
-//    // scale for subtle effect
-//    float s  = f * 0.05 + 1.2;
-//    // scan line fading
-//    float l  = sin( u_time * 32 ) * 0.03 + 0.97;
-//    // sample in 3 colour offset
-//    float r = texture2D( u_texture, vec2( texCoord.x + o, texCoord.y + o ) ).x;
-//    float g = texture2D( u_texture, vec2( texCoord.x - o, texCoord.y + o ) ).y;
-//    float b = texture2D( u_texture, vec2( texCoord.x  , texCoord.y - o ) ).z;
-    
     vec4 finalColor = (vec4(colorCorrect, 1));
+    
     if (u_show_vignette == 1.0)
     {
         finalColor *= vec4(vignette, 1);
@@ -59,11 +46,10 @@ void main()
     // If the texture coordinate is outside of the texture coordinates then discard the texel
     if (texCoord.x < 0 || texCoord.y < 0.0805 || texCoord.x > 0.9075 || texCoord.y > 0.9193)
     {
-        finalColor = vec4(0.32, 0.19, 0.07, 1.0);
+        
+        finalColor = vec4(0.35, 0.35, 0.35, 1.0);
     }
 
     gl_FragColor = finalColor;
-    
-    
 }
 

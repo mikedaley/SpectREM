@@ -47,6 +47,9 @@
                                [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
                                ];
+//        _shader.uniforms = @[
+//                             [SKUniform uniformWithName:@"u_old_tv" texture:[SKTexture textureWithImageNamed:@"old-tv"]]
+//                             ];
         self.emulationDisplaySprite.shader = _shader;
         [self setupObservers];
     }

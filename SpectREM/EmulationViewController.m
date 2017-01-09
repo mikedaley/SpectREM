@@ -234,6 +234,7 @@ NS_ENUM(NSUInteger, MachineType)
 {
     emulationDisplayTexture.filteringMode = SKTextureFilteringNearest;
     _emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
+    _emulationScene.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringNearest;
 }
 
 #pragma mark - UI Actions

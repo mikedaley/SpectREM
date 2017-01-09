@@ -220,12 +220,13 @@
             self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                  size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
                                               flipped:YES];
+            self.texture = [SKTexture textureWithRect:textureRect inTexture:self.texture];
+            
             CFRelease(dataRef);
             
             // Updating the emulators texture must be done on the main thread
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.emulationViewController updateEmulationDisplayWithTexture:[SKTexture textureWithRect:textureRect
-                                                                                                 inTexture:self.texture]];
+                [self.emulationViewController updateEmulationDisplayWithTexture:self.texture];
             });
             
             frameCounter++;
