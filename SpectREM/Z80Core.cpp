@@ -80,6 +80,18 @@ unsigned char CZ80Core::Z80CoreMemRead(unsigned short address, unsigned int tsta
 
 //-----------------------------------------------------------------------------------------
 
+unsigned char CZ80Core::Z80CoreMemReadInternal(unsigned short address, unsigned int tstates)
+{
+    if (m_MemRead != NULL)
+    {
+        return m_MemRead(address, m_Param);
+    }
+    
+    return 0;
+}
+
+//-----------------------------------------------------------------------------------------
+
 void CZ80Core::Z80CoreMemWrite(unsigned short address, unsigned char data, unsigned int tstates)
 {
 	// First handle the contention
@@ -184,7 +196,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
                         Z80CoreMemWrite(--m_CPURegisters.regSP, (m_CPURegisters.regPC >> 0) & 0xff);
                         
                         // Should handle the bus
-                        unsigned short address = (m_CPURegisters.regI << 8) | 0;
+                        unsigned short address = (m_CPURegisters.regI << 8) | 0xff;
                         m_CPURegisters.regPC = Z80CoreMemRead(address + 0);
                         m_CPURegisters.regPC |= Z80CoreMemRead(address + 1) << 8;
                         
@@ -211,6 +223,14 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 //        int tempTs = m_CPURegisters.TStates;
 //        int tempPC = m_CPURegisters.regPC;
         
+//        if (m_CPURegisters.regPC == 0x791d)
+//        {
+//            printf("STOPPED");
+//        }
+//        printf("%x: ", m_CPURegisters.regPC);
+        
+        int opcodePC = 0;
+        
         // Read the opcode
         unsigned char opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
         
@@ -227,6 +247,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
 			m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+            opcodePC = m_CPURegisters.regPC;
             break;
 
 		case 0xdd:
@@ -234,7 +255,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			// Get the next byte
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
-			m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+            opcodePC = m_CPURegisters.regPC;
+            m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
 
 			if ( opcode == 0xcb )
 			{
@@ -243,7 +265,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 				// Read the offset
 				signed char offset = Z80CoreMemRead(m_CPURegisters.regPC);
 				m_CPURegisters.regPC++;
-				m_MEMPTR = m_CPURegisters.reg_pairs.regIX + offset;
+                opcodePC = m_CPURegisters.regPC;
+                m_MEMPTR = m_CPURegisters.reg_pairs.regIX + offset;
 
 				// Get the next byte
 				opcode = Z80CoreMemRead(m_CPURegisters.regPC);
@@ -261,7 +284,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 			// Get the next byte
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
-			m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+            opcodePC = m_CPURegisters.regPC;
+            m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
             break;
 
 		case 0xfd:
@@ -269,7 +293,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
             // Get the next byte
 			opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
 			m_CPURegisters.regPC++;
-			m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+            opcodePC = m_CPURegisters.regPC;
+            m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
                 
 			if (opcode == 0xcb)
 			{
@@ -278,7 +303,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 				// Read the offset
 				signed char offset = Z80CoreMemRead(m_CPURegisters.regPC);
 				m_CPURegisters.regPC++;
-				m_MEMPTR = m_CPURegisters.reg_pairs.regIY + offset;
+                opcodePC = m_CPURegisters.regPC;
+                m_MEMPTR = m_CPURegisters.reg_pairs.regIY + offset;
 
 				// Get the next byte
 				opcode = Z80CoreMemRead(m_CPURegisters.regPC);
@@ -294,6 +320,16 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
 		// We can now execute the instruction
 		if (table->entries[opcode].function != NULL)
 		{
+//            if (opcodePC != 0)
+//            {
+//                printf(table->entries[opcode].format, Z80CoreMemReadInternal(opcodePC));
+//            }
+//            else
+//            {
+//                printf(table->entries[opcode].format, Z80CoreMemReadInternal(m_CPURegisters.regPC));
+//            }
+//            printf("\n");
+            
             // Execute the opcode
             (this->*table->entries[opcode].function)(opcode);
         }

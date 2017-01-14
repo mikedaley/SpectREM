@@ -193,6 +193,8 @@ public:
 	void					ResetTStates() { m_CPURegisters.TStates = 0; }
 	void					ResetTStates(unsigned int tstates_per_frame) { m_CPURegisters.TStates -= tstates_per_frame; }
 
+    unsigned char			Z80CoreMemReadInternal(unsigned short address, unsigned int tstates = 3);
+    
 	unsigned char			Z80CoreMemRead(unsigned short address, unsigned int tstates = 3);
 	void					Z80CoreMemWrite(unsigned short address, unsigned char data, unsigned int tstates = 3);
 	unsigned char			Z80CoreIORead(unsigned short address);
