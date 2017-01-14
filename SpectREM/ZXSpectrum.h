@@ -300,6 +300,12 @@ Loads an SNA based snapshot file with the path provided
 - (void)loadZ80Snapshot;
 
 /**
+ Loads the ROM at the provided path into a 48k Machine. These are ROM files that were available for the IF2. Only 16
+ were ever made.
+ */
+- (void)loadROMWithPath:(NSString *)path;
+
+/**
 Sets up observers between the machine and the audio core
  */
 - (void)setupObservers;

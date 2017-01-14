@@ -234,7 +234,19 @@
     }
 }
 
-#pragma mark - Tape processing
+#pragma mark - Load IF2 ROM
+
+- (void)loadROMWithPath:(NSString *)path
+{
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    
+    const char *fileBytes = (const char*)[data bytes];
+    
+    for (int addr = 0; addr < data.length; addr++)
+    {
+        memory[addr] = fileBytes[addr];
+    }
+}
 
 #pragma mark - Audio
 

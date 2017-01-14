@@ -289,7 +289,7 @@ NS_ENUM(NSUInteger, MachineType)
     NSOpenPanel *openPanel = [NSOpenPanel new];
     openPanel.canChooseDirectories = NO;
     openPanel.allowsMultipleSelection = NO;
-    openPanel.allowedFileTypes = @[@"SNA", @"Z80", @"TAP"];
+    openPanel.allowedFileTypes = @[@"SNA", @"Z80", @"TAP", @"ROM"];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [openPanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
@@ -304,7 +304,8 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)loadFileWithURL:(NSURL *)url
 {
 
-    if (![[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
+    if ([[[url pathExtension] uppercaseString] isEqualToString:@"Z80"] ||
+        [[[url pathExtension] uppercaseString] isEqualToString:@"SNA"])
     {
         // Check to see if the snapshot being loaded is compatible with the current machine and if not then switch
         // to the machine needed for the snapshot
@@ -317,11 +318,22 @@ NS_ENUM(NSUInteger, MachineType)
         }
         [_machine loadSnapshotWithPath:url.path];
     }
-    else
+    else if ([[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
     {
         zxTape.playing = NO;
         [zxTape loadTapeWithURL:url];
         [self.tapeBytesLabel.animator setHidden:NO];
+    }
+    else if ([[[url pathExtension] uppercaseString] isEqualToString:@"ROM"])
+    {
+        if (_machine->machineInfo.machineType != eZXSpectrum48)
+        {
+            [self switchToMachine:eZXSpectrum48];
+            preferences = [NSUserDefaults standardUserDefaults];
+            [preferences setValue:@(eZXSpectrum48) forKey:@"currentMachineType"];
+        }
+        [_machine loadROMWithPath:url.path];
+        [_machine reset:NO];
     }
     
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
