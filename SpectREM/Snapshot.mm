@@ -218,6 +218,7 @@
         pc = ((unsigned short *)&fileBytes[32])[0];
     }
     
+    NSLog(@"-------------------------------------------------------");
     NSLog(@"Z80 Snapshot Version %i", version);
 
     core->SetRegister(CZ80Core::eREG_A, (unsigned char)fileBytes[0]);
@@ -261,6 +262,7 @@
     // Based on the version number of the Z80, decode the memory contents
     switch (version) {
         case 1:
+            NSLog(@"Hardware Type: 48k");
             [self extractMemoryBlock:fileBytes memAddr:16384 fileOffset:30 compressed:compressed unpackedLength:49152 intoMachine:machine];
             break;
             

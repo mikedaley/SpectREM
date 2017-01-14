@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		991D87BB1E2A5BA900667E37 /* gw03.rom in Resources */ = {isa = PBXBuildFile; fileRef = 991D87BA1E2A5BA900667E37 /* gw03.rom */; };
+		991D87BE1E2AB89A00667E37 /* Pssst.rom in Resources */ = {isa = PBXBuildFile; fileRef = 991D87BD1E2AB89A00667E37 /* Pssst.rom */; };
+		991D87C01E2AB91A00667E37 /* Chess.rom in Resources */ = {isa = PBXBuildFile; fileRef = 991D87BF1E2AB91A00667E37 /* Chess.rom */; };
 		995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995657F21DC1327100114FC9 /* ZXSpectrum.mm */; };
 		996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */ = {isa = PBXBuildFile; fileRef = 996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */; };
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
@@ -55,6 +58,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		991D87BA1E2A5BA900667E37 /* gw03.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = gw03.rom; sourceTree = "<group>"; };
+		991D87BD1E2AB89A00667E37 /* Pssst.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pssst.rom; sourceTree = "<group>"; };
+		991D87BF1E2AB91A00667E37 /* Chess.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = Chess.rom; sourceTree = "<group>"; };
 		995657F11DC1327100114FC9 /* ZXSpectrum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum.h; sourceTree = "<group>"; };
 		995657F21DC1327100114FC9 /* ZXSpectrum.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum.mm; sourceTree = "<group>"; };
 		996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = Open_SEBASIC_3.12.rom; sourceTree = "<group>"; };
@@ -152,6 +158,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		991D87BC1E2AB88C00667E37 /* IF2 */ = {
+			isa = PBXGroup;
+			children = (
+				991D87BF1E2AB91A00667E37 /* Chess.rom */,
+				991D87BD1E2AB89A00667E37 /* Pssst.rom */,
+			);
+			name = IF2;
+			sourceTree = "<group>";
+		};
 		99BFAA271DBA0AC50049D811 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -386,6 +401,8 @@
 		EDF3A4C41DB0D79100511BAF /* ROMS */ = {
 			isa = PBXGroup;
 			children = (
+				991D87BC1E2AB88C00667E37 /* IF2 */,
+				991D87BA1E2A5BA900667E37 /* gw03.rom */,
 				99A79E6C1DC2295000B8D4CD /* 128-0.rom */,
 				99A79E6D1DC2295000B8D4CD /* 128-1.rom */,
 				EDF3A4DD1DB0D7BB00511BAF /* 48.rom */,
@@ -490,11 +507,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
+				991D87BB1E2A5BA900667E37 /* gw03.rom in Resources */,
 				996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */,
 				EDF3A4F81DB0F25F00511BAF /* CRT.fsh in Resources */,
 				99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */,
 				EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */,
 				EDF3A5021DB8EBD500511BAF /* Defaults.plist in Resources */,
+				991D87C01E2AB91A00667E37 /* Chess.rom in Resources */,
+				991D87BE1E2AB89A00667E37 /* Pssst.rom in Resources */,
 				EDF3A4B11DB0D60700511BAF /* Assets.xcassets in Resources */,
 				EDF3A4A91DB0D60700511BAF /* Actions.sks in Resources */,
 				EDF3A4E31DB0D7BB00511BAF /* 48.rom in Resources */,
