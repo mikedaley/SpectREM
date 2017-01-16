@@ -16,6 +16,7 @@
 @property (assign) id keyboardDelegate;
 
 @property (assign) double displayCurve;
+@property (assign) bool displayPixelated;
 @property (assign) float displaySaturation;
 @property (assign) float displayContrast;
 @property (assign) float displayBrightness;

@@ -305,6 +305,8 @@ Loads an SNA based snapshot file with the path provided
  */
 - (void)loadROMWithPath:(NSString *)path;
 
+- (void)loadDefaultROM;
+
 /**
 Sets up observers between the machine and the audio core
  */

@@ -19,6 +19,7 @@
 - (void)dealloc
 {
     NSLog(@"Deallocating Scene");
+    [self removeObserver:self forKeyPath:@"displayPixelated"];
     [self removeObserver:self forKeyPath:@"displayCurve"];
     [self removeObserver:self forKeyPath:@"displaySaturation"];
     [self removeObserver:self forKeyPath:@"displayContrast"];
@@ -60,6 +61,7 @@
 
 - (void)setupObservers
 {
+    [self addObserver:self forKeyPath:@"displayPixelated" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
@@ -68,6 +70,7 @@
     [self addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"screenHeight" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"pixelated" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -99,6 +102,17 @@
     else if ([keyPath isEqualToString:@"displayVignetteY"])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_y"];
+    }
+    else if ([keyPath isEqualToString:@"displayPixelated"])
+    {
+        if ([change[NSKeyValueChangeNewKey] boolValue])
+        {
+            self.emulationDisplaySprite.shader = nil;
+        }
+        else
+        {
+            self.emulationDisplaySprite.shader = _shader;
+        }
     }
 }
 

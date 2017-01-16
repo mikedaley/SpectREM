@@ -12,6 +12,7 @@
 
 // Display properties
 @property (assign) double displayBorderWidth;
+@property (assign) bool displayPixelated;
 @property (assign) double displayCurve;
 @property (assign) double displaySaturation;
 @property (assign) double displayContrast;

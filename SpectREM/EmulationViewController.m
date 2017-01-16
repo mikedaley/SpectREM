@@ -150,6 +150,7 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)setupSceneBindings
 {
+    [_emulationScene bind:@"displayPixelated" toObject:_configViewController withKeyPath:@"displayPixelated" options:nil];
     [_emulationScene bind:@"displayCurve" toObject:_configViewController withKeyPath:@"displayCurve" options:nil];
     [_emulationScene bind:@"displaySaturation" toObject:_configViewController withKeyPath:@"displaySaturation" options:nil];
     [_emulationScene bind:@"displayContrast" toObject:_configViewController withKeyPath:@"displayContrast" options:nil];
@@ -185,6 +186,7 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)removeBindings
 {
+    [_emulationScene unbind:@"displayPixelated"];
     [_emulationScene unbind:@"displayCurve"];
     [_emulationScene unbind:@"displaySaturation"];
     [_emulationScene unbind:@"displayContrast"];

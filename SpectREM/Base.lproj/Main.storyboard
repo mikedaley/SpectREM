@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D17a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D30a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -411,26 +411,31 @@
             <objects>
                 <viewController storyboardIdentifier="ConfigViewController" id="eq9-hE-kE2" customClass="ConfigViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" misplaced="YES" id="a97-VP-aKI">
-                        <rect key="frame" x="0.0" y="0.0" width="236" height="537"/>
+                        <rect key="frame" x="0.0" y="0.0" width="236" height="554"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box misplaced="YES" borderType="line" title="Display" id="g2m-hz-Neu">
-                                <rect key="frame" x="8" y="231" width="221" height="211"/>
+                                <rect key="frame" x="8" y="231" width="221" height="228"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="rv0-nd-bwL">
-                                    <rect key="frame" x="1" y="1" width="219" height="195"/>
+                                    <rect key="frame" x="1" y="1" width="219" height="212"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <slider verticalHuggingPriority="750" id="MNb-Xd-By4">
-                                            <rect key="frame" x="116" y="145" width="84" height="18"/>
+                                        <slider verticalHuggingPriority="750" misplaced="YES" id="MNb-Xd-By4">
+                                            <rect key="frame" x="116" y="142" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="2CO-1H-pbL"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="7IT-AK-pdP">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayCurve" id="p4e-Pw-5XU"/>
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" id="KEJ-Ux-JaQ">
-                                            <rect key="frame" x="116" y="167" width="83" height="18"/>
+                                            <rect key="frame" x="116" y="184" width="83" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="31" doubleValue="16" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="LoA-Pk-COT"/>
                                             <connections>
@@ -438,7 +443,7 @@
                                             </connections>
                                         </slider>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="82Z-YM-ZcI">
-                                            <rect key="frame" x="33" y="168" width="77" height="14"/>
+                                            <rect key="frame" x="33" y="185" width="77" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Border Size:" id="T4w-Wx-Yj9">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -446,8 +451,8 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="EBo-zY-ycy">
-                                            <rect key="frame" x="32" y="146" width="78" height="14"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="EBo-zY-ycy">
+                                            <rect key="frame" x="32" y="143" width="78" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Screen Curve:" id="Dgj-Ct-8dY">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -455,8 +460,8 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="zod-LG-17a">
-                                            <rect key="frame" x="39" y="124" width="71" height="14"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="zod-LG-17a">
+                                            <rect key="frame" x="39" y="121" width="71" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Saturation:" id="Lmr-e3-dLg">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -464,8 +469,8 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="kMc-CW-FBP">
-                                            <rect key="frame" x="37" y="102" width="73" height="14"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="kMc-CW-FBP">
+                                            <rect key="frame" x="37" y="99" width="73" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Brightness:" id="L3e-VK-woi">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -473,32 +478,47 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <slider verticalHuggingPriority="750" id="SMV-Z4-sZ7">
-                                            <rect key="frame" x="116" y="123" width="84" height="18"/>
+                                        <slider verticalHuggingPriority="750" misplaced="YES" id="SMV-Z4-sZ7">
+                                            <rect key="frame" x="116" y="120" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="4" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="MmM-L9-T2p"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="z1P-Pw-IRd">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displaySaturation" id="xSB-LP-n0v"/>
                                             </connections>
                                         </slider>
-                                        <slider verticalHuggingPriority="750" id="SQD-oW-KMJ">
-                                            <rect key="frame" x="116" y="101" width="84" height="18"/>
+                                        <slider verticalHuggingPriority="750" misplaced="YES" id="SQD-oW-KMJ">
+                                            <rect key="frame" x="116" y="98" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="Jms-f6-keg"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="j7E-cY-AGb">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayBrightness" id="bUe-qi-rj2"/>
                                             </connections>
                                         </slider>
-                                        <slider verticalHuggingPriority="750" id="c2R-T9-O6n">
-                                            <rect key="frame" x="116" y="79" width="84" height="18"/>
+                                        <slider verticalHuggingPriority="750" misplaced="YES" id="c2R-T9-O6n">
+                                            <rect key="frame" x="116" y="76" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="CwY-6z-aYU"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="d7M-pn-JPa">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayContrast" id="ETj-R9-Qie"/>
                                             </connections>
                                         </slider>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="S4u-RZ-lwO">
-                                            <rect key="frame" x="49" y="80" width="61" height="14"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="S4u-RZ-lwO">
+                                            <rect key="frame" x="49" y="77" width="61" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Contrast:" id="6KJ-0F-Tiz">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -506,16 +526,21 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <slider verticalHuggingPriority="750" id="4ip-4L-sA2">
-                                            <rect key="frame" x="116" y="37" width="84" height="18"/>
+                                        <slider verticalHuggingPriority="750" misplaced="YES" id="4ip-4L-sA2">
+                                            <rect key="frame" x="116" y="34" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="0.5" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="vKd-Gi-Rkh"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="e2F-Us-Chm">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayVignetteX" id="Lsd-No-upt"/>
                                             </connections>
                                         </slider>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="c1z-UF-6wP">
-                                            <rect key="frame" x="47" y="38" width="63" height="14"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="c1z-UF-6wP">
+                                            <rect key="frame" x="47" y="35" width="63" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Vignette X:" id="XKk-vw-lrD">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -523,16 +548,21 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <slider verticalHuggingPriority="750" id="xcx-sM-p2U">
-                                            <rect key="frame" x="116" y="15" width="84" height="18"/>
+                                        <slider verticalHuggingPriority="750" misplaced="YES" id="xcx-sM-p2U">
+                                            <rect key="frame" x="116" y="12" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="BQK-jx-mLG"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="loN-TL-hfZ">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayVignetteY" id="JqZ-6z-EAv"/>
                                             </connections>
                                         </slider>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="DND-ht-Y4d">
-                                            <rect key="frame" x="48" y="16" width="62" height="14"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="DND-ht-Y4d">
+                                            <rect key="frame" x="48" y="13" width="62" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Vignette Y:" id="xal-ZO-nmq">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -540,8 +570,8 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="hZY-l1-yFC">
-                                            <rect key="frame" x="18" y="59" width="92" height="14"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="hZY-l1-yFC">
+                                            <rect key="frame" x="18" y="56" width="92" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Show Vignette:" id="TYh-1J-XPT">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -549,22 +579,47 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button id="0ig-gn-GLL">
-                                            <rect key="frame" x="113" y="56" width="18" height="20"/>
+                                        <button misplaced="YES" id="0ig-gn-GLL">
+                                            <rect key="frame" x="113" y="53" width="18" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="overlaps" controlSize="small" state="on" inset="2" id="BuJ-Ql-WGH">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="smallSystem"/>
                                             </buttonCell>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="erD-t4-8pV">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayShowVignette" id="AGc-Bl-263"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="oac-pS-Y3B">
+                                            <rect key="frame" x="18" y="163" width="92" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Pixel Filter:" id="LMe-OU-9qb">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button misplaced="YES" id="AkG-jB-fEW">
+                                            <rect key="frame" x="113" y="160" width="18" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="overlaps" controlSize="small" state="on" inset="2" id="7EW-jV-DOd">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayPixelated" id="oSh-Ey-hgb"/>
                                             </connections>
                                         </button>
                                     </subviews>
                                 </view>
                             </box>
                             <box misplaced="YES" title="Computer" id="16N-tf-hw7">
-                                <rect key="frame" x="8" y="446" width="221" height="71"/>
+                                <rect key="frame" x="8" y="463" width="221" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="wN5-47-Bis">
                                     <rect key="frame" x="2" y="2" width="217" height="54"/>
@@ -792,7 +847,7 @@
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s"/>
             </objects>
-            <point key="canvasLocation" x="-322" y="693"/>
+            <point key="canvasLocation" x="-322" y="701"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">

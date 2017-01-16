@@ -121,6 +121,11 @@
     [self resetFrame];
     CZ80Core *core = (CZ80Core *)[self getCore];
     core->Reset(hard);
+    
+    if (hard)
+    {
+        [self loadDefaultROM];
+    }
 }
 
 - (void)resetSound

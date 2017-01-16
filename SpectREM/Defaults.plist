@@ -4,6 +4,8 @@
 <dict>
 	<key>displayBorderWidth</key>
 	<integer>16</integer>
+	<key>displayPixelated</key>
+	<true/>
 	<key>displayCurve</key>
 	<real>0.125</real>
 	<key>displaySaturation</key>

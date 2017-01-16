@@ -14,6 +14,7 @@
 {
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     [preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
+    [preferences removeObserver:self forKeyPath:@"displayPixelated"];
     [preferences removeObserver:self forKeyPath:@"displayCurve"];
     [preferences removeObserver:self forKeyPath:@"displaySaturation"];
     [preferences removeObserver:self forKeyPath:@"displayContrast"];
@@ -44,6 +45,7 @@
         NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
         
         [preferences addObserver:self forKeyPath:@"displayBorderWidth" options:NSKeyValueObservingOptionNew context:NULL];
+        [preferences addObserver:self forKeyPath:@"displayPixelated" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
         [preferences addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
@@ -155,6 +157,7 @@
 - (NSArray *)observableBoolKeys
 {
     return @[
+             @"displayPixelated",
              @"AYChannelA",
              @"AYChannelB",
              @"AYChannelC"
