@@ -47,7 +47,7 @@ void main()
     if (texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1)
     {
         
-        finalColor = vec4(0.35, 0.35, 0.35, 1.0);
+        finalColor = vec4(0.1, 0.1, 0.1, 1.0);
     }
 
     gl_FragColor = finalColor;

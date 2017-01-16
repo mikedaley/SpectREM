@@ -426,18 +426,18 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="2CO-1H-pbL"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayCurve" id="p4e-Pw-5XU"/>
                                                 <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="7IT-AK-pdP">
                                                     <dictionary key="options">
                                                         <string key="NSValueTransformerName">NSNegateBoolean</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayCurve" id="p4e-Pw-5XU"/>
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" id="KEJ-Ux-JaQ">
                                             <rect key="frame" x="116" y="184" width="83" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="31" doubleValue="16" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="LoA-Pk-COT"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="1" maxValue="32" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="LoA-Pk-COT"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayBorderWidth" id="0pA-iy-0cF"/>
                                             </connections>
@@ -496,12 +496,12 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="Jms-f6-keg"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayBrightness" id="bUe-qi-rj2"/>
                                                 <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="j7E-cY-AGb">
                                                     <dictionary key="options">
                                                         <string key="NSValueTransformerName">NSNegateBoolean</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayBrightness" id="bUe-qi-rj2"/>
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="c2R-T9-O6n">
@@ -509,12 +509,12 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="CwY-6z-aYU"/>
                                             <connections>
+                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayContrast" id="ETj-R9-Qie"/>
                                                 <binding destination="ywq-i7-o5s" name="enabled" keyPath="values.displayPixelated" id="d7M-pn-JPa">
                                                     <dictionary key="options">
                                                         <string key="NSValueTransformerName">NSNegateBoolean</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayContrast" id="ETj-R9-Qie"/>
                                             </connections>
                                         </slider>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="S4u-RZ-lwO">

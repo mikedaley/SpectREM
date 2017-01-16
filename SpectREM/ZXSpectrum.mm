@@ -212,18 +212,21 @@
             core->ResetTStates( machineInfo.tsPerFrame );
             core->SignalInterrupt();
             
-            float borderWidth = self.displayBorderWidth;
-            
-            CGRect textureRect = (CGRect){
-                ((emuLeftBorderPx - borderWidth) * emuHScale),
-                (emuBottomBorderPx - borderWidth) * emuVScale,
-                1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)) + emuHScale,
-                1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2.0)
-            };
+            // Use the configurable border width to work out the rect that should be extraced from the texture
+            CGRect textureRect = (CGRect){0, 0, 1, 1};
+            if (self.displayBorderWidth != emuTopBorderPx)
+            {
+                float borderWidth = emuTopBorderPx - self.displayBorderWidth;
+                textureRect = (CGRect){
+                    borderWidth * emuHScale,
+                    borderWidth * emuVScale,
+                    1.0 - (borderWidth * 2.0 * emuHScale),
+                    1.0 - (borderWidth * 2.0 * emuVScale)
+                };
+            }
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength, kCFAllocatorNull);
-            
             self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                  size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
                                               flipped:YES];
