@@ -7,7 +7,7 @@
 //
 vec2 radialDistortion(vec2 pos, float distortion)
 {
-    vec2 cc = pos - vec2(0.4544, 0.5);
+    vec2 cc = pos - vec2(0.5, 0.5);
     float dist = dot(cc, cc) * distortion;
     return (pos + cc * (0.5 + dist) * dist);
 }
@@ -27,7 +27,7 @@ vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightn
 
 vec3 vegnetteColor(vec3 color, vec2 coord, float vig_x, float vig_y)
 {
-    float dist = distance(coord, vec2(0.4544, 0.5));
+    float dist = distance(coord, vec2(0.5, 0.5));
     return vec3(smoothstep(vig_x, vig_y, dist));
 }
 
@@ -44,7 +44,7 @@ void main()
     }
 
     // If the texture coordinate is outside of the texture coordinates then discard the texel
-    if (texCoord.x < 0 || texCoord.y < 0.0805 || texCoord.x > 0.9075 || texCoord.y > 0.9193)
+    if (texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1)
     {
         
         finalColor = vec4(0.35, 0.35, 0.35, 1.0);

@@ -36,10 +36,10 @@
         frameCounter = 0;
         
         emuLeftBorderPx = 32;
-        emuRightBorderPx = 64;
+        emuRightBorderPx = 32;
         
-        emuBottomBorderPx = 56;
-        emuTopBorderPx = 56;
+        emuBottomBorderPx = 32;
+        emuTopBorderPx = 32;
         
         emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
@@ -212,19 +212,22 @@
             core->ResetTStates( machineInfo.tsPerFrame );
             core->SignalInterrupt();
             
-            float borderWidth = self.displayBorderWidth - 0.5;
+            float borderWidth = self.displayBorderWidth;
+            
             CGRect textureRect = (CGRect){
-                (emuLeftBorderPx - borderWidth) * emuHScale,
+                ((emuLeftBorderPx - borderWidth) * emuHScale),
                 (emuBottomBorderPx - borderWidth) * emuVScale,
-                1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)),
-                1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2)
+                1.0 - ((emuLeftBorderPx - borderWidth) * emuHScale + ((emuRightBorderPx - borderWidth) * emuHScale)) + emuHScale,
+                1.0 - (((emuTopBorderPx - borderWidth) * emuVScale) * 2.0)
             };
             
             // Update the display texture using the data from the emulator display buffer
             CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength, kCFAllocatorNull);
+            
             self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                  size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
                                               flipped:YES];
+            
             self.texture = [SKTexture textureWithRect:textureRect inTexture:self.texture];
             
             CFRelease(dataRef);
@@ -251,6 +254,13 @@
     {
         memory[addr] = fileBytes[addr];
     }
+}
+
+#pragma mark - Audio
+
+- (void)loadDefaultROM
+{
+    // Implemented in subclasses
 }
 
 #pragma mark - Audio
@@ -377,7 +387,8 @@ void updateScreenWithTStates(int numberTs, void *m)
         int line = machine->emuDisplayTs / machine->machineInfo.tsPerLine;
         int ts = machine->emuDisplayTs % machine->machineInfo.tsPerLine;
         
-        switch (machine->emuDisplayTsTable[line][ts]) {
+        switch (machine->emuDisplayTsTable[line][ts])
+        {
             case DisplayAction::eDisplayRetrace:
                 break;
                 
@@ -664,9 +675,10 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
 }
 
 // Generates a table that holds what screen activity should be happening based on each T-States within a Frame e.g. should the
-// border be drawn, bitmap screen or beam retrace
+// border be drawn, bitmap screen or beam retrace. The values have been adjusted to ensure that the image drawn will be 320x256.
 - (void)buildDisplayTsTable
 {
+    
     for(int line = 0; line < machineInfo.pxVerticalTotal; line++)
     {
         for(int ts = 0 ; ts < machineInfo.tsPerLine; ts++)
@@ -676,9 +688,10 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                 emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
             }
             
-            if (line >= machineInfo.pxVerticalBlank  && line < machineInfo.pxVerticalBlank + machineInfo.pxTopBorder)
+            // Top Border
+            if (line >= machineInfo.pxVerticalBlank && line < machineInfo.pxVerticalBlank + machineInfo.pxTopBorder)
             {
-                if (ts >= 176 && ts < machineInfo.tsPerLine)
+                if ((ts >= 160 && ts < machineInfo.tsPerLine) || line < machineInfo.pxVerticalBlank + machineInfo.pxTopBorder - emuTopBorderPx)
                 {
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
@@ -687,26 +700,15 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
             }
-            
-            if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay) && line < machineInfo.pxVerticalTotal)
-            {
-                if (ts >= 176 && ts < machineInfo.tsPerLine)
-                {
-                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
-                }
-                else
-                {
-                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
-                }
-            }
-            
+
+            // Border + Paper + Border
             if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder) && line < (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay))
             {
-                if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 176))
+                if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 160))
                 {
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
-                else if (ts >= 176 && ts < machineInfo.tsPerLine)
+                else if (ts >= 160 && ts < machineInfo.tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
@@ -715,6 +717,20 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayPaper;
                 }
             }
+
+            // Bottom Border
+            if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay) && line < machineInfo.pxVerticalTotal - 24)
+            {
+                if (ts >= 160 && ts < machineInfo.tsPerLine)
+                {
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
+                }
+                else
+                {
+                    emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
+                }
+            }
+            
         }
     }
 }
@@ -737,13 +753,13 @@ static unsigned char floatingBus(void *m)
     
     // If the line and tState are within the bitmap of the screen then grab the
     // pixel or attribute value
-    if (currentDisplayLine >= (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank)
-        && currentDisplayLine < (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
+    if (currentDisplayLine >= (32 + machine->machineInfo.pxVerticalBlank)
+        && currentDisplayLine < (32 + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
         && currentTs <= machine->machineInfo.tsHorizontalDisplay)
     {
         unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
         
-        int y = currentDisplayLine - (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank);
+        int y = currentDisplayLine - (32 + machine->machineInfo.pxVerticalBlank);
         int x = currentTs >> 2;
         
         if (ulaValueType == FloatingBusValueType::ePixel)

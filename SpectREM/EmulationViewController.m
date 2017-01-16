@@ -388,12 +388,12 @@ NS_ENUM(NSUInteger, MachineType)
     if (([self.view.window styleMask] & NSFullScreenWindowMask) != NSFullScreenWindowMask)
     {
         NSMenuItem *menuItem = (NSMenuItem*)sender;
-        float width = 319 * menuItem.tag;
+        float width = 320 * menuItem.tag;
         float height = 256 * menuItem.tag + 22;
         float originX = self.view.window.frame.origin.x;
         float originY = self.view.window.frame.origin.y - (height - self.view.window.frame.size.height);
         NSRect windowFrame = CGRectMake(originX, originY, width, height);
-        [self.view.window.animator setFrame:windowFrame display:YES animate:NO];
+        [self.view.window.animator setFrame:windowFrame display:YES animate:YES];
     }
 }
 
