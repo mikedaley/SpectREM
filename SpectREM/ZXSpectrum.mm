@@ -763,13 +763,13 @@ static unsigned char floatingBus(void *m)
     
     // If the line and tState are within the bitmap of the screen then grab the
     // pixel or attribute value
-    if (currentDisplayLine >= (32 + machine->machineInfo.pxVerticalBlank)
-        && currentDisplayLine < (32 + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
+    if (currentDisplayLine >= (56 + machine->machineInfo.pxVerticalBlank)
+        && currentDisplayLine < (56 + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
         && currentTs <= machine->machineInfo.tsHorizontalDisplay)
     {
         unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
         
-        int y = currentDisplayLine - (32 + machine->machineInfo.pxVerticalBlank);
+        int y = currentDisplayLine - (56 + machine->machineInfo.pxVerticalBlank);
         int x = currentTs >> 2;
         
         if (ulaValueType == FloatingBusValueType::ePixel)
