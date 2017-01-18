@@ -62,6 +62,8 @@
         audioAYTStatesStep = 32;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         
+        self.fastMode = NO;
+        
         [self resetFrame];
         [self resetSound];
         [self buildContentionTable];
@@ -156,30 +158,32 @@
 - (void)doFrame
 {
     // Ensure that the frame is run on the emulation queue
-    dispatch_async(self.emulationQueue, ^
+    dispatch_sync(self.emulationQueue, ^
                    {
-                       switch (event)
-                       {
-                           case EventType::eNone:
-                               break;
-                               
-                           case EventType::eReset:
-                               break;
-                               
-                           case EventType::eSnapshot:
-                               [self loadSnapshot];
-                               break;
-                               
-                           case EventType::eZ80Snapshot:
-                               [self loadZ80Snapshot];
-                               break;
-                               
-                           default:
-                               break;
+                       @autoreleasepool {
+                           switch (event)
+                           {
+                               case EventType::eNone:
+                                   break;
+                                   
+                               case EventType::eReset:
+                                   break;
+                                   
+                               case EventType::eSnapshot:
+                                   [self loadSnapshot];
+                                   break;
+                                   
+                               case EventType::eZ80Snapshot:
+                                   [self loadZ80Snapshot];
+                                   break;
+                                   
+                               default:
+                                   break;
+                           }
+                           event = EventType::eNone;
+                           [self resetFrame];
+                           [self generateFrame];                           
                        }
-                       event = EventType::eNone;
-                       [self resetFrame];
-                       [self generateFrame];
                    });
 }
 
@@ -200,7 +204,10 @@
         
         count -= tsCPU;
         
-        updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
+        if (!self.fastMode)
+        {
+            updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
+        }
         
         if (core->GetTStates() >= machineInfo.tsPerFrame )
         {

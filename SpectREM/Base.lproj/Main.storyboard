@@ -108,12 +108,18 @@
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="ujU-zz-zhp"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hard Reset" tag="1" keyEquivalent="R" id="qvx-Nm-tSo" userLabel="Restart">
+                                        <menuItem title="Hard Reset" tag="1" keyEquivalent="R" id="qvx-Nm-tSo">
                                             <connections>
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="Lyz-79-5Ov"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="srL-8x-Qy7"/>
+                                        <menuItem title="Fast Mode" tag="1" keyEquivalent="f" id="KHH-qv-Dio" userLabel="Fast Mode">
+                                            <connections>
+                                                <action selector="fastMode:" target="Ady-hI-5gd" id="Rba-66-YVq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="blN-5W-g1Z"/>
                                         <menuItem title="Configuration" keyEquivalent="c" id="Csa-4F-pON" userLabel="Configuration">
                                             <connections>
                                                 <action selector="configButtonPressed:" target="Ady-hI-5gd" id="INc-zS-6nO"/>
@@ -296,7 +302,7 @@
             <objects>
                 <windowController id="B8D-0N-5wS" customClass="EmulationWindowController" sceneMemberID="viewController">
                     <window key="window" title="SpectREM" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="spectrem" animationBehavior="default" id="IQv-IB-iLA">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="160" y="570" width="320" height="256"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>

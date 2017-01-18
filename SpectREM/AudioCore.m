@@ -476,10 +476,7 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
     // Check if we have used a frames worth of buffer storage and if so then its time to generate another frame.
     if ([audioCore.queue used] < (audioCore->samplesPerFrame << 1))
     {
-        dispatch_sync(audioCore.emulationQueue, ^
-        {
-            [audioCore.machine doFrame];
-        });
+        [audioCore.machine doFrame];
         
         // Populate the audio buffer on the same thread as the Core Audio callback otherwise there are timing
         // problems

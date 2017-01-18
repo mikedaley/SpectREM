@@ -227,6 +227,8 @@ typedef NS_ENUM(int, TapeLoadingState)
 
 @property (assign) BOOL tapePlaying;
 
+@property (assign) BOOL fastMode;
+
 #pragma mark - Methods
 
 /**

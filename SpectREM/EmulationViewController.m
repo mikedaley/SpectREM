@@ -48,11 +48,14 @@ NS_ENUM(NSUInteger, MachineType)
     CPUViewController       *_cpuViewController;
 
     IOHIDManagerRef         _hidManager;
-    NSUserDefaults          *preferences;
+    NSUserDefaults          *_preferences;
     dispatch_queue_t        _debugTimerQueue;
     dispatch_source_t       _debugTimer;
+    dispatch_queue_t        _fastTimerQueue;
+    dispatch_source_t       _fastTimer;
     
-    ZXTape                  *zxTape;
+    ZXTape                  *_zxTape;
+    
 }
 
 - (void)dealloc
@@ -91,10 +94,10 @@ NS_ENUM(NSUInteger, MachineType)
     [_infoViewController.view setFrameOrigin:(NSPoint){10,10}];
     [self.skView addSubview:_infoViewController.view];
     
-    preferences = [NSUserDefaults standardUserDefaults];
+    _preferences = [NSUserDefaults standardUserDefaults];
     
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    _emulationScene.scaleMode = [[preferences valueForKey:@"sceneScaleMode"] integerValue];
+    _emulationScene.scaleMode = [[_preferences valueForKey:@"sceneScaleMode"] integerValue];
     
     [self.skView setFrameSize:self.skView.window.frame.size];
     
@@ -105,11 +108,12 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupSceneBindings];
     [self setupNotificationCenterObservers];
     [self setupGamepad];
-    [self setupDebugTimer];
     
-    zxTape = [ZXTape new];
+    _zxTape = [ZXTape new];
     
     [self switchToMachine:_configViewController.currentMachineType];
+
+    [self setupDebugTimer];
 }
 
 #pragma mark - CPU View Timer
@@ -141,6 +145,15 @@ NS_ENUM(NSUInteger, MachineType)
     });
     
     dispatch_resume(_debugTimer);
+    
+    _fastTimerQueue = dispatch_queue_create("FastTimerQueue", nil);
+    _fastTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _fastTimerQueue);
+    dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, 0.0025 * NSEC_PER_SEC, 0);
+    
+    dispatch_source_set_event_handler(_fastTimer, ^
+      {
+          [_machine doFrame];
+      });
 }
 
 #pragma mark - Bindings/Observers
@@ -241,15 +254,15 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)setAspectFitMode:(id)sender
 {
     _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
-    [preferences setValue:@(SKSceneScaleModeAspectFit) forKey:@"sceneScaleMode"];
-    [preferences synchronize];
+    [_preferences setValue:@(SKSceneScaleModeAspectFit) forKey:@"sceneScaleMode"];
+    [_preferences synchronize];
 }
 
 - (IBAction)setFillMode:(id)sender
 {
     _emulationScene.scaleMode = SKSceneScaleModeFill;
-    [preferences setValue:@(SKSceneScaleModeFill) forKey:@"sceneScaleMode"];
-    [preferences synchronize];
+    [_preferences setValue:@(SKSceneScaleModeFill) forKey:@"sceneScaleMode"];
+    [_preferences synchronize];
 }
 
 - (IBAction)machineRestart:(id)sender
@@ -258,9 +271,9 @@ NS_ENUM(NSUInteger, MachineType)
     {
         NSMenuItem *menuItem = (NSMenuItem *)sender;
         [self.view.window setTitle:@"SpectREM"];
-        [zxTape reset];
+        [_zxTape reset];
         self.tapeBytesLabel.hidden = YES;
-        _machine.zxTape = zxTape;
+        _machine.zxTape = _zxTape;
         [_machine.audioCore reset];
         [_machine reset:menuItem.tag];
     });
@@ -302,7 +315,14 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)loadFileWithURL:(NSURL *)url
 {
-
+    
+    if (_machine.fastMode)
+    {
+        _machine.fastMode = NO;
+        dispatch_suspend(_fastTimer);
+        [_machine.audioCore start];
+    }
+    
     if ([[[url pathExtension] uppercaseString] isEqualToString:@"Z80"] ||
         [[[url pathExtension] uppercaseString] isEqualToString:@"SNA"])
     {
@@ -311,16 +331,16 @@ NS_ENUM(NSUInteger, MachineType)
         int machineType = [Snapshot machineNeededForZ80SnapshotWithPath:url.path];
         if (machineType != _machine->machineInfo.machineType)
         {
-            // Storing the machine type in preferences triggers an observer which runs the switchToMachine method
-            preferences = [NSUserDefaults standardUserDefaults];
-            [preferences setValue:@(machineType) forKey:@"currentMachineType"];
+            // Storing the machine type in _preferences triggers an observer which runs the switchToMachine method
+            _preferences = [NSUserDefaults standardUserDefaults];
+            [_preferences setValue:@(machineType) forKey:@"currentMachineType"];
         }
         [_machine loadSnapshotWithPath:url.path];
     }
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
     {
-        zxTape.playing = NO;
-        [zxTape loadTapeWithURL:url];
+        _zxTape.playing = NO;
+        [_zxTape loadTapeWithURL:url];
         [self.tapeBytesLabel.animator setHidden:NO];
     }
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"ROM"])
@@ -328,8 +348,8 @@ NS_ENUM(NSUInteger, MachineType)
         if (_machine->machineInfo.machineType != eZXSpectrum48)
         {
             [self switchToMachine:eZXSpectrum48];
-            preferences = [NSUserDefaults standardUserDefaults];
-            [preferences setValue:@(eZXSpectrum48) forKey:@"currentMachineType"];
+            _preferences = [NSUserDefaults standardUserDefaults];
+            [_preferences setValue:@(eZXSpectrum48) forKey:@"currentMachineType"];
         }
         [_machine loadROMWithPath:url.path];
         [_machine reset:NO];
@@ -361,7 +381,7 @@ NS_ENUM(NSUInteger, MachineType)
             _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self machineInfo:machines[2]];
             break;
     }
-    _machine.zxTape = zxTape;
+    _machine.zxTape = _zxTape;
     _emulationScene.keyboardDelegate = _machine;
     [self setupMachineBindings];
     [self setupSceneBindings];
@@ -375,8 +395,8 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)switchMachine:(id)sender
 {
     NSMenuItem *menuItem = (NSMenuItem *)sender;
-    preferences = [NSUserDefaults standardUserDefaults];
-    [preferences setValue:@(menuItem.tag) forKey:@"currentMachineType"];
+    _preferences = [NSUserDefaults standardUserDefaults];
+    [_preferences setValue:@(menuItem.tag) forKey:@"currentMachineType"];
 }
 
 - (IBAction)setWindowSize:(id)sender
@@ -424,36 +444,52 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine.audioCore start];
 }
 
+- (IBAction)fastMode:(id)sender
+{
+    _machine.fastMode = (_machine.fastMode) ? NO : YES;
+    
+    if (_machine.fastMode)
+    {
+        [_machine.audioCore stop];
+        dispatch_resume(_fastTimer);
+    }
+    else
+    {
+        [_machine.audioCore start];
+        dispatch_suspend(_fastTimer);
+    }
+}
+
 - (IBAction)playTape:(id)sender
 {
-    if (![zxTape isTapeLoaded])
+    if (![_zxTape isTapeLoaded])
     {
         [_infoViewController setText:@"No Tape Loaded"];
         [_infoViewController displayMessage];
         return;
     }
-    [zxTape play];
+    [_zxTape play];
     [_infoViewController setText:@"Tape Playing"];
     [_infoViewController displayMessage];
 }
 
 - (IBAction)stopTape:(id)sender
 {
-    [zxTape stop];
+    [_zxTape stop];
     [_infoViewController setText:@"Tape Stopped"];
     [_infoViewController displayMessage];
 }
 
 - (IBAction)rewindTape:(id)sender
 {
-    [zxTape rewind];
+    [_zxTape rewind];
     [_infoViewController setText:@"Tape Rewound"];
     [_infoViewController displayMessage];
 }
 
 - (IBAction)ejectTape:(id)sender
 {
-    [zxTape eject];
+    [_zxTape eject];
     [self.tapeBytesLabel.animator setHidden:YES];
     [self.view.window setTitle:@"SpectREM"];
     [_infoViewController setText:@"Tape Ejected"];

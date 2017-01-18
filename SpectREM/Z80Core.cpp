@@ -78,17 +78,6 @@ unsigned char CZ80Core::Z80CoreMemRead(unsigned short address, unsigned int tsta
 	return 0;
 }
 
-//-----------------------------------------------------------------------------------------
-
-unsigned char CZ80Core::Z80CoreMemReadInternal(unsigned short address, unsigned int tstates)
-{
-    if (m_MemRead != NULL)
-    {
-        return m_MemRead(address, m_Param);
-    }
-    
-    return 0;
-}
 
 //-----------------------------------------------------------------------------------------
 
