@@ -195,7 +195,7 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
                         Z80CoreMemWrite(--m_CPURegisters.regSP, (m_CPURegisters.regPC >> 8) & 0xff);
                         Z80CoreMemWrite(--m_CPURegisters.regSP, (m_CPURegisters.regPC >> 0) & 0xff);
                         
-                        // Hardware would normally put a value on the bus to be used with I when working out
+                        // Hardware would normally put a value on the bus to be used with regI when working out
                         // the address for the IM 2 jump table. With no hardware connected this is defaulted to
                         // 0xff
                         unsigned short address = (m_CPURegisters.regI << 8) | 0xff;
