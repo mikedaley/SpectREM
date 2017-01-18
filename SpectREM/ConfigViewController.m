@@ -9,32 +9,35 @@
 #import "ConfigViewController.h"
 
 @implementation ConfigViewController
+{
+    NSUserDefaults *_preferences;
+}
 
 - (void)dealloc
 {
-    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    [preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
-    [preferences removeObserver:self forKeyPath:@"displayPixelated"];
-    [preferences removeObserver:self forKeyPath:@"displayCurve"];
-    [preferences removeObserver:self forKeyPath:@"displaySaturation"];
-    [preferences removeObserver:self forKeyPath:@"displayContrast"];
-    [preferences removeObserver:self forKeyPath:@"displayBrightness"];
-    [preferences removeObserver:self forKeyPath:@"displayShowVignette"];
-    [preferences removeObserver:self forKeyPath:@"displayVignetteX"];
-    [preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
-    [preferences removeObserver:self forKeyPath:@"displayVignetteY"];
+    _preferences = [NSUserDefaults standardUserDefaults];
+    [_preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
+    [_preferences removeObserver:self forKeyPath:@"displayPixelated"];
+    [_preferences removeObserver:self forKeyPath:@"displayCurve"];
+    [_preferences removeObserver:self forKeyPath:@"displaySaturation"];
+    [_preferences removeObserver:self forKeyPath:@"displayContrast"];
+    [_preferences removeObserver:self forKeyPath:@"displayBrightness"];
+    [_preferences removeObserver:self forKeyPath:@"displayShowVignette"];
+    [_preferences removeObserver:self forKeyPath:@"displayVignetteX"];
+    [_preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
+    [_preferences removeObserver:self forKeyPath:@"displayVignetteY"];
 
-    [preferences removeObserver:self forKeyPath:@"soundVolume"];
-    [preferences removeObserver:self forKeyPath:@"soundLowPassFilter"];
-    [preferences removeObserver:self forKeyPath:@"soundHighPassFilter"];
-    [preferences removeObserver:self forKeyPath:@"AYChannelA"];
-    [preferences removeObserver:self forKeyPath:@"AYChannelB"];
-    [preferences removeObserver:self forKeyPath:@"AYChannelC"];
-    [preferences removeObserver:self forKeyPath:@"AYChannelABalance"];
-    [preferences removeObserver:self forKeyPath:@"AYChannelBBalance"];
-    [preferences removeObserver:self forKeyPath:@"AYChannelCBalance"];
+    [_preferences removeObserver:self forKeyPath:@"soundVolume"];
+    [_preferences removeObserver:self forKeyPath:@"soundLowPassFilter"];
+    [_preferences removeObserver:self forKeyPath:@"soundHighPassFilter"];
+    [_preferences removeObserver:self forKeyPath:@"AYChannelA"];
+    [_preferences removeObserver:self forKeyPath:@"AYChannelB"];
+    [_preferences removeObserver:self forKeyPath:@"AYChannelC"];
+    [_preferences removeObserver:self forKeyPath:@"AYChannelABalance"];
+    [_preferences removeObserver:self forKeyPath:@"AYChannelBBalance"];
+    [_preferences removeObserver:self forKeyPath:@"AYChannelCBalance"];
 
-    [preferences removeObserver:self forKeyPath:@"currentMachineType"];
+    [_preferences removeObserver:self forKeyPath:@"currentMachineType"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -42,37 +45,37 @@
     self = [super initWithCoder:coder];
     if (self)
     {
-        NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+        _preferences = [NSUserDefaults standardUserDefaults];
         
-        [preferences addObserver:self forKeyPath:@"displayBorderWidth" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displayPixelated" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayBorderWidth" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayPixelated" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
         
         // Set the maximum volume that the volume control can select. > 1.0 means we are amplifying the output
         self.maxSoundVolume = 3.0;
         
-        [preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannelA" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannelB" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannelC" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannelABalance" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannelBBalance" options:NSKeyValueObservingOptionNew context:NULL];
-        [preferences addObserver:self forKeyPath:@"AYChannelCBalance" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"AYChannelA" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"AYChannelB" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"AYChannelC" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"AYChannelABalance" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"AYChannelBBalance" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"AYChannelCBalance" options:NSKeyValueObservingOptionNew context:NULL];
         
-        [preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
         
         // Apply default values
         NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
         NSDictionary *userDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsPath];
-        [preferences registerDefaults:userDefaults];
+        [_preferences registerDefaults:userDefaults];
         NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
         [defaultsController setInitialValues:userDefaults];
     }
