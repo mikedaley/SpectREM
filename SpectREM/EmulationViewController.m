@@ -69,10 +69,7 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-}
 
-- (void)viewWillAppear
-{
     _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     
     // Setup debug window and view controllers
@@ -95,14 +92,14 @@ NS_ENUM(NSUInteger, MachineType)
     [self.skView addSubview:_infoViewController.view];
     
     preferences = [NSUserDefaults standardUserDefaults];
-
+    
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     _emulationScene.scaleMode = [[preferences valueForKey:@"sceneScaleMode"] integerValue];
-
+    
     [self.skView setFrameSize:self.skView.window.frame.size];
-
+    
     [self.skView presentScene:_emulationScene];
-
+    
     [self setupLocalObservers];
     [self setupMachineBindings];
     [self setupSceneBindings];
@@ -111,7 +108,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupDebugTimer];
     
     zxTape = [ZXTape new];
-
+    
     [self switchToMachine:_configViewController.currentMachineType];
 }
 
