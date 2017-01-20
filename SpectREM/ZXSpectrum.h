@@ -184,6 +184,8 @@ typedef NS_ENUM(int, TapeLoadingState)
     int pilotPulses;
     BOOL flipTapeBit;
     int tapeInputBit;
+    
+    char kempston;
 }
 
 #pragma mark - Properties

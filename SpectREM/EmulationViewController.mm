@@ -131,25 +131,23 @@ NS_ENUM(NSUInteger, MachineType)
     _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
     dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC, 0);
     
-    dispatch_source_set_event_handler(_debugTimer, ^
-                                      {
-                                          dispatch_async(dispatch_get_main_queue(), ^
-                                                         {
-                                                             if (_machine)
-                                                             {
-                                                                 if ([_graphicalMemoryWindowController.window isVisible])
-                                                                 {
-                                                                     [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
-                                                                 }
-                                                                 if ([_cpuWindowController.window isVisible])
-                                                                 {
-                                                                     [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
-                                                                 }
-                                                                 
-                                                                 self.tapeBytesRemaining = _machine.zxTape.bytesRemaining;
-                                                             }
-                                                         });
-                                      });
+    dispatch_source_set_event_handler(_debugTimer, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (_machine)
+            {
+                if ([_graphicalMemoryWindowController.window isVisible])
+                {
+                    [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
+                }
+                if ([_cpuWindowController.window isVisible])
+                {
+                    [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
+                }
+                
+                self.tapeBytesRemaining = _machine.zxTape.bytesRemaining;
+            }
+        });
+    });
     
     dispatch_resume(_debugTimer);
     
@@ -157,44 +155,63 @@ NS_ENUM(NSUInteger, MachineType)
     _fastTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _fastTimerQueue);
     dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, (1.0 / (50.0 * 2)) * NSEC_PER_SEC, 0);
     
-    dispatch_source_set_event_handler(_fastTimer, ^
-                                      {
-                                          [_machine doFrame];
-                                      });
+    dispatch_source_set_event_handler(_fastTimer, ^{
+        [_machine doFrame];
+    });
     
 
-    __block asio::serial_port serial(io, "/dev/cu.usbmodem1431");
-    serial.set_option(asio::serial_port_base::baud_rate(115200));
     _serialQueue = dispatch_queue_create("SerialQueue", nil);
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), _serialQueue, ^{
+    try
+    {
+        __block asio::serial_port serial(io, "/dev/cu.usbmodem1421");
+        serial.set_option(asio::serial_port_base::baud_rate(115200));
+
         
-        while (1) {
-            static char buffer[1];
-            buffer[0] = 0x77;
-            asio::write(serial, asio::buffer(buffer, 1));
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), _serialQueue, ^{
             
-            __block unsigned char data[9], *dataPtr;
-            asio::read(serial, asio::buffer(data, 9));
-            
-            dataPtr = data;
-            
-            if (data[0] == 0x77)
-            {
-                dispatch_sync(_machine.emulationQueue, ^{
+            while (1) {
+                try
+                {
+                    static char buffer[1];
+                    buffer[0] = 0x77;
+                    asio::write(serial, asio::buffer(buffer, 1));
                     
-                    for (int row = 0; row < 8; row++)
+                    unsigned char data[10], *dataPtr;
+                    asio::read(serial, asio::buffer(data, 10));
+                    
+                    dataPtr = data;
+                    
+                    if (data[0] == 0x77)
                     {
-                        _machine->keyboardMap[row] ^= _machine->keyboardMap[row] ^ dataPtr[row + 1];
-                    };
+                        dispatch_sync(_machine.emulationQueue, ^{
+                            
+                            for (int row = 0; row < 8; row++)
+                            {
+                                _machine->keyboardMap[row] ^= _machine->keyboardMap[row] ^ dataPtr[row + 1];
+                            };
+
+                            _machine->kempston = dataPtr[9];
+                            
+                        });
+                    }
                     
-                });
-            }
+                }
+                catch (std::exception &e)
+                {
+
+                }
+                
+                usleep(20000);
+            };
             
-            usleep(20000);
-        };
+        });
+    }
+    catch (std::exception &e)
+    {
         
-    });
+    }
     
 }
 

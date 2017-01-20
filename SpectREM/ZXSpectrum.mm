@@ -48,6 +48,8 @@
         emuVScale = 1.0 / emuDisplayPxHeight;
         
         emuDisplayTs = 0;
+        
+        kempston = 0x0;
 
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelData);
@@ -539,7 +541,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         // real machine.
         if ((address & 0xff) == 0x1f)
         {
-            return 0x0;
+            return machine->kempston;
         }
         else if ((address & 0xc002) == 0xc000)
         {
