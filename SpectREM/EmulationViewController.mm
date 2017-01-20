@@ -185,8 +185,8 @@ NS_ENUM(NSUInteger, MachineType)
                     
                     for (int row = 0; row < 8; row++)
                     {
-                        _machine->keyboardMap[row] = 0xbf ^_machine->keyboardMap[row] ^ dataPtr[row + 1];
-                    }
+                        _machine->keyboardMap[row] ^= _machine->keyboardMap[row] ^ dataPtr[row + 1];
+                    };
                     
                 });
             }
