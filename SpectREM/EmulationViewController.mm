@@ -57,6 +57,7 @@ NS_ENUM(NSUInteger, MachineType)
     dispatch_source_t       _fastTimer;
     
     dispatch_queue_t        _serialQueue;
+    dispatch_source_t       _serialTimer;
     
     ZXTape                  *_zxTape;
     
@@ -113,7 +114,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupMachineBindings];
     [self setupSceneBindings];
     [self setupNotificationCenterObservers];
-//    [self setupGamepad];
+    [self setupGamepad];
     [self setupTimers];
     
     _zxTape = [ZXTape new];
@@ -165,18 +166,33 @@ NS_ENUM(NSUInteger, MachineType)
     __block asio::serial_port serial(io, "/dev/cu.usbmodem1431");
     serial.set_option(asio::serial_port_base::baud_rate(115200));
     _serialQueue = dispatch_queue_create("SerialQueue", nil);
-
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), _serialQueue, ^{
         
-        static char buffer[1];
-        buffer[0] = 0x80;
-        asio::write(serial, asio::buffer(buffer, 8));
-        
-        unsigned char data[8];
-        memset(data, 0, 8);
-        asio::read(serial, asio::buffer(data, 8));
-        
-        NSLog(@"DONE");
+        while (1) {
+            static char buffer[1];
+            buffer[0] = 0x77;
+            asio::write(serial, asio::buffer(buffer, 1));
+            
+            __block unsigned char data[9], *dataPtr;
+            asio::read(serial, asio::buffer(data, 9));
+            
+            dataPtr = data;
+            
+            if (data[0] == 0x77)
+            {
+                dispatch_sync(_machine.emulationQueue, ^{
+                    
+                    for (int row = 0; row < 8; row++)
+                    {
+                        _machine->keyboardMap[row] = 0xbf ^_machine->keyboardMap[row] ^ dataPtr[row + 1];
+                    }
+                    
+                });
+            }
+            
+            usleep(20000);
+        };
         
     });
     

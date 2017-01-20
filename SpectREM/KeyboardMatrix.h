@@ -24,6 +24,7 @@ struct KeyboardEntry {
 };
 
 struct KeyboardEntry keyboardLookup[] = {
+    {-1, 0, 0 },    // SHIFT
     { 6, 0,	1 },    // Z
     { 7, 0,	2 },    // X
     { 8, 0,	3 },    // C
@@ -66,6 +67,7 @@ struct KeyboardEntry keyboardLookup[] = {
     { 4,  6, 4 },   // H
     
     { 49, 7, 0 },   // Space
+    { -1, 7, 1 },   // SYMBOL SHIFT
     { 46, 7, 2 },   // M
     { 45, 7, 3 },   // N
     { 11, 7, 4 }    // B

@@ -550,7 +550,7 @@ unsigned char coreIORead(unsigned short address, void *m)
     }
     
     // Default return value
-    int result = 0xff;
+    int result = 0xbf;
     
     // Check to see if any keys have been pressed
     for (int i = 0; i < 8; i++)
@@ -558,6 +558,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         if (!(address & (0x100 << i)))
         {
             result &= machine->keyboardMap[i];
+//            NSLog(@"%x - %x", address, machine->keyboardMap[i]);
         }
     }
 
@@ -962,7 +963,7 @@ static unsigned char floatingBus(void *m)
 {
     for (int i = 0; i < 8; i++)
     {
-        keyboardMap[i] = 0xff;
+        keyboardMap[i] = 0xbf;
     }
 }
 
