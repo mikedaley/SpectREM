@@ -167,8 +167,6 @@ NS_ENUM(NSUInteger, MachineType)
         __block asio::serial_port serial(io, "/dev/cu.usbmodem1421");
         serial.set_option(asio::serial_port_base::baud_rate(115200));
 
-        
-        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), _serialQueue, ^{
             
             while (1) {
