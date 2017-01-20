@@ -72,6 +72,9 @@
         
         [_preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
         
+        self.accelerate = NO;
+        self.accelerationMultiplier = 2.0;
+        
         // Apply default values
         NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
         NSDictionary *userDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsPath];
@@ -146,7 +149,8 @@
              @"soundHighPassFilter",
              @"AYChannelABalance",
              @"AYChannelBBalance",
-             @"AYChannelCBalance"
+             @"AYChannelCBalance",
+             @"acceleratedMultiplier"
              ];
 }
 
@@ -163,7 +167,8 @@
              @"displayPixelated",
              @"AYChannelA",
              @"AYChannelB",
-             @"AYChannelC"
+             @"AYChannelC",
+             @"accelerate"
              ];
 }
 

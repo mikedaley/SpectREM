@@ -62,7 +62,7 @@
         audioAYTStatesStep = 32;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         
-        self.fastMode = NO;
+        self.accelerated = NO;
         
         [self resetFrame];
         [self resetSound];
@@ -204,10 +204,7 @@
         
         count -= tsCPU;
         
-        if (!self.fastMode)
-        {
-            updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
-        }
+        updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
         
         if (core->GetTStates() >= machineInfo.tsPerFrame )
         {

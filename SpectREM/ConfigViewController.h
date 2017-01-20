@@ -10,6 +10,10 @@
 
 @interface ConfigViewController : NSViewController
 
+// Machine properties
+@property (assign) BOOL accelerate;
+@property (assign) double accelerationMultiplier;
+
 // Display properties
 @property (assign) double displayBorderWidth;
 @property (assign) bool displayPixelated;

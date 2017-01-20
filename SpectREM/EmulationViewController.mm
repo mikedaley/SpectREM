@@ -6,6 +6,8 @@
 //  Copyright © 2016 71Squared Ltd. All rights reserved.
 //
 
+#include "asio.hpp"
+
 #import <IOKit/hid/IOHIDLib.h>
 
 #import "EmulationViewController.h"
@@ -46,7 +48,7 @@ NS_ENUM(NSUInteger, MachineType)
     
     NSWindowController      *_cpuWindowController;
     CPUViewController       *_cpuViewController;
-
+    
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
     dispatch_queue_t        _debugTimerQueue;
@@ -54,7 +56,11 @@ NS_ENUM(NSUInteger, MachineType)
     dispatch_queue_t        _fastTimerQueue;
     dispatch_source_t       _fastTimer;
     
+    dispatch_queue_t        _serialQueue;
+    
     ZXTape                  *_zxTape;
+    
+    asio::io_service        io;
     
 }
 
@@ -72,7 +78,7 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     
     // Setup debug window and view controllers
@@ -97,7 +103,7 @@ NS_ENUM(NSUInteger, MachineType)
     _preferences = [NSUserDefaults standardUserDefaults];
     
     _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    _emulationScene.scaleMode = [[_preferences valueForKey:@"sceneScaleMode"] integerValue];
+    _emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:@"sceneScaleMode"] integerValue];
     
     [self.skView setFrameSize:self.skView.window.frame.size];
     
@@ -107,53 +113,73 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupMachineBindings];
     [self setupSceneBindings];
     [self setupNotificationCenterObservers];
-    [self setupGamepad];
+//    [self setupGamepad];
+    [self setupTimers];
     
     _zxTape = [ZXTape new];
     
     [self switchToMachine:_configViewController.currentMachineType];
-
-    [self setupDebugTimer];
+    
 }
 
 #pragma mark - CPU View Timer
 
-- (void)setupDebugTimer
+- (void)setupTimers
 {
     _debugTimerQueue = dispatch_queue_create("DebugTimerQueue", nil);
     _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
     dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC, 0);
     
     dispatch_source_set_event_handler(_debugTimer, ^
-    {
-        dispatch_async(dispatch_get_main_queue(), ^
-        {
-            if (_machine)
-            {
-                if ([_graphicalMemoryWindowController.window isVisible])
-                {
-                    [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
-                }
-                if ([_cpuWindowController.window isVisible])
-                {
-                    [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
-                }
-                
-                self.tapeBytesRemaining = _machine.zxTape.bytesRemaining;
-            }
-        });
-    });
+                                      {
+                                          dispatch_async(dispatch_get_main_queue(), ^
+                                                         {
+                                                             if (_machine)
+                                                             {
+                                                                 if ([_graphicalMemoryWindowController.window isVisible])
+                                                                 {
+                                                                     [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
+                                                                 }
+                                                                 if ([_cpuWindowController.window isVisible])
+                                                                 {
+                                                                     [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
+                                                                 }
+                                                                 
+                                                                 self.tapeBytesRemaining = _machine.zxTape.bytesRemaining;
+                                                             }
+                                                         });
+                                      });
     
     dispatch_resume(_debugTimer);
     
     _fastTimerQueue = dispatch_queue_create("FastTimerQueue", nil);
     _fastTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _fastTimerQueue);
-    dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, 0.0025 * NSEC_PER_SEC, 0);
+    dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, (1.0 / (50.0 * 2)) * NSEC_PER_SEC, 0);
     
     dispatch_source_set_event_handler(_fastTimer, ^
-      {
-          [_machine doFrame];
-      });
+                                      {
+                                          [_machine doFrame];
+                                      });
+    
+
+    __block asio::serial_port serial(io, "/dev/cu.usbmodem1431");
+    serial.set_option(asio::serial_port_base::baud_rate(115200));
+    _serialQueue = dispatch_queue_create("SerialQueue", nil);
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), _serialQueue, ^{
+        
+        static char buffer[1];
+        buffer[0] = 0x80;
+        asio::write(serial, asio::buffer(buffer, 8));
+        
+        unsigned char data[8];
+        memset(data, 0, 8);
+        asio::read(serial, asio::buffer(data, 8));
+        
+        NSLog(@"DONE");
+        
+    });
+    
 }
 
 #pragma mark - Bindings/Observers
@@ -187,6 +213,8 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)setupLocalObservers
 {
     [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:@"accelerationMultiplier" options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:@"accelerate" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)setupNotificationCenterObservers
@@ -225,6 +253,26 @@ NS_ENUM(NSUInteger, MachineType)
     {
         [self switchToMachine:[[change valueForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
     }
+
+    if ([keyPath isEqualToString:@"accelerationMultiplier"])
+    {
+        dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, (1.0 / (50.0 * [[change valueForKey:NSKeyValueChangeNewKey] doubleValue])) * NSEC_PER_SEC, 0);
+    }
+
+    if ([keyPath isEqualToString:@"accelerate"])
+    {
+        if (_configViewController.accelerate)
+        {
+            [_machine.audioCore stop];
+            dispatch_resume(_fastTimer);
+        }
+        else
+        {
+            [_machine.audioCore start];
+            dispatch_suspend(_fastTimer);
+        }
+    }
+
 }
 
 #pragma mark - View events
@@ -241,7 +289,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine flagsChanged:event];
 }
 
-#pragma mark - 
+#pragma mark -
 - (void)updateEmulationDisplayWithTexture:(SKTexture *)emulationDisplayTexture
 {
     emulationDisplayTexture.filteringMode = SKTextureFilteringNearest;
@@ -268,15 +316,15 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)machineRestart:(id)sender
 {
     dispatch_sync(_machine.emulationQueue, ^
-    {
-        NSMenuItem *menuItem = (NSMenuItem *)sender;
-        [self.view.window setTitle:@"SpectREM"];
-        [_zxTape reset];
-        self.tapeBytesLabel.hidden = YES;
-        _machine.zxTape = _zxTape;
-        [_machine.audioCore reset];
-        [_machine reset:menuItem.tag];
-    });
+                  {
+                      NSMenuItem *menuItem = (NSMenuItem *)sender;
+                      [self.view.window setTitle:@"SpectREM"];
+                      [_zxTape reset];
+                      self.tapeBytesLabel.hidden = YES;
+                      _machine.zxTape = _zxTape;
+                      [_machine.audioCore reset];
+                      [_machine reset:menuItem.tag];
+                  });
 }
 
 - (IBAction)configButtonPressed:(id)sender
@@ -316,9 +364,9 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)loadFileWithURL:(NSURL *)url
 {
     
-    if (_machine.fastMode)
+    if (_machine.accelerated)
     {
-        _machine.fastMode = NO;
+        _machine.accelerated = NO;
         dispatch_suspend(_fastTimer);
         [_machine.audioCore start];
     }
@@ -367,6 +415,10 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)switchToMachine:(NSInteger)machineType
 {
     [_machine stop];
+    if (_machine.accelerated)
+    {
+        dispatch_suspend(_fastTimer);
+    }
     
     [self removeBindings];
     switch (machineType) {
@@ -418,15 +470,15 @@ NS_ENUM(NSUInteger, MachineType)
 {
     [self.view.window addChildWindow:_graphicalMemoryWindowController.window ordered:NSWindowAbove];
     [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
-//    [_graphicalMemoryWindowController.window makeKeyAndOrderFront:nil];
+    //    [_graphicalMemoryWindowController.window makeKeyAndOrderFront:nil];
 }
 
 - (IBAction)showCPUWindow:(id)sender
 {
     [self.view.window addChildWindow:_cpuWindowController.window ordered:NSWindowAbove];
     [_cpuViewController updateViewWithMachine:(__bridge void*)_machine];
-//    [_cpuWindowController.window orderFront:nil];
-//    [_cpuWindowController.window setLevel:NSPopUpMenuWindowLevel];
+    //    [_cpuWindowController.window orderFront:nil];
+    //    [_cpuWindowController.window setLevel:NSPopUpMenuWindowLevel];
 }
 
 - (IBAction)switchHexDecValues:(id)sender
@@ -444,20 +496,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine.audioCore start];
 }
 
-- (IBAction)fastMode:(id)sender
+- (IBAction)accelerate:(id)sender
 {
-    _machine.fastMode = (_machine.fastMode) ? NO : YES;
-    
-    if (_machine.fastMode)
-    {
-        [_machine.audioCore stop];
-        dispatch_resume(_fastTimer);
-    }
-    else
-    {
-        [_machine.audioCore start];
-        dispatch_suspend(_fastTimer);
-    }
+    _configViewController.accelerate = (_configViewController.accelerate) ? NO : YES;
 }
 
 - (IBAction)playTape:(id)sender
@@ -522,9 +563,9 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
     IOHIDManagerRegisterDeviceMatchingCallback(_hidManager, gamepadWasAdded, (void*)self);
     IOHIDManagerRegisterDeviceRemovalCallback(_hidManager, gamepadWasRemoved, (void*)self);
     IOHIDManagerScheduleWithRunLoop(_hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-
+    
     // Uncomment line below to get device input details
-//    IOReturn tIOReturn = IOHIDManagerOpen(_hidManager, kIOHIDOptionsTypeNone);
+    //    IOReturn tIOReturn = IOHIDManagerOpen(_hidManager, kIOHIDOptionsTypeNone);
     IOHIDManagerRegisterInputValueCallback(_hidManager, gamepadAction, (void*)self);
 }
 

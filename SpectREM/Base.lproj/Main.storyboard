@@ -114,9 +114,9 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="srL-8x-Qy7"/>
-                                        <menuItem title="Fast Mode" tag="1" keyEquivalent="f" id="KHH-qv-Dio" userLabel="Fast Mode">
+                                        <menuItem title="Accelerate" tag="1" keyEquivalent="a" id="KHH-qv-Dio" userLabel="Fast Mode">
                                             <connections>
-                                                <action selector="fastMode:" target="Ady-hI-5gd" id="Rba-66-YVq"/>
+                                                <action selector="accelerate:" target="Ady-hI-5gd" id="jDR-Aq-1Ee"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="blN-5W-g1Z"/>
@@ -417,7 +417,7 @@
             <objects>
                 <viewController storyboardIdentifier="ConfigViewController" id="eq9-hE-kE2" customClass="ConfigViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" misplaced="YES" id="a97-VP-aKI">
-                        <rect key="frame" x="0.0" y="0.0" width="236" height="554"/>
+                        <rect key="frame" x="0.0" y="0.0" width="236" height="594"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box misplaced="YES" borderType="line" title="Display" id="g2m-hz-Neu">
@@ -624,34 +624,6 @@
                                     </subviews>
                                 </view>
                             </box>
-                            <box misplaced="YES" title="Computer" id="16N-tf-hw7">
-                                <rect key="frame" x="8" y="463" width="221" height="71"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <view key="contentView" id="wN5-47-Bis">
-                                    <rect key="frame" x="2" y="2" width="217" height="54"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <popUpButton verticalHuggingPriority="750" id="PWl-1w-lVC">
-                                            <rect key="frame" x="17" y="15" width="183" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <popUpButtonCell key="cell" type="push" title="ZX Spectrum 48k" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" continuous="YES" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ta2-se-wRH" id="KmX-Rz-7Sw">
-                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <menu key="menu" id="aIw-DB-Lrl">
-                                                    <items>
-                                                        <menuItem title="ZX Spectrum 48k" state="on" id="ta2-se-wRH"/>
-                                                        <menuItem title="ZX Spectrum 128k" id="3uP-eK-Uo7"/>
-                                                        <menuItem title="ZX Spectrum SE" id="dhw-rc-I5F"/>
-                                                    </items>
-                                                </menu>
-                                            </popUpButtonCell>
-                                            <connections>
-                                                <binding destination="ywq-i7-o5s" name="selectedIndex" keyPath="values.currentMachineType" id="lRl-3Q-SAP"/>
-                                            </connections>
-                                        </popUpButton>
-                                    </subviews>
-                                </view>
-                            </box>
                             <box misplaced="YES" boxType="secondary" title="Audio" id="61y-0j-XH6">
                                 <rect key="frame" x="8" y="16" width="221" height="211"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -847,13 +819,97 @@
                                     </subviews>
                                 </view>
                             </box>
+                            <box misplaced="YES" title="Computer" id="16N-tf-hw7">
+                                <rect key="frame" x="8" y="463" width="221" height="111"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="wN5-47-Bis">
+                                    <rect key="frame" x="2" y="2" width="217" height="94"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <popUpButton verticalHuggingPriority="750" misplaced="YES" id="PWl-1w-lVC">
+                                            <rect key="frame" x="17" y="63" width="183" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <popUpButtonCell key="cell" type="push" title="ZX Spectrum 48k" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" continuous="YES" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ta2-se-wRH" id="KmX-Rz-7Sw">
+                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <menu key="menu" id="aIw-DB-Lrl">
+                                                    <items>
+                                                        <menuItem title="ZX Spectrum 48k" state="on" id="ta2-se-wRH"/>
+                                                        <menuItem title="ZX Spectrum 128k" id="3uP-eK-Uo7"/>
+                                                        <menuItem title="ZX Spectrum SE" id="dhw-rc-I5F"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                            <connections>
+                                                <binding destination="ywq-i7-o5s" name="selectedIndex" keyPath="values.currentMachineType" id="lRl-3Q-SAP"/>
+                                            </connections>
+                                        </popUpButton>
+                                        <slider verticalHuggingPriority="750" misplaced="YES" id="eEU-2Y-BUw">
+                                            <rect key="frame" x="116" y="9" width="81" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="2" maxValue="5" doubleValue="2" tickMarkPosition="above" numberOfTickMarks="4" allowsTickMarkValuesOnly="YES" sliderType="linear" id="dpo-4u-49g"/>
+                                            <connections>
+                                                <binding destination="eq9-hE-kE2" name="value" keyPath="self.accelerationMultiplier" id="NiZ-82-owH"/>
+                                            </connections>
+                                        </slider>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="7le-Sv-Kt4">
+                                            <rect key="frame" x="113" y="25" width="17" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="2x" id="ePk-Wa-oGj">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="6WK-T1-TFY">
+                                            <rect key="frame" x="182" y="25" width="17" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="5x" id="RBe-kW-Feo">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="kHB-yX-VU3">
+                                            <rect key="frame" x="18" y="44" width="92" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Accelerate:" id="nnd-xF-0Ow">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button misplaced="YES" id="Egx-UE-eV2">
+                                            <rect key="frame" x="113" y="41" width="18" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="overlaps" controlSize="small" state="on" inset="2" id="gtC-9u-Eaw">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="eq9-hE-kE2" name="value" keyPath="self.accelerate" id="XwW-JZ-KnK"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="FQ3-oP-XSQ">
+                                            <rect key="frame" x="69" y="10" width="41" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Speed:" id="HRa-1x-RF1">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
+                                </view>
+                            </box>
                         </subviews>
                     </view>
                 </viewController>
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s"/>
+                <userDefaultsController id="CUz-D8-d1s"/>
             </objects>
-            <point key="canvasLocation" x="-322" y="701"/>
+            <point key="canvasLocation" x="-322" y="721"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">

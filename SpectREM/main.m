@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define ASIO_STANDALONE
+
 int main(int argc, const char * argv[]) {
     return NSApplicationMain(argc, argv);
 }
