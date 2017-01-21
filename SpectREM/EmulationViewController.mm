@@ -6,7 +6,7 @@
 //  Copyright © 2016 71Squared Ltd. All rights reserved.
 //
 
-#include "asio.hpp"
+//#include "asio.hpp"
 
 #import <IOKit/hid/IOHIDLib.h>
 
@@ -23,6 +23,7 @@
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
 #import "ZXSpectrumSE.h"
+#import "SerialCore.h"
 
 #pragma mark - Enums
 
@@ -60,9 +61,6 @@ NS_ENUM(NSUInteger, MachineType)
     dispatch_source_t       _serialTimer;
     
     ZXTape                  *_zxTape;
-    
-    asio::io_service        io;
-    
 }
 
 - (void)dealloc
@@ -158,59 +156,6 @@ NS_ENUM(NSUInteger, MachineType)
     dispatch_source_set_event_handler(_fastTimer, ^{
         [_machine doFrame];
     });
-    
-
-    _serialQueue = dispatch_queue_create("SerialQueue", nil);
-    
-    try
-    {
-        __block asio::serial_port serial(io, "/dev/cu.usbmodem1421");
-        serial.set_option(asio::serial_port_base::baud_rate(115200));
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), _serialQueue, ^{
-            
-            while (1) {
-                try
-                {
-                    static char buffer[1];
-                    buffer[0] = 0x77;
-                    asio::write(serial, asio::buffer(buffer, 1));
-                    
-                    unsigned char data[10], *dataPtr;
-                    asio::read(serial, asio::buffer(data, 10));
-                    
-                    dataPtr = data;
-                    
-                    if (data[0] == 0x77)
-                    {
-                        dispatch_sync(_machine.emulationQueue, ^{
-                            
-                            for (int row = 0; row < 8; row++)
-                            {
-                                _machine->keyboardMap[row] ^= _machine->keyboardMap[row] ^ dataPtr[row + 1];
-                            };
-
-                            _machine->kempston = dataPtr[9];
-                            
-                        });
-                    }
-                    
-                }
-                catch (std::exception &e)
-                {
-
-                }
-                
-                usleep(20000);
-            };
-            
-        });
-    }
-    catch (std::exception &e)
-    {
-        
-    }
-    
 }
 
 #pragma mark - Bindings/Observers
@@ -225,6 +170,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_emulationScene bind:@"displayShowVignette" toObject:_configViewController withKeyPath:@"displayShowVignette" options:nil];
     [_emulationScene bind:@"displayVignetteX" toObject:_configViewController withKeyPath:@"displayVignetteX" options:nil];
     [_emulationScene bind:@"displayVignetteY" toObject:_configViewController withKeyPath:@"displayVignetteY" options:nil];
+
 }
 
 - (void)setupMachineBindings
@@ -239,6 +185,8 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:@"AYChannelABalance" toObject:_configViewController withKeyPath:@"AYChannelABalance" options:nil];
     [_machine bind:@"AYChannelBBalance" toObject:_configViewController withKeyPath:@"AYChannelBBalance" options:nil];
     [_machine bind:@"AYChannelCBalance" toObject:_configViewController withKeyPath:@"AYChannelCBalance" options:nil];
+    [_machine.serialCore bind:@"serialPort" toObject:_configViewController withKeyPath:@"serialPort" options:nil];
+    [_machine bind:@"useSmartLink" toObject:_configViewController withKeyPath:@"useSmartLink" options:nil];
 }
 
 - (void)setupLocalObservers

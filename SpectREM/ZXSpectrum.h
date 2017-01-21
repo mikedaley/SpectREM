@@ -103,6 +103,8 @@ typedef NS_ENUM(int, TapeLoadingState)
 
 #pragma mark - Interface
 
+@class SerialCore;
+
 @interface ZXSpectrum : NSObject <KeyboardEventProtocol>
 {
 @public
@@ -185,7 +187,11 @@ typedef NS_ENUM(int, TapeLoadingState)
     BOOL flipTapeBit;
     int tapeInputBit;
     
+    // Holds the kempston joystick last byte value read either through the emulator or SmartLINK
     char kempston;
+    
+    // Byte request used to get data from SmartLink
+    NSData *smartLinkRequest;
 }
 
 #pragma mark - Properties
@@ -230,6 +236,10 @@ typedef NS_ENUM(int, TapeLoadingState)
 @property (assign) BOOL tapePlaying;
 
 @property (assign) BOOL accelerated;
+
+// Serial core used to communicate with SmartLINK
+@property (strong) SerialCore *serialCore;
+@property (assign) BOOL useSmartLink;
 
 #pragma mark - Methods
 

@@ -8,6 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class ORSSerialPortManager;
+@class ORSSerialPort;
+
 @interface ConfigViewController : NSViewController
 
 // Machine properties
@@ -41,6 +44,10 @@
 @property (assign) NSInteger currentMachineType;
 @property (strong) IBOutlet NSView *scrollDocView;
 @property (weak) IBOutlet NSScrollView *scrollView;
+
+@property (nonatomic, readonly) ORSSerialPortManager *serialPortManager;
+@property (nonatomic, strong) ORSSerialPort *serialPort;
+@property (nonatomic, assign) BOOL useSmartLink;
 
 - (void)resetPreferences;
 

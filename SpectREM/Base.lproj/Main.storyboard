@@ -417,11 +417,11 @@
             <objects>
                 <viewController storyboardIdentifier="ConfigViewController" id="eq9-hE-kE2" customClass="ConfigViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" misplaced="YES" id="a97-VP-aKI">
-                        <rect key="frame" x="0.0" y="0.0" width="236" height="594"/>
+                        <rect key="frame" x="0.0" y="0.0" width="236" height="678"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box misplaced="YES" borderType="line" title="Display" id="g2m-hz-Neu">
-                                <rect key="frame" x="8" y="231" width="221" height="228"/>
+                                <rect key="frame" x="8" y="315" width="221" height="228"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="rv0-nd-bwL">
                                     <rect key="frame" x="1" y="1" width="219" height="212"/>
@@ -625,7 +625,7 @@
                                 </view>
                             </box>
                             <box misplaced="YES" boxType="secondary" title="Audio" id="61y-0j-XH6">
-                                <rect key="frame" x="8" y="16" width="221" height="211"/>
+                                <rect key="frame" x="8" y="100" width="221" height="211"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="el6-kT-AL6">
                                     <rect key="frame" x="2" y="2" width="217" height="194"/>
@@ -820,7 +820,7 @@
                                 </view>
                             </box>
                             <box misplaced="YES" title="Computer" id="16N-tf-hw7">
-                                <rect key="frame" x="8" y="463" width="221" height="111"/>
+                                <rect key="frame" x="8" y="547" width="221" height="111"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="wN5-47-Bis">
                                     <rect key="frame" x="2" y="2" width="217" height="94"/>
@@ -902,14 +902,65 @@
                                     </subviews>
                                 </view>
                             </box>
+                            <box misplaced="YES" title="SmartLINK" id="DTH-e0-9zP">
+                                <rect key="frame" x="8" y="16" width="221" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="kD5-ir-o3u">
+                                    <rect key="frame" x="2" y="2" width="217" height="63"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="IWH-Zo-ogT">
+                                            <rect key="frame" x="22" y="40" width="88" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Use SmartLINK:" id="OJg-Qy-bu7">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button misplaced="YES" id="C1t-EF-XnC">
+                                            <rect key="frame" x="114" y="37" width="18" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="overlaps" controlSize="small" state="on" inset="2" id="zqr-WM-Nsp">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="eq9-hE-kE2" name="value" keyPath="self.useSmartLink" id="9AT-dR-JOX"/>
+                                            </connections>
+                                        </button>
+                                        <popUpButton verticalHuggingPriority="750" misplaced="YES" id="D7p-PG-vqC">
+                                            <rect key="frame" x="17" y="13" width="183" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" continuous="YES" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="jHX-Qg-yfa" id="z37-jC-1KD">
+                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <menu key="menu" id="I1v-tm-W8f">
+                                                    <items>
+                                                        <menuItem title="Item 1" state="on" id="jHX-Qg-yfa"/>
+                                                        <menuItem title="Item 2" id="Zrw-Yh-I1c"/>
+                                                        <menuItem title="Item 3" id="b1C-F7-WQU"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                            <connections>
+                                                <binding destination="eq9-hE-kE2" name="content" keyPath="self.serialPortManager.availablePorts" id="FDN-Qa-z4t"/>
+                                                <binding destination="eq9-hE-kE2" name="contentValues" keyPath="self.serialPortManager.availablePorts.name" previousBinding="FDN-Qa-z4t" id="Rat-NU-gcy"/>
+                                                <binding destination="eq9-hE-kE2" name="selectedObject" keyPath="self.serialPort" previousBinding="Rat-NU-gcy" id="2Il-31-1Bd"/>
+                                            </connections>
+                                        </popUpButton>
+                                    </subviews>
+                                </view>
+                            </box>
                         </subviews>
                     </view>
                 </viewController>
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s"/>
                 <userDefaultsController id="CUz-D8-d1s"/>
+                <userDefaultsController id="yyM-Ee-Mhh"/>
             </objects>
-            <point key="canvasLocation" x="-322" y="721"/>
+            <point key="canvasLocation" x="-322" y="763"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">

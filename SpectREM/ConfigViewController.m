@@ -7,6 +7,7 @@
 //
 
 #import "ConfigViewController.h"
+@import ORSSerial;
 
 @implementation ConfigViewController
 {
@@ -170,6 +171,11 @@
              @"AYChannelC",
              @"accelerate"
              ];
+}
+
+- (ORSSerialPortManager *)serialPortManager
+{
+    return [ORSSerialPortManager sharedSerialPortManager];
 }
 
 @end

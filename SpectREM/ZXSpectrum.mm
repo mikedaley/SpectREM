@@ -10,9 +10,9 @@
 #import "KeyboardMatrix.h"
 #import "Snapshot.h"
 #import "Z80Core.h"
+#import "SerialCore.h"
 
 @interface ZXSpectrum ()
-
 
 @end
 
@@ -49,7 +49,38 @@
         
         emuDisplayTs = 0;
         
+        // SmartLINK
         kempston = 0x0;
+        char smartLinkRequestBuffer[1];
+        smartLinkRequestBuffer[0] = 0x77;
+        smartLinkRequest = [NSData dataWithBytes:smartLinkRequestBuffer length:1];
+        self.serialCore = [SerialCore new];
+        
+        ZXSpectrum *__weak weakSelf = self;
+        self.serialCore.dataReceivedBlock = ^(NSData *responseData){
+          
+            if (responseData.length == 10)
+            {
+                __block char responseBuffer[10], *dataPtr;
+                [responseData getBytes:responseBuffer range:NSMakeRange(0, 10)];
+                dataPtr = responseBuffer;
+                
+                if (responseBuffer[0] == 0x77)
+                {
+                    dispatch_sync(weakSelf.emulationQueue, ^{
+                        
+                        for (int row = 0; row < 8; row++)
+                        {
+                            keyboardMap[row] ^= keyboardMap[row] ^ dataPtr[row + 1];
+                        };
+                        
+                        kempston = dataPtr[9];
+                        
+                    });
+                }
+            }
+            
+        };
 
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelData);
@@ -194,6 +225,11 @@
     CZ80Core *core = (CZ80Core *)[self getCore];
 
     int count = machineInfo.tsPerFrame;
+    
+    if (self.serialCore.serialPort && self.useSmartLink)
+    {
+        [self.serialCore sendData:smartLinkRequest];
+    }
     
     while (count > 0)
     {
@@ -813,7 +849,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand))
+    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -862,7 +898,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyUp:(NSEvent *)theEvent
 {
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand))
+    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -911,7 +947,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    if (!(theEvent.modifierFlags & NSEventModifierFlagCommand))
+    if (!(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
