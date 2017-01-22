@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface NSViewController_Bindings : NSViewController
+@interface NSObject_Bindings : NSObject
 
 // Used to propogate changes to a property to objects that are bound to that property
 -(void)propagateValue:(id)value forBinding:(NSString*)binding;

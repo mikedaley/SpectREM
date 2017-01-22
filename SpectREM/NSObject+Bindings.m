@@ -6,7 +6,7 @@
 //  Copyright © 2016 71Squared Ltd. All rights reserved.
 //
 
-#import "NSViewController+Bindings.h"
+#import "NSObject+Bindings.h"
 
 @interface NSObject_Bindings ()
 
