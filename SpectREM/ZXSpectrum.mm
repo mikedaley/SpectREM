@@ -598,7 +598,7 @@ unsigned char coreIORead(unsigned short address, void *m)
     }
     
     // Default return value
-    int result = 0xbf;
+    int result = 0xff;
     
     // Check to see if any keys have been pressed
     for (int i = 0; i < 8; i++)
@@ -865,6 +865,51 @@ static unsigned char floatingBus(void *m)
         dispatch_sync(self.emulationQueue, ^{
             switch (theEvent.keyCode)
             {
+                case 24: // Inv Video
+                    keyboardMap[0] &= ~0x01; // Shift
+                    keyboardMap[3] &= ~0x08; // 4
+                    break;
+
+                case 27: // True Video
+                    keyboardMap[0] &= ~0x01; // Shift
+                    keyboardMap[3] &= ~0x04; // 3
+                    break;
+
+                case 39: // "
+                    keyboardMap[7] &= ~0x02; // Sym
+                    keyboardMap[5] &= ~0x01; // "
+                    break;
+
+                case 41: // "
+                    keyboardMap[7] &= ~0x02; // Sym
+                    keyboardMap[5] &= ~0x02; // ;
+                    break;
+
+                case 43: // ,
+                    keyboardMap[7] &= ~0x02; // Sym
+                    keyboardMap[7] &= ~0x08; // ,
+                    break;
+
+                case 47: // .
+                    keyboardMap[7] &= ~0x02; // Sym
+                    keyboardMap[7] &= ~0x04; // .
+                    break;
+
+                case 48: // Edit
+                    keyboardMap[0] &= ~0x01; // Shift
+                    keyboardMap[3] &= ~0x01; // 1
+                    break;
+
+                case 50: // Graph
+                    keyboardMap[0] &= ~0x01; // Shift
+                    keyboardMap[4] &= ~0x02; // 9
+                    break;
+
+                case 53: // Break
+                    keyboardMap[0] &= ~0x01; // Shift
+                    keyboardMap[7] &= ~0x01; // Space
+                    break;
+
                 case 51: // Backspace
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[4] &= ~0x01; // 0
@@ -914,6 +959,51 @@ static unsigned char floatingBus(void *m)
         dispatch_sync(self.emulationQueue, ^{
             switch (theEvent.keyCode)
             {
+                case 24: // Inv Video
+                    keyboardMap[0] |= 0x01; // Shift
+                    keyboardMap[3] |= 0x08; // 4
+                    break;
+
+                case 27: // True Video
+                    keyboardMap[0] |= 0x01; // Shift
+                    keyboardMap[3] |= 0x04; // 3
+                    break;
+
+                case 39: // "
+                    keyboardMap[7] |= 0x02; // Sym
+                    keyboardMap[5] |= 0x01; // "
+                    break;
+
+                case 41: // "
+                    keyboardMap[7] |= 0x02; // Sym
+                    keyboardMap[5] |= 0x02; // ;
+                    break;
+
+                case 43: // ,
+                    keyboardMap[7] |= 0x02; // Sym
+                    keyboardMap[7] |= 0x08; // ,
+                    break;
+
+                case 47: // .
+                    keyboardMap[7] |= 0x02; // Sym
+                    keyboardMap[7] |= 0x04; // .
+                    break;
+
+                case 48: // Edit
+                    keyboardMap[0] |= 0x01; // Shift
+                    keyboardMap[3] |= 0x01; // 1
+                    break;
+
+                case 50: // Graph
+                    keyboardMap[0] |= 0x01; // Shift
+                    keyboardMap[4] |= 0x02; // 9
+                    break;
+
+                case 53: // Break
+                    keyboardMap[0] |= 0x01; // Shift
+                    keyboardMap[7] |= 0x01; // Space
+                    break;
+
                 case 51: // Backspace
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[4] |= 0x01; // 0
@@ -976,7 +1066,15 @@ static unsigned char floatingBus(void *m)
                         keyboardMap[7] |= 0x02;
                     }
                     break;
-                    
+
+                case 57: // Caps Lock
+                    if (theEvent.modifierFlags & NSEventModifierFlagCapsLock)
+                    {
+                        keyboardMap[0] &= ~0x01;
+                        keyboardMap[3] &= ~0x02;
+                    }
+                    break;
+
                 case 56: // Left Shift
                 case 60: // Right Shift
                     if (theEvent.modifierFlags & NSEventModifierFlagShift)
@@ -998,7 +1096,8 @@ static unsigned char floatingBus(void *m)
                     {
                         keyboardMap[7] |= 0x02;
                     }
-                    
+                    break;
+                
                 default:
                     break;
             }
