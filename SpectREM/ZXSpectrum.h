@@ -239,7 +239,7 @@ typedef NS_ENUM(int, TapeLoadingState)
 
 // Serial core used to communicate with SmartLINK
 @property (strong) SerialCore *serialCore;
-@property (assign) BOOL useSmartLink;
+@property (nonatomic, assign) BOOL useSmartLink;
 
 #pragma mark - Methods
 

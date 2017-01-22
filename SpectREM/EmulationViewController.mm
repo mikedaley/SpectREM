@@ -194,6 +194,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
     [_configViewController addObserver:self forKeyPath:@"accelerationMultiplier" options:NSKeyValueObservingOptionNew context:NULL];
     [_configViewController addObserver:self forKeyPath:@"accelerate" options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:@"useSmartLink" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)setupNotificationCenterObservers
@@ -222,6 +223,8 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine unbind:@"AYChannelABalance"];
     [_machine unbind:@"AYChannelBBalance"];
     [_machine unbind:@"AYChannelCBalance"];
+    [_machine unbind:@"useSmartLink"];
+    [_machine.serialCore unbind:@"serialPort"];
 }
 
 #pragma mark - Observers
@@ -252,6 +255,19 @@ NS_ENUM(NSUInteger, MachineType)
         }
     }
 
+    if ([keyPath isEqualToString:@"useSmartLink"])
+    {
+        if ([[change valueForKey:NSKeyValueChangeNewKey] boolValue])
+        {
+            [_infoViewController setText:@"SmartLINK Enabled"];
+            [_infoViewController displayMessage];
+        }
+        else
+        {
+            [_infoViewController setText:@"SmartLINK Disabled"];
+            [_infoViewController displayMessage];
+        }
+    }
 }
 
 #pragma mark - View events

@@ -49,13 +49,17 @@
         
         emuDisplayTs = 0;
         
-        // SmartLINK
+        // SmartLINK. A request byte of 0x77 causes SmartLINK to respond
         kempston = 0x0;
         char smartLinkRequestBuffer[1];
         smartLinkRequestBuffer[0] = 0x77;
         smartLinkRequest = [NSData dataWithBytes:smartLinkRequestBuffer length:1];
+
         self.serialCore = [SerialCore new];
         
+        // Setup the block to be run when data is received in the Serial Core. This checks the response
+        // from SmartLINK and if necessary udpates the keyboard map based on what has been sent from the
+        // real ZX Spectrum.
         ZXSpectrum *__weak weakSelf = self;
         self.serialCore.dataReceivedBlock = ^(NSData *responseData){
           
@@ -68,18 +72,14 @@
                 if (responseBuffer[0] == 0x77)
                 {
                     dispatch_sync(weakSelf.emulationQueue, ^{
-                        
                         for (int row = 0; row < 8; row++)
                         {
                             keyboardMap[row] ^= keyboardMap[row] ^ dataPtr[row + 1];
                         };
-                        
                         kempston = dataPtr[9];
-                        
                     });
                 }
             }
-            
         };
 
         // Setup the display buffer and length used to store the output from the emulator
@@ -226,11 +226,6 @@
 
     int count = machineInfo.tsPerFrame;
     
-    if (self.serialCore.serialPort && self.useSmartLink)
-    {
-        [self.serialCore sendData:smartLinkRequest];
-    }
-    
     while (count > 0)
     {
         int tsCPU = core->Execute(1, machineInfo.intLength);
@@ -285,6 +280,14 @@
             frameCounter++;
         }
     }
+    
+    // If smartlink is activated and a serial port has been selected then try to read from
+    // SmartLINK and if successful this will update the keyboard map and Kempston joystick port
+    if (self.serialCore.serialPort && self.useSmartLink)
+    {
+        [self.serialCore sendData:smartLinkRequest];
+    }
+
 }
 
 #pragma mark - Load IF2 ROM
@@ -577,7 +580,14 @@ unsigned char coreIORead(unsigned short address, void *m)
         // real machine.
         if ((address & 0xff) == 0x1f)
         {
-            return machine->kempston;
+            if (machine.useSmartLink)
+            {
+                return machine->kempston;
+            }
+            else
+            {
+                return 0x0;
+            }
         }
         else if ((address & 0xc002) == 0xc000)
         {
@@ -596,7 +606,6 @@ unsigned char coreIORead(unsigned short address, void *m)
         if (!(address & (0x100 << i)))
         {
             result &= machine->keyboardMap[i];
-//            NSLog(@"%x - %x", address, machine->keyboardMap[i]);
         }
     }
 
@@ -849,7 +858,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
+    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && (!self.useSmartLink && self.serialCore.serialPort) )
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -898,7 +907,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyUp:(NSEvent *)theEvent
 {
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
+    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && (!self.useSmartLink && self.serialCore.serialPort))
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -947,7 +956,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    if (!(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
+    if (!(theEvent.modifierFlags & NSEventModifierFlagCommand) && (!self.useSmartLink && self.serialCore.serialPort))
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -1056,7 +1065,7 @@ static unsigned char floatingBus(void *m)
     }
 }
 
-#pragma mark - Getters
+#pragma mark - Properties
 
 // This is implemented within each machine class and returna a reference to the core being used for that machinne
 - (void *)getCore;
@@ -1069,5 +1078,12 @@ static unsigned char floatingBus(void *m)
 {
     return @"Unknown";
 }
+
+- (void)setUseSmartLink:(BOOL)useSmartLink
+{
+    _useSmartLink = useSmartLink;
+    [self resetKeyboardMap];
+}
+
 
 @end

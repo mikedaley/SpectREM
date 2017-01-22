@@ -932,7 +932,7 @@
                                         <popUpButton verticalHuggingPriority="750" misplaced="YES" id="D7p-PG-vqC">
                                             <rect key="frame" x="17" y="13" width="183" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" continuous="YES" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="jHX-Qg-yfa" id="z37-jC-1KD">
+                                            <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="jHX-Qg-yfa" id="z37-jC-1KD">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <menu key="menu" id="I1v-tm-W8f">
@@ -944,9 +944,9 @@
                                                 </menu>
                                             </popUpButtonCell>
                                             <connections>
-                                                <binding destination="eq9-hE-kE2" name="content" keyPath="self.serialPortManager.availablePorts" id="FDN-Qa-z4t"/>
-                                                <binding destination="eq9-hE-kE2" name="contentValues" keyPath="self.serialPortManager.availablePorts.name" previousBinding="FDN-Qa-z4t" id="Rat-NU-gcy"/>
-                                                <binding destination="eq9-hE-kE2" name="selectedObject" keyPath="self.serialPort" previousBinding="Rat-NU-gcy" id="2Il-31-1Bd"/>
+                                                <binding destination="eq9-hE-kE2" name="content" keyPath="serialPortManager.availablePorts" id="GMj-2V-goN"/>
+                                                <binding destination="eq9-hE-kE2" name="contentValues" keyPath="serialPortManager.availablePorts.name" previousBinding="GMj-2V-goN" id="Yaw-p5-622"/>
+                                                <binding destination="eq9-hE-kE2" name="selectedObject" keyPath="serialPort" previousBinding="Yaw-p5-622" id="JA6-lG-Kah"/>
                                             </connections>
                                         </popUpButton>
                                     </subviews>

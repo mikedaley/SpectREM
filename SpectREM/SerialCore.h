@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSObject+Bindings.h"
 
 @class ORSSerialPortManager;
 @class ORSSerialPort;
 
-@interface SerialCore : NSObject
+@interface SerialCore : NSObject_Bindings
 
-@property (nonatomic, readonly) ORSSerialPortManager *serialPortManager;
+@property (nonatomic, strong) ORSSerialPortManager *serialPortManager;
 @property (nonatomic, strong) ORSSerialPort *serialPort;
 @property (nonatomic, copy) void (^dataReceivedBlock)(NSData *responseData);
 
