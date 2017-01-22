@@ -245,11 +245,13 @@ NS_ENUM(NSUInteger, MachineType)
     {
         if (_configViewController.accelerate)
         {
+            [self notifyUserWithMessage:@"Acceleration mode on"];
             [_machine.audioCore stop];
             dispatch_resume(_fastTimer);
         }
         else
         {
+            [self notifyUserWithMessage:@"Acceleration mode off"];
             [_machine.audioCore start];
             dispatch_suspend(_fastTimer);
         }
@@ -259,13 +261,11 @@ NS_ENUM(NSUInteger, MachineType)
     {
         if ([[change valueForKey:NSKeyValueChangeNewKey] boolValue])
         {
-            [_infoViewController setText:@"SmartLINK Enabled"];
-            [_infoViewController displayMessage];
+            [self notifyUserWithMessage:@"SmartLINK Enabled"];
         }
         else
         {
-            [_infoViewController setText:@"SmartLINK Disabled"];
-            [_infoViewController displayMessage];
+            [self notifyUserWithMessage:@"SmartLINK Disabled"];
         }
     }
 }
@@ -433,8 +433,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupMachineBindings];
     [self setupSceneBindings];
     
-    _infoViewController.text = _machine.machineName;
-    [_infoViewController displayMessage];
+    [self notifyUserWithMessage:[NSString stringWithFormat:@"%@ Loaded", _machine.machineName]];
     
     [_machine start];
 }
@@ -500,27 +499,23 @@ NS_ENUM(NSUInteger, MachineType)
 {
     if (![_zxTape isTapeLoaded])
     {
-        [_infoViewController setText:@"No Tape Loaded"];
-        [_infoViewController displayMessage];
+        [self notifyUserWithMessage:@"No tape loaded!"];
         return;
     }
     [_zxTape play];
-    [_infoViewController setText:@"Tape Playing"];
-    [_infoViewController displayMessage];
+    [self notifyUserWithMessage:@"Tape Playing"];
 }
 
 - (IBAction)stopTape:(id)sender
 {
     [_zxTape stop];
-    [_infoViewController setText:@"Tape Stopped"];
-    [_infoViewController displayMessage];
+    [self notifyUserWithMessage:@"Tape Stopped"];
 }
 
 - (IBAction)rewindTape:(id)sender
 {
     [_zxTape rewind];
-    [_infoViewController setText:@"Tape Rewound"];
-    [_infoViewController displayMessage];
+    [self notifyUserWithMessage:@"Tape Rewound"];
 }
 
 - (IBAction)ejectTape:(id)sender
@@ -528,8 +523,18 @@ NS_ENUM(NSUInteger, MachineType)
     [_zxTape eject];
     [self.tapeBytesLabel.animator setHidden:YES];
     [self.view.window setTitle:@"SpectREM"];
-    [_infoViewController setText:@"Tape Ejected"];
-    [_infoViewController displayMessage];
+    [self notifyUserWithMessage:@"Tape Ejected"];
+}
+
+#pragma mark - User Notifications
+
+- (void)notifyUserWithMessage:(NSString *)message
+{
+    NSUserNotificationCenter *unc = [NSUserNotificationCenter defaultUserNotificationCenter];
+    NSUserNotification *userNote = [[NSUserNotification alloc] init];
+    userNote.title = message;
+    userNote.soundName = nil;
+    [unc deliverNotification:userNote];
 }
 
 #pragma mark - USB Controllers

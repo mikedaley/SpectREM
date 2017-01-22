@@ -90,6 +90,8 @@
         _serialPort = serialPort;
         _serialPort.delegate = self;
         [_serialPort open];
+        
+        // Make sure that the change is propogated back to any bindings which make exist for this property
         [self propagateValue:_serialPort forBinding:@"serialPort"];
     }
 }

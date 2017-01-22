@@ -858,7 +858,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && (!self.useSmartLink && self.serialCore.serialPort) )
+    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink )
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -907,7 +907,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyUp:(NSEvent *)theEvent
 {
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && (!self.useSmartLink && self.serialCore.serialPort))
+    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -956,7 +956,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    if (!(theEvent.modifierFlags & NSEventModifierFlagCommand) && (!self.useSmartLink && self.serialCore.serialPort))
+    if (!(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
