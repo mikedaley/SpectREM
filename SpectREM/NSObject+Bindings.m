@@ -8,16 +8,11 @@
 
 #import "NSViewController+Bindings.h"
 
-@interface NSViewController_Bindings ()
+@interface NSObject_Bindings ()
 
 @end
 
-@implementation NSViewController_Bindings
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do view setup here.
-}
+@implementation NSObject_Bindings
 
 #pragma mark - Bindings
 
