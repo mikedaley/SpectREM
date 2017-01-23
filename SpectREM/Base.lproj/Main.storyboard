@@ -945,9 +945,9 @@
                                                 </menu>
                                             </popUpButtonCell>
                                             <connections>
+                                                <binding destination="eq9-hE-kE2" name="selectedObject" keyPath="serialPort" previousBinding="Yaw-p5-622" id="JA6-lG-Kah"/>
                                                 <binding destination="eq9-hE-kE2" name="content" keyPath="serialPortManager.availablePorts" id="GMj-2V-goN"/>
                                                 <binding destination="eq9-hE-kE2" name="contentValues" keyPath="serialPortManager.availablePorts.name" previousBinding="GMj-2V-goN" id="Yaw-p5-622"/>
-                                                <binding destination="eq9-hE-kE2" name="selectedObject" keyPath="serialPort" previousBinding="Yaw-p5-622" id="JA6-lG-Kah"/>
                                             </connections>
                                         </popUpButton>
                                     </subviews>
@@ -961,7 +961,7 @@
                 <userDefaultsController id="CUz-D8-d1s"/>
                 <userDefaultsController id="yyM-Ee-Mhh"/>
             </objects>
-            <point key="canvasLocation" x="-322" y="763"/>
+            <point key="canvasLocation" x="-288" y="692"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">
@@ -1007,8 +1007,10 @@
                     <window key="window" title="Keyboard Map" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="keyboardMap" animationBehavior="default" id="v7V-uE-i5A">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="163" y="199" width="480" height="270"/>
+                        <rect key="contentRect" x="163" y="199" width="355" height="200"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+                        <value key="minSize" type="size" width="355" height="200"/>
+                        <value key="minFullScreenContentSize" type="size" width="355" height="200"/>
                     </window>
                     <connections>
                         <segue destination="5h4-mJ-tZZ" kind="relationship" relationship="window.shadowedContentViewController" id="KoC-op-mMc"/>
@@ -1016,27 +1018,48 @@
                 </windowController>
                 <customObject id="ps7-LN-tQV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1735" y="209"/>
+            <point key="canvasLocation" x="1623.5" y="177.5"/>
         </scene>
-        <!--View Controller-->
+        <!--Keyboard View Controller-->
         <scene sceneID="ahz-sD-Vlf">
             <objects>
-                <viewController id="5h4-mJ-tZZ" sceneMemberID="viewController">
+                <viewController id="5h4-mJ-tZZ" customClass="KeyboardViewController" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="PLu-x7-33H">
-                        <rect key="frame" x="0.0" y="0.0" width="452" height="200"/>
+                        <rect key="frame" x="0.0" y="0.0" width="355" height="200"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="XYA-2K-nub">
-                                <rect key="frame" x="6" y="0.0" width="440" height="194"/>
+                                <rect key="frame" x="6" y="8" width="343" height="154"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="KeyboardMapImage" id="id7-28-SMi"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="LongKeyboard" id="id7-28-SMi"/>
                             </imageView>
+                            <popUpButton verticalHuggingPriority="750" misplaced="YES" id="jz5-1O-I3e">
+                                <rect key="frame" x="18" y="167" width="224" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" title="Apple Wireless Keyboard" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="b5z-r9-4vn" id="krK-4a-cc4">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="6YO-Ya-2ca">
+                                        <items>
+                                            <menuItem title="Apple Wireless Keyboard" state="on" id="b5z-r9-4vn"/>
+                                            <menuItem title="Apple Wired Keyboard" id="vme-iE-iC5" userLabel="Apple Wired Keyboard"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <binding destination="5h4-mJ-tZZ" name="selectedIndex" keyPath="self.selectedKeyboard" id="gbh-lM-swa"/>
+                                </connections>
+                            </popUpButton>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="keyboardImageView" destination="XYA-2K-nub" id="5PM-xS-VHG"/>
+                    </connections>
                 </viewController>
                 <customObject id="yOY-te-xxY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController id="ei6-xn-Ym2"/>
             </objects>
-            <point key="canvasLocation" x="1735" y="650"/>
+            <point key="canvasLocation" x="1623.5" y="658"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="9Af-Td-QZ7">
@@ -1863,6 +1886,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="KeyboardMapImage" width="626" height="257"/>
+        <image name="LongKeyboard" width="2000" height="575"/>
     </resources>
 </document>
