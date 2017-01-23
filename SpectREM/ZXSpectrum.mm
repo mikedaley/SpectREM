@@ -17,6 +17,10 @@
 @end
 
 @implementation ZXSpectrum
+{
+    NSMutableData *_emptyTAP;
+    int blocks;
+}
 
 - (void)dealloc
 {
@@ -48,6 +52,9 @@
         emuVScale = 1.0 / emuDisplayPxHeight;
         
         emuDisplayTs = 0;
+        
+        _emptyTAP = [NSMutableData new];
+        blocks = 0;
         
         // SmartLINK. A request byte of 0x77 causes SmartLINK to respond
         kempston = 0x0;
@@ -235,49 +242,68 @@
             [self.zxTape updateTapeWithTStates:tsCPU];
         }
         
-        count -= tsCPU;
-        
-        updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
-        
-        if (core->GetTStates() >= machineInfo.tsPerFrame )
+        if(core->saving)
         {
-            // Must reset count to ensure we leave the while loop at the correct point
-            count = 0;
+            printf("Saving 0x%04x\n", core->GetRegister(CZ80Core::eREG_HL));
+            [self saveTAPBlock];
             
-            updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+            // Once a block has been saved this is the RET address
+            core->SetRegister(CZ80Core::eREG_PC, 0x053d);
+            core->saving = false;
+            blocks += 1;
             
-            core->ResetTStates( machineInfo.tsPerFrame );
-            core->SignalInterrupt();
-            
-            // Use the configurable border width to work out the rect that should be extraced from the texture
-            CGRect textureRect = (CGRect){0, 0, 1, 1};
-            if (self.displayBorderWidth != emuTopBorderPx)
+            if (blocks == 2)
             {
-                float borderWidth = emuTopBorderPx - self.displayBorderWidth;
-                textureRect = (CGRect){
-                    borderWidth * emuHScale,
-                    borderWidth * emuVScale,
-                    1.0 - (borderWidth * 2.0 * emuHScale),
-                    1.0 - (borderWidth * 2.0 * emuVScale)
-                };
+                blocks = 0;
+                [_emptyTAP writeToFile:@"/Users/mikedaley/Desktop/test.tap" atomically:NO];
             }
+        }
+        else
+        {
+            count -= tsCPU;
             
-            // Update the display texture using the data from the emulator display buffer
-            CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength, kCFAllocatorNull);
-            self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
-                                                 size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
-                                              flipped:YES];
+            updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
             
-            self.texture = [SKTexture textureWithRect:textureRect inTexture:self.texture];
-            
-            CFRelease(dataRef);
-            
-            // Updating the emulators texture must be done on the main thread
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.emulationViewController updateEmulationDisplayWithTexture:self.texture];
-            });
-            
-            frameCounter++;
+            if (core->GetTStates() >= machineInfo.tsPerFrame )
+            {
+                // Must reset count to ensure we leave the while loop at the correct point
+                count = 0;
+                
+                updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+                
+                core->ResetTStates( machineInfo.tsPerFrame );
+                core->SignalInterrupt();
+                
+                // Use the configurable border width to work out the rect that should be extraced from the texture
+                CGRect textureRect = (CGRect){0, 0, 1, 1};
+                if (self.displayBorderWidth != emuTopBorderPx)
+                {
+                    float borderWidth = emuTopBorderPx - self.displayBorderWidth;
+                    textureRect = (CGRect){
+                        borderWidth * emuHScale,
+                        borderWidth * emuVScale,
+                        1.0 - (borderWidth * 2.0 * emuHScale),
+                        1.0 - (borderWidth * 2.0 * emuVScale)
+                    };
+                }
+                
+                // Update the display texture using the data from the emulator display buffer
+                CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength, kCFAllocatorNull);
+                self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+                                                     size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
+                                                  flipped:YES];
+                
+                self.texture = [SKTexture textureWithRect:textureRect inTexture:self.texture];
+                
+                CFRelease(dataRef);
+                
+                // Updating the emulators texture must be done on the main thread
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.emulationViewController updateEmulationDisplayWithTexture:self.texture];
+                });
+                
+                frameCounter++;
+            }
         }
     }
     
@@ -865,34 +891,44 @@ static unsigned char floatingBus(void *m)
         dispatch_sync(self.emulationQueue, ^{
             switch (theEvent.keyCode)
             {
-                case 24: // Inv Video
+                case 30: // Inv Video
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[3] &= ~0x08; // 4
                     break;
 
-                case 27: // True Video
+                case 33: // True Video
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[3] &= ~0x04; // 3
                     break;
 
                 case 39: // "
                     keyboardMap[7] &= ~0x02; // Sym
-                    keyboardMap[5] &= ~0x01; // "
+                    keyboardMap[5] &= ~0x01; // P
                     break;
 
-                case 41: // "
+                case 41: // ;
                     keyboardMap[7] &= ~0x02; // Sym
-                    keyboardMap[5] &= ~0x02; // ;
+                    keyboardMap[5] &= ~0x02; // O
                     break;
 
                 case 43: // ,
                     keyboardMap[7] &= ~0x02; // Sym
-                    keyboardMap[7] &= ~0x08; // ,
+                    keyboardMap[7] &= ~0x08; // N
+                    break;
+
+                case 27: // -
+                    keyboardMap[7] &= ~0x02; // Sym
+                    keyboardMap[6] &= ~0x08; // J
+                    break;
+
+                case 24: // +
+                    keyboardMap[7] &= ~0x02; // Sym
+                    keyboardMap[6] &= ~0x04; // K
                     break;
 
                 case 47: // .
                     keyboardMap[7] &= ~0x02; // Sym
-                    keyboardMap[7] &= ~0x04; // .
+                    keyboardMap[7] &= ~0x04; // M
                     break;
 
                 case 48: // Edit
@@ -959,34 +995,44 @@ static unsigned char floatingBus(void *m)
         dispatch_sync(self.emulationQueue, ^{
             switch (theEvent.keyCode)
             {
-                case 24: // Inv Video
+                case 30: // Inv Video
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[3] |= 0x08; // 4
                     break;
 
-                case 27: // True Video
+                case 33: // True Video
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[3] |= 0x04; // 3
                     break;
 
                 case 39: // "
                     keyboardMap[7] |= 0x02; // Sym
-                    keyboardMap[5] |= 0x01; // "
+                    keyboardMap[5] |= 0x01; // P
                     break;
 
                 case 41: // "
                     keyboardMap[7] |= 0x02; // Sym
-                    keyboardMap[5] |= 0x02; // ;
+                    keyboardMap[5] |= 0x02; // O
                     break;
 
                 case 43: // ,
                     keyboardMap[7] |= 0x02; // Sym
-                    keyboardMap[7] |= 0x08; // ,
+                    keyboardMap[7] |= 0x08; // M
+                    break;
+
+                case 24: // +
+                    keyboardMap[7] |= 0x02; // Sym
+                    keyboardMap[6] |= 0x04; // K
+                    break;
+
+                case 27: // -
+                    keyboardMap[7] |= 0x02; // Sym
+                    keyboardMap[6] |= 0x08; // J
                     break;
 
                 case 47: // .
                     keyboardMap[7] |= 0x02; // Sym
-                    keyboardMap[7] |= 0x04; // .
+                    keyboardMap[7] |= 0x04; // N
                     break;
 
                 case 48: // Edit
@@ -1162,6 +1208,30 @@ static unsigned char floatingBus(void *m)
         default:
             break;
     }
+}
+
+#pragma mark - TAP saving
+
+- (void)saveTAPBlock
+{
+    CZ80Core *core = (CZ80Core *)[self getCore];
+    
+    char parity = 0;
+    short length = core->GetRegister(CZ80Core::eREG_DE) + 2;
+    [_emptyTAP appendBytes:&length length:2];
+    
+    parity = core->GetRegister(CZ80Core::eREG_A);
+    [_emptyTAP appendBytes:&parity length:1];
+    
+    for (int i = 0; i < core->GetRegister(CZ80Core::eREG_DE); i++)
+    {
+        char byte = memory[core->GetRegister(CZ80Core::eREG_IX) + i];
+        parity ^= byte;
+        [_emptyTAP appendBytes:&byte length:1];
+    }
+    
+    [_emptyTAP appendBytes:&parity length:1];
+    
 }
 
 #pragma mark - Properties

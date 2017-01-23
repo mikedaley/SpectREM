@@ -199,6 +199,8 @@ public:
 	void					Z80CoreIOWrite(unsigned short address, unsigned char data);
 	void					Z80CoreMemoryContention(unsigned short address, unsigned int t_states);
 	void					Z80CoreIOContention(unsigned short address, unsigned int t_states);
+    
+    bool                    saving;
 
 protected:
 	#include "Z80Core_MainOpcodes.h"

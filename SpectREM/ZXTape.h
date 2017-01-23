@@ -83,6 +83,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 
 @property (assign, getter=isTapeLoaded) BOOL tapeLoaded;
 @property (assign) BOOL playing;
+@property (assign) BOOL saving;
 @property (assign) NSUInteger bytesRemaining;
 
 #pragma mark - Methods
@@ -103,6 +104,8 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 
 // Reset the tape loader removing any current tape loaded and stopping the tape if it is playing
 - (void)reset;
+
+- (void)createBlockWithType:(unsigned short)blockType;
 
 @end
 

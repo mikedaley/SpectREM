@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpectREM/ZXSpectrum.mm"
-            timestampString = "506608606.230097"
+            timestampString = "506887709.589039"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "560"
-            endingLineNumber = "560"
+            startingLineNumber = "586"
+            endingLineNumber = "586"
             landmarkName = "coreIORead(unsigned short address, void *m)"
             landmarkType = "9">
          </BreakpointContent>

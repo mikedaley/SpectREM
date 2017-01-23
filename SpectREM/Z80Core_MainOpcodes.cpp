@@ -68,8 +68,8 @@ void CZ80Core::RLCA(unsigned char opcode)
 //-----------------------------------------------------------------------------------------
 
 void CZ80Core::EX_AF_AF_(unsigned char opcode)
-{
-	unsigned short t = m_CPURegisters.reg_pairs.regAF;
+{    
+    unsigned short t = m_CPURegisters.reg_pairs.regAF;
 	m_CPURegisters.reg_pairs.regAF = m_CPURegisters.reg_pairs.regAF_;
 	m_CPURegisters.reg_pairs.regAF_ = t;
 }

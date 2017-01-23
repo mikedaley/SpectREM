@@ -8,6 +8,7 @@
 
 #import "ZXTape.h"
 
+
 @implementation ZXTape
 {
     // How many Ts have passed since the start of the pilot pulses
@@ -492,6 +493,15 @@
     self.playing = NO;
     [tapBlocks removeAllObjects];
 }
+
+#pragma mark - Saving
+
+- (void)createBlockWithType:(unsigned short)blockType
+{
+    
+}
+
+#pragma mark - Debug print
 
 - (void)printTAPContents
 {
