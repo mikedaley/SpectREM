@@ -1031,7 +1031,7 @@
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="XYA-2K-nub">
                                 <rect key="frame" x="6" y="8" width="343" height="154"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="LongKeyboard" id="id7-28-SMi"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="id7-28-SMi"/>
                             </imageView>
                             <popUpButton verticalHuggingPriority="750" misplaced="YES" id="jz5-1O-I3e">
                                 <rect key="frame" x="18" y="167" width="224" height="26"/>
@@ -1885,7 +1885,4 @@
             <point key="canvasLocation" x="596" y="692"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="LongKeyboard" width="2000" height="575"/>
-    </resources>
 </document>

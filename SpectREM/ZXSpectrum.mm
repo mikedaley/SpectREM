@@ -255,7 +255,7 @@
             if (blocks == 2)
             {
                 blocks = 0;
-                [_emptyTAP writeToFile:@"/Users/mikedaley/Desktop/test.tap" atomically:NO];
+                [_emptyTAP writeToFile:@"/Users/mdaley/Desktop/test.tap" atomically:NO];
             }
         }
         else

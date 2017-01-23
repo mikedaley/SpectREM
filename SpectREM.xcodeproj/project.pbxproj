@@ -23,7 +23,6 @@
 		99F71A831DDB17B80093CAE4 /* PixelImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99F71A821DDB17B80093CAE4 /* PixelImageView.m */; };
 		99F71A861DDB1A4B0093CAE4 /* CPUViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 99F71A851DDB1A4B0093CAE4 /* CPUViewController.mm */; };
 		ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED06D3301E362B8D001F99FB /* KeyboardViewController.m */; };
-		ED06D3331E3678D0001F99FB /* test.tap in Resources */ = {isa = PBXBuildFile; fileRef = ED06D3321E3678D0001F99FB /* test.tap */; };
 		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5E38151DDA14E700525788 /* GraphicalMemViewController.m */; };
@@ -100,8 +99,6 @@
 		99F71A851DDB1A4B0093CAE4 /* CPUViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CPUViewController.mm; sourceTree = "<group>"; };
 		ED06D32F1E362B8D001F99FB /* KeyboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardViewController.h; sourceTree = "<group>"; };
 		ED06D3301E362B8D001F99FB /* KeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardViewController.m; sourceTree = "<group>"; };
-		ED06D3321E3678D0001F99FB /* test.tap */ = {isa = PBXFileReference; lastKnownFileType = file; name = test.tap; path = ../../../Desktop/test.tap; sourceTree = "<group>"; };
-		ED06D3341E36794C001F99FB /* retro.tap */ = {isa = PBXFileReference; lastKnownFileType = file; name = retro.tap; path = ../../../Desktop/retro.tap; sourceTree = "<group>"; };
 		ED3295CB1DBE4F4E00372061 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		ED5E38141DDA14E700525788 /* GraphicalMemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicalMemViewController.h; sourceTree = "<group>"; };
@@ -285,8 +282,6 @@
 		EDF3A4941DB0D60700511BAF = {
 			isa = PBXGroup;
 			children = (
-				ED06D3321E3678D0001F99FB /* test.tap */,
-				ED06D3341E36794C001F99FB /* retro.tap */,
 				EDF3A49F1DB0D60700511BAF /* SpectREM */,
 				EDF3A4B01DB0D60700511BAF /* Assets.xcassets */,
 				EDF3A49E1DB0D60700511BAF /* Products */,
@@ -543,7 +538,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED06D3331E3678D0001F99FB /* test.tap in Resources */,
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
 				991D87BB1E2A5BA900667E37 /* gw03.rom in Resources */,
 				996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */,
