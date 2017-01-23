@@ -50,6 +50,8 @@ NS_ENUM(NSUInteger, MachineType)
     NSWindowController      *_cpuWindowController;
     CPUViewController       *_cpuViewController;
     
+    NSWindowController      *_keyboardMapWindowController;
+    
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
     dispatch_queue_t        _debugTimerQueue;
@@ -95,9 +97,7 @@ NS_ENUM(NSUInteger, MachineType)
     
     self.configScrollView.documentView = _configViewController.view;
     
-    _infoViewController = [_storyBoard instantiateControllerWithIdentifier:@"InfoViewController"];
-    [_infoViewController.view setFrameOrigin:(NSPoint){10,10}];
-    [self.skView addSubview:_infoViewController.view];
+    _keyboardMapWindowController = [_storyBoard instantiateControllerWithIdentifier:@"KeyboardWindow"];
     
     _preferences = [NSUserDefaults standardUserDefaults];
     
@@ -524,6 +524,11 @@ NS_ENUM(NSUInteger, MachineType)
     [self.tapeBytesLabel.animator setHidden:YES];
     [self.view.window setTitle:@"SpectREM"];
     [self notifyUserWithMessage:@"Tape Ejected"];
+}
+
+- (IBAction)showKeyboardMapWindow:(id)sender
+{
+    [self.view.window addChildWindow:_keyboardMapWindowController.window ordered:NSWindowAbove];
 }
 
 #pragma mark - User Notifications

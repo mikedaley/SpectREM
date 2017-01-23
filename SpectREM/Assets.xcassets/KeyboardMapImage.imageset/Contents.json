@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "old-tv.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "KeyboardMapImage.png",
       "scale" : "2x"
     },
     {

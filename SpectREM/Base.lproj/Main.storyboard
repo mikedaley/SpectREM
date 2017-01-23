@@ -278,9 +278,10 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                                     <items>
-                                        <menuItem title="SpectREM Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                                        <menuItem title="Show Keyboard Map" id="kWg-m7-LUW">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
+                                                <action selector="showKeyboardMapWindow:" target="Ady-hI-5gd" id="CCh-Rd-qc9"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -998,6 +999,44 @@
                 <customObject id="akj-Wl-v3M" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1133" y="209"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="ihi-53-5WE">
+            <objects>
+                <windowController storyboardIdentifier="KeyboardWindow" id="rd2-U6-lqk" sceneMemberID="viewController">
+                    <window key="window" title="Keyboard Map" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="keyboardMap" animationBehavior="default" id="v7V-uE-i5A">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="163" y="199" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+                    </window>
+                    <connections>
+                        <segue destination="5h4-mJ-tZZ" kind="relationship" relationship="window.shadowedContentViewController" id="KoC-op-mMc"/>
+                    </connections>
+                </windowController>
+                <customObject id="ps7-LN-tQV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1735" y="209"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ahz-sD-Vlf">
+            <objects>
+                <viewController id="5h4-mJ-tZZ" sceneMemberID="viewController">
+                    <view key="view" misplaced="YES" id="PLu-x7-33H">
+                        <rect key="frame" x="0.0" y="0.0" width="452" height="200"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="XYA-2K-nub">
+                                <rect key="frame" x="6" y="0.0" width="440" height="194"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="KeyboardMapImage" id="id7-28-SMi"/>
+                            </imageView>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="yOY-te-xxY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1735" y="650"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="9Af-Td-QZ7">
@@ -1823,4 +1862,7 @@
             <point key="canvasLocation" x="596" y="692"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="KeyboardMapImage" width="626" height="257"/>
+    </resources>
 </document>
