@@ -11,6 +11,7 @@
 #import "Snapshot.h"
 #import "Z80Core.h"
 #import "SerialCore.h"
+#import "EmulationScene.h"
 
 @interface ZXSpectrum ()
 
@@ -20,6 +21,8 @@
 {
     NSMutableData *_emptyTAP;
     int blocks;
+    
+    SKSpriteNode *_backingSprite;
 }
 
 - (void)dealloc
@@ -55,6 +58,12 @@
         
         _emptyTAP = [NSMutableData new];
         blocks = 0;
+        
+        _backingSprite = [SKSpriteNode new];
+        _backingSprite.size = (CGSize){320 * 2, 256 * 2};
+        _backingSprite.position = (CGPoint){5000,5000};
+        [self.emulationViewController.emulationScene addChild:_backingSprite];
+
         
         // SmartLINK. A request byte of 0x77 causes SmartLINK to respond
         kempston = 0x0;
@@ -288,11 +297,37 @@
                 }
                 
                 // Update the display texture using the data from the emulator display buffer
+//                const int scaleShift = 1;
+//                const int scaleSize = 1 << scaleShift;
+//                PixelData *inPixelData = reinterpret_cast<PixelData *>(emuDisplayBuffer);
+//                PixelData *outPixelData = new PixelData[(emuDisplayPxWidth * scaleSize) * (emuDisplayPxHeight * scaleSize)];
+//                PixelData *outPixelDataStore = outPixelData;
+//                for (int y = 0; y < emuDisplayPxHeight * scaleSize; ++y) {
+//                    for (int x = 0; x < emuDisplayPxWidth * scaleSize; ++x) {
+//                        *outPixelDataStore++ = inPixelData[((y >> scaleShift) * emuDisplayPxWidth) + (x >> scaleShift)];
+//                    }
+//                }
+//                CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, reinterpret_cast<unsigned char *>(outPixelData), emuDisplayBufferLength * scaleSize, kCFAllocatorNull);
+//                
+//                self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+//                                                     size:CGSizeMake(emuDisplayPxWidth * scaleSize, emuDisplayPxHeight * scaleSize)
+//                                                  flipped:YES];
+//                
+//                self.texture = [SKTexture textureWithRect:textureRect inTexture:self.texture];
+//                
+//                CFRelease(dataRef);
+//                delete[] outPixelData;
+
                 CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, emuDisplayBuffer, emuDisplayBufferLength, kCFAllocatorNull);
-                self.texture = [SKTexture textureWithData:(__bridge NSData *)dataRef
-                                                     size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
-                                                  flipped:YES];
                 
+                SKTexture *backingTexture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+                                                                  size:CGSizeMake(emuDisplayPxWidth, emuDisplayPxHeight)
+                                                               flipped:YES];
+                backingTexture.filteringMode = SKTextureFilteringNearest;
+                
+                _backingSprite = [SKSpriteNode spriteNodeWithTexture:backingTexture];
+                
+                self.texture = [(SKView *)_emulationViewController.skView textureFromNode:_backingSprite];
                 self.texture = [SKTexture textureWithRect:textureRect inTexture:self.texture];
                 
                 CFRelease(dataRef);

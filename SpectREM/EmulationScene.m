@@ -129,7 +129,7 @@
 
 - (void)sceneViewSizeChanged:(CGSize)newSize
 {
-    [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:newSize.height] forAttributeNamed:@"u_screen_height"];
+    [self.emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:newSize.height] forAttributeNamed:@"u_screen_height"];
 }
 
 #pragma mark - Game tick

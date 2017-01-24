@@ -39,7 +39,6 @@ NS_ENUM(NSUInteger, MachineType)
 @implementation EmulationViewController
 {
     ZXSpectrum              *_machine;
-    EmulationScene          *_emulationScene;
     ConfigViewController    *_configViewController;
     InfoViewController      *_infoViewController;
     NSStoryboard            *_storyBoard;
@@ -101,8 +100,8 @@ NS_ENUM(NSUInteger, MachineType)
     
     _preferences = [NSUserDefaults standardUserDefaults];
     
-    _emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    _emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:@"sceneScaleMode"] integerValue];
+    self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
+    self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:@"sceneScaleMode"] integerValue];
     
     [self.skView setFrameSize:self.skView.window.frame.size];
     
@@ -274,7 +273,7 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)viewDidLayout
 {
-    [_emulationScene sceneViewSizeChanged:self.view.frame.size];
+    [self.emulationScene sceneViewSizeChanged:self.view.frame.size];
 }
 
 #pragma mark - Keyboard events
@@ -285,10 +284,11 @@ NS_ENUM(NSUInteger, MachineType)
 }
 
 #pragma mark -
+
 - (void)updateEmulationDisplayWithTexture:(SKTexture *)emulationDisplayTexture
 {
-    _emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
-    _emulationScene.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringNearest;
+    self.emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
+    self.emulationScene.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringNearest;
 }
 
 #pragma mark - UI Actions
@@ -455,7 +455,7 @@ NS_ENUM(NSUInteger, MachineType)
         float originX = self.view.window.frame.origin.x;
         float originY = self.view.window.frame.origin.y - (height - self.view.window.frame.size.height);
         NSRect windowFrame = CGRectMake(originX, originY, width, height);
-        [self.view.window.animator setFrame:windowFrame display:YES animate:YES];
+        [self.view.window.animator setFrame:windowFrame display:YES animate:NO];
     }
 }
 

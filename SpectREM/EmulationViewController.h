@@ -11,11 +11,13 @@
 
 @class EmulationView;
 @class ZXTape;
+@class EmulationScene;
 
 @interface EmulationViewController : NSViewController
 
 // Emulation view that contains the SpriteKit scene used to render the emulations display
 @property (assign) IBOutlet EmulationView *skView;
+@property (strong) EmulationScene *emulationScene;
 
 @property (weak) IBOutlet NSVisualEffectView *configEffectsView;
 @property (weak) IBOutlet NSScrollView *configScrollView;

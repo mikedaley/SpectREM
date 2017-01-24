@@ -89,6 +89,8 @@
         _serialPort.baudRate = @115200;
         _serialPort = serialPort;
         _serialPort.delegate = self;
+        _serialPort.RTS = YES;
+        _serialPort.DTR = YES;
         [_serialPort open];
         
         // Make sure that the change is propogated back to any bindings which make exist for this property
