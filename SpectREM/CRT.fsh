@@ -43,6 +43,14 @@ void main()
         finalColor *= vec4(vignette, 1);
     }
 
+//    float scanLines = clamp(0.35 + 0.35 * cos(3.5 + v_tex_coord.y * u_screen_height * 1.5), 0.0, 1.0);
+//    float saturation = pow(scanLines, 4.0);
+//    finalColor = finalColor * vec4(1.0 + 1.5 * saturation);
+
+    float scanline 	= clamp( 0.95 + 0.05 * cos( 3.14 * ( v_tex_coord.y + 0.008 * u_time ) * 512 * 1.0 ), 0.0, 1.0 );
+    float grille 	= 0.85 + 0.15 * clamp( 1.5 * cos( 3.14 * v_tex_coord.x * 640.0 * 1.0 ), 0.0, 1.0 );
+    finalColor *= scanline * grille * 1.1;
+    
     // If the texture coordinate is outside of the texture coordinates then discard the texel
     if (texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1)
     {

@@ -9,6 +9,7 @@
 //#include "asio.hpp"
 
 #import <IOKit/hid/IOHIDLib.h>
+#import <Foundation/Foundation.h>
 
 #import "EmulationViewController.h"
 #import "EmulationScene.h"
@@ -62,6 +63,8 @@ NS_ENUM(NSUInteger, MachineType)
     dispatch_source_t       _serialTimer;
     
     ZXTape                  *_zxTape;
+    
+    SKTexture               *_backingTexture;
 }
 
 - (void)dealloc
@@ -283,12 +286,36 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine flagsChanged:event];
 }
 
-#pragma mark -
+#pragma mark - Emulation View Update
 
-- (void)updateEmulationDisplayWithTexture:(SKTexture *)emulationDisplayTexture
+- (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size
 {
-    self.emulationScene.emulationDisplaySprite.texture = emulationDisplayTexture;
-    self.emulationScene.emulationDisplaySprite.texture.filteringMode = SKTextureFilteringNearest;
+    CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, pixelBuffer, length, kCFAllocatorNull);
+    _backingTexture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+                                                      size:size
+                                                   flipped:YES];
+    CFRelease(dataRef);
+    
+    _backingTexture.filteringMode = SKTextureFilteringNearest;
+    self.emulationScene.emulationBackingSprite.texture = _backingTexture;
+    self.emulationScene.emulationBackingSprite.size = (CGSize){size.width * (floorf(self.view.frame.size.width / size.width)),
+        size.height * (floorf(self.view.frame.size.width / size.height))};
+
+    // Use the configurable border width to work out the rect that should be extraced from the texture
+    CGRect textureRect = (CGRect){0, 0, 1, 1};
+    float borderWidth = 32 - _configViewController.displayBorderWidth;
+    float emuHScale = 1.0 / size.width;
+    float emuVScale = 1.0 / size.height;
+    
+    textureRect = (CGRect){
+        borderWidth * emuHScale,
+        borderWidth * emuVScale,
+        1.0 - (borderWidth * 2.0 * emuHScale),
+        1.0 - (borderWidth * 2.0 * emuVScale)
+    };
+    
+    self.emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithRect:textureRect
+                                                                          inTexture:[self.skView textureFromNode:self.emulationScene.emulationBackingSprite]];
 }
 
 #pragma mark - UI Actions

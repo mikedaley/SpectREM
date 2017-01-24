@@ -23,6 +23,8 @@
 		99F71A831DDB17B80093CAE4 /* PixelImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99F71A821DDB17B80093CAE4 /* PixelImageView.m */; };
 		99F71A861DDB1A4B0093CAE4 /* CPUViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 99F71A851DDB1A4B0093CAE4 /* CPUViewController.mm */; };
 		ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED06D3301E362B8D001F99FB /* KeyboardViewController.m */; };
+		ED06D3371E37794D001F99FB /* CRT1.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ED06D3361E37794D001F99FB /* CRT1.fsh */; };
+		ED0ABFB31E37BD5F00287363 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED0ABFB21E37BD5F00287363 /* Assets.xcassets */; };
 		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5E38151DDA14E700525788 /* GraphicalMemViewController.m */; };
@@ -39,7 +41,6 @@
 		EDF3A4A91DB0D60700511BAF /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A81DB0D60700511BAF /* Actions.sks */; };
 		EDF3A4AC1DB0D60700511BAF /* EmulationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4AB1DB0D60700511BAF /* EmulationScene.m */; };
 		EDF3A4AF1DB0D60700511BAF /* EmulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4AE1DB0D60700511BAF /* EmulationViewController.mm */; };
-		EDF3A4B11DB0D60700511BAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4B01DB0D60700511BAF /* Assets.xcassets */; };
 		EDF3A4B41DB0D60800511BAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4B21DB0D60800511BAF /* Main.storyboard */; };
 		EDF3A4D41DB0D7AB00511BAF /* Z80Core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4C61DB0D7AB00511BAF /* Z80Core.cpp */; };
 		EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4C91DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp */; };
@@ -99,6 +100,9 @@
 		99F71A851DDB1A4B0093CAE4 /* CPUViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CPUViewController.mm; sourceTree = "<group>"; };
 		ED06D32F1E362B8D001F99FB /* KeyboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardViewController.h; sourceTree = "<group>"; };
 		ED06D3301E362B8D001F99FB /* KeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardViewController.m; sourceTree = "<group>"; };
+		ED06D3351E375B88001F99FB /* PixelData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PixelData.h; sourceTree = "<group>"; };
+		ED06D3361E37794D001F99FB /* CRT1.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CRT1.fsh; sourceTree = "<group>"; };
+		ED0ABFB21E37BD5F00287363 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = SpectREM/Assets.xcassets; sourceTree = "<group>"; };
 		ED3295CB1DBE4F4E00372061 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		ED5E38141DDA14E700525788 /* GraphicalMemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicalMemViewController.h; sourceTree = "<group>"; };
@@ -127,7 +131,6 @@
 		EDF3A4AB1DB0D60700511BAF /* EmulationScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmulationScene.m; sourceTree = "<group>"; };
 		EDF3A4AD1DB0D60700511BAF /* EmulationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmulationViewController.h; sourceTree = "<group>"; };
 		EDF3A4AE1DB0D60700511BAF /* EmulationViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = EmulationViewController.mm; sourceTree = "<group>"; };
-		EDF3A4B01DB0D60700511BAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = SpectREM/Assets.xcassets; sourceTree = "<group>"; };
 		EDF3A4B31DB0D60800511BAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EDF3A4B51DB0D60800511BAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDF3A4C51DB0D7AB00511BAF /* Z80Core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Z80Core.h; sourceTree = "<group>"; };
@@ -283,7 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				EDF3A49F1DB0D60700511BAF /* SpectREM */,
-				EDF3A4B01DB0D60700511BAF /* Assets.xcassets */,
+				ED0ABFB21E37BD5F00287363 /* Assets.xcassets */,
 				EDF3A49E1DB0D60700511BAF /* Products */,
 				EDF3A4F11DB0D7F100511BAF /* Frameworks */,
 			);
@@ -394,6 +397,7 @@
 			isa = PBXGroup;
 			children = (
 				EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */,
+				ED06D3351E375B88001F99FB /* PixelData.h */,
 				EDFEB2941DED8D4100ED3C25 /* MachineDetails.h */,
 				995657F11DC1327100114FC9 /* ZXSpectrum.h */,
 				995657F21DC1327100114FC9 /* ZXSpectrum.mm */,
@@ -456,6 +460,7 @@
 			isa = PBXGroup;
 			children = (
 				EDF3A4F71DB0F25F00511BAF /* CRT.fsh */,
+				ED06D3361E37794D001F99FB /* CRT1.fsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -544,9 +549,10 @@
 				EDF3A4F81DB0F25F00511BAF /* CRT.fsh in Resources */,
 				99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */,
 				EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */,
+				ED0ABFB31E37BD5F00287363 /* Assets.xcassets in Resources */,
 				EDF3A5021DB8EBD500511BAF /* Defaults.plist in Resources */,
-				EDF3A4B11DB0D60700511BAF /* Assets.xcassets in Resources */,
 				EDF3A4A91DB0D60700511BAF /* Actions.sks in Resources */,
+				ED06D3371E37794D001F99FB /* CRT1.fsh in Resources */,
 				EDF3A4E31DB0D7BB00511BAF /* 48.rom in Resources */,
 				99A79E6F1DC2295000B8D4CD /* 128-1.rom in Resources */,
 				EDF3A4B41DB0D60800511BAF /* Main.storyboard in Resources */,

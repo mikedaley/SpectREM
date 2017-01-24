@@ -14,6 +14,7 @@
 #import "AudioCore.h"
 #import "MachineDetails.h"
 #import "ZXTape.h"
+#import "PixelData.h"
 
 #pragma mark - Constants
 
@@ -30,41 +31,6 @@ static int const cAudioSampleRate = 192000;
 // Static values used when building the contention and floating bus tables
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
-
-#pragma mark - Structures
-
-// Structure of pixel data used in the emulation display buffer
-struct PixelData
-{
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
-};
-
-// Pallette
-static struct PixelData pallette[] = {
-    
-    // Normal colours
-    {0, 0, 0, 255},         // Black
-    {0, 0, 200, 255},       // Blue
-    {200, 0, 0, 255},       // Red
-    {200, 0, 200, 255},     // Green
-    {0, 200, 0, 255},       // Magenta
-    {0, 200, 200, 255},     // Cyan
-    {200, 200, 0, 255},     // Yellow
-    {200, 200, 200, 255},   // White
-
-    // Bright colours
-    {0, 0, 0, 255},
-    {0, 0, 255, 255},
-    {255, 0, 0, 255},
-    {255, 0, 255, 255},
-    {0, 255, 0, 255},
-    {0, 255, 255, 255},
-    {255, 255, 0, 255},
-    {255, 255, 255, 255}
-};
 
 #pragma mark - Type Definitions
 

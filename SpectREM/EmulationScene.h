@@ -13,6 +13,7 @@
 #pragma mark - Properties
 
 @property (strong) SKSpriteNode *emulationDisplaySprite;
+@property (strong) SKSpriteNode *emulationBackingSprite;
 @property (assign) id keyboardDelegate;
 
 @property (assign) double displayCurve;

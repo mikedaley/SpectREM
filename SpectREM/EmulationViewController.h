@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <SpriteKit/SpriteKit.h>
+#import "PixelData.h"
 
 @class EmulationView;
 @class ZXTape;
@@ -28,7 +29,7 @@
 #pragma mark - Methods
 
 // Called by the machine being emulated when a new display image is ready to be displayed
-- (void)updateEmulationDisplayWithTexture:(SKTexture *)emulationDisplayTexture;
+- (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size;
 
 // Load the file referenced in the supplied URL into the currently running machine
 - (void)loadFileWithURL:(NSURL *)url;

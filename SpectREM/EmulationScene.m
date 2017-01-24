@@ -34,9 +34,10 @@
 {
     if (self = [super initWithCoder:aDecoder])
     {
-        self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
+        self.emulationBackingSprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationBackingSprite"];
+        self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationDisplaySprite"];
 
-        _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
+        _shader = [SKShader shaderWithFileNamed:@"CRT1.fsh"];
         _shader.attributes = @[
                                [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeFloat],
@@ -47,9 +48,9 @@
                                [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
                                ];
-//        _shader.uniforms = @[
-//                             [SKUniform uniformWithName:@"u_old_tv" texture:[SKTexture textureWithImageNamed:@"old-tv"]]
-//                             ];
+        _shader.uniforms = @[
+                             [SKUniform uniformWithName:@"u_reflection" texture:[SKTexture textureWithImageNamed:@"reflection"]]
+                             ];
         self.emulationDisplaySprite.shader = _shader;
         [self setupObservers];
     }
