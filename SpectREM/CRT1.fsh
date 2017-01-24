@@ -1,27 +1,27 @@
 // change these values to 0.0 to turn off individual effects
-__constant float vertJerkOpt = 0.0;
-__constant float vertMovementOpt = 0.0;
-__constant float bottomStaticOpt = 0.0;
-__constant float scalinesOpt = 1.0;
-__constant float rgbOffsetOpt = 1.0;
-__constant float horzFuzzOpt = 0.0;
+float vertJerkOpt = 0.0;
+float vertMovementOpt = 0.0;
+float bottomStaticOpt = 0.0;
+float scalinesOpt = 1.0;
+float rgbOffsetOpt = 1.0;
+float horzFuzzOpt = 0.0;
 
 // Noise generation functions borrowed from:
 // https://github.com/ashima/webgl-noise/blob/master/src/noise2D.glsl
 
-static vec3 mod289(vec3 x) {
+vec3 mod289(vec3 x) {
     return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
 
-static vec2 mod289(vec2 x) {
+vec2 mod289(vec2 x) {
     return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
 
-static vec3 permute(vec3 x) {
+vec3 permute(vec3 x) {
     return mod289(((x*34.0)+1.0)*x);
 }
 
-static float snoise(vec2 v)
+float snoise(vec2 v)
 {
     const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
                         0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
@@ -70,14 +70,14 @@ static float snoise(vec2 v)
     return 200.0 * dot(m, g);
 }
 
-static float staticV(vec2 texCoord, float time) {
+float staticV(vec2 texCoord, float time) {
     float staticHeight = snoise(vec2(9.0,time*1.2+3.0))*0.3+5.0;
     float staticAmount = snoise(vec2(1.0,time*1.2-6.0))*0.1+0.3;
     float staticStrength = snoise(vec2(-9.75,time*0.6-3.0))*2.0+2.0;
     return (1.0-step(snoise(vec2(5.0*pow(time,2.0)+pow(texCoord.x*7.0,1.2),pow((mod(time,100.0)+100.0)*texCoord.y*0.3+3.0,staticHeight))),staticAmount))*staticStrength;
 }
 
-static vec2 radialDistortion(vec2 pos, float distortion)
+vec2 radialDistortion(vec2 pos, float distortion)
 {
     vec2 cc = pos - vec2(0.5, 0.5);
     float dist = dot(cc, cc) * distortion;
