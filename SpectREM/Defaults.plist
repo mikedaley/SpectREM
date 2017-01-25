@@ -4,8 +4,6 @@
 <dict>
 	<key>displayBorderWidth</key>
 	<integer>16</integer>
-	<key>displayPixelated</key>
-	<true/>
 	<key>displayCurve</key>
 	<real>0.125</real>
 	<key>displaySaturation</key>
@@ -23,6 +21,14 @@
 	<key>displayRGBOffset</key>
 	<integer>0</integer>
 	<key>displayHorizOffset</key>
+	<integer>0</integer>
+	<key>displayStatic</key>
+	<integer>0</integer>
+	<key>displayVertJump</key>
+	<integer>0</integer>
+	<key>displayVertRoll</key>
+	<integer>0</integer>
+	<key>displayShowReflection</key>
 	<integer>0</integer>
 	<key>soundVolume</key>
 	<real>1</real>

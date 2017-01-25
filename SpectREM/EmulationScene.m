@@ -30,6 +30,10 @@
     [self removeObserver:self forKeyPath:@"displayScanLine"];
     [self removeObserver:self forKeyPath:@"displayRGBOffset"];
     [self removeObserver:self forKeyPath:@"displayHorizOffset"];
+    [self removeObserver:self forKeyPath:@"displayVertJump"];
+    [self removeObserver:self forKeyPath:@"displayVertRoll"];
+    [self removeObserver:self forKeyPath:@"displayStatic"];
+    [self removeObserver:self forKeyPath:@"displayShowReflection"];
     [self removeObserver:self forKeyPath:@"screenHeight"];
 }
 
@@ -40,7 +44,7 @@
         self.emulationBackingSprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationBackingSprite"];
         self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationDisplaySprite"];
 
-        _shader = [SKShader shaderWithFileNamed:@"CRT1.fsh"];
+        _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
         _shader.attributes = @[
                                [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeFloat],
@@ -53,6 +57,10 @@
                                [SKAttribute attributeWithName:@"u_scan_line" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_rgb_offset" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_horiz_offset" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_vert_jump" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_vert_roll" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_static" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_show_reflection" type:SKAttributeTypeFloat],
                                ];
         _shader.uniforms = @[
                              [SKUniform uniformWithName:@"u_reflection" texture:[SKTexture textureWithImageNamed:@"reflection"]]
@@ -67,7 +75,6 @@
 
 - (void)setupObservers
 {
-    [self addObserver:self forKeyPath:@"displayPixelated" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
@@ -78,6 +85,10 @@
     [self addObserver:self forKeyPath:@"displayScanLine" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayRGBOffset" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayHorizOffset" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayVertJump" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayVertRoll" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayStatic" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayShowReflection" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"screenHeight" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
@@ -122,6 +133,22 @@
     else if ([keyPath isEqualToString:@"displayHorizOffset"])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_horiz_offset"];
+    }
+    else if ([keyPath isEqualToString:@"displayVertJump"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vert_jump"];
+    }
+    else if ([keyPath isEqualToString:@"displayVertRoll"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vert_roll"];
+    }
+    else if ([keyPath isEqualToString:@"displayStatic"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_static"];
+    }
+    else if ([keyPath isEqualToString:@"displayShowReflection"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_show_reflection"];
     }
 }
 

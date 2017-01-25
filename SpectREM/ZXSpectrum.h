@@ -23,7 +23,7 @@ static int const cBitmapAddress = 16384;
 static int const cBitmapSize = 6144;
 
 // Used to increase the volume of the beeper output. Too high and the output is clipped
-static int const cAudioBeeperVolumeMultiplier = 48;
+static int const cAudioBeeperVolumeMultiplier = 64;
 
 // Sampled rate used to drive the update frequency in the audio engine which is then used to generate new frames e.g. 50.08 fps
 static int const cAudioSampleRate = 192000;
@@ -175,7 +175,6 @@ typedef NS_ENUM(int, TapeLoadingState)
 // Queue on which the emulation is run
 @property (strong) dispatch_queue_t emulationQueue;
 
-@property (assign) float displayBorderWidth;
 @property (assign) float soundVolume;
 @property (assign) double soundLowPassFilter;
 @property (assign) double soundHighPassFilter;

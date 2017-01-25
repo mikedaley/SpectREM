@@ -174,12 +174,15 @@ NS_ENUM(NSUInteger, MachineType)
     [_emulationScene bind:@"displayScanLine" toObject:_configViewController withKeyPath:@"displayScanLine" options:nil];
     [_emulationScene bind:@"displayRGBOffset" toObject:_configViewController withKeyPath:@"displayRGBOffset" options:nil];
     [_emulationScene bind:@"displayHorizOffset" toObject:_configViewController withKeyPath:@"displayHorizOffset" options:nil];
+    [_emulationScene bind:@"displayVertJump" toObject:_configViewController withKeyPath:@"displayVertJump" options:nil];
+    [_emulationScene bind:@"displayVertRoll" toObject:_configViewController withKeyPath:@"displayVertRoll" options:nil];
+    [_emulationScene bind:@"displayStatic" toObject:_configViewController withKeyPath:@"displayStatic" options:nil];
+    [_emulationScene bind:@"displayShowReflection" toObject:_configViewController withKeyPath:@"displayShowReflection" options:nil];
 
 }
 
 - (void)setupMachineBindings
 {
-    [_machine bind:@"displayBorderWidth" toObject:_configViewController withKeyPath:@"displayBorderWidth" options:nil];
     [_machine bind:@"soundHighPassFilter" toObject:_configViewController withKeyPath:@"soundHighPassFilter" options:nil];
     [_machine bind:@"soundLowPassFilter" toObject:_configViewController withKeyPath:@"soundLowPassFilter" options:nil];
     [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
@@ -208,7 +211,6 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)removeBindings
 {
-    [_emulationScene unbind:@"displayPixelated"];
     [_emulationScene unbind:@"displayCurve"];
     [_emulationScene unbind:@"displaySaturation"];
     [_emulationScene unbind:@"displayContrast"];
@@ -216,8 +218,14 @@ NS_ENUM(NSUInteger, MachineType)
     [_emulationScene unbind:@"displayBrightness"];
     [_emulationScene unbind:@"displayVignetteX"];
     [_emulationScene unbind:@"displayVignetteY"];
+    [_emulationScene unbind:@"displayScanLine"];
+    [_emulationScene unbind:@"displayRGBOffset"];
+    [_emulationScene unbind:@"displayHorizOffset"];
+    [_emulationScene unbind:@"displayVertJump"];
+    [_emulationScene unbind:@"displayVertRoll"];
+    [_emulationScene unbind:@"displayStatic"];
+    [_emulationScene unbind:@"displayShowReflection"];
     
-    [_machine unbind:@"displayBorderWidth"];
     [_machine unbind:@"soundHighPassFilter"];
     [_machine unbind:@"soundLowPassFilter"];
     [_machine unbind:@"soundVolume"];

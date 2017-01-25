@@ -30,7 +30,10 @@
 @property (assign) float displayScanLine;
 @property (assign) float displayRGBOffset;
 @property (assign) float displayHorizOffset;
-    
+@property (assign) float displayVertJump;
+@property (assign) float displayVertRoll;
+@property (assign) float displayStatic;
+@property (assign) float displayShowReflection;
 
 // Sound properties
 @property (assign) float maxSoundVolume;

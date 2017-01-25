@@ -26,7 +26,11 @@
 @property (assign) double displayScanLine;
 @property (assign) double displayRGBOffset;
 @property (assign) double displayHorizOffset;
+@property (assign) double displayVertJump;
+@property (assign) double displayVertRoll;
+@property (assign) double displayStatic;
 @property (assign) double screenHeight;
+@property (assign) double displayShowReflection;
 
 #pragma mark - Methods
 

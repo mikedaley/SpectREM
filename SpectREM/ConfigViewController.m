@@ -26,6 +26,13 @@
     [_preferences removeObserver:self forKeyPath:@"displayVignetteX"];
     [_preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
     [_preferences removeObserver:self forKeyPath:@"displayVignetteY"];
+    [_preferences removeObserver:self forKeyPath:@"displayScanLine"];
+    [_preferences removeObserver:self forKeyPath:@"displayRGBOffset"];
+    [_preferences removeObserver:self forKeyPath:@"displayHorizOffset"];
+    [_preferences removeObserver:self forKeyPath:@"displayVertJump"];
+    [_preferences removeObserver:self forKeyPath:@"displayVertRoll"];
+    [_preferences removeObserver:self forKeyPath:@"displayStatic"];
+    [_preferences removeObserver:self forKeyPath:@"displayShowReflection"];
 
     [_preferences removeObserver:self forKeyPath:@"soundVolume"];
     [_preferences removeObserver:self forKeyPath:@"soundLowPassFilter"];
@@ -58,8 +65,12 @@
         [_preferences addObserver:self forKeyPath:@"displayScanLine" options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:@"displayRGBOffset" options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:@"displayHorizOffset" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayVertJump" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayVertRoll" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayStatic" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayShowReflection" options:NSKeyValueObservingOptionNew context:NULL];
         
-        // Set the maximum volume that the volume control can select. > 1.0 means we are amplifying the output
+        // Set the maximum volume that the volume control can select with > 1.0 means we are amplifying the output
         self.maxSoundVolume = 3.0;
         
         [_preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
@@ -155,7 +166,11 @@
              @"acceleratedMultiplier",
              @"displayScanLine",
              @"displayRGBOffset",
-             @"displayHorizOffset"
+             @"displayHorizOffset",
+             @"displayVertJump",
+             @"displayVertRoll",
+             @"displayStatic",
+             @"displayShowReflection"
              ];
 }
 
