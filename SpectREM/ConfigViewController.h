@@ -20,19 +20,23 @@
 // Display properties
 @property (assign) double displayBorderWidth;
 @property (assign) bool displayPixelated;
-@property (assign) double displayCurve;
-@property (assign) double displaySaturation;
-@property (assign) double displayContrast;
-@property (assign) double displayBrightness;
-@property (assign) double displayShowVignette;
-@property (assign) double displayVignetteX;
-@property (assign) double displayVignetteY;
+@property (assign) float displayCurve;
+@property (assign) float displaySaturation;
+@property (assign) float displayContrast;
+@property (assign) float displayBrightness;
+@property (assign) float displayShowVignette;
+@property (assign) float displayVignetteX;
+@property (assign) float displayVignetteY;
+@property (assign) float displayScanLine;
+@property (assign) float displayRGBOffset;
+@property (assign) float displayHorizOffset;
+    
 
 // Sound properties
-@property (assign) double maxSoundVolume;
-@property (assign) double soundVolume;
-@property (assign) double soundHighPassFilter;
-@property (assign) double soundLowPassFilter;
+@property (assign) float maxSoundVolume;
+@property (assign) float soundVolume;
+@property (assign) float soundHighPassFilter;
+@property (assign) float soundLowPassFilter;
 @property (assign) bool AYChannelA;
 @property (assign) bool AYChannelB;
 @property (assign) bool AYChannelC;

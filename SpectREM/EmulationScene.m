@@ -27,6 +27,9 @@
     [self removeObserver:self forKeyPath:@"displayShowVignette"];
     [self removeObserver:self forKeyPath:@"displayVignetteX"];
     [self removeObserver:self forKeyPath:@"displayVignetteY"];
+    [self removeObserver:self forKeyPath:@"displayScanLine"];
+    [self removeObserver:self forKeyPath:@"displayRGBOffset"];
+    [self removeObserver:self forKeyPath:@"displayHorizOffset"];
     [self removeObserver:self forKeyPath:@"screenHeight"];
 }
 
@@ -47,6 +50,9 @@
                                [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
                                [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_scan_line" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_rgb_offset" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_horiz_offset" type:SKAttributeTypeFloat],
                                ];
         _shader.uniforms = @[
                              [SKUniform uniformWithName:@"u_reflection" texture:[SKTexture textureWithImageNamed:@"reflection"]]
@@ -69,6 +75,9 @@
     [self addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayScanLine" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayRGBOffset" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayHorizOffset" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"screenHeight" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
@@ -102,16 +111,17 @@
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_y"];
     }
-    else if ([keyPath isEqualToString:@"displayPixelated"])
+    else if ([keyPath isEqualToString:@"displayScanLine"])
     {
-        if ([change[NSKeyValueChangeNewKey] boolValue])
-        {
-            self.emulationDisplaySprite.shader = nil;
-        }
-        else
-        {
-            self.emulationDisplaySprite.shader = _shader;
-        }
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_scan_line"];
+    }
+    else if ([keyPath isEqualToString:@"displayRGBOffset"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_rgb_offset"];
+    }
+    else if ([keyPath isEqualToString:@"displayHorizOffset"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_horiz_offset"];
     }
 }
 

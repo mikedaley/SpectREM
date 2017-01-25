@@ -1,10 +1,10 @@
 // change these values to 0.0 to turn off individual effects
-float vertJerkOpt = 0.0;
-float vertMovementOpt = 0.0;
-float bottomStaticOpt = 0.0;
-float scalinesOpt = 1.0;
-float rgbOffsetOpt = 1.0;
-float horzFuzzOpt = 0.0;
+__constant float vertJerkOpt = 0.0;
+__constant float vertMovementOpt = 0.0;
+__constant float bottomStaticOpt = 0.0;
+__constant float scalinesOpt = 0.6;
+__constant float rgbOffsetOpt = 0.4;
+__constant float horzFuzzOpt = 0.2;
 
 // Noise generation functions borrowed from:
 // https://github.com/ashima/webgl-noise/blob/master/src/noise2D.glsl
@@ -67,7 +67,7 @@ float snoise(vec2 v)
     vec3 g;
     g.x  = a0.x  * x0.x  + h.x  * x0.y;
     g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 200.0 * dot(m, g);
+    return 130.0 * dot(m, g);
 }
 
 float staticV(vec2 texCoord, float time) {
@@ -84,24 +84,41 @@ vec2 radialDistortion(vec2 pos, float distortion)
     return (pos + cc * (0.5 + dist) * dist);
 }
 
+vec3 colorCorrection(vec3 color, float saturation, float contrast, float brightness)
+{
+    const vec3 meanLuminosity = vec3(0.5, 0.5, 0.5);
+    const vec3 rgb2greyCoeff = vec3(0.2126, 0.7152, 0.0722);    // Updated greyscal coefficients for sRGB and modern TVs
+    
+    vec3 brightened = color * brightness;
+    float intensity = dot(brightened, rgb2greyCoeff);
+    vec3 saturated = mix(vec3(intensity), brightened, saturation);
+    vec3 contrasted = mix(meanLuminosity, saturated, contrast);
+    
+    return contrasted;
+}
+
+vec3 vegnetteColor(vec3 color, vec2 coord, float vig_x, float vig_y)
+{
+    float dist = distance(coord, vec2(0.5, 0.5));
+    return vec3(smoothstep(vig_x, vig_y, dist));
+}
+
 void main()
 {
-    
-//    vec2 texCoord =  v_tex_coord.xy; ///vec2(320 , u_screen_height);
     vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
-//    vec2 texCoord = curve(v_tex_coord, u_distortion);
     
     float jerkOffset = (1.0-step(snoise(vec2(u_time*1.3,5.0)),0.8))*0.05;
 
-    float fuzzOffset = snoise(vec2(u_time*7.0,texCoord.y*200))*0.001;
-    float largeFuzzOffset = snoise(vec2(u_time*7.0,texCoord.y*2.0))*0.001;
+    float fuzzOffset = snoise(vec2(u_time*15.0,texCoord.y*80.0))*0.003;
+    float largeFuzzOffset = snoise(vec2(u_time*1.0,texCoord.y*25.0))*0.004;
 
     float vertMovementOn = (1.0-step(snoise(vec2(u_time *0.2,8.0)),0.4))*vertMovementOpt;
     float vertJerk = (1.0-step(snoise(vec2(u_time *1.5,5.0)),0.6))*vertJerkOpt;
     float vertJerk2 = (1.0-step(snoise(vec2(u_time *5.5,5.0)),0.2))*vertJerkOpt;
     float yOffset = abs(sin(u_time)*4.0)*vertMovementOn+vertJerk*vertJerk2*0.3;
     float y = mod(texCoord.y+yOffset,1.0);
-    float xOffset = (fuzzOffset + largeFuzzOffset) * horzFuzzOpt;
+    
+    float xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
 
     float staticVal = 0.0;
     for (float y = -1.0; y <= 1.0; y += 1.0) {
@@ -112,26 +129,31 @@ void main()
 
     staticVal *= bottomStaticOpt;
     
-    float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset -0.002*rgbOffsetOpt,y)).r+staticVal;
+    float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset -0.01*u_rgb_offset,y)).r+staticVal;
     float green = 	texture2D(	u_texture, 	vec2(texCoord.x + xOffset,	  y)).g+staticVal;
-    float blue 	=	texture2D(	u_texture, 	vec2(texCoord.x + xOffset +0.002*rgbOffsetOpt,y)).b+staticVal;
+    float blue 	=	texture2D(	u_texture, 	vec2(texCoord.x + xOffset +0.01*u_rgb_offset,y)).b+staticVal;
     
     vec3 color = vec3(red,green,blue);
-    float scanline = sin(texCoord.y*800.0)*0.02*scalinesOpt;
+
+    color = colorCorrection(color, u_saturation, u_contrast, u_brightness);
+
+    float scanline = sin(texCoord.y*800.0)*0.04*u_scan_line;
     color -= scanline;
-    
+
+    vec3 vignette = vegnetteColor(color, texCoord, u_vignette_x, u_vignette_y);
+
     vec4 reflection_color = texture2D(u_reflection, texCoord);
     
     // If the texture coordinate is outside of the texture coordinates then discard the texel
     if (texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1)
     {
-        
         color = vec3(0.1, 0.1, 0.1);
     }
     
-//    reflection_color.r *= 1;
-//    reflection_color.g *= 1;
-//    reflection_color.b *= 1;
+    if (u_show_vignette == 1.0)
+    {
+        color *= vignette;
+    }
     
     gl_FragColor = vec4(mix(vec3(reflection_color) ,color , 0.8), 1.0);
 //    gl_FragColor = vec4(color, 1.0);

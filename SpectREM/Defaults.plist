@@ -18,6 +18,12 @@
 	<integer>1</integer>
 	<key>displayVignetteY</key>
 	<real>0.25</real>
+	<key>displayScanLine</key>
+	<integer>0</integer>
+	<key>displayRGBOffset</key>
+	<integer>0</integer>
+	<key>displayHorizOffset</key>
+	<integer>0</integer>
 	<key>soundVolume</key>
 	<real>1</real>
 	<key>soundLowPassFilter</key>

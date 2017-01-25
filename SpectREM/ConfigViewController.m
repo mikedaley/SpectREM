@@ -18,7 +18,6 @@
 {
     _preferences = [NSUserDefaults standardUserDefaults];
     [_preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
-    [_preferences removeObserver:self forKeyPath:@"displayPixelated"];
     [_preferences removeObserver:self forKeyPath:@"displayCurve"];
     [_preferences removeObserver:self forKeyPath:@"displaySaturation"];
     [_preferences removeObserver:self forKeyPath:@"displayContrast"];
@@ -49,7 +48,6 @@
         _preferences = [NSUserDefaults standardUserDefaults];
         
         [_preferences addObserver:self forKeyPath:@"displayBorderWidth" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayPixelated" options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
@@ -57,6 +55,9 @@
         [_preferences addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayScanLine" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayRGBOffset" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:@"displayHorizOffset" options:NSKeyValueObservingOptionNew context:NULL];
         
         // Set the maximum volume that the volume control can select. > 1.0 means we are amplifying the output
         self.maxSoundVolume = 3.0;
@@ -151,7 +152,10 @@
              @"AYChannelABalance",
              @"AYChannelBBalance",
              @"AYChannelCBalance",
-             @"acceleratedMultiplier"
+             @"acceleratedMultiplier",
+             @"displayScanLine",
+             @"displayRGBOffset",
+             @"displayHorizOffset"
              ];
 }
 
@@ -165,7 +169,6 @@
 - (NSArray *)observableBoolKeys
 {
     return @[
-             @"displayPixelated",
              @"AYChannelA",
              @"AYChannelB",
              @"AYChannelC",

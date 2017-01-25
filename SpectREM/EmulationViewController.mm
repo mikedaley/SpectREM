@@ -164,7 +164,6 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)setupSceneBindings
 {
-    [_emulationScene bind:@"displayPixelated" toObject:_configViewController withKeyPath:@"displayPixelated" options:nil];
     [_emulationScene bind:@"displayCurve" toObject:_configViewController withKeyPath:@"displayCurve" options:nil];
     [_emulationScene bind:@"displaySaturation" toObject:_configViewController withKeyPath:@"displaySaturation" options:nil];
     [_emulationScene bind:@"displayContrast" toObject:_configViewController withKeyPath:@"displayContrast" options:nil];
@@ -172,6 +171,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_emulationScene bind:@"displayShowVignette" toObject:_configViewController withKeyPath:@"displayShowVignette" options:nil];
     [_emulationScene bind:@"displayVignetteX" toObject:_configViewController withKeyPath:@"displayVignetteX" options:nil];
     [_emulationScene bind:@"displayVignetteY" toObject:_configViewController withKeyPath:@"displayVignetteY" options:nil];
+    [_emulationScene bind:@"displayScanLine" toObject:_configViewController withKeyPath:@"displayScanLine" options:nil];
+    [_emulationScene bind:@"displayRGBOffset" toObject:_configViewController withKeyPath:@"displayRGBOffset" options:nil];
+    [_emulationScene bind:@"displayHorizOffset" toObject:_configViewController withKeyPath:@"displayHorizOffset" options:nil];
 
 }
 
