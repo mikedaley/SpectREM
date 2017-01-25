@@ -110,23 +110,40 @@ void main()
     float fuzzOffset = snoise(vec2(u_time*15.0,texCoord.y*80.0))*0.003;
     float largeFuzzOffset = snoise(vec2(u_time*1.0,texCoord.y*25.0))*0.004;
 
-    float vertMovementOn = (1.0-step(snoise(vec2(u_time *0.2,8.0)),0.4))*u_vert_roll;
-    float vertJerk = (1.0-step(snoise(vec2(u_time *1.5,5.0)),0.6))*u_vert_jump;
-    float vertJerk2 = (1.0-step(snoise(vec2(u_time *5.5,5.0)),0.2))*u_vert_jump;
-    float yOffset = abs(sin(u_time)*4.0)*vertMovementOn+vertJerk*vertJerk2*0.3;
+    float vertMovementOn = 0.0;
+    float vertJerk = 0.0;
+    float vertJerk2 = 0.0;
+    float yOffset = 0.0;
+    float xOffset = 0.0;
+    
+    if (u_vert_roll == 1.0)
+    {
+        vertMovementOn = (1.0-step(snoise(vec2(u_time *0.2,8.0)),0.4))*u_vert_roll;
+    }
+    
+    if (u_vert_jump == 1.0)
+    {
+        vertJerk = (1.0-step(snoise(vec2(u_time *1.5,5.0)),0.6))*u_vert_jump;
+        vertJerk2 = (1.0-step(snoise(vec2(u_time *5.5,5.0)),0.2))*u_vert_jump;
+        yOffset = abs(sin(u_time)*4.0)*vertMovementOn+vertJerk*vertJerk2*0.3;
+    }
+        
     float y = mod(texCoord.y+yOffset,1.0);
     
-    float xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
+    xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
 
     float staticVal = 0.0;
-    for (float y = -1.0; y <= 1.0; y += 1.0) {
-        float maxDist = 5.0/200.0;
-        float dist = y/200.0;
-        staticVal += staticV(vec2(texCoord.x,texCoord.y+dist), u_time)*(maxDist-abs(dist))*1.5;
+    
+    if (u_static > 0.0)
+    {
+        for (float y = -1.0; y <= 1.0; y += 1.0) {
+            float maxDist = 5.0/200.0;
+            float dist = y/200.0;
+            staticVal += staticV(vec2(texCoord.x,texCoord.y+dist), u_time)*(maxDist-abs(dist))*1.5;
+        }
+        staticVal *= u_static;
     }
 
-    staticVal *= u_static;
-    
     float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset -0.01*u_rgb_offset,y)).r+staticVal;
     float green = 	texture2D(	u_texture, 	vec2(texCoord.x + xOffset,	  y)).g+staticVal;
     float blue 	=	texture2D(	u_texture, 	vec2(texCoord.x + xOffset +0.01*u_rgb_offset,y)).b+staticVal;
