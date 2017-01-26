@@ -23,7 +23,7 @@ static int const cBitmapAddress = 16384;
 static int const cBitmapSize = 6144;
 
 // Used to increase the volume of the beeper output. Too high and the output is clipped
-static int const cAudioBeeperVolumeMultiplier = 64;
+static int const cAudioBeeperVolumeMultiplier = 48;
 
 // Sampled rate used to drive the update frequency in the audio engine which is then used to generate new frames e.g. 50.08 fps
 static int const cAudioSampleRate = 192000;

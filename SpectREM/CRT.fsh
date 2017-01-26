@@ -6,6 +6,7 @@
 // https://github.com/ashima/webgl-noise/blob/master/src/noise2D.glsl
 //
 // Updates made my: Mike Daley on 24th January 2017
+//
 
 vec3 mod289(vec3 x) {
     return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -16,7 +17,7 @@ vec2 mod289(vec2 x) {
 }
 
 vec3 permute(vec3 x) {
-    return mod289(((x*34.0)+1.0)*x);
+    return mod289(((x * 34.0) + 1.0) * x);
 }
 
 float snoise(vec2 v)
@@ -45,7 +46,7 @@ float snoise(vec2 v)
     vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
                      + i.x + vec3(0.0, i1.x, 1.0 ));
     
-    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
     m = m*m ;
     m = m*m ;
     
@@ -59,7 +60,7 @@ float snoise(vec2 v)
     
     // Normalise gradients implicitly by scaling m
     // Approximation of: m *= inversesqrt( a0*a0 + h*h );
-    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+    m *= 1.79284291400159 - 0.85373472095314 * ( a0 * a0 + h * h );
     
     // Compute final noise value at P
     vec3 g;
@@ -69,10 +70,10 @@ float snoise(vec2 v)
 }
 
 float staticV(vec2 texCoord, float time) {
-    float staticHeight = snoise(vec2(9.0,time*1.2+3.0))*0.3+5.0;
-    float staticAmount = snoise(vec2(1.0,time*1.2-6.0))*0.1+0.3;
-    float staticStrength = snoise(vec2(-9.75,time*0.6-3.0))*2.0+2.0;
-    return (1.0-step(snoise(vec2(5.0*pow(time,2.0)+pow(texCoord.x*7.0,1.2),pow((mod(time,100.0)+100.0)*texCoord.y*0.3+3.0,staticHeight))),staticAmount))*staticStrength;
+    float staticHeight = snoise(vec2(9.0,time * 1.2 + 3.0)) * 0.3 + 5.0;
+    float staticAmount = snoise(vec2(1.0,time * 1.2 - 6.0)) * 0.1 + 0.3;
+    float staticStrength = snoise(vec2(-9.75, time * 0.6- 3.0)) * 2.0 + 2.0;
+    return (1.0 - step(snoise(vec2(5.0 * pow(time, 2.0) + pow(texCoord.x * 7.0, 1.2), pow((mod(time, 100.0) + 100.0) * texCoord.y * 0.3 + 3.0, staticHeight))), staticAmount)) * staticStrength;
 }
 
 vec2 radialDistortion(vec2 pos, float distortion)
@@ -105,30 +106,37 @@ void main()
 {
     vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
     
-    float jerkOffset = (1.0-step(snoise(vec2(u_time*1.3,5.0)),0.8))*0.05;
-
-    float fuzzOffset = snoise(vec2(u_time*15.0,texCoord.y*80.0))*0.003;
-    float largeFuzzOffset = snoise(vec2(u_time*1.0,texCoord.y*25.0))*0.004;
-
     float vertMovementOn = 0.0;
     float vertJerk = 0.0;
     float vertJerk2 = 0.0;
     float yOffset = 0.0;
     float xOffset = 0.0;
+    float fuzzOffset = 0.0;
+    float largeFuzzOffset = 0.0;
     
-    if (u_vert_roll == 1.0)
+    if (u_vert_roll > 0.0)
     {
-        vertMovementOn = (1.0-step(snoise(vec2(u_time *0.2,8.0)),0.4))*u_vert_roll;
+        vertMovementOn = (1.0 - step(snoise(vec2(u_time * 0.2, 8.0)), 0.4)) * u_vert_roll;
     }
     
-    if (u_vert_jump == 1.0)
+    if (u_vert_jump > 0.0)
     {
-        vertJerk = (1.0-step(snoise(vec2(u_time *1.5,5.0)),0.6))*u_vert_jump;
-        vertJerk2 = (1.0-step(snoise(vec2(u_time *5.5,5.0)),0.2))*u_vert_jump;
-        yOffset = abs(sin(u_time)*4.0)*vertMovementOn+vertJerk*vertJerk2*0.3;
+        vertJerk = (1.0 - step(snoise(vec2(u_time * 1.5, 5.0)), 0.6)) * u_vert_jump;
+        vertJerk2 = (1.0 - step(snoise(vec2(u_time * 5.5, 5.0)), 0.2)) * u_vert_jump;
     }
-        
-    float y = mod(texCoord.y+yOffset,1.0);
+    
+    if (u_horiz_offset > 0.0)
+    {
+        fuzzOffset = snoise(vec2(u_time * 15.0, texCoord.y * 80.0)) * 0.003;
+        largeFuzzOffset = snoise(vec2(u_time * 1.0, texCoord.y * 25.0)) * 0.004;
+    }
+
+    if (u_vert_roll > 0.0 || u_vert_jump > 0.0)
+    {
+        yOffset = abs(sin(u_time) * 4.0) * vertMovementOn + vertJerk * vertJerk2 * 0.3;
+    }
+
+    float y = mod(texCoord.y + yOffset, 1.0);
     
     xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
 
@@ -137,16 +145,16 @@ void main()
     if (u_static > 0.0)
     {
         for (float y = -1.0; y <= 1.0; y += 1.0) {
-            float maxDist = 5.0/200.0;
-            float dist = y/200.0;
-            staticVal += staticV(vec2(texCoord.x,texCoord.y+dist), u_time)*(maxDist-abs(dist))*1.5;
+            float maxDist = 5.0 / 200.0;
+            float dist = y / 200.0;
+            staticVal += staticV(vec2(texCoord.x, texCoord.y + dist), u_time) * (maxDist-abs(dist)) * 1.5;
         }
         staticVal *= u_static;
     }
 
-    float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset -0.01*u_rgb_offset,y)).r+staticVal;
+    float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset - 0.01 * u_rgb_offset, y)).r + staticVal;
     float green = 	texture2D(	u_texture, 	vec2(texCoord.x + xOffset,	  y)).g+staticVal;
-    float blue 	=	texture2D(	u_texture, 	vec2(texCoord.x + xOffset +0.01*u_rgb_offset,y)).b+staticVal;
+    float blue 	=	texture2D(	u_texture, 	vec2(texCoord.x + xOffset + 0.01 * u_rgb_offset, y)).b + staticVal;
     
     vec3 color = vec3(red,green,blue);
 
