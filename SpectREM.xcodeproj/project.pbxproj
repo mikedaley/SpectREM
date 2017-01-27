@@ -31,10 +31,9 @@
 		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
 		ED804FD71DD32443004B6F31 /* NSClipView+Flipped.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */; };
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
-		EDAAD8C21E05893F0070153E /* ZXTape.m in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.m */; };
+		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
-		EDEBA7A61DF02C9300671446 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA7A41DF02C9300671446 /* InfoViewController.m */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
 		EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EDF3A4A61DB0D60700511BAF /* EmulationScene.sks */; };
@@ -114,13 +113,11 @@
 		ED804FD81DD32EAC004B6F31 /* NSView+Vibrancy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+Vibrancy.h"; sourceTree = "<group>"; };
 		ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+Vibrancy.m"; sourceTree = "<group>"; };
 		EDAAD8C01E05893F0070153E /* ZXTape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXTape.h; sourceTree = "<group>"; };
-		EDAAD8C11E05893F0070153E /* ZXTape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXTape.m; sourceTree = "<group>"; };
+		EDAAD8C11E05893F0070153E /* ZXTape.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXTape.mm; sourceTree = "<group>"; };
 		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
 		EDEBA79F1DEEDCB000671446 /* Snapshot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Snapshot.mm; sourceTree = "<group>"; };
-		EDEBA7A31DF02C9300671446 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
-		EDEBA7A41DF02C9300671446 /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF3A4A01DB0D60700511BAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDF3A4A11DB0D60700511BAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -268,18 +265,9 @@
 				EDEBA79E1DEEDCB000671446 /* Snapshot.h */,
 				EDEBA79F1DEEDCB000671446 /* Snapshot.mm */,
 				EDAAD8C01E05893F0070153E /* ZXTape.h */,
-				EDAAD8C11E05893F0070153E /* ZXTape.m */,
+				EDAAD8C11E05893F0070153E /* ZXTape.mm */,
 			);
 			name = Snapshot/Tape;
-			sourceTree = "<group>";
-		};
-		EDEBA7A21DF02C7600671446 /* Info View Controller */ = {
-			isa = PBXGroup;
-			children = (
-				EDEBA7A31DF02C9300671446 /* InfoViewController.h */,
-				EDEBA7A41DF02C9300671446 /* InfoViewController.m */,
-			);
-			name = "Info View Controller";
 			sourceTree = "<group>";
 		};
 		EDF3A4941DB0D60700511BAF = {
@@ -356,7 +344,6 @@
 				EDF3A4BC1DB0D68800511BAF /* Emulation Scene */,
 				ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */,
 				ED619C881DC0BE39004A60CA /* Emulation View Controller */,
-				EDEBA7A21DF02C7600671446 /* Info View Controller */,
 				ED619C891DC0BE44004A60CA /* Config View Controller */,
 				ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */,
 				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,
@@ -574,7 +561,6 @@
 				99F71A861DDB1A4B0093CAE4 /* CPUViewController.mm in Sources */,
 				995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */,
 				99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */,
-				EDEBA7A61DF02C9300671446 /* InfoViewController.m in Sources */,
 				EDF3A4EC1DB0D7C700511BAF /* AudioQueue.m in Sources */,
 				EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */,
 				ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */,
@@ -598,7 +584,7 @@
 				EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */,
 				99F71A801DDB13CC0093CAE4 /* CenteredClipView.m in Sources */,
 				EDF3A4FD1DB7745700511BAF /* NSObject+Bindings.m in Sources */,
-				EDAAD8C21E05893F0070153E /* ZXTape.m in Sources */,
+				EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

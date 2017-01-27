@@ -200,7 +200,7 @@ public:
 	void					Z80CoreMemoryContention(unsigned short address, unsigned int t_states);
 	void					Z80CoreIOContention(unsigned short address, unsigned int t_states);
     
-    bool                    saving;
+    bool                    saveTrapTriggered;
 
 protected:
 	#include "Z80Core_MainOpcodes.h"

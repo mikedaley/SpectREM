@@ -7,6 +7,7 @@
 //
 
 #import "EmulationScene.h"
+#import "ConfigViewController.h"
 
 #pragma mark - Implementation
 
@@ -19,7 +20,6 @@
 - (void)dealloc
 {
     NSLog(@"Deallocating Scene");
-    [self removeObserver:self forKeyPath:@"displayPixelated"];
     [self removeObserver:self forKeyPath:@"displayCurve"];
     [self removeObserver:self forKeyPath:@"displaySaturation"];
     [self removeObserver:self forKeyPath:@"displayContrast"];

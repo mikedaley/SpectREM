@@ -8,8 +8,44 @@
 
 #import <Cocoa/Cocoa.h>
 
+#pragma mark - Key Path Constants
+
+extern NSString *const displayBorderWidth;
+
+
 @class ORSSerialPortManager;
 @class ORSSerialPort;
+
+extern NSString *const cDisplayBorderWidth;
+extern NSString *const cDisplayCurve;
+extern NSString *const cDisplaySaturation;
+extern NSString *const cDisplayContrast;
+extern NSString *const cDisplayBrightness;
+extern NSString *const cDisplayShowVignette;
+extern NSString *const cDisplayVignetteX;
+extern NSString *const cDisplayVignetteY;
+extern NSString *const cDisplayScanLine;
+extern NSString *const cDisplayRGBOffset;
+extern NSString *const cDisplayHorizOffset;
+extern NSString *const cDisplayVertJump;
+extern NSString *const cDisplayVertRoll;
+extern NSString *const cDisplayStatic;
+extern NSString *const cDisplayShowReflection;
+extern NSString *const cSoundVolume;
+extern NSString *const cSoundLowPassFilter;
+extern NSString *const cSoundHighPassFilter;
+extern NSString *const cAYChannelA;
+extern NSString *const cAYChannelB;
+extern NSString *const cAYChannelC;
+extern NSString *const cAYChannelABalance;
+extern NSString *const cAYChannelBBalance;
+extern NSString *const cAYChannelCBalance;
+extern NSString *const cCurrentMachineType;
+extern NSString *const cAcceleratedMultiplier;
+extern NSString *const cAccelerate;
+extern NSString *const cSerialPort;
+extern NSString *const cUseSmartLink;
+extern NSString *const cSceneScaleMode;
 
 @interface ConfigViewController : NSViewController
 

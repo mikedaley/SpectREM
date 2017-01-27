@@ -162,7 +162,6 @@ typedef NS_ENUM(int, TapeLoadingState)
 
 #pragma mark - Properties
 
-
 // Buffer used to hold the sound samples generated for each emulation frame
 @property (assign) short *audioBuffer;
 
@@ -184,8 +183,6 @@ typedef NS_ENUM(int, TapeLoadingState)
 @property (assign) float AYChannelABalance;
 @property (assign) float AYChannelBBalance;
 @property (assign) float AYChannelCBalance;
-
-@property (strong) NSString *corePC;
 
 @property (strong) NSString *snapshotPath;
 

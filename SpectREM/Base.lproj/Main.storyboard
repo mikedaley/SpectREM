@@ -80,20 +80,10 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
-                                        <menuItem title="Reset Preferences" keyEquivalent="R" id="0KF-ZR-5GM" userLabel="Reset Preferences">
+                                        <menuItem title="Reset Preferences" id="0KF-ZR-5GM" userLabel="Reset Preferences">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="resetPreferences:" target="Ady-hI-5gd" id="r0c-pK-4xZ"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="HI0-Eh-qfW"/>
-                                        <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
-                                            <connections>
-                                                <action selector="saveDocument:" target="Ady-hI-5gd" id="teZ-XB-qJY"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Save As…" keyEquivalent="S" id="Bw7-FT-i3A">
-                                            <connections>
-                                                <action selector="saveDocumentAs:" target="Ady-hI-5gd" id="mDf-zr-I0C"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -108,7 +98,8 @@
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="ujU-zz-zhp"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hard Reset" tag="1" keyEquivalent="R" id="qvx-Nm-tSo">
+                                        <menuItem title="Hard Reset" tag="1" id="qvx-Nm-tSo">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="Lyz-79-5Ov"/>
                                             </connections>
@@ -188,26 +179,28 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Tape" id="wel-Ye-3xa">
                                     <items>
-                                        <menuItem title="Play" keyEquivalent="p" id="uHe-W5-ov1" userLabel="Play">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                        <menuItem title="Play" keyEquivalent="P" id="uHe-W5-ov1" userLabel="Play">
                                             <connections>
                                                 <action selector="playTape:" target="Ady-hI-5gd" id="1Gv-Pu-5JC"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Stop" keyEquivalent="s" id="cU7-vK-uqO">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                        <menuItem title="Save" id="mQZ-I8-z3d" userLabel="Play">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="saveTape:" target="Ady-hI-5gd" id="Hfr-Rh-z0e"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Stop" keyEquivalent="S" id="cU7-vK-uqO">
                                             <connections>
                                                 <action selector="stopTape:" target="Ady-hI-5gd" id="4wb-pO-N8z"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rewind" keyEquivalent="r" id="kvv-nr-xKz" userLabel="Rewind">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                        <menuItem title="Rewind" keyEquivalent="R" id="kvv-nr-xKz" userLabel="Rewind">
                                             <connections>
                                                 <action selector="rewindTape:" target="Ady-hI-5gd" id="5Ji-8J-Kbm"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Eject" keyEquivalent="e" id="jue-20-2LA">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                        <menuItem title="Eject" keyEquivalent="E" id="jue-20-2LA">
                                             <connections>
                                                 <action selector="ejectTape:" target="Ady-hI-5gd" id="vYr-VJ-Hhs"/>
                                             </connections>
@@ -219,12 +212,14 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Debug" id="JY9-nv-SyR">
                                     <items>
-                                        <menuItem title="Pause" keyEquivalent="p" id="SzU-5C-4Ft" userLabel="Pause">
+                                        <menuItem title="Pause" id="SzU-5C-4Ft" userLabel="Pause">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="pause:" target="Ady-hI-5gd" id="eTj-os-ojc"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Resume" keyEquivalent="P" id="Fn3-AE-Us1" userLabel="Resume">
+                                        <menuItem title="Resume" id="Fn3-AE-Us1" userLabel="Resume">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="start:" target="Ady-hI-5gd" id="09M-gk-1Fl"/>
                                             </connections>

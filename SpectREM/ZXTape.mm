@@ -7,7 +7,7 @@
 //
 
 #import "ZXTape.h"
-
+#import "Z80Core.h"
 
 @implementation ZXTape
 {
@@ -37,14 +37,15 @@
     int dataBlockLength;
     // How many pulses have been generated for the current data bit;
     int dataPulseCount;
+    
     // Array that contains all the data blocks within the TAP file
     NSMutableArray *tapBlocks;
+    
     // The current block within the tapBlocks array being processed
     int currentBlockIndex;
+    
     // Is a new block about to start
     BOOL newBlock;
-    
-    NSData *tapeData;
 }
 
 - (instancetype)init
@@ -61,22 +62,37 @@
         flipTapeBit = NO;
         tapeInputBit = 0;
         _playing = NO;
+        
+        tapBlocks = [NSMutableArray new];
     }
     return self;
 }
 
-- (BOOL)loadTapeWithURL:(NSURL *)url
+- (void)openTapeWithURL:(NSURL *)url
 {
-    tapeData = [NSData dataWithContentsOfURL:url];
-    [self processTAPFile];
+    self.tapeFileURL = url;
+    self.playing = NO;
+    
+    NSError *error;
+    NSData *tapeData = [NSData dataWithContentsOfURL:self.tapeFileURL options:NULL error:&error];
+    if (!tapeData)
+    {
+        NSLog(@"Error reading tape file: %@ - %@", self.tapeFileURL.path, error.description);
+        self.tapeLoaded = NO;
+        processingState = eNoTape;
+        return;
+    }
+
+    tapBlocks = [NSMutableArray new];
+
+    [self processTAPFileData:tapeData];
     [self printTAPContents];
     self.tapeLoaded = YES;
-    return YES;
 }
 
-- (void)processTAPFile
+- (void)processTAPFileData:(NSData *)data
 {
-    const char *tapeBytes = (const char*)[tapeData bytes];
+    const char *tapeBytes = (const char*)[data bytes];
     
     self.playing = NO;
     pilotPulseTStates = 0;
@@ -89,10 +105,9 @@
     currentBlockIndex = 0;
     self.bytesRemaining = 0;
     newBlock = YES;
-    tapBlocks = [NSMutableArray new];
     
     // Build an array of all the blocks in the TAP file
-    while (currentBytePointer < tapeData.length) {
+    while (currentBytePointer < data.length) {
         
         unsigned short blockLength = ((unsigned short *)&tapeBytes[currentBytePointer])[0];
         currentBytePointer += 2;
@@ -102,9 +117,9 @@
         if (dataType == eProgramHeader && flag != 255)
         {
             ProgramHeader *programHeader = [ProgramHeader new];
-            programHeader.blockData = calloc(blockLength, sizeof(unsigned char));
+            programHeader.blockLength = blockLength;
+            programHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(programHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            currentBytePointer += blockLength;
             dataBlockLength = [programHeader getDataLength];
             self.bytesRemaining += 17;
             [tapBlocks addObject:programHeader];
@@ -113,9 +128,9 @@
         if (dataType == eNumericDataHeader && flag != 255)
         {
             NumericDataHeader *numericDataHeader = [NumericDataHeader new];
-            numericDataHeader.blockData = calloc(blockLength, sizeof(unsigned char));
+            numericDataHeader.blockLength = blockLength;
+            numericDataHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(numericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            currentBytePointer += blockLength;
             dataBlockLength = [numericDataHeader getDataLength];
             self.bytesRemaining += 17;
             [tapBlocks addObject:numericDataHeader];
@@ -124,9 +139,9 @@
         if (dataType == eAlphaNumericDataHeader && flag != 255)
         {
             AlphaNumericDataHeader *alphaNumericDataHeader = [AlphaNumericDataHeader new];
-            alphaNumericDataHeader.blockData = calloc(blockLength, sizeof(unsigned char));
+            alphaNumericDataHeader.blockLength = blockLength;
+            alphaNumericDataHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(alphaNumericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            currentBytePointer += blockLength;
             dataBlockLength = [alphaNumericDataHeader getDataLength];
             self.bytesRemaining += 17;
             [tapBlocks addObject:alphaNumericDataHeader];
@@ -135,9 +150,9 @@
         if (dataType == eByteHeader && flag != 255)
         {
             ByteHeader *byteHeader = [ByteHeader new];
-            byteHeader.blockData = calloc(blockLength, sizeof(unsigned char));
+            byteHeader.blockLength = blockLength;
+            byteHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(byteHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            currentBytePointer += blockLength;
             dataBlockLength = [byteHeader getDataLength];
             self.bytesRemaining += 17;
             [tapBlocks addObject:byteHeader];
@@ -146,12 +161,17 @@
         if (flag == 255)
         {
             DataBlock *dataBlock = [DataBlock new];
+            dataBlock.blockLength = blockLength;
             dataBlock.dataBlockLength = dataBlockLength + 2;
-            dataBlock.blockData = calloc(dataBlockLength + 2, sizeof(unsigned char));
+            dataBlock.blockData = (unsigned char *)calloc(dataBlockLength + 2, sizeof(unsigned char));
             memcpy(dataBlock.blockData, &tapeBytes[currentBytePointer], dataBlockLength + 2);
             currentBytePointer += dataBlockLength + 2;
             self.bytesRemaining += dataBlockLength + 6;
             [tapBlocks addObject:dataBlock];
+        }
+        else
+        {
+            currentBytePointer += blockLength;
         }
     }
 }
@@ -458,7 +478,7 @@
 - (void)blockPauseWithTStates:(int)tStates
 {
     blockPauseTStates += tStates;
-    if (blockPauseTStates > 3500000)
+    if (blockPauseTStates > 3500000 * 1.5)
     {
         currentBlockIndex += 1;
         newBlock = YES;
@@ -470,6 +490,19 @@
     self.playing = YES;
 }
 
+- (void)save
+{
+    NSMutableData *saveData = [NSMutableData new];
+    
+    for (TAPBlock *tapBlock in tapBlocks) {
+        unsigned char length = tapBlock.blockLength;
+        [saveData appendBytes:&length length:sizeof(unsigned short)];
+        [saveData appendBytes:tapBlock.blockData length:length];
+    }
+    
+    [saveData writeToFile:@"/Users/mikedaley/Desktop/testing.tap" atomically:YES];
+}
+
 - (void)stop
 {
     self.playing = NO;
@@ -477,12 +510,12 @@
 
 - (void)rewind
 {
-    [self processTAPFile];
+//    [self processTAPFile];
 }
 
 - (void)eject
 {
-    tapBlocks = nil;
+    tapBlocks = [NSMutableArray new];
     self.tapeLoaded = NO;
 }
 
@@ -496,9 +529,33 @@
 
 #pragma mark - Saving
 
-- (void)createBlockWithType:(unsigned short)blockType
+- (void)saveTAPBlockWithMachine:(ZXSpectrum *)m
 {
+    CZ80Core *core = (CZ80Core *)[m getCore];
     
+    char parity = 0;
+    short length = core->GetRegister(CZ80Core::eREG_DE) + 2;
+
+    NSMutableData *data = [NSMutableData new];
+    
+    [data appendBytes:&length length:2];
+
+    parity = core->GetRegister(CZ80Core::eREG_A);
+    [data appendBytes:&parity length:1];
+    
+    for (int i = 0; i < core->GetRegister(CZ80Core::eREG_DE); i++)
+    {
+        char byte = m->memory[core->GetRegister(CZ80Core::eREG_IX) + i];
+        parity ^= byte;
+        [data appendBytes:&byte length:1];
+    }
+    
+    [data appendBytes:&parity length:1];
+    
+    [self processTAPFileData:data];
+
+    // Once a block has been saved this is the RET address
+    core->SetRegister(CZ80Core::eREG_PC, 0x053d);
 }
 
 #pragma mark - Debug print
@@ -542,7 +599,6 @@
             NSLog(@"Data Block    :");
             NSLog(@"Data Length   : %i", [(DataBlock *)tapBlock getDataLength]);
         }
-        
     }
 }
 
@@ -573,7 +629,7 @@
 
 - (NSString *)getFilename
 {
-    char *filename = calloc(cHeaderFilenameLength, sizeof(char));
+    char *filename = (char *)calloc(cHeaderFilenameLength, sizeof(char));
     memcpy(filename, &_blockData[cHeaderFilenameOffset], cHeaderFilenameLength);
     return [NSString stringWithCString:filename encoding:NSASCIIStringEncoding];
 }
@@ -609,6 +665,11 @@
     return self.blockData[cProgramHeaderChecksumOffset];
 }
 
+- (NSString *)getBlockType
+{
+    return @"Program Header";
+}
+
 @end
 
 #pragma mark - Numeric Data Header
@@ -618,6 +679,11 @@
 - (unsigned char)getVariableName
 {
     return self.blockData[cNumericDataHeaderVariableNameOffset];
+}
+
+- (NSString *)getBlockType
+{
+    return @"Numeric Data Header";
 }
 
 @end
@@ -631,6 +697,11 @@
     return self.blockData[cAlphaNumericDataHeaderVariableNameOffset];
 }
 
+- (NSString *)getBlockType
+{
+    return @"Alphanumeric Data Header";
+}
+
 @end
 
 #pragma mark - Byte Header
@@ -642,15 +713,25 @@
     return ((unsigned short *)&self.blockData[cByteHeaderStartAddressOffset])[0];
 }
 
+- (NSString *)getBlockType
+{
+    return @"Byte Header";
+}
+
 @end
 
 #pragma mark - Data Block
 
 @implementation DataBlock
 
+- (NSString *)getFilename
+{
+    return @"";
+}
+
 - (unsigned char *)getDataBlock
 {
-    unsigned char *dataBlock = calloc([self getDataLength], sizeof(unsigned char));
+    unsigned char *dataBlock = (unsigned char *)calloc([self getDataLength], sizeof(unsigned char));
     memcpy(dataBlock, &self.blockData[cDataBlockDataLengthOffset], sizeof(unsigned char) * [self getDataLength]);
     return dataBlock;
 }
@@ -663,6 +744,11 @@
 - (unsigned char)getChecksum
 {
     return self.blockData[self.dataBlockLength + 1];
+}
+
+- (NSString *)getBlockType
+{
+    return @"Data Block";
 }
 
 @end

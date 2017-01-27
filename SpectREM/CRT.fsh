@@ -179,7 +179,7 @@ void main()
     if (u_show_reflection == 1.0)
     {
         vec4 reflection_color = texture2D(u_reflection, texCoord);
-        gl_FragColor = vec4(mix(vec3(reflection_color) ,color , 0.8), 1.0);
+        gl_FragColor = vec4(mix(vec3(reflection_color) ,color , 0.75), 1.0);
     }
     else
     {

@@ -216,14 +216,14 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
         m_CPURegisters.regPC++;
         m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
         
-        // Trap the SAVE command and flag it so the machine can perform the save functions
+        // Trap the SAVE command and flag it so the machine can perform the save function
         if (opcode == 0x08 && (m_CPURegisters.regPC == 0x04d1 || m_CPURegisters.regPC == 0x0077))
         {
-            saving = true;
+            saveTrapTriggered = true;
         }
         else
         {
-            saving = false;
+            saveTrapTriggered = false;
             
             // Handle the main bits
             switch (opcode)

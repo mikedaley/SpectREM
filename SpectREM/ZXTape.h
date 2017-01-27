@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ZXSpectrum.h"
 
 #pragma mark - Constants
 
@@ -75,7 +76,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 @interface ZXTape : NSObject
 {
 @public
-    // Current tape input value to be ORd to the IO Read response and sound generation
+    // Current tape input value to be OR'd to the IO Read response and sound generation
     int tapeInputBit;
 }
 
@@ -85,11 +86,13 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 @property (assign) BOOL playing;
 @property (assign) BOOL saving;
 @property (assign) NSUInteger bytesRemaining;
+@property (strong) NSURL *tapeFileURL;
 
 #pragma mark - Methods
 
 // Load the supplied TAP file into memory and setup for processing the tap data
--(BOOL)loadTapeWithURL:(NSURL *)url;
+- (void)openTapeWithURL:(NSURL *)url;
+
 
 // Called by the emulators main loop if a tape is playing. It passes in the number of tStates that have been used by the last
 // instruction so that the tape processing can keep track of timings necessary to generate header pulses, syncs, pauses and
@@ -98,6 +101,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 
 // Currently loaded tape controls
 - (void)play;
+- (void)save;
 - (void)stop;
 - (void)rewind;
 - (void)eject;
@@ -105,7 +109,9 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 // Reset the tape loader removing any current tape loaded and stopping the tape if it is playing
 - (void)reset;
 
-- (void)createBlockWithType:(unsigned short)blockType;
+// Called from the main emulation loop when a save is being performed. This passes in a reference to the core
+// which is then used to extract the data being written for the current block to tape.
+- (void)saveTAPBlockWithMachine:(ZXSpectrum *)m;
 
 @end
 
@@ -113,6 +119,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 
 @interface TAPBlock : NSObject
 
+@property (assign) unsigned short blockLength;
 @property (assign) unsigned char *blockData;
 
 - (unsigned char)getFlag;

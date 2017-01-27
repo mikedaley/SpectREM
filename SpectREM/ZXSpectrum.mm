@@ -242,21 +242,9 @@
             [self.zxTape updateTapeWithTStates:tsCPU];
         }
         
-        if(core->saving)
+        if(core->saveTrapTriggered)
         {
-            printf("Saving 0x%04x\n", core->GetRegister(CZ80Core::eREG_HL));
-            [self saveTAPBlock];
-            
-            // Once a block has been saved this is the RET address
-            core->SetRegister(CZ80Core::eREG_PC, 0x053d);
-            core->saving = false;
-            blocks += 1;
-            
-            if (blocks == 2)
-            {
-                blocks = 0;
-                [_emptyTAP writeToFile:@"/Users/mdaley/Desktop/test.tap" atomically:NO];
-            }
+            [self.zxTape saveTAPBlockWithMachine:self];
         }
         else
         {
@@ -1193,23 +1181,6 @@ static unsigned char floatingBus(void *m)
 
 - (void)saveTAPBlock
 {
-    CZ80Core *core = (CZ80Core *)[self getCore];
-    
-    char parity = 0;
-    short length = core->GetRegister(CZ80Core::eREG_DE) + 2;
-    [_emptyTAP appendBytes:&length length:2];
-    
-    parity = core->GetRegister(CZ80Core::eREG_A);
-    [_emptyTAP appendBytes:&parity length:1];
-    
-    for (int i = 0; i < core->GetRegister(CZ80Core::eREG_DE); i++)
-    {
-        char byte = memory[core->GetRegister(CZ80Core::eREG_IX) + i];
-        parity ^= byte;
-        [_emptyTAP appendBytes:&byte length:1];
-    }
-    
-    [_emptyTAP appendBytes:&parity length:1];
     
 }
 

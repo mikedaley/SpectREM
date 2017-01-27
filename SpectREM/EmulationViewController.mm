@@ -16,7 +16,6 @@
 #import "ConfigViewController.h"
 #import "GraphicalMemViewController.h"
 #import "CPUViewController.h"
-#import "InfoViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
 #import "ZXTape.h"
@@ -41,7 +40,6 @@ NS_ENUM(NSUInteger, MachineType)
 {
     ZXSpectrum              *_machine;
     ConfigViewController    *_configViewController;
-    InfoViewController      *_infoViewController;
     NSStoryboard            *_storyBoard;
     
     NSWindowController      *_graphicalMemoryWindowController;
@@ -71,7 +69,7 @@ NS_ENUM(NSUInteger, MachineType)
 {
     NSLog(@"Deallocating EmulationViewController");
     [self removeBindings];
-    [_configViewController removeObserver:self forKeyPath:@"currentMachineType"];
+    [_configViewController removeObserver:self forKeyPath:cCurrentMachineType];
     if (_debugTimer)
     {
         dispatch_source_cancel(_debugTimer);
@@ -104,7 +102,7 @@ NS_ENUM(NSUInteger, MachineType)
     _preferences = [NSUserDefaults standardUserDefaults];
     
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:@"sceneScaleMode"] integerValue];
+    self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:cSceneScaleMode] integerValue];
     
     [self.skView setFrameSize:self.skView.window.frame.size];
     
@@ -164,44 +162,44 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)setupSceneBindings
 {
-    [_emulationScene bind:@"displayCurve" toObject:_configViewController withKeyPath:@"displayCurve" options:nil];
-    [_emulationScene bind:@"displaySaturation" toObject:_configViewController withKeyPath:@"displaySaturation" options:nil];
-    [_emulationScene bind:@"displayContrast" toObject:_configViewController withKeyPath:@"displayContrast" options:nil];
-    [_emulationScene bind:@"displayBrightness" toObject:_configViewController withKeyPath:@"displayBrightness" options:nil];
-    [_emulationScene bind:@"displayShowVignette" toObject:_configViewController withKeyPath:@"displayShowVignette" options:nil];
-    [_emulationScene bind:@"displayVignetteX" toObject:_configViewController withKeyPath:@"displayVignetteX" options:nil];
-    [_emulationScene bind:@"displayVignetteY" toObject:_configViewController withKeyPath:@"displayVignetteY" options:nil];
-    [_emulationScene bind:@"displayScanLine" toObject:_configViewController withKeyPath:@"displayScanLine" options:nil];
-    [_emulationScene bind:@"displayRGBOffset" toObject:_configViewController withKeyPath:@"displayRGBOffset" options:nil];
-    [_emulationScene bind:@"displayHorizOffset" toObject:_configViewController withKeyPath:@"displayHorizOffset" options:nil];
-    [_emulationScene bind:@"displayVertJump" toObject:_configViewController withKeyPath:@"displayVertJump" options:nil];
-    [_emulationScene bind:@"displayVertRoll" toObject:_configViewController withKeyPath:@"displayVertRoll" options:nil];
-    [_emulationScene bind:@"displayStatic" toObject:_configViewController withKeyPath:@"displayStatic" options:nil];
-    [_emulationScene bind:@"displayShowReflection" toObject:_configViewController withKeyPath:@"displayShowReflection" options:nil];
+    [_emulationScene bind:cDisplayCurve toObject:_configViewController withKeyPath:cDisplayCurve options:nil];
+    [_emulationScene bind:cDisplaySaturation toObject:_configViewController withKeyPath:cDisplaySaturation options:nil];
+    [_emulationScene bind:cDisplayContrast toObject:_configViewController withKeyPath:cDisplayContrast options:nil];
+    [_emulationScene bind:cDisplayBrightness toObject:_configViewController withKeyPath:cDisplayBrightness options:nil];
+    [_emulationScene bind:cDisplayShowVignette toObject:_configViewController withKeyPath:cDisplayShowVignette options:nil];
+    [_emulationScene bind:cDisplayVignetteX toObject:_configViewController withKeyPath:cDisplayVignetteX options:nil];
+    [_emulationScene bind:cDisplayVignetteY toObject:_configViewController withKeyPath:cDisplayVignetteY options:nil];
+    [_emulationScene bind:cDisplayScanLine toObject:_configViewController withKeyPath:cDisplayScanLine options:nil];
+    [_emulationScene bind:cDisplayRGBOffset toObject:_configViewController withKeyPath:cDisplayRGBOffset options:nil];
+    [_emulationScene bind:cDisplayHorizOffset toObject:_configViewController withKeyPath:cDisplayHorizOffset options:nil];
+    [_emulationScene bind:cDisplayVertJump toObject:_configViewController withKeyPath:cDisplayVertJump options:nil];
+    [_emulationScene bind:cDisplayVertRoll toObject:_configViewController withKeyPath:cDisplayVertRoll options:nil];
+    [_emulationScene bind:cDisplayStatic toObject:_configViewController withKeyPath:cDisplayStatic options:nil];
+    [_emulationScene bind:cDisplayShowReflection toObject:_configViewController withKeyPath:cDisplayShowReflection options:nil];
 
 }
 
 - (void)setupMachineBindings
 {
-    [_machine bind:@"soundHighPassFilter" toObject:_configViewController withKeyPath:@"soundHighPassFilter" options:nil];
-    [_machine bind:@"soundLowPassFilter" toObject:_configViewController withKeyPath:@"soundLowPassFilter" options:nil];
-    [_machine bind:@"soundVolume" toObject:_configViewController withKeyPath:@"soundVolume" options:nil];
-    [_machine bind:@"AYChannelA" toObject:_configViewController withKeyPath:@"AYChannelA" options:nil];
-    [_machine bind:@"AYChannelB" toObject:_configViewController withKeyPath:@"AYChannelB" options:nil];
-    [_machine bind:@"AYChannelC" toObject:_configViewController withKeyPath:@"AYChannelC" options:nil];
-    [_machine bind:@"AYChannelABalance" toObject:_configViewController withKeyPath:@"AYChannelABalance" options:nil];
-    [_machine bind:@"AYChannelBBalance" toObject:_configViewController withKeyPath:@"AYChannelBBalance" options:nil];
-    [_machine bind:@"AYChannelCBalance" toObject:_configViewController withKeyPath:@"AYChannelCBalance" options:nil];
-    [_machine.serialCore bind:@"serialPort" toObject:_configViewController withKeyPath:@"serialPort" options:nil];
-    [_machine bind:@"useSmartLink" toObject:_configViewController withKeyPath:@"useSmartLink" options:nil];
+    [_machine bind:cSoundHighPassFilter toObject:_configViewController withKeyPath:cSoundHighPassFilter options:nil];
+    [_machine bind:cSoundLowPassFilter toObject:_configViewController withKeyPath:cSoundLowPassFilter options:nil];
+    [_machine bind:cSoundVolume toObject:_configViewController withKeyPath:cSoundVolume options:nil];
+    [_machine bind:cAYChannelA toObject:_configViewController withKeyPath:cAYChannelA options:nil];
+    [_machine bind:cAYChannelB toObject:_configViewController withKeyPath:cAYChannelB options:nil];
+    [_machine bind:cAYChannelC toObject:_configViewController withKeyPath:cAYChannelC options:nil];
+    [_machine bind:cAYChannelABalance toObject:_configViewController withKeyPath:cAYChannelABalance options:nil];
+    [_machine bind:cAYChannelBBalance toObject:_configViewController withKeyPath:cAYChannelBBalance options:nil];
+    [_machine bind:cAYChannelCBalance toObject:_configViewController withKeyPath:cAYChannelCBalance options:nil];
+    [_machine.serialCore bind:cSerialPort toObject:_configViewController withKeyPath:cSerialPort options:nil];
+    [_machine bind:cUseSmartLink toObject:_configViewController withKeyPath:cUseSmartLink options:nil];
 }
 
 - (void)setupLocalObservers
 {
-    [_configViewController addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
-    [_configViewController addObserver:self forKeyPath:@"accelerationMultiplier" options:NSKeyValueObservingOptionNew context:NULL];
-    [_configViewController addObserver:self forKeyPath:@"accelerate" options:NSKeyValueObservingOptionNew context:NULL];
-    [_configViewController addObserver:self forKeyPath:@"useSmartLink" options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:cAcceleratedMultiplier options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:cAccelerate options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:cUseSmartLink options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)setupNotificationCenterObservers
@@ -211,73 +209,73 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)removeBindings
 {
-    [_emulationScene unbind:@"displayCurve"];
-    [_emulationScene unbind:@"displaySaturation"];
-    [_emulationScene unbind:@"displayContrast"];
-    [_emulationScene unbind:@"displayCurve"];
-    [_emulationScene unbind:@"displayBrightness"];
-    [_emulationScene unbind:@"displayVignetteX"];
-    [_emulationScene unbind:@"displayVignetteY"];
-    [_emulationScene unbind:@"displayScanLine"];
-    [_emulationScene unbind:@"displayRGBOffset"];
-    [_emulationScene unbind:@"displayHorizOffset"];
-    [_emulationScene unbind:@"displayVertJump"];
-    [_emulationScene unbind:@"displayVertRoll"];
-    [_emulationScene unbind:@"displayStatic"];
-    [_emulationScene unbind:@"displayShowReflection"];
+    [_emulationScene unbind:cDisplayCurve];
+    [_emulationScene unbind:cDisplayBrightness];
+    [_emulationScene unbind:cDisplayContrast];
+    [_emulationScene unbind:cDisplayCurve];
+    [_emulationScene unbind:cDisplayShowVignette];
+    [_emulationScene unbind:cDisplayVignetteX];
+    [_emulationScene unbind:cDisplayVignetteY];
+    [_emulationScene unbind:cDisplayScanLine];
+    [_emulationScene unbind:cDisplayRGBOffset];
+    [_emulationScene unbind:cDisplayHorizOffset];
+    [_emulationScene unbind:cDisplayVertJump];
+    [_emulationScene unbind:cDisplayVertRoll];
+    [_emulationScene unbind:cDisplayStatic];
+    [_emulationScene unbind:cDisplayShowReflection];
     
-    [_machine unbind:@"soundHighPassFilter"];
-    [_machine unbind:@"soundLowPassFilter"];
-    [_machine unbind:@"soundVolume"];
-    [_machine unbind:@"AYChannelA"];
-    [_machine unbind:@"AYChannelB"];
-    [_machine unbind:@"AYChannelC"];
-    [_machine unbind:@"AYChannelABalance"];
-    [_machine unbind:@"AYChannelBBalance"];
-    [_machine unbind:@"AYChannelCBalance"];
-    [_machine unbind:@"useSmartLink"];
-    [_machine.serialCore unbind:@"serialPort"];
+    [_machine unbind:cSoundHighPassFilter];
+    [_machine unbind:cSoundLowPassFilter];
+    [_machine unbind:cSoundVolume];
+    [_machine unbind:cAYChannelA];
+    [_machine unbind:cAYChannelB];
+    [_machine unbind:cAYChannelC];
+    [_machine unbind:cAYChannelABalance];
+    [_machine unbind:cAYChannelBBalance];
+    [_machine unbind:cAYChannelCBalance];
+    [_machine unbind:cUseSmartLink];
+    [_machine.serialCore unbind:cSerialPort];
 }
 
 #pragma mark - Observers
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"currentMachineType"])
+    if ([keyPath isEqualToString:cCurrentMachineType])
     {
         [self switchToMachine:[[change valueForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
     }
 
-    if ([keyPath isEqualToString:@"accelerationMultiplier"])
+    if ([keyPath isEqualToString:cAcceleratedMultiplier])
     {
         dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, (1.0 / (50.0 * [[change valueForKey:NSKeyValueChangeNewKey] doubleValue])) * NSEC_PER_SEC, 0);
     }
 
-    if ([keyPath isEqualToString:@"accelerate"])
+    if ([keyPath isEqualToString:cAccelerate])
     {
         if (_configViewController.accelerate)
         {
-            [self notifyUserWithMessage:@"Acceleration mode on"];
+            [self notifyUserWithMessage:NSLocalizedString(@"Acceleration mode on", nil)];
             [_machine.audioCore stop];
             dispatch_resume(_fastTimer);
         }
         else
         {
-            [self notifyUserWithMessage:@"Acceleration mode off"];
+            [self notifyUserWithMessage:NSLocalizedString(@"Acceleration mode off", nil)];
             [_machine.audioCore start];
             dispatch_suspend(_fastTimer);
         }
     }
 
-    if ([keyPath isEqualToString:@"useSmartLink"])
+    if ([keyPath isEqualToString:cUseSmartLink])
     {
         if ([[change valueForKey:NSKeyValueChangeNewKey] boolValue])
         {
-            [self notifyUserWithMessage:@"SmartLINK Enabled"];
+            [self notifyUserWithMessage:NSLocalizedString(@"SmartLINK Enabled", nil)];
         }
         else
         {
-            [self notifyUserWithMessage:@"SmartLINK Disabled"];
+            [self notifyUserWithMessage:NSLocalizedString(@"SmartLINK Disabled", nil)];
         }
     }
 }
@@ -324,8 +322,9 @@ NS_ENUM(NSUInteger, MachineType)
         1.0 - (borderWidth * 2.0 * emuVScale)
     };
     
-    self.emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithRect:textureRect
-                                                                          inTexture:[self.skView textureFromNode:self.emulationScene.emulationBackingSprite]];
+    _backingTexture = [SKTexture textureWithRect:textureRect
+                                       inTexture:[self.skView textureFromNode:self.emulationScene.emulationBackingSprite]];
+    self.emulationScene.emulationDisplaySprite.texture = _backingTexture;
 }
 
 #pragma mark - UI Actions
@@ -333,14 +332,14 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)setAspectFitMode:(id)sender
 {
     _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
-    [_preferences setValue:@(SKSceneScaleModeAspectFit) forKey:@"sceneScaleMode"];
+    [_preferences setValue:@(SKSceneScaleModeAspectFit) forKey:cSceneScaleMode];
     [_preferences synchronize];
 }
 
 - (IBAction)setFillMode:(id)sender
 {
     _emulationScene.scaleMode = SKSceneScaleModeFill;
-    [_preferences setValue:@(SKSceneScaleModeFill) forKey:@"sceneScaleMode"];
+    [_preferences setValue:@(SKSceneScaleModeFill) forKey:cSceneScaleMode];
     [_preferences synchronize];
 }
 
@@ -412,14 +411,13 @@ NS_ENUM(NSUInteger, MachineType)
         {
             // Storing the machine type in _preferences triggers an observer which runs the switchToMachine method
             _preferences = [NSUserDefaults standardUserDefaults];
-            [_preferences setValue:@(machineType) forKey:@"currentMachineType"];
+            [_preferences setValue:@(machineType) forKey:cCurrentMachineType];
         }
         [_machine loadSnapshotWithPath:url.path];
     }
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
     {
-        _zxTape.playing = NO;
-        [_zxTape loadTapeWithURL:url];
+        [_zxTape openTapeWithURL:url];
         [self.tapeBytesLabel.animator setHidden:NO];
     }
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"ROM"])
@@ -428,7 +426,7 @@ NS_ENUM(NSUInteger, MachineType)
         {
             [self switchToMachine:eZXSpectrum48];
             _preferences = [NSUserDefaults standardUserDefaults];
-            [_preferences setValue:@(eZXSpectrum48) forKey:@"currentMachineType"];
+            [_preferences setValue:@(eZXSpectrum48) forKey:cCurrentMachineType];
         }
         [_machine loadROMWithPath:url.path];
         [_machine reset:NO];
@@ -469,7 +467,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupMachineBindings];
     [self setupSceneBindings];
     
-    [self notifyUserWithMessage:[NSString stringWithFormat:@"%@ Loaded", _machine.machineName]];
+    [self notifyUserWithMessage:[NSString stringWithFormat:NSLocalizedString(@"%@ Loaded", nil), _machine.machineName]];
     
     [_machine start];
 }
@@ -478,7 +476,7 @@ NS_ENUM(NSUInteger, MachineType)
 {
     NSMenuItem *menuItem = (NSMenuItem *)sender;
     _preferences = [NSUserDefaults standardUserDefaults];
-    [_preferences setValue:@(menuItem.tag) forKey:@"currentMachineType"];
+    [_preferences setValue:@(menuItem.tag) forKey:cCurrentMachineType];
 }
 
 - (IBAction)setWindowSize:(id)sender
@@ -535,23 +533,28 @@ NS_ENUM(NSUInteger, MachineType)
 {
     if (![_zxTape isTapeLoaded])
     {
-        [self notifyUserWithMessage:@"No tape loaded!"];
+        [self notifyUserWithMessage:NSLocalizedString(@"No tape loaded!", nil)];
         return;
     }
     [_zxTape play];
-    [self notifyUserWithMessage:@"Tape Playing"];
+    [self notifyUserWithMessage:NSLocalizedString(@"Tape Playing", nil)];
+}
+
+- (IBAction)saveTape:(id)sender
+{
+    [_zxTape save];
 }
 
 - (IBAction)stopTape:(id)sender
 {
     [_zxTape stop];
-    [self notifyUserWithMessage:@"Tape Stopped"];
+    [self notifyUserWithMessage:NSLocalizedString(@"Tape Stopped", nil)];
 }
 
 - (IBAction)rewindTape:(id)sender
 {
     [_zxTape rewind];
-    [self notifyUserWithMessage:@"Tape Rewound"];
+    [self notifyUserWithMessage:NSLocalizedString(@"Tape Rewound", nil)];
 }
 
 - (IBAction)ejectTape:(id)sender
@@ -559,7 +562,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_zxTape eject];
     [self.tapeBytesLabel.animator setHidden:YES];
     [self.view.window setTitle:@"SpectREM"];
-    [self notifyUserWithMessage:@"Tape Ejected"];
+    [self notifyUserWithMessage:NSLocalizedString(@"Tape Ejected", nil)];
 }
 
 - (IBAction)showKeyboardMapWindow:(id)sender
@@ -614,9 +617,7 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
 
 - (void)windowResize:(NSNotification *)notification
 {
-    float xx = (self.view.frame.size.width - _infoViewController.view.frame.size.width) / 2;
-    float yy = (self.view.frame.size.height - _infoViewController.view.frame.size.height) - 10;
-    [_infoViewController.view setFrameOrigin:(NSPoint){xx, yy}];
+
 }
 
 @end

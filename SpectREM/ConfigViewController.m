@@ -9,6 +9,41 @@
 #import "ConfigViewController.h"
 @import ORSSerial;
 
+#pragma mark - Key Path Constants
+
+NSString *const cDisplayBorderWidth = @"displayBorderWidth";
+NSString *const cDisplayCurve = @"displayCurve";
+NSString *const cDisplaySaturation = @"displaySaturation";
+NSString *const cDisplayContrast = @"displayContrast";
+NSString *const cDisplayBrightness = @"displayBrightness";
+NSString *const cDisplayShowVignette = @"displayShowVignette";
+NSString *const cDisplayVignetteX = @"displayVignetteX";
+NSString *const cDisplayVignetteY = @"displayVignetteY";
+NSString *const cDisplayScanLine = @"displayScanLine";
+NSString *const cDisplayRGBOffset = @"displayRGBOffset";
+NSString *const cDisplayHorizOffset = @"displayHorizOffset";
+NSString *const cDisplayVertJump = @"displayVertJump";
+NSString *const cDisplayVertRoll = @"displayVertRoll";
+NSString *const cDisplayStatic = @"displayStatic";
+NSString *const cDisplayShowReflection = @"displayShowReflection";
+NSString *const cSoundVolume = @"soundVolume";
+NSString *const cSoundLowPassFilter = @"soundLowPassFilter";
+NSString *const cSoundHighPassFilter = @"soundHighPassFilter";
+NSString *const cAYChannelA = @"AYChannelA";
+NSString *const cAYChannelB = @"AYChannelB";
+NSString *const cAYChannelC = @"AYChannelC";
+NSString *const cAYChannelABalance = @"AYChannelABalance";
+NSString *const cAYChannelBBalance = @"AYChannelBBalance";
+NSString *const cAYChannelCBalance = @"AYChannelCBalance";
+NSString *const cCurrentMachineType = @"currentMachineType";
+NSString *const cAcceleratedMultiplier = @"acceleratedMultiplier";
+NSString *const cAccelerate = @"accelerate";
+NSString *const cSerialPort = @"serialPort";
+NSString *const cUseSmartLink = @"useSmartLink";
+NSString *const cSceneScaleMode = @"sceneScaleMode";
+
+#pragma mark - Implementation 
+
 @implementation ConfigViewController
 {
     NSUserDefaults *_preferences;
@@ -17,34 +52,33 @@
 - (void)dealloc
 {
     _preferences = [NSUserDefaults standardUserDefaults];
-    [_preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
-    [_preferences removeObserver:self forKeyPath:@"displayCurve"];
-    [_preferences removeObserver:self forKeyPath:@"displaySaturation"];
-    [_preferences removeObserver:self forKeyPath:@"displayContrast"];
-    [_preferences removeObserver:self forKeyPath:@"displayBrightness"];
-    [_preferences removeObserver:self forKeyPath:@"displayShowVignette"];
-    [_preferences removeObserver:self forKeyPath:@"displayVignetteX"];
-    [_preferences removeObserver:self forKeyPath:@"displayBorderWidth"];
-    [_preferences removeObserver:self forKeyPath:@"displayVignetteY"];
-    [_preferences removeObserver:self forKeyPath:@"displayScanLine"];
-    [_preferences removeObserver:self forKeyPath:@"displayRGBOffset"];
-    [_preferences removeObserver:self forKeyPath:@"displayHorizOffset"];
-    [_preferences removeObserver:self forKeyPath:@"displayVertJump"];
-    [_preferences removeObserver:self forKeyPath:@"displayVertRoll"];
-    [_preferences removeObserver:self forKeyPath:@"displayStatic"];
-    [_preferences removeObserver:self forKeyPath:@"displayShowReflection"];
+    [_preferences removeObserver:self forKeyPath:cDisplayBorderWidth];
+    [_preferences removeObserver:self forKeyPath:cDisplayCurve];
+    [_preferences removeObserver:self forKeyPath:cDisplaySaturation];
+    [_preferences removeObserver:self forKeyPath:cDisplayContrast];
+    [_preferences removeObserver:self forKeyPath:cDisplayBrightness];
+    [_preferences removeObserver:self forKeyPath:cDisplayShowVignette];
+    [_preferences removeObserver:self forKeyPath:cDisplayVignetteX];
+    [_preferences removeObserver:self forKeyPath:cDisplayVignetteY];
+    [_preferences removeObserver:self forKeyPath:cDisplayScanLine];
+    [_preferences removeObserver:self forKeyPath:cDisplayRGBOffset];
+    [_preferences removeObserver:self forKeyPath:cDisplayHorizOffset];
+    [_preferences removeObserver:self forKeyPath:cDisplayVertJump];
+    [_preferences removeObserver:self forKeyPath:cDisplayVertRoll];
+    [_preferences removeObserver:self forKeyPath:cDisplayStatic];
+    [_preferences removeObserver:self forKeyPath:cDisplayShowReflection];
 
-    [_preferences removeObserver:self forKeyPath:@"soundVolume"];
-    [_preferences removeObserver:self forKeyPath:@"soundLowPassFilter"];
-    [_preferences removeObserver:self forKeyPath:@"soundHighPassFilter"];
-    [_preferences removeObserver:self forKeyPath:@"AYChannelA"];
-    [_preferences removeObserver:self forKeyPath:@"AYChannelB"];
-    [_preferences removeObserver:self forKeyPath:@"AYChannelC"];
-    [_preferences removeObserver:self forKeyPath:@"AYChannelABalance"];
-    [_preferences removeObserver:self forKeyPath:@"AYChannelBBalance"];
-    [_preferences removeObserver:self forKeyPath:@"AYChannelCBalance"];
+    [_preferences removeObserver:self forKeyPath:cSoundVolume];
+    [_preferences removeObserver:self forKeyPath:cSoundLowPassFilter];
+    [_preferences removeObserver:self forKeyPath:cSoundHighPassFilter];
+    [_preferences removeObserver:self forKeyPath:cAYChannelA];
+    [_preferences removeObserver:self forKeyPath:cAYChannelB];
+    [_preferences removeObserver:self forKeyPath:cAYChannelC];
+    [_preferences removeObserver:self forKeyPath:cAYChannelABalance];
+    [_preferences removeObserver:self forKeyPath:cAYChannelBBalance];
+    [_preferences removeObserver:self forKeyPath:cAYChannelCBalance];
 
-    [_preferences removeObserver:self forKeyPath:@"currentMachineType"];
+    [_preferences removeObserver:self forKeyPath:cCurrentMachineType];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -54,36 +88,36 @@
     {
         _preferences = [NSUserDefaults standardUserDefaults];
         
-        [_preferences addObserver:self forKeyPath:@"displayBorderWidth" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayScanLine" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayRGBOffset" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayHorizOffset" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayVertJump" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayVertRoll" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayStatic" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"displayShowReflection" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayBorderWidth options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayCurve options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplaySaturation options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayContrast options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayBrightness options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayShowVignette options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayVignetteX options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayVignetteY options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayScanLine options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayRGBOffset options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayHorizOffset options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayVertJump options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayVertRoll options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayStatic options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cDisplayShowReflection options:NSKeyValueObservingOptionNew context:NULL];
         
         // Set the maximum volume that the volume control can select with > 1.0 means we are amplifying the output
         self.maxSoundVolume = 3.0;
         
-        [_preferences addObserver:self forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"soundLowPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"soundHighPassFilter" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"AYChannelA" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"AYChannelB" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"AYChannelC" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"AYChannelABalance" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"AYChannelBBalance" options:NSKeyValueObservingOptionNew context:NULL];
-        [_preferences addObserver:self forKeyPath:@"AYChannelCBalance" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cSoundVolume options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cSoundLowPassFilter options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cSoundHighPassFilter options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cAYChannelA options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cAYChannelB options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cAYChannelC options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cAYChannelABalance options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cAYChannelBBalance options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cAYChannelCBalance options:NSKeyValueObservingOptionNew context:NULL];
         
-        [_preferences addObserver:self forKeyPath:@"currentMachineType" options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
         
         self.accelerate = NO;
         self.accelerationMultiplier = 2.0;
@@ -149,45 +183,45 @@
 - (NSArray *)observableFloatKeys
 {
     return @[
-             @"displayBorderWidth",
-             @"displayCurve",
-             @"displaySaturation",
-             @"displayBrightness",
-             @"displayContrast",
-             @"displayShowVignette",
-             @"displayVignetteX",
-             @"displayVignetteY",
-             @"soundVolume",
-             @"soundLowPassFilter",
-             @"soundHighPassFilter",
-             @"AYChannelABalance",
-             @"AYChannelBBalance",
-             @"AYChannelCBalance",
-             @"acceleratedMultiplier",
-             @"displayScanLine",
-             @"displayRGBOffset",
-             @"displayHorizOffset",
-             @"displayVertJump",
-             @"displayVertRoll",
-             @"displayStatic",
-             @"displayShowReflection"
+             cDisplayBorderWidth,
+             cDisplayCurve,
+             cDisplaySaturation,
+             cDisplayBrightness,
+             cDisplayContrast,
+             cDisplayShowVignette,
+             cDisplayVignetteX,
+             cDisplayVignetteY,
+             cSoundVolume,
+             cSoundLowPassFilter,
+             cSoundHighPassFilter,
+             cAYChannelABalance,
+             cAYChannelBBalance,
+             cAYChannelCBalance,
+             cAcceleratedMultiplier,
+             cDisplayScanLine,
+             cDisplayRGBOffset,
+             cDisplayHorizOffset,
+             cDisplayVertJump,
+             cDisplayVertRoll,
+             cDisplayStatic,
+             cDisplayShowReflection
              ];
 }
 
 - (NSArray *)observableUIntKeys
 {
     return @[
-             @"currentMachineType"
+             cCurrentMachineType
              ];
 }
 
 - (NSArray *)observableBoolKeys
 {
     return @[
-             @"AYChannelA",
-             @"AYChannelB",
-             @"AYChannelC",
-             @"accelerate"
+             cAYChannelA,
+             cAYChannelB,
+             cAYChannelC,
+             cAccelerate
              ];
 }
 

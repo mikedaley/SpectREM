@@ -19,8 +19,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    NSVisualEffectView *visualEffectView = (NSVisualEffectView *)self.view;
-//    visualEffectView.material = NSVisualEffectMaterialSidebar;
     _decimalFormat = NO;
 }
 

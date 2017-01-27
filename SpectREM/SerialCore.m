@@ -7,6 +7,7 @@
 //
 
 #import "SerialCore.h"
+
 @import ORSSerial;
 
 #pragma mark - Private Interface
