@@ -41,7 +41,7 @@ extern NSString *const cAYChannelABalance;
 extern NSString *const cAYChannelBBalance;
 extern NSString *const cAYChannelCBalance;
 extern NSString *const cCurrentMachineType;
-extern NSString *const cAcceleratedMultiplier;
+extern NSString *const cAccelerationMultiplier;
 extern NSString *const cAccelerate;
 extern NSString *const cSerialPort;
 extern NSString *const cUseSmartLink;

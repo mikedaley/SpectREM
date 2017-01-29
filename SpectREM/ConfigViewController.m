@@ -36,7 +36,7 @@ NSString *const cAYChannelABalance = @"AYChannelABalance";
 NSString *const cAYChannelBBalance = @"AYChannelBBalance";
 NSString *const cAYChannelCBalance = @"AYChannelCBalance";
 NSString *const cCurrentMachineType = @"currentMachineType";
-NSString *const cAcceleratedMultiplier = @"acceleratedMultiplier";
+NSString *const cAccelerationMultiplier = @"accelerationMultiplier";
 NSString *const cAccelerate = @"accelerate";
 NSString *const cSerialPort = @"serialPort";
 NSString *const cUseSmartLink = @"useSmartLink";
@@ -197,7 +197,7 @@ NSString *const cSceneScaleMode = @"sceneScaleMode";
              cAYChannelABalance,
              cAYChannelBBalance,
              cAYChannelCBalance,
-             cAcceleratedMultiplier,
+             cAccelerationMultiplier,
              cDisplayScanLine,
              cDisplayRGBOffset,
              cDisplayHorizOffset,

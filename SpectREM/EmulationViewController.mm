@@ -197,7 +197,7 @@ NS_ENUM(NSUInteger, MachineType)
 - (void)setupLocalObservers
 {
     [_configViewController addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
-    [_configViewController addObserver:self forKeyPath:cAcceleratedMultiplier options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:cAccelerationMultiplier options:NSKeyValueObservingOptionNew context:NULL];
     [_configViewController addObserver:self forKeyPath:cAccelerate options:NSKeyValueObservingOptionNew context:NULL];
     [_configViewController addObserver:self forKeyPath:cUseSmartLink options:NSKeyValueObservingOptionNew context:NULL];
 }
@@ -246,7 +246,7 @@ NS_ENUM(NSUInteger, MachineType)
         [self switchToMachine:[[change valueForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
     }
 
-    if ([keyPath isEqualToString:cAcceleratedMultiplier])
+    if ([keyPath isEqualToString:cAccelerationMultiplier])
     {
         dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, (1.0 / (50.0 * [[change valueForKey:NSKeyValueChangeNewKey] doubleValue])) * NSEC_PER_SEC, 0);
     }
