@@ -40,7 +40,7 @@
     {
         // We need 64k of memory total for the 48k Speccy
         memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
-
+        
         core = new CZ80Core;
         core->Initialise(coreMemoryRead,
                          coreMemoryWrite,
@@ -50,12 +50,7 @@
                          coreIOContention,
                          (__bridge void *)self);
         
-        displayPage = 1;
-        disablePaging = YES;
-        
-
-        [self loadDefaultROM];
-        
+        [self reset:YES];
     }
     return self;
 }
@@ -68,6 +63,13 @@
 
 - (void)reset:(BOOL)hard
 {
+    if (hard)
+    {
+        for (int i = 0; i < 64 * 1024; i++)
+        {
+            memory[i] = arc4random_uniform(255);
+        }
+    }
     [super reset:hard];
     currentRAMPage = 0;
     currentROMPage = 0;

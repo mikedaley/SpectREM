@@ -51,14 +51,8 @@
                          coreMemoryContention,
                          coreIOContention,
                          (__bridge void *)self);
-                        
-        currentROMPage = 0;
-        currentRAMPage = 0;
-        displayPage = 5;
-        disablePaging = NO;
         
-        [self loadDefaultROM];
-        
+        [self reset:YES];
     }
     return self;
 }
@@ -74,6 +68,13 @@
 
 - (void)reset:(BOOL)hard
 {
+    if (hard)
+    {
+        for (int i = 0; i < 128 * 1024; i++)
+        {
+            memory[i] = arc4random_uniform(255);
+        }
+    }
     [super reset:hard];
     currentROMPage = 0;
     currentRAMPage = 0;

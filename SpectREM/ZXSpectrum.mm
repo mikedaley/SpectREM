@@ -157,17 +157,16 @@
 
 - (void)reset:(BOOL)hard
 {
-    frameCounter = 0;
-    [self resetKeyboardMap];
-    [self resetSound];
-    [self resetFrame];
     CZ80Core *core = (CZ80Core *)[self getCore];
     core->Reset(hard);
-    
     if (hard)
     {
         [self loadDefaultROM];
     }
+    frameCounter = 0;
+    [self resetKeyboardMap];
+    [self resetSound];
+    [self resetFrame];
 }
 
 - (void)resetSound

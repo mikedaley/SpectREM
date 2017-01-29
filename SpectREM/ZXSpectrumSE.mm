@@ -52,7 +52,7 @@
         displayPage = 1;
         disablePaging = YES;
         
-        [self loadDefaultROM];
+        [self reset:YES];
         
     }
     return self;
