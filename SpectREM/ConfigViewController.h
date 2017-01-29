@@ -46,6 +46,7 @@ extern NSString *const cAccelerate;
 extern NSString *const cSerialPort;
 extern NSString *const cUseSmartLink;
 extern NSString *const cSceneScaleMode;
+extern NSString *const cUseAYOn48k;;
 
 @interface ConfigViewController : NSViewController
 
@@ -82,6 +83,7 @@ extern NSString *const cSceneScaleMode;
 @property (assign) float AYChannelABalance;
 @property (assign) float AYChannelBBalance;
 @property (assign) float AYChannelCBalance;
+@property (assign) bool useAYOn48k;
 
 // Emulation Properties
 @property (assign) NSInteger currentMachineType;

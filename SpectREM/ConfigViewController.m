@@ -41,6 +41,7 @@ NSString *const cAccelerate = @"accelerate";
 NSString *const cSerialPort = @"serialPort";
 NSString *const cUseSmartLink = @"useSmartLink";
 NSString *const cSceneScaleMode = @"sceneScaleMode";
+NSString *const cUseAYOn48k = @"useAYOn48k";
 
 #pragma mark - Implementation 
 
@@ -77,6 +78,7 @@ NSString *const cSceneScaleMode = @"sceneScaleMode";
     [_preferences removeObserver:self forKeyPath:cAYChannelABalance];
     [_preferences removeObserver:self forKeyPath:cAYChannelBBalance];
     [_preferences removeObserver:self forKeyPath:cAYChannelCBalance];
+    [_preferences removeObserver:self forKeyPath:cUseAYOn48k];
 
     [_preferences removeObserver:self forKeyPath:cCurrentMachineType];
 }
@@ -116,6 +118,7 @@ NSString *const cSceneScaleMode = @"sceneScaleMode";
         [_preferences addObserver:self forKeyPath:cAYChannelABalance options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cAYChannelBBalance options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cAYChannelCBalance options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cUseAYOn48k options:NSKeyValueObservingOptionNew context:NULL];
         
         [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
         
@@ -221,6 +224,7 @@ NSString *const cSceneScaleMode = @"sceneScaleMode";
              cAYChannelA,
              cAYChannelB,
              cAYChannelC,
+             cUseAYOn48k,
              cAccelerate
              ];
 }

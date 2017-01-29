@@ -190,6 +190,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:cAYChannelABalance toObject:_configViewController withKeyPath:cAYChannelABalance options:nil];
     [_machine bind:cAYChannelBBalance toObject:_configViewController withKeyPath:cAYChannelBBalance options:nil];
     [_machine bind:cAYChannelCBalance toObject:_configViewController withKeyPath:cAYChannelCBalance options:nil];
+    [_machine bind:cUseAYOn48k toObject:_configViewController withKeyPath:cUseAYOn48k options:nil];
     [_machine.serialCore bind:cSerialPort toObject:_configViewController withKeyPath:cSerialPort options:nil];
     [_machine bind:cUseSmartLink toObject:_configViewController withKeyPath:cUseSmartLink options:nil];
 }
@@ -233,6 +234,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine unbind:cAYChannelABalance];
     [_machine unbind:cAYChannelBBalance];
     [_machine unbind:cAYChannelCBalance];
+    [_machine unbind:cUseAYOn48k];
     [_machine unbind:cUseSmartLink];
     [_machine.serialCore unbind:cSerialPort];
 }

@@ -54,5 +54,7 @@
 	<real>0.5</real>
 	<key>AYChannelCBalance</key>
 	<integer>0</integer>
+	<key>useAYOn48k</key>
+	<false/>
 </dict>
 </plist>

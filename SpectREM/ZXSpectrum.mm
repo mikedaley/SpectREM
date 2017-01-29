@@ -248,8 +248,8 @@
         else
         {
             count -= tsCPU;
-            
-            updateAudioWithTStates(tsCPU, (__bridge void *)self, machineInfo.hasAY);
+                        
+            updateAudioWithTStates(tsCPU, (__bridge void *)self);
             
             if (core->GetTStates() >= machineInfo.tsPerFrame )
             {
@@ -305,7 +305,7 @@
 
 #pragma mark - Audio
 
-void updateAudioWithTStates(int numberTs, void *m, bool hasAY)
+void updateAudioWithTStates(int numberTs, void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     
@@ -320,7 +320,7 @@ void updateAudioWithTStates(int numberTs, void *m, bool hasAY)
         double leftMix = 0.5;
         double rightMix = 0.5;
         
-        if (hasAY)
+        if (machine->machineInfo.hasAY || (machine->machineInfo.machineType == 0 && machine.useAYOn48k))
         {
             machine->audioAYTStates++;
             if (machine->audioAYTStates >= machine->audioAYTStatesStep)
@@ -581,7 +581,7 @@ unsigned char coreIORead(unsigned short address, void *m)
                 return 0x0;
             }
         }
-        else if ((address & 0xc002) == 0xc000)
+        else if ((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY || (machine->machineInfo.machineType == 0 && machine.useAYOn48k) ))
         {
             return [machine.audioCore readAYData];
         }
@@ -693,12 +693,12 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->currentRAMPage = (data & 0x07);
     }
     
-    if((address & 0xc002) == 0xc000 && machine->machineInfo.hasAY)
+    if((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY || machine.useAYOn48k))
     {
         [machine.audioCore setAYRegister:(data & 0x0f)];
     }
     
-    if ((address & 0xc002) == 0x8000 && machine->machineInfo.hasAY)
+    if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY || machine.useAYOn48k))
     {
         [machine.audioCore writeAYData:data];
     }

@@ -183,6 +183,7 @@ typedef NS_ENUM(int, TapeLoadingState)
 @property (assign) float AYChannelABalance;
 @property (assign) float AYChannelBBalance;
 @property (assign) float AYChannelCBalance;
+@property (assign) bool useAYOn48k;
 
 @property (strong) NSString *snapshotPath;
 
@@ -301,7 +302,7 @@ void updateScreenWithTStates(int numberTs, void *m);
 /**
 Updates the audio buffer for both the beeper and AY chip based on the number of tStates that have passed in the current frame
  */
-void updateAudioWithTStates(int tsCPU, void *m, bool ay);
+void updateAudioWithTStates(int tsCPU, void *m);
 
 /**
 Handles any port writes made by the CPU
