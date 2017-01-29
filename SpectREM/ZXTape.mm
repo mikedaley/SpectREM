@@ -121,7 +121,7 @@
             programHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(programHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             dataBlockLength = [programHeader getDataLength];
-            self.bytesRemaining += 17;
+            self.bytesRemaining += blockLength;
             [tapBlocks addObject:programHeader];
         }
         
@@ -132,7 +132,7 @@
             numericDataHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(numericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             dataBlockLength = [numericDataHeader getDataLength];
-            self.bytesRemaining += 17;
+            self.bytesRemaining += blockLength;
             [tapBlocks addObject:numericDataHeader];
         }
         
@@ -143,7 +143,7 @@
             alphaNumericDataHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(alphaNumericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             dataBlockLength = [alphaNumericDataHeader getDataLength];
-            self.bytesRemaining += 17;
+            self.bytesRemaining += blockLength;
             [tapBlocks addObject:alphaNumericDataHeader];
         }
         
@@ -154,7 +154,7 @@
             byteHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
             memcpy(byteHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
             dataBlockLength = [byteHeader getDataLength];
-            self.bytesRemaining += 17;
+            self.bytesRemaining += blockLength;
             [tapBlocks addObject:byteHeader];
         }
         
@@ -166,7 +166,7 @@
             dataBlock.blockData = (unsigned char *)calloc(dataBlockLength + 2, sizeof(unsigned char));
             memcpy(dataBlock.blockData, &tapeBytes[currentBytePointer], dataBlockLength + 2);
             currentBytePointer += dataBlockLength + 2;
-            self.bytesRemaining += dataBlockLength + 6;
+            self.bytesRemaining += dataBlockLength + 4;
             [tapBlocks addObject:dataBlock];
         }
         else
@@ -478,10 +478,17 @@
 - (void)blockPauseWithTStates:(int)tStates
 {
     blockPauseTStates += tStates;
-    if (blockPauseTStates > 3500000 * 1.5)
+    if (blockPauseTStates > 3500000 * 2.5)
     {
         currentBlockIndex += 1;
         newBlock = YES;
+    }
+
+    // Introduce a random crackle inbetween blocks to produce a similar experience as a loading from a real tape
+    // on a ZX Spectrum.
+    if (arc4random_uniform(200000) == 1)
+    {
+        tapeInputBit ^= 1;
     }
 }
 
@@ -510,7 +517,11 @@
 
 - (void)rewind
 {
-//    [self processTAPFile];
+    blockPauseTStates = 0;
+    tapeInputBit = 0;
+    currentBytePointer = 0;
+    currentBlockIndex = 0;
+    newBlock = YES;
 }
 
 - (void)eject
@@ -518,7 +529,6 @@
     tapBlocks = [NSMutableArray new];
     self.tapeLoaded = NO;
 }
-
 
 - (void)reset
 {
