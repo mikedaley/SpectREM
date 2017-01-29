@@ -581,7 +581,9 @@ unsigned char coreIORead(unsigned short address, void *m)
                 return 0x0;
             }
         }
-        else if ((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY || (machine->machineInfo.machineType == 0 && machine.useAYOn48k) ))
+        else if ((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY ||
+                                                  (machine->machineInfo.machineType == 0 &&
+                                                   machine.useAYOn48k) ))
         {
             return [machine.audioCore readAYData];
         }
@@ -693,12 +695,16 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->currentRAMPage = (data & 0x07);
     }
     
-    if((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY || machine.useAYOn48k))
+    if((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY || (machine->machineInfo.hasAY ||
+                                                                       (machine->machineInfo.machineType == 0 &&
+                                                                        machine.useAYOn48k) )))
     {
         [machine.audioCore setAYRegister:(data & 0x0f)];
     }
     
-    if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY || machine.useAYOn48k))
+       if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY || (machine->machineInfo.hasAY ||
+                                                                           (machine->machineInfo.machineType == 0 &&
+                                                                            machine.useAYOn48k) )))
     {
         [machine.audioCore writeAYData:data];
     }
