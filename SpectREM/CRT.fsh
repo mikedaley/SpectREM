@@ -106,84 +106,86 @@ void main()
 {
     vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
     
-    float vertMovementOn = 0.0;
-    float vertJerk = 0.0;
-    float vertJerk2 = 0.0;
-    float yOffset = 0.0;
-    float xOffset = 0.0;
-    float fuzzOffset = 0.0;
-    float largeFuzzOffset = 0.0;
-    
-    if (u_vert_roll > 0.0)
-    {
-        vertMovementOn = (1.0 - step(snoise(vec2(u_time * 0.2, 8.0)), 0.4)) * u_vert_roll;
-    }
-    
-    if (u_vert_jump > 0.0)
-    {
-        vertJerk = (1.0 - step(snoise(vec2(u_time * 1.5, 5.0)), 0.6)) * u_vert_jump;
-        vertJerk2 = (1.0 - step(snoise(vec2(u_time * 5.5, 5.0)), 0.2)) * u_vert_jump;
-    }
-    
-    if (u_horiz_offset > 0.0)
-    {
-        fuzzOffset = snoise(vec2(u_time * 15.0, texCoord.y * 80.0)) * 0.003;
-        largeFuzzOffset = snoise(vec2(u_time * 1.0, texCoord.y * 25.0)) * 0.004;
-    }
-
-    if (u_vert_roll > 0.0 || u_vert_jump > 0.0)
-    {
-        yOffset = abs(sin(u_time) * 4.0) * vertMovementOn + vertJerk * vertJerk2 * 0.3;
-    }
-
-    float y = mod(texCoord.y + yOffset, 1.0);
-    
-    xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
-
-    float staticVal = 0.0;
-    
-    if (u_static > 0.0)
-    {
-        for (float y = -1.0; y <= 1.0; y += 1.0) {
-            float maxDist = 5.0 / 200.0;
-            float dist = y / 200.0;
-            staticVal += staticV(vec2(texCoord.x, texCoord.y + dist), u_time) * (maxDist-abs(dist)) * 1.5;
-        }
-        staticVal *= u_static;
-    }
-
-    float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset - 0.01 * u_rgb_offset, y)).r + staticVal;
-    float green = 	texture2D(	u_texture, 	vec2(texCoord.x + xOffset,	  y)).g+staticVal;
-    float blue 	=	texture2D(	u_texture, 	vec2(texCoord.x + xOffset + 0.01 * u_rgb_offset, y)).b + staticVal;
-    
-    vec3 color = vec3(red,green,blue);
-
-    color = colorCorrection(color, u_saturation, u_contrast, u_brightness);
-
-    float scanline = sin(texCoord.y*800.0)*0.04*u_scan_line;
-    color -= scanline;
-
-    vec3 vignette = vegnetteColor(color, texCoord, u_vignette_x, u_vignette_y);
+    vec3 color;
     
     // If the texture coordinate is outside of the texture coordinates then discard the texel
     if (texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1)
     {
         color = vec3(0.1, 0.1, 0.1);
     }
-    
-    if (u_show_vignette == 1.0)
-    {
-        color *= vignette;
-    }
-
-    if (u_show_reflection == 1.0)
-    {
-        vec4 reflection_color = texture2D(u_reflection, texCoord);
-        gl_FragColor = vec4(mix(vec3(reflection_color) ,color , 0.75), 1.0);
-    }
     else
     {
-        gl_FragColor = vec4(color, 1.0);
+        float vertMovementOn = 0.0;
+        float vertJerk = 0.0;
+        float vertJerk2 = 0.0;
+        float yOffset = 0.0;
+        float xOffset = 0.0;
+        float fuzzOffset = 0.0;
+        float largeFuzzOffset = 0.0;
+        
+        if (u_vert_roll > 0.0)
+        {
+            vertMovementOn = (1.0 - step(snoise(vec2(u_time * 0.2, 8.0)), 0.4)) * u_vert_roll;
+        }
+        
+        if (u_vert_jump > 0.0)
+        {
+            vertJerk = (1.0 - step(snoise(vec2(u_time * 1.5, 5.0)), 0.6)) * u_vert_jump;
+            vertJerk2 = (1.0 - step(snoise(vec2(u_time * 5.5, 5.0)), 0.2)) * u_vert_jump;
+        }
+        
+        if (u_horiz_offset > 0.0)
+        {
+            fuzzOffset = snoise(vec2(u_time * 15.0, texCoord.y * 80.0)) * 0.003;
+            largeFuzzOffset = snoise(vec2(u_time * 1.0, texCoord.y * 25.0)) * 0.004;
+        }
+
+        if (u_vert_roll > 0.0 || u_vert_jump > 0.0)
+        {
+            yOffset = abs(sin(u_time) * 4.0) * vertMovementOn + vertJerk * vertJerk2 * 0.3;
+        }
+
+        float y = mod(texCoord.y + yOffset, 1.0);
+        
+        xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
+
+        float staticVal = 0.0;
+        
+        if (u_static > 0.0)
+        {
+            for (float y = -1.0; y <= 1.0; y += 1.0) {
+                float maxDist = 5.0 / 200.0;
+                float dist = y / 200.0;
+                staticVal += staticV(vec2(texCoord.x, texCoord.y + dist), u_time) * (maxDist-abs(dist)) * 1.5;
+            }
+            staticVal *= u_static;
+        }
+
+        float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset - 0.01 * u_rgb_offset, y)).r + staticVal;
+        float green = 	texture2D(	u_texture, 	vec2(texCoord.x + xOffset, y)).g + staticVal;
+        float blue 	=	texture2D(	u_texture, 	vec2(texCoord.x + xOffset + 0.01 * u_rgb_offset, y)).b + staticVal;
+        
+        color = vec3(red,green,blue);
+
+        color = colorCorrection(color, u_saturation, u_contrast, u_brightness);
+
+        float scanline = sin(texCoord.y*800.0)*0.04*u_scan_line;
+        color -= scanline;
+
+        vec3 vignette = vegnetteColor(color, texCoord, u_vignette_x, u_vignette_y);
+    
+        if (u_show_vignette == 1.0)
+        {
+            color *= vignette;
+        }
+        
+        if (u_show_reflection == 1.0)
+        {
+            vec4 reflection_color = texture2D(u_reflection, texCoord);
+            color = mix(vec3(reflection_color) ,color , 0.75);
+        }
     }
+    
+    gl_FragColor = vec4(color, 1.0);
 }
 
