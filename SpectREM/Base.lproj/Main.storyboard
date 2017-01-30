@@ -298,7 +298,7 @@
             <objects>
                 <windowController id="B8D-0N-5wS" customClass="EmulationWindowController" sceneMemberID="viewController">
                     <window key="window" title="SpectREM" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="spectrem" animationBehavior="default" id="IQv-IB-iLA">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="160" y="570" width="320" height="256"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>

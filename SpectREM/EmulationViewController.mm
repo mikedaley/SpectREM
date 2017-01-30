@@ -74,12 +74,19 @@ NS_ENUM(NSUInteger, MachineType)
     {
         dispatch_source_cancel(_debugTimer);
     }
+    
+    if (_fastTimer)
+    {
+        dispatch_source_cancel(_fastTimer);
+    }
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    _preferences = [NSUserDefaults standardUserDefaults];
+
     _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     
     // Setup debug window and view controllers
@@ -89,25 +96,27 @@ NS_ENUM(NSUInteger, MachineType)
     _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
     _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
     
+    // Setup the config view controller used for the config panel on the right. This initially places the view off the
+    // left edge of the window and drops the configViewController view into the config scroll view.
     _configViewController = [_storyBoard instantiateControllerWithIdentifier:@"ConfigViewController"];
     self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width,
         0,
         self.configEffectsView.frame.size.width,
         self.configEffectsView.frame.size.height};
-    
     self.configScrollView.documentView = _configViewController.view;
     
+    // Init the keyboard mapping view
     _keyboardMapWindowController = [_storyBoard instantiateControllerWithIdentifier:@"KeyboardWindow"];
     
-    _preferences = [NSUserDefaults standardUserDefaults];
-    
+    // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:cSceneScaleMode] integerValue];
-    
     [self.skView setFrameSize:self.skView.window.frame.size];
-    
     [self.skView presentScene:_emulationScene];
-    
+
+    // Create an instance of the ZXTape controller
+    _zxTape = [ZXTape new];
+
     [self setupLocalObservers];
     [self setupMachineBindings];
     [self setupSceneBindings];
@@ -115,10 +124,8 @@ NS_ENUM(NSUInteger, MachineType)
     [self setupGamepad];
     [self setupTimers];
     
-    _zxTape = [ZXTape new];
-    
+    // Switch to the last machine saved in preferences
     [self switchToMachine:_configViewController.currentMachineType];
-    
 }
 
 #pragma mark - CPU View Timer

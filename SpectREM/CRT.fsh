@@ -104,9 +104,17 @@ vec3 vegnetteColor(vec3 color, vec2 coord, float vig_x, float vig_y)
 
 void main()
 {
-    vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
-    
     vec3 color;
+    float vertMovementOn = 0.0;
+    float vertJerk = 0.0;
+    float vertJerk2 = 0.0;
+    float yOffset = 0.0;
+    float xOffset = 0.0;
+    float fuzzOffset = 0.0;
+    float largeFuzzOffset = 0.0;
+    float staticVal = 0.0;
+
+    vec2 texCoord = radialDistortion(v_tex_coord, u_distortion);
     
     // If the texture coordinate is outside of the texture coordinates then discard the texel
     if (texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1)
@@ -115,14 +123,6 @@ void main()
     }
     else
     {
-        float vertMovementOn = 0.0;
-        float vertJerk = 0.0;
-        float vertJerk2 = 0.0;
-        float yOffset = 0.0;
-        float xOffset = 0.0;
-        float fuzzOffset = 0.0;
-        float largeFuzzOffset = 0.0;
-        
         if (u_vert_roll > 0.0)
         {
             vertMovementOn = (1.0 - step(snoise(vec2(u_time * 0.2, 8.0)), 0.4)) * u_vert_roll;
@@ -148,8 +148,6 @@ void main()
         float y = mod(texCoord.y + yOffset, 1.0);
         
         xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
-
-        float staticVal = 0.0;
         
         if (u_static > 0.0)
         {
@@ -169,7 +167,7 @@ void main()
 
         color = colorCorrection(color, u_saturation, u_contrast, u_brightness);
 
-        float scanline = sin(texCoord.y*800.0)*0.04*u_scan_line;
+        float scanline = sin(texCoord.y * 880) * 0.04 * u_scan_line;
         color -= scanline;
 
         vec3 vignette = vegnetteColor(color, texCoord, u_vignette_x, u_vignette_y);

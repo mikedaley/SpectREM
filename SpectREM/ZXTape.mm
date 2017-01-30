@@ -187,6 +187,7 @@
         {
             NSLog(@"TAPE STOPPED");
             self.playing = NO;
+            tapeInputBit = 0;
             return;
         }
 
@@ -513,6 +514,7 @@
 - (void)stop
 {
     self.playing = NO;
+    tapeInputBit = 0;
 }
 
 - (void)rewind
