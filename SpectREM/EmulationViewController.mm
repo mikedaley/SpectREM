@@ -16,6 +16,7 @@
 #import "ConfigViewController.h"
 #import "GraphicalMemViewController.h"
 #import "CPUViewController.h"
+#import "TapeViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
 #import "ZXTape.h"
@@ -49,6 +50,9 @@ NS_ENUM(NSUInteger, MachineType)
     CPUViewController       *_cpuViewController;
     
     NSWindowController      *_keyboardMapWindowController;
+    
+    NSWindowController      *_tapeBrowserWindowController;
+    TapeViewController      *_tapeViewController;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
@@ -108,6 +112,11 @@ NS_ENUM(NSUInteger, MachineType)
     // Init the keyboard mapping view
     _keyboardMapWindowController = [_storyBoard instantiateControllerWithIdentifier:@"KeyboardWindow"];
     
+    // Setup the tape view view controller;
+    _tapeBrowserWindowController = [_storyBoard instantiateControllerWithIdentifier:@"TAPBrowserWindow"];
+    _tapeViewController = (TapeViewController *)_tapeBrowserWindowController.contentViewController;
+    [_tapeBrowserWindowController showWindow:nil];
+    
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:cSceneScaleMode] integerValue];
@@ -118,7 +127,6 @@ NS_ENUM(NSUInteger, MachineType)
     _zxTape = [ZXTape new];
 
     [self setupLocalObservers];
-    [self setupMachineBindings];
     [self setupSceneBindings];
     [self setupNotificationCenterObservers];
     [self setupGamepad];
@@ -126,6 +134,8 @@ NS_ENUM(NSUInteger, MachineType)
     
     // Switch to the last machine saved in preferences
     [self switchToMachine:_configViewController.currentMachineType];
+
+    [self setupMachineBindings];
 }
 
 #pragma mark - CPU View Timer
@@ -200,6 +210,8 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:cUseAYOn48k toObject:_configViewController withKeyPath:cUseAYOn48k options:nil];
     [_machine.serialCore bind:cSerialPort toObject:_configViewController withKeyPath:cSerialPort options:nil];
     [_machine bind:cUseSmartLink toObject:_configViewController withKeyPath:cUseSmartLink options:nil];
+    
+    [_tapeViewController bind:@"tape" toObject:self withKeyPath:@"zxTape" options:nil];
 }
 
 - (void)setupLocalObservers
@@ -257,7 +269,7 @@ NS_ENUM(NSUInteger, MachineType)
 
     if ([keyPath isEqualToString:cAccelerationMultiplier])
     {
-        dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, (1.0 / (50.0 * [[change valueForKey:NSKeyValueChangeNewKey] doubleValue])) * NSEC_PER_SEC, 0);
+        dispatch_source_set_timer(_fastTimer, DISPATCH_TIME_NOW, (1.0 / (50.08 * [[change valueForKey:NSKeyValueChangeNewKey] doubleValue])) * NSEC_PER_SEC, 0);
     }
 
     if ([keyPath isEqualToString:cAccelerate])

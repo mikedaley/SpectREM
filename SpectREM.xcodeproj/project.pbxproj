@@ -33,6 +33,7 @@
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
 		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
+		EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
@@ -116,6 +117,8 @@
 		EDAAD8C11E05893F0070153E /* ZXTape.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXTape.mm; sourceTree = "<group>"; };
 		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
+		EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapeViewController.h; sourceTree = "<group>"; };
+		EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeViewController.m; sourceTree = "<group>"; };
 		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
 		EDEBA79F1DEEDCB000671446 /* Snapshot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Snapshot.mm; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -259,6 +262,15 @@
 			name = "CPU View Controller";
 			sourceTree = "<group>";
 		};
+		EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */ = {
+			isa = PBXGroup;
+			children = (
+				EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */,
+				EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */,
+			);
+			name = TapeViewController;
+			sourceTree = "<group>";
+		};
 		EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */ = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +360,7 @@
 				ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */,
 				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,
 				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
+				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
 				99BFAA271DBA0AC50049D811 /* Views */,
 			);
 			name = "View/Window Controllers";
@@ -570,6 +583,7 @@
 				99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */,
 				991D87C41E33937A00667E37 /* SerialCore.m in Sources */,
 				99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */,
+				EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */,
 				EDF3A4D61DB0D7AB00511BAF /* Z80Core_CBOpcodes.cpp in Sources */,
 				EDF3A4AF1DB0D60700511BAF /* EmulationViewController.mm in Sources */,
 				EDF3A4D81DB0D7AB00511BAF /* Z80Core_DDOpcodes.cpp in Sources */,

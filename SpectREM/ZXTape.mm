@@ -36,17 +36,11 @@
     // How many pulses have been generated for the current data bit;
     int dataPulseCount;
     
-    // Array that contains all the data blocks within the TAP file
-    NSMutableArray *tapBlocks;
-    
     // The current block within the tapBlocks array being processed
     int currentBlockIndex;
     
     // Is a new block about to start
     BOOL newBlock;
-    
-    // What was the previous block type
-    BlockDataType previousBlockType;
 }
 
 - (instancetype)init
@@ -64,7 +58,7 @@
         tapeInputBit = 0;
         _playing = NO;
         
-        tapBlocks = [NSMutableArray new];
+        self.tapBlocks = [NSMutableArray new];
     }
     return self;
 }
@@ -84,7 +78,7 @@
         return;
     }
 
-    tapBlocks = [NSMutableArray new];
+    self.tapBlocks = [NSMutableArray new];
 
     [self processTAPFileData:tapeData];
     [self printTAPContents];
@@ -96,12 +90,6 @@
     const char *tapeBytes = (const char*)[data bytes];
     
     self.playing = NO;
-    pilotPulseTStates = 0;
-    syncPulseTStates = 0;
-    pilotPulses = 0;
-    processingState = eNoTape;
-    blockPauseTStates = 0;
-    tapeInputBit = 0;
     currentBytePointer = 0;
     currentBlockIndex = 0;
     self.bytesRemaining = 0;
@@ -116,7 +104,7 @@
         
         blockLength = ((unsigned short *)&tapeBytes[currentBytePointer])[0];
         
-        // Move the pointer past the block size and into the block itself
+        // Move the pointer to the start of the actual tap block
         currentBytePointer += 2;
         
         flag = tapeBytes[currentBytePointer + cHeaderFlagOffset];
@@ -146,13 +134,16 @@
         }
 
         newTAPBlock.blockLength = blockLength;
+        newTAPBlock.blockType = @"Testing";
         newTAPBlock.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
         memcpy(newTAPBlock.blockData, &tapeBytes[currentBytePointer], blockLength);
-        self.bytesRemaining += blockLength + 1;
-        [tapBlocks addObject:newTAPBlock];
+        self.totalBytes += blockLength + 1;
+        [self.tapBlocks addObject:newTAPBlock];
 
         currentBytePointer += blockLength;
     }
+    
+    self.bytesRemaining = self.totalBytes;
 }
 
 - (void)updateTapeWithTStates:(int)tStates
@@ -162,7 +153,7 @@
     {
         newBlock = NO;
         
-        if (currentBlockIndex > tapBlocks.count - 1)
+        if (currentBlockIndex > self.tapBlocks.count - 1)
         {
             NSLog(@"TAPE STOPPED");
             self.playing = NO;
@@ -170,7 +161,7 @@
             return;
         }
 
-        TAPBlock *tapBlock = [tapBlocks objectAtIndex:currentBlockIndex];
+        TAPBlock *tapBlock = [self.tapBlocks objectAtIndex:currentBlockIndex];
 
         if ([tapBlock isKindOfClass:[ProgramHeader class]])
         {
@@ -358,8 +349,8 @@
 
 - (void)generateDataStreamWithTStates:(int)tStates
 {
-    int currentBlockLength = [[tapBlocks objectAtIndex:currentBlockIndex] getDataLength];
-    unsigned char byte = [[tapBlocks objectAtIndex:currentBlockIndex] blockData][currentBytePointer];
+    int currentBlockLength = [[self.tapBlocks objectAtIndex:currentBlockIndex] getDataLength];
+    unsigned char byte = [[self.tapBlocks objectAtIndex:currentBlockIndex] blockData][currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     
     currentDataBit += 1;
@@ -395,7 +386,7 @@
 - (void)generateHeaderDataStreamWithTStates:(int)tStates
 {
     int currentBlockLength = 19;
-    unsigned char byte = [[tapBlocks objectAtIndex:currentBlockIndex] blockData][currentBytePointer];
+    unsigned char byte = [[self.tapBlocks objectAtIndex:currentBlockIndex] blockData][currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     
     currentDataBit += 1;
@@ -481,7 +472,7 @@
 {
     NSMutableData *saveData = [NSMutableData new];
     
-    for (TAPBlock *tapBlock in tapBlocks) {
+    for (TAPBlock *tapBlock in self.tapBlocks) {
         unsigned char length = tapBlock.blockLength;
         [saveData appendBytes:&length length:sizeof(unsigned short)];
         [saveData appendBytes:tapBlock.blockData length:length];
@@ -498,6 +489,11 @@
 
 - (void)rewind
 {
+    self.bytesRemaining = self.totalBytes;
+    pilotPulseTStates = 0;
+    syncPulseTStates = 0;
+    pilotPulses = 0;
+    processingState = eNoTape;
     blockPauseTStates = 0;
     tapeInputBit = 0;
     currentBytePointer = 0;
@@ -507,7 +503,7 @@
 
 - (void)eject
 {
-    tapBlocks = [NSMutableArray new];
+    self.tapBlocks = [NSMutableArray new];
     self.tapeLoaded = NO;
 }
 
@@ -515,7 +511,7 @@
 {
     self.tapeLoaded = NO;
     self.playing = NO;
-    [tapBlocks removeAllObjects];
+    [self.tapBlocks removeAllObjects];
 }
 
 #pragma mark - Saving
@@ -553,7 +549,7 @@
 
 - (void)printTAPContents
 {
-    for (TAPBlock *tapBlock in tapBlocks) {
+    for (TAPBlock *tapBlock in self.tapBlocks) {
         
         NSLog(@"+----------------------------------------");
         
@@ -656,11 +652,6 @@
     return self.blockData[cProgramHeaderChecksumOffset];
 }
 
-- (NSString *)getBlockType
-{
-    return @"Program Header";
-}
-
 @end
 
 #pragma mark - Numeric Data Header
@@ -670,11 +661,6 @@
 - (unsigned char)getVariableName
 {
     return self.blockData[cNumericDataHeaderVariableNameOffset];
-}
-
-- (NSString *)getBlockType
-{
-    return @"Numeric Data Header";
 }
 
 @end
@@ -688,11 +674,6 @@
     return self.blockData[cAlphaNumericDataHeaderVariableNameOffset];
 }
 
-- (NSString *)getBlockType
-{
-    return @"Alphanumeric Data Header";
-}
-
 @end
 
 #pragma mark - Byte Header
@@ -702,11 +683,6 @@
 - (unsigned short)getStartAddress
 {
     return ((unsigned short *)&self.blockData[cByteHeaderStartAddressOffset])[0];
-}
-
-- (NSString *)getBlockType
-{
-    return @"Byte Header";
 }
 
 @end
@@ -735,11 +711,6 @@
 - (unsigned char)getChecksum
 {
     return self.blockData[self.blockLength + 1];
-}
-
-- (NSString *)getBlockType
-{
-    return @"Data Block";
 }
 
 @end

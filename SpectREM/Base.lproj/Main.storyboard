@@ -291,7 +291,7 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="-68"/>
+            <point key="canvasLocation" x="76" y="-9"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -379,34 +379,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75.5" y="692"/>
-        </scene>
-        <!--Info View Controller-->
-        <scene sceneID="Ghy-Iy-lJ4">
-            <objects>
-                <viewController storyboardIdentifier="InfoViewController" id="9tO-SO-LXj" customClass="InfoViewController" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="Gf9-Ur-rL7">
-                        <rect key="frame" x="0.0" y="0.0" width="275" height="69"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="5es-Yf-py2">
-                                <rect key="frame" x="18" y="20" width="239" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="ZX Spectrum 48k SE" id="Hw2-IQ-RFb">
-                                    <font key="font" metaFont="system" size="24"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <binding destination="9tO-SO-LXj" name="value" keyPath="self.text" id="Tmd-tE-nBt"/>
-                                </connections>
-                            </textField>
-                        </subviews>
-                    </view>
-                </viewController>
-                <customObject id="RxS-Ic-NaC" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="76" y="927"/>
+            <point key="canvasLocation" x="76" y="606"/>
         </scene>
         <!--Config View Controller-->
         <scene sceneID="suV-XS-mcE">
@@ -1044,10 +1017,8 @@
                 </viewController>
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s"/>
-                <userDefaultsController id="CUz-D8-d1s"/>
-                <userDefaultsController id="yyM-Ee-Mhh"/>
             </objects>
-            <point key="canvasLocation" x="-288" y="807"/>
+            <point key="canvasLocation" x="-307" y="708"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">
@@ -1090,7 +1061,7 @@
         <scene sceneID="ihi-53-5WE">
             <objects>
                 <windowController storyboardIdentifier="KeyboardWindow" id="rd2-U6-lqk" sceneMemberID="viewController">
-                    <window key="window" title="Keyboard Map" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="keyboardMap" animationBehavior="default" id="v7V-uE-i5A">
+                    <window key="window" title="Keyboard Map" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="keyboardMap" animationBehavior="default" id="v7V-uE-i5A" customClass="NSPanel">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="163" y="199" width="355" height="200"/>
@@ -1104,7 +1075,119 @@
                 </windowController>
                 <customObject id="ps7-LN-tQV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1623.5" y="177.5"/>
+            <point key="canvasLocation" x="93" y="956"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="j4T-1C-mNu">
+            <objects>
+                <windowController storyboardIdentifier="TAPBrowserWindow" id="aEX-Zc-V4a" sceneMemberID="viewController">
+                    <window key="window" title="TAP Browser" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="tapBrowser" animationBehavior="default" id="TGS-8M-haL" customClass="NSPanel">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="425" y="461" width="480" height="208"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+                    </window>
+                    <connections>
+                        <segue destination="Y2K-MQ-n4V" kind="relationship" relationship="window.shadowedContentViewController" id="7Pl-eP-t35"/>
+                    </connections>
+                </windowController>
+                <customObject id="V0c-IT-ucs" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="596" y="960"/>
+        </scene>
+        <!--TAP View Controller-->
+        <scene sceneID="ef2-PT-cdk">
+            <objects>
+                <viewController title="TAP View Controller" id="Y2K-MQ-n4V" customClass="TapeViewController" sceneMemberID="viewController">
+                    <view key="view" misplaced="YES" id="7I0-xD-BdR">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="290"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="45" horizontalPageScroll="10" verticalLineScroll="45" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="pf9-PB-yk5">
+                                <rect key="frame" x="20" y="20" width="267" height="250"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
+                                <clipView key="contentView" id="kYi-aQ-aIj">
+                                    <rect key="frame" x="1" y="0.0" width="265" height="249"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="43" rowSizeStyle="automatic" headerView="Lyk-s9-foR" viewBased="YES" id="Fif-5P-uhb">
+                                            <rect key="frame" x="0.0" y="0.0" width="265" height="226"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <size key="intercellSpacing" width="3" height="2"/>
+                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                            <tableColumns>
+                                                <tableColumn width="262" minWidth="250" maxWidth="1000" id="K2e-Xb-t7r">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="TAP Blocks">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                    </tableHeaderCell>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="1X5-aa-bPH">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                    <prototypeCellViews>
+                                                        <tableCellView misplaced="YES" id="kwr-1U-RPZ">
+                                                            <rect key="frame" x="1" y="1" width="262" height="43"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="ey9-Oh-lgL">
+                                                                    <rect key="frame" x="1" y="13" width="260" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Z8a-aU-IUm">
+                                                                        <font key="font" metaFont="system"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                    <connections>
+                                                                        <binding destination="kwr-1U-RPZ" name="value" keyPath="objectValue.blockType" id="UGY-9f-ctY"/>
+                                                                    </connections>
+                                                                </textField>
+                                                            </subviews>
+                                                            <connections>
+                                                                <outlet property="textField" destination="ey9-Oh-lgL" id="FZA-7d-d06"/>
+                                                            </connections>
+                                                        </tableCellView>
+                                                    </prototypeCellViews>
+                                                </tableColumn>
+                                            </tableColumns>
+                                            <connections>
+                                                <binding destination="AaH-pT-0V2" name="content" keyPath="arrangedObjects" id="iD3-4o-9tS"/>
+                                            </connections>
+                                        </tableView>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="zIx-gQ-iYT">
+                                    <rect key="frame" x="1" y="119" width="223" height="15"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="sdf-mb-rkE">
+                                    <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <tableHeaderView key="headerView" id="Lyk-s9-foR">
+                                    <rect key="frame" x="0.0" y="0.0" width="265" height="23"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableHeaderView>
+                            </scrollView>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="Fif-5P-uhb" id="dKT-Z1-kyw"/>
+                    </connections>
+                </viewController>
+                <customObject id="xY4-Rg-kYp" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <arrayController id="AaH-pT-0V2" userLabel="TAP Blocks Array Controller">
+                    <connections>
+                        <binding destination="Y2K-MQ-n4V" name="contentArray" keyPath="self.tape.tapBlocks" id="hRF-Lf-Za9"/>
+                    </connections>
+                </arrayController>
+                <userDefaultsController id="DCi-Kb-qB4"/>
+            </objects>
+            <point key="canvasLocation" x="596" y="1350"/>
         </scene>
         <!--Keyboard View Controller-->
         <scene sceneID="ahz-sD-Vlf">
@@ -1145,7 +1228,7 @@
                 <customObject id="yOY-te-xxY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ei6-xn-Ym2"/>
             </objects>
-            <point key="canvasLocation" x="1623.5" y="658"/>
+            <point key="canvasLocation" x="93" y="1305"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="9Af-Td-QZ7">
@@ -1891,10 +1974,9 @@
                     </view>
                 </viewController>
                 <customObject id="Pew-Ua-735" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <userDefaultsController id="Knd-cW-vAt"/>
                 <userDefaultsController id="v4N-c4-LQd"/>
             </objects>
-            <point key="canvasLocation" x="1133.5" y="682"/>
+            <point key="canvasLocation" x="1134" y="602"/>
         </scene>
         <!--Graphical Mem View Controller-->
         <scene sceneID="KMB-hG-mTJ">
@@ -1968,7 +2050,7 @@
                 <customObject id="K6x-f1-4c5" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="nPd-DA-0F7"/>
             </objects>
-            <point key="canvasLocation" x="596" y="692"/>
+            <point key="canvasLocation" x="596" y="606"/>
         </scene>
     </scenes>
 </document>

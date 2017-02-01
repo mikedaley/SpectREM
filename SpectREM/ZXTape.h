@@ -87,7 +87,9 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 @property (assign) BOOL playing;
 @property (assign) BOOL saving;
 @property (assign) NSUInteger bytesRemaining;
+@property (assign) NSUInteger totalBytes;
 @property (strong) NSURL *tapeFileURL;
+@property (strong) NSMutableArray *tapBlocks;
 
 #pragma mark - Methods
 
@@ -122,6 +124,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 
 @property (assign) unsigned short blockLength;
 @property (assign) unsigned char *blockData;
+@property (strong, nonatomic) NSString *blockType;
 
 - (unsigned char)getFlag;
 - (unsigned char)getDataType;
