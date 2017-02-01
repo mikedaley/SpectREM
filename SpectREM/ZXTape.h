@@ -68,7 +68,8 @@ typedef NS_ENUM(unsigned char, BlockDataType)
     eAlphaNumericDataHeader,
     eByteHeader,
     eDataBlock,
-    eFragmentedDataBlock
+    eFragmentedDataBlock,
+    eUnknownBlock = 99
 };
 
 #pragma mark - Interface
@@ -166,7 +167,5 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 #pragma mark - Data Block
 
 @interface DataBlock : TAPBlock
-
-@property (assign) int dataBlockLength;
 
 @end

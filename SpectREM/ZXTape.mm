@@ -33,8 +33,6 @@
     int blockPauseTStates;
     // How many tStates to pause when processing data bit pulses
     int dataBitTStates;
-    // Temp storage for the number of bytes in a data block as specific by the preceeding header
-    int dataBlockLength;
     // How many pulses have been generated for the current data bit;
     int dataPulseCount;
     
@@ -46,6 +44,9 @@
     
     // Is a new block about to start
     BOOL newBlock;
+    
+    // What was the previous block type
+    BlockDataType previousBlockType;
 }
 
 - (instancetype)init
@@ -106,73 +107,51 @@
     self.bytesRemaining = 0;
     newBlock = YES;
     
+    unsigned short blockLength = 0;
+    unsigned char flag = 0;
+    unsigned char dataType = 0;
+    
     // Build an array of all the blocks in the TAP file
     while (currentBytePointer < data.length) {
         
-        unsigned short blockLength = ((unsigned short *)&tapeBytes[currentBytePointer])[0];
+        blockLength = ((unsigned short *)&tapeBytes[currentBytePointer])[0];
+        
+        // Move the pointer past the block size and into the block itself
         currentBytePointer += 2;
-        unsigned char flag = tapeBytes[currentBytePointer + cHeaderFlagOffset];
-        unsigned char dataType = tapeBytes[currentBytePointer + cHeaderDataTypeOffset];
         
-        if (dataType == eProgramHeader && flag != 255)
-        {
-            ProgramHeader *programHeader = [ProgramHeader new];
-            programHeader.blockLength = blockLength;
-            programHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
-            memcpy(programHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            dataBlockLength = [programHeader getDataLength];
-            self.bytesRemaining += blockLength;
-            [tapBlocks addObject:programHeader];
-        }
+        flag = tapeBytes[currentBytePointer + cHeaderFlagOffset];
+        dataType = tapeBytes[currentBytePointer + cHeaderDataTypeOffset];
         
-        if (dataType == eNumericDataHeader && flag != 255)
-        {
-            NumericDataHeader *numericDataHeader = [NumericDataHeader new];
-            numericDataHeader.blockLength = blockLength;
-            numericDataHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
-            memcpy(numericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            dataBlockLength = [numericDataHeader getDataLength];
-            self.bytesRemaining += blockLength;
-            [tapBlocks addObject:numericDataHeader];
-        }
+        TAPBlock *newTAPBlock = nil;
         
-        if (dataType == eAlphaNumericDataHeader && flag != 255)
+        if (dataType == eProgramHeader && flag != 0xff)
         {
-            AlphaNumericDataHeader *alphaNumericDataHeader = [AlphaNumericDataHeader new];
-            alphaNumericDataHeader.blockLength = blockLength;
-            alphaNumericDataHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
-            memcpy(alphaNumericDataHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            dataBlockLength = [alphaNumericDataHeader getDataLength];
-            self.bytesRemaining += blockLength;
-            [tapBlocks addObject:alphaNumericDataHeader];
+            newTAPBlock = [ProgramHeader new];
         }
-        
-        if (dataType == eByteHeader && flag != 255)
+        else if (dataType == eNumericDataHeader && flag != 0xff)
         {
-            ByteHeader *byteHeader = [ByteHeader new];
-            byteHeader.blockLength = blockLength;
-            byteHeader.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
-            memcpy(byteHeader.blockData, &tapeBytes[currentBytePointer], blockLength);
-            dataBlockLength = [byteHeader getDataLength];
-            self.bytesRemaining += blockLength;
-            [tapBlocks addObject:byteHeader];
+            newTAPBlock = [NumericDataHeader new];
         }
-        
-        if (flag == 255)
+        else if (dataType == eAlphaNumericDataHeader && flag != 0xff)
         {
-            DataBlock *dataBlock = [DataBlock new];
-            dataBlock.blockLength = blockLength;
-            dataBlock.dataBlockLength = dataBlockLength + 2;
-            dataBlock.blockData = (unsigned char *)calloc(dataBlockLength + 2, sizeof(unsigned char));
-            memcpy(dataBlock.blockData, &tapeBytes[currentBytePointer], dataBlockLength + 2);
-            currentBytePointer += dataBlockLength + 2;
-            self.bytesRemaining += dataBlockLength + 4;
-            [tapBlocks addObject:dataBlock];
+            newTAPBlock = [AlphaNumericDataHeader new];
         }
-        else
+        else if (dataType == eByteHeader && flag != 0xff)
         {
-            currentBytePointer += blockLength;
+            newTAPBlock = [ByteHeader new];
         }
+        else if (flag == 0xff || flag == 0xfe)
+        {
+            newTAPBlock = [DataBlock new];
+        }
+
+        newTAPBlock.blockLength = blockLength;
+        newTAPBlock.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
+        memcpy(newTAPBlock.blockData, &tapeBytes[currentBytePointer], blockLength);
+        self.bytesRemaining += blockLength + 1;
+        [tapBlocks addObject:newTAPBlock];
+
+        currentBytePointer += blockLength;
     }
 }
 
@@ -479,7 +458,7 @@
 - (void)blockPauseWithTStates:(int)tStates
 {
     blockPauseTStates += tStates;
-    if (blockPauseTStates > 3500000 * 2.5)
+    if (blockPauseTStates > 3500000 * 2)
     {
         currentBlockIndex += 1;
         newBlock = YES;
@@ -750,12 +729,12 @@
 
 - (unsigned short)getDataLength
 {
-    return self.dataBlockLength;
+    return self.blockLength;
 }
 
 - (unsigned char)getChecksum
 {
-    return self.blockData[self.dataBlockLength + 1];
+    return self.blockData[self.blockLength + 1];
 }
 
 - (NSString *)getBlockType
