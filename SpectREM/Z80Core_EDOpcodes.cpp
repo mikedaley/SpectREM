@@ -5,7 +5,7 @@
 void CZ80Core::IN_B_off_C(unsigned char opcode)
 {
 	m_CPURegisters.regs.regB = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
+    m_CPURegisters.regs.regF &= FLAG_C;
     m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regB];
     m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regB];
 }
@@ -85,7 +85,7 @@ void CZ80Core::LD_I_A(unsigned char opcode)
 void CZ80Core::IN_C_off_C(unsigned char opcode)
 {
 	m_CPURegisters.regs.regC = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
+    m_CPURegisters.regs.regF &= FLAG_C;
     m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regC];
     m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regC];
 }
@@ -149,7 +149,7 @@ void CZ80Core::LD_R_A(unsigned char opcode)
 void CZ80Core::IN_D_off_C(unsigned char opcode)
 {
 	m_CPURegisters.regs.regD = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
+    m_CPURegisters.regs.regF &= FLAG_C;
     m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regD];
     m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regD];
 }
@@ -211,7 +211,7 @@ void CZ80Core::LD_A_I(unsigned char opcode)
 void CZ80Core::IN_E_off_C(unsigned char opcode)
 {
 	m_CPURegisters.regs.regE = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
+    m_CPURegisters.regs.regF &= FLAG_C;
     m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regE];
     m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regE];
 }
@@ -273,7 +273,7 @@ void CZ80Core::LD_A_R(unsigned char opcode)
 void CZ80Core::IN_H_off_C(unsigned char opcode)
 {
 	m_CPURegisters.regs.regH = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
+    m_CPURegisters.regs.regF &= FLAG_C;
     m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regH];
     m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regH];
 }
@@ -324,7 +324,7 @@ void CZ80Core::RRD(unsigned char opcode)
 void CZ80Core::IN_L_off_C(unsigned char opcode)
 {
 	m_CPURegisters.regs.regL = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
+    m_CPURegisters.regs.regF &= FLAG_C;
     m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regL];
     m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regL];
 }
@@ -374,10 +374,10 @@ void CZ80Core::RLD(unsigned char opcode)
 
 void CZ80Core::IN_F_off_C(unsigned char opcode)
 {
-	Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
-    m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regF];
-    m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regF];
+	unsigned char t = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
+    m_CPURegisters.regs.regF &= FLAG_C;
+    m_CPURegisters.regs.regF |= m_SZ35Table[t];
+    m_CPURegisters.regs.regF |= m_ParityTable[t];
 }
 
 //-----------------------------------------------------------------------------------------
@@ -419,8 +419,8 @@ void CZ80Core::LD_off_nn_SP(unsigned char opcode)
 void CZ80Core::IN_A_off_C(unsigned char opcode)
 {
 	m_CPURegisters.regs.regA = Z80CoreIORead(m_CPURegisters.reg_pairs.regBC);
-	m_MEMPTR = m_CPURegisters.reg_pairs.regBC + 1;
-    m_CPURegisters.regs.regF = m_CPURegisters.regs.regF & FLAG_C;
+    m_MEMPTR = m_CPURegisters.reg_pairs.regBC + 1;
+    m_CPURegisters.regs.regF &= FLAG_C;
     m_CPURegisters.regs.regF |= m_SZ35Table[m_CPURegisters.regs.regA];
     m_CPURegisters.regs.regF |= m_ParityTable[m_CPURegisters.regs.regA];
 }

@@ -304,6 +304,8 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
             {
                 // Execute the opcode
                 (this->*table->entries[opcode].function)(opcode);
+                
+                
             }
             else
             {

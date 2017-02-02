@@ -1791,7 +1791,7 @@ CZ80Core::Z80OpcodeTable CZ80Core::Main_Opcodes = {
 		{ NULL							 , NULL               },
 		{ &CZ80Core::SBC_A_n             , "SBC A,0%02Xh"     },
 		{ &CZ80Core::RST_18H             , "RST 18H"          },
-		{ &CZ80Core::RET_PO              , "RET PO"           },
+		{ &CZ80Core::RET_PO              , "RET PO"           },    
 		{ &CZ80Core::POP_HL              , "POP HL"           },
 		{ &CZ80Core::JP_PO_off_nn        , "JP PO,(0%04Xh)"   },
 		{ &CZ80Core::EX_off_SP_HL        , "EX (SP),HL"       },
