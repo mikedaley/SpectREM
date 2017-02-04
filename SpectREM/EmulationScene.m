@@ -44,23 +44,24 @@
         self.emulationBackingSprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationBackingSprite"];
         self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationDisplaySprite"];
 
+//        _shader = [SKShader shaderWithFileNamed:@"OpenGL.fsh"];
         _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
         _shader.attributes = @[
-                               [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_contrast" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_show_vignette" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_scan_line" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_rgb_offset" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_horiz_offset" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_vert_jump" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_vert_roll" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_static" type:SKAttributeTypeFloat],
-                               [SKAttribute attributeWithName:@"u_show_reflection" type:SKAttributeTypeFloat],
+                               [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_contrast" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_show_vignette" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_scan_line" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_rgb_offset" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_horiz_offset" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_vert_jump" type:SKAttributeTypeHalfFloat],
+//                               [SKAttribute attributeWithName:@"u_vert_roll" type:SKAttributeTypeHalfFloat],
+//                               [SKAttribute attributeWithName:@"u_static" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_show_reflection" type:SKAttributeTypeHalfFloat]
                                ];
         _shader.uniforms = @[
                              [SKUniform uniformWithName:@"u_reflection" texture:[SKTexture textureWithImageNamed:@"reflection"]]

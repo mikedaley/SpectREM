@@ -1110,14 +1110,14 @@
                                     <rect key="frame" x="1" y="0.0" width="265" height="249"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="43" rowSizeStyle="automatic" headerView="Lyk-s9-foR" viewBased="YES" id="Fif-5P-uhb">
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="43" headerView="Lyk-s9-foR" id="Fif-5P-uhb">
                                             <rect key="frame" x="0.0" y="0.0" width="265" height="226"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn width="262" minWidth="250" maxWidth="1000" id="K2e-Xb-t7r">
+                                                <tableColumn identifier="TapView" width="262" minWidth="250" maxWidth="1000" id="K2e-Xb-t7r">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="TAP Blocks">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1129,29 +1129,6 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                    <prototypeCellViews>
-                                                        <tableCellView misplaced="YES" id="kwr-1U-RPZ">
-                                                            <rect key="frame" x="1" y="1" width="262" height="43"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="ey9-Oh-lgL">
-                                                                    <rect key="frame" x="1" y="13" width="260" height="17"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Z8a-aU-IUm">
-                                                                        <font key="font" metaFont="system"/>
-                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                    <connections>
-                                                                        <binding destination="kwr-1U-RPZ" name="value" keyPath="objectValue.blockType" id="UGY-9f-ctY"/>
-                                                                    </connections>
-                                                                </textField>
-                                                            </subviews>
-                                                            <connections>
-                                                                <outlet property="textField" destination="ey9-Oh-lgL" id="FZA-7d-d06"/>
-                                                            </connections>
-                                                        </tableCellView>
-                                                    </prototypeCellViews>
                                                 </tableColumn>
                                             </tableColumns>
                                             <connections>
@@ -1182,7 +1159,7 @@
                 <customObject id="xY4-Rg-kYp" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <arrayController id="AaH-pT-0V2" userLabel="TAP Blocks Array Controller">
                     <connections>
-                        <binding destination="Y2K-MQ-n4V" name="contentArray" keyPath="self.tape.tapBlocks" id="hRF-Lf-Za9"/>
+                        <binding destination="Y2K-MQ-n4V" name="contentArray" keyPath="tape.tapBlocks" id="fOo-jV-7Ux"/>
                     </connections>
                 </arrayController>
                 <userDefaultsController id="DCi-Kb-qB4"/>

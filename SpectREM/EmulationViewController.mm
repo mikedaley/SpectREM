@@ -74,6 +74,7 @@ NS_ENUM(NSUInteger, MachineType)
     NSLog(@"Deallocating EmulationViewController");
     [self removeBindings];
     [_configViewController removeObserver:self forKeyPath:cCurrentMachineType];
+    
     if (_debugTimer)
     {
         dispatch_source_cancel(_debugTimer);
@@ -115,7 +116,7 @@ NS_ENUM(NSUInteger, MachineType)
     // Setup the tape view view controller;
     _tapeBrowserWindowController = [_storyBoard instantiateControllerWithIdentifier:@"TAPBrowserWindow"];
     _tapeViewController = (TapeViewController *)_tapeBrowserWindowController.contentViewController;
-    [_tapeBrowserWindowController showWindow:nil];
+//    [_tapeBrowserWindowController showWindow:nil];
     
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
@@ -327,7 +328,7 @@ NS_ENUM(NSUInteger, MachineType)
     
     _backingTexture.filteringMode = SKTextureFilteringNearest;
     self.emulationScene.emulationBackingSprite.texture = _backingTexture;
-    self.emulationScene.emulationBackingSprite.size = (CGSize){size.width * (floorf(self.view.frame.size.width / size.width)),
+    self.emulationScene.emulationBackingSprite.size = (CGSize){size.width  * (floorf(self.view.frame.size.width / size.width)),
         size.height * (floorf(self.view.frame.size.width / size.height))};
 
     // Use the configurable border width to work out the rect that should be extraced from the texture

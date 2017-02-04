@@ -239,7 +239,7 @@
     unsigned char byte12 = fileBytes[12];
     
     // For campatibility reasons if byte 12 = 255 then is should be assumed to = 1
-//    byte12 = (byte12 == 255) ? byte12 : 1;
+    byte12 = (byte12 == 255) ? byte12 : 1;
     
     machine->borderColor = (fileBytes[12] & 14) >> 1;
     BOOL compressed = fileBytes[12] & 32;
@@ -259,7 +259,7 @@
     NSLog(@"RB7: %i Border: %i SamRom: %i Compressed: %i", byte12 & 1, (byte12 & 14) >> 1, byte12 & 16, byte12 & 32);
     NSLog(@"IFF1: %i IM Mode: %i", (unsigned char)fileBytes[27] & 1, (unsigned char)fileBytes[29] & 3);
     
-    // Based on the version number of the Z80, decode the memory contents
+    // Based on the version number of the snapshot, decode the memory contents
     switch (version) {
         case 1:
             NSLog(@"Hardware Type: 48k");

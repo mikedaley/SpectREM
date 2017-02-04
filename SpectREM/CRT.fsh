@@ -123,10 +123,10 @@ void main()
     }
     else
     {
-        if (u_vert_roll > 0.0)
-        {
-            vertMovementOn = (1.0 - step(snoise(vec2(u_time * 0.2, 8.0)), 0.4)) * u_vert_roll;
-        }
+//        if (u_vert_roll > 0.0)
+//        {
+//            vertMovementOn = (1.0 - step(snoise(vec2(u_time * 0.2, 8.0)), 0.4)) * u_vert_roll;
+//        }
         
         if (u_vert_jump > 0.0)
         {
@@ -140,24 +140,24 @@ void main()
             largeFuzzOffset = snoise(vec2(u_time * 1.0, texCoord.y * 25.0)) * 0.004;
         }
 
-        if (u_vert_roll > 0.0 || u_vert_jump > 0.0)
-        {
-            yOffset = abs(sin(u_time) * 4.0) * vertMovementOn + vertJerk * vertJerk2 * 0.3;
-        }
+//        if (u_vert_roll > 0.0 || u_vert_jump > 0.0)
+//        {
+//            yOffset = abs(sin(u_time) * 4.0) * vertMovementOn + vertJerk * vertJerk2 * 0.3;
+//        }
 
         float y = mod(texCoord.y + yOffset, 1.0);
         
         xOffset = (fuzzOffset + largeFuzzOffset) * u_horiz_offset;
         
-        if (u_static > 0.0)
-        {
-            for (float y = -1.0; y <= 1.0; y += 1.0) {
-                float maxDist = 5.0 / 200.0;
-                float dist = y / 200.0;
-                staticVal += staticV(vec2(texCoord.x, texCoord.y + dist), u_time) * (maxDist-abs(dist)) * 1.5;
-            }
-            staticVal *= u_static;
-        }
+//        if (u_static > 0.0)
+//        {
+//            for (float y = -1.0; y <= 1.0; y += 1.0) {
+//                float maxDist = 5.0 / 200.0;
+//                float dist = y / 200.0;
+//                staticVal += staticV(vec2(texCoord.x, texCoord.y + dist), u_time) * (maxDist-abs(dist)) * 1.5;
+//            }
+//            staticVal *= u_static;
+//        }
 
         float red 	=   texture2D(	u_texture, 	vec2(texCoord.x + xOffset - 0.01 * u_rgb_offset, y)).r + staticVal;
         float green = 	texture2D(	u_texture, 	vec2(texCoord.x + xOffset, y)).g + staticVal;

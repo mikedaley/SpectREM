@@ -11,6 +11,7 @@
 		991D87C41E33937A00667E37 /* SerialCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 991D87C31E33937A00667E37 /* SerialCore.m */; };
 		991D87F21E33BD6700667E37 /* ORSSerial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; };
 		991D87F31E33BD6700667E37 /* ORSSerial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		992B25941E453B68008538EF /* OpenGL.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 992B25931E453B68008538EF /* OpenGL.fsh */; };
 		995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995657F21DC1327100114FC9 /* ZXSpectrum.mm */; };
 		996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */ = {isa = PBXBuildFile; fileRef = 996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */; };
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
@@ -79,6 +80,7 @@
 		991D87C21E33937A00667E37 /* SerialCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialCore.h; sourceTree = "<group>"; };
 		991D87C31E33937A00667E37 /* SerialCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialCore.m; sourceTree = "<group>"; };
 		991D87F11E33BD6700667E37 /* ORSSerial.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ORSSerial.framework; sourceTree = "<group>"; };
+		992B25931E453B68008538EF /* OpenGL.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = OpenGL.fsh; sourceTree = "<group>"; };
 		995657F11DC1327100114FC9 /* ZXSpectrum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum.h; sourceTree = "<group>"; };
 		995657F21DC1327100114FC9 /* ZXSpectrum.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum.mm; sourceTree = "<group>"; };
 		996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = Open_SEBASIC_3.12.rom; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 			children = (
 				EDF3A4F71DB0F25F00511BAF /* CRT_old.fsh */,
 				ED06D3361E37794D001F99FB /* CRT.fsh */,
+				992B25931E453B68008538EF /* OpenGL.fsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -549,6 +552,7 @@
 				EDF3A4F81DB0F25F00511BAF /* CRT_old.fsh in Resources */,
 				99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */,
 				EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */,
+				992B25941E453B68008538EF /* OpenGL.fsh in Resources */,
 				ED0ABFB31E37BD5F00287363 /* Assets.xcassets in Resources */,
 				EDF3A5021DB8EBD500511BAF /* Defaults.plist in Resources */,
 				EDF3A4A91DB0D60700511BAF /* Actions.sks in Resources */,

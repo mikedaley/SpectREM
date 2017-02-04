@@ -149,72 +149,57 @@
 - (void)updateTapeWithTStates:(int)tStates
 {
     
+    if (currentBlockIndex > self.tapBlocks.count - 1)
+    {
+        NSLog(@"TAPE STOPPED");
+        self.playing = NO;
+        tapeInputBit = 0;
+        return;
+    }
+
     if (newBlock)
     {
         newBlock = NO;
         
-        if (currentBlockIndex > self.tapBlocks.count - 1)
-        {
-            NSLog(@"TAPE STOPPED");
-            self.playing = NO;
-            tapeInputBit = 0;
-            return;
-        }
-
         TAPBlock *tapBlock = [self.tapBlocks objectAtIndex:currentBlockIndex];
 
         if ([tapBlock isKindOfClass:[ProgramHeader class]])
         {
             NSLog(@"Processing Program Header");
-            pilotPulseTStates = 0;
-            pilotPulses = 0;
-            flipTapeBit = YES;
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-
-        if ([tapBlock isKindOfClass:[NumericDataHeader class]])
+        else if ([tapBlock isKindOfClass:[NumericDataHeader class]])
         {
             NSLog(@"Processing Numberic Header");
-            pilotPulseTStates = 0;
-            pilotPulses = 0;
-            flipTapeBit = YES;
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-
-        if ([tapBlock isKindOfClass:[AlphaNumericDataHeader class]])
+        else if ([tapBlock isKindOfClass:[AlphaNumericDataHeader class]])
         {
             NSLog(@"Processing Alpha Numeric Header");
-            pilotPulseTStates = 0;
-            pilotPulses = 0;
-            flipTapeBit = YES;
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-        
-        if ([tapBlock isKindOfClass:[ByteHeader class]])
+        else if ([tapBlock isKindOfClass:[ByteHeader class]])
         {
             NSLog(@"Processing Byte Header");
-            pilotPulseTStates = 0;
-            pilotPulses = 0;
-            flipTapeBit = YES;
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-
-        if ([tapBlock isKindOfClass:[DataBlock class]])
+        else if ([tapBlock isKindOfClass:[DataBlock class]])
         {
             NSLog(@"Processing Data Block");
-            currentBytePointer = 0;
-            currentDataBit = 0;
-            pilotPulseTStates = 0;
-            pilotPulses = 0;
-            dataPulseTStates = 0;
-            flipTapeBit = YES;
             processingState = eDataPilot;
             nextProcessingState = eDataStream;
         }
+        
+        currentBytePointer = 0;
+        currentDataBit = 0;
+        pilotPulseTStates = 0;
+        pilotPulses = 0;
+        dataPulseTStates = 0;
+        flipTapeBit = YES;
     }
     
     switch (processingState) {
@@ -250,7 +235,6 @@
             [self blockPauseWithTStates:tStates];
             break;
     }
-    
 }
 
 - (void)generateHeaderPilotWithTStates:(int)tStates
@@ -455,7 +439,7 @@
         newBlock = YES;
     }
 
-    // Introduce a random crackle inbetween blocks to produce a similar experience as a loading from a real tape
+    // Introduce a random crackle in between blocks to produce a similar experience as a loading from a real tape
     // on a ZX Spectrum.
     if (arc4random_uniform(200000) == 1)
     {
