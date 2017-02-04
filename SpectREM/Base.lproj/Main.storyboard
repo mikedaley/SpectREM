@@ -1089,7 +1089,7 @@
             <objects>
                 <windowController storyboardIdentifier="TAPBrowserWindow" id="aEX-Zc-V4a" sceneMemberID="viewController">
                     <window key="window" title="TAP Browser" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="tapBrowser" animationBehavior="default" id="TGS-8M-haL" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="480" height="208"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
@@ -1139,7 +1139,7 @@
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="BlockTypeCellID" misplaced="YES" id="wqW-ab-Smq">
+                                                        <tableCellView identifier="BlockTypeCellID" misplaced="YES" id="wqW-ab-Smq" customClass="TapeCellView">
                                                             <rect key="frame" x="1" y="1" width="435" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
@@ -1164,6 +1164,7 @@
                                                             </subviews>
                                                             <connections>
                                                                 <outlet property="imageView" destination="Njq-ds-j5E" id="8LF-RA-aX8"/>
+                                                                <outlet property="progressIndicator" destination="l8s-pw-NiV" id="Wfz-vd-EfL"/>
                                                                 <outlet property="textField" destination="ooh-q3-kpa" id="S6i-aw-hEL"/>
                                                             </connections>
                                                         </tableCellView>

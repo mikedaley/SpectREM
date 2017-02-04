@@ -140,6 +140,8 @@ typedef NS_ENUM(int, TapeLoadingState)
     int audioAYTStates;
     int audioAYTStatesStep;
     
+    int specDrumValue;
+    
     EventType event;
     
     unsigned char memoryContentionTable[80000];

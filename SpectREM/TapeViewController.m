@@ -7,6 +7,7 @@
 //
 
 #import "TapeViewController.h"
+#import "TapeCellView.h"
 #import "ZXTape.h"
 
 @interface TapeViewController ()
@@ -31,12 +32,13 @@
 
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    NSTableCellView *view = [tableView makeViewWithIdentifier:@"BlockTypeCellID" owner:nil];
+    TapeCellView *view = [tableView makeViewWithIdentifier:@"BlockTypeCellID" owner:nil];
     if (view)
     {
         view.textField.stringValue = [(TAPBlock *)[self.tape.tapBlocks objectAtIndex:row] blockType];
         if (row == self.tape.currentBlockIndex)
         {
+            [view.progressIndicator.animator setHidden:NO];
             if (self.tape.playing)
             {
                 view.imageView.image = [NSImage imageNamed:NSImageNameStatusAvailable];
@@ -49,6 +51,7 @@
         else
         {
             view.imageView.image = nil;
+            [view.progressIndicator.animator setHidden:YES];
         }
     }
     return view;
