@@ -710,7 +710,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         [machine.audioCore writeAYData:data];
     }
     
-    if ((address & 0xdf) == 0xdf)
+    if ((address & 0xff) == 0xdf)
     {
         machine->specDrumValue = ((data * 128) - 16384) / cAudioBeeperVolumeMultiplier;
     }
