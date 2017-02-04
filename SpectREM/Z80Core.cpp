@@ -20,6 +20,8 @@ CZ80Core::CZ80Core()
 	m_IOWrite = NULL;
 	m_MemContentionHandling = NULL;
 	m_IOContentionHandling = NULL;
+    m_CPUType = eCPUTYPE_Zilog;
+	m_PrevOpcodeFlags = 0;
 
 	Reset();
 
@@ -304,8 +306,9 @@ int CZ80Core::Execute(int num_tstates, int int_t_states)
             {
                 // Execute the opcode
                 (this->*table->entries[opcode].function)(opcode);
-                
-                
+				
+				// Remember the details of if we updated flags
+				m_PrevOpcodeFlags = table->entries[opcode].flags;
             }
             else
             {

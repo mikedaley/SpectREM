@@ -67,16 +67,24 @@ public:
 		eREG_PC,
 
 	} eZ80WORDREGISTERS;
+    
+    typedef enum
+    {
+        eCPUTYPE_Zilog,
+        eCPUTYPE_Nec
+    } eCPUTYPE;
 
-	const unsigned char FLAG_C = 0x01;
-	const unsigned char FLAG_N = 0x02;
-	const unsigned char FLAG_P = 0x04;
-	const unsigned char FLAG_V = FLAG_P;
-	const unsigned char FLAG_3 = 0x08;
-	const unsigned char FLAG_H = 0x10;
-	const unsigned char FLAG_5 = 0x20;
-	const unsigned char FLAG_Z = 0x40;
-	const unsigned char FLAG_S = 0x80;
+	static const unsigned char FLAG_C = 0x01;
+	static const unsigned char FLAG_N = 0x02;
+	static const unsigned char FLAG_P = 0x04;
+	static const unsigned char FLAG_V = FLAG_P;
+	static const unsigned char FLAG_3 = 0x08;
+	static const unsigned char FLAG_H = 0x10;
+	static const unsigned char FLAG_5 = 0x20;
+	static const unsigned char FLAG_Z = 0x40;
+	static const unsigned char FLAG_S = 0x80;
+	
+	static const unsigned int OPCODEFLAG_AltersFlags = (1 << 0);
 
 	typedef struct
 	{
@@ -148,6 +156,7 @@ public:
 	typedef struct
 	{
 		void (CZ80Core::*function)(unsigned char opcode);
+		unsigned int flags;
 		const char* format;
 	} Z80Opcode;
 
@@ -249,6 +258,8 @@ protected:
 	unsigned char			m_ParityTable[256];
 	unsigned char			m_SZ35Table[256];
 	unsigned short			m_MEMPTR;
+    eCPUTYPE				m_CPUType;
+	unsigned int			m_PrevOpcodeFlags;
 
 	void *                  m_Param;
 	Z80CoreRead				m_MemRead;

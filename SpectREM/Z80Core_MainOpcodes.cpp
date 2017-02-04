@@ -586,9 +586,35 @@ void CZ80Core::LD_off_HL_n(unsigned char opcode)
 
 void CZ80Core::SCF(unsigned char opcode)
 {
-	m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z);
-	m_CPURegisters.regs.regF |= FLAG_C;
-	m_CPURegisters.regs.regF |= (m_CPURegisters.regs.regA & (FLAG_3 | FLAG_5));
+	if ( m_CPUType == eCPUTYPE_Zilog )
+	{
+		if ( m_PrevOpcodeFlags & OPCODEFLAG_AltersFlags )
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z);
+		}
+		else
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z | FLAG_3 | FLAG_5);
+		}
+
+		m_CPURegisters.regs.regF |= FLAG_C;
+		m_CPURegisters.regs.regF |= (m_CPURegisters.regs.regA & (FLAG_3 | FLAG_5));
+	}
+	else
+	{
+		// THIS IS UNKNOWN SO LEAVING AS ZILOG FOR NOW
+		if ( m_PrevOpcodeFlags & OPCODEFLAG_AltersFlags )
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z);
+		}
+		else
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z | FLAG_3 | FLAG_5);
+		}
+		
+		m_CPURegisters.regs.regF |= FLAG_C;
+		m_CPURegisters.regs.regF |= (m_CPURegisters.regs.regA & (FLAG_3 | FLAG_5));
+	}
 }
 
 //-----------------------------------------------------------------------------------------
@@ -673,9 +699,36 @@ void CZ80Core::LD_A_n(unsigned char opcode)
 void CZ80Core::CCF(unsigned char opcode)
 {
 	unsigned char tf = m_CPURegisters.regs.regF;
-	m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z);
-	m_CPURegisters.regs.regF |= (tf & FLAG_C) ? FLAG_H : FLAG_C;
-	m_CPURegisters.regs.regF |= (m_CPURegisters.regs.regA & (FLAG_3 | FLAG_5));
+	
+	if ( m_CPUType == eCPUTYPE_Zilog )
+	{
+		if ( m_PrevOpcodeFlags & OPCODEFLAG_AltersFlags )
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z);
+		}
+		else
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z | FLAG_3 | FLAG_5);
+		}
+		
+		m_CPURegisters.regs.regF |= (tf & FLAG_C) ? FLAG_H : FLAG_C;
+		m_CPURegisters.regs.regF |= (m_CPURegisters.regs.regA & (FLAG_3 | FLAG_5));
+	}
+	else
+	{
+		// THIS IS UNKNOWN SO LEAVING AS ZILOG FOR NOW
+		if ( m_PrevOpcodeFlags & OPCODEFLAG_AltersFlags )
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z);
+		}
+		else
+		{
+			m_CPURegisters.regs.regF &= (FLAG_P | FLAG_S | FLAG_Z | FLAG_3 | FLAG_5);
+		}
+		
+		m_CPURegisters.regs.regF |= (tf & FLAG_C) ? FLAG_H : FLAG_C;
+		m_CPURegisters.regs.regF |= (m_CPURegisters.regs.regA & (FLAG_3 | FLAG_5));
+	}
 }
 
 //-----------------------------------------------------------------------------------------

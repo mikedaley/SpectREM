@@ -136,7 +136,7 @@
 		EDF3A4B31DB0D60800511BAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EDF3A4B51DB0D60800511BAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDF3A4C51DB0D7AB00511BAF /* Z80Core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Z80Core.h; sourceTree = "<group>"; };
-		EDF3A4C61DB0D7AB00511BAF /* Z80Core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Z80Core.cpp; sourceTree = "<group>"; };
+		EDF3A4C61DB0D7AB00511BAF /* Z80Core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Z80Core.cpp; sourceTree = "<group>"; usesTabs = 1; wrapsLines = 0; };
 		EDF3A4C71DB0D7AB00511BAF /* Z80CoreOpcodeTables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Z80CoreOpcodeTables.h; sourceTree = "<group>"; };
 		EDF3A4C81DB0D7AB00511BAF /* Z80Core_MainOpcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Z80Core_MainOpcodes.h; sourceTree = "<group>"; };
 		EDF3A4C91DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Z80Core_MainOpcodes.cpp; sourceTree = "<group>"; };
