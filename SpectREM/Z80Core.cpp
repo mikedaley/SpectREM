@@ -142,9 +142,9 @@ void CZ80Core::Z80CoreIOContention(unsigned short address, unsigned int t_states
 
 //-----------------------------------------------------------------------------------------
 
-int CZ80Core::Execute(int num_tstates, int int_t_states)
+int CZ80Core::Execute(unsigned int num_tstates, unsigned int int_t_states)
 {
-	int tstates = m_CPURegisters.TStates;
+	unsigned int tstates = m_CPURegisters.TStates;
     
 	do
 	{

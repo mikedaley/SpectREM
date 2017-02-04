@@ -175,7 +175,7 @@ public:
 
 	void					Reset(bool hardReset = true);
 	void					Debug();
-	int						Execute(int num_tstates = -1, int int_t_states = 32);
+	int						Execute(unsigned int num_tstates = -1, unsigned int int_t_states = 32);
 
 	void					SignalInterrupt();
 
