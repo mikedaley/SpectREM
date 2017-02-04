@@ -1583,7 +1583,7 @@ CZ80Core::Z80OpcodeTable CZ80Core::Main_Opcodes = {
 		{ &CZ80Core::DEC_C               , CZ80Core::OPCODEFLAG_AltersFlags,	"DEC C"            },
 		{ &CZ80Core::LD_C_n              , 0,									"LD C,0%02Xh"      },
 		{ &CZ80Core::RRCA                , CZ80Core::OPCODEFLAG_AltersFlags,	"RRCA"             },
-		{ &CZ80Core::DJNZ_off_PC_e       , CZ80Core::OPCODEFLAG_AltersFlags,	"DJNZ (PC+%d)"     },
+		{ &CZ80Core::DJNZ_off_PC_e       , 0,									"DJNZ (PC+%d)"     },
 		{ &CZ80Core::LD_DE_nn            , 0,									"LD DE,0%04Xh"     },
 		{ &CZ80Core::LD_off_DE_A         , 0,									"LD (DE),A"        },
 		{ &CZ80Core::INC_DE              , 0,									"INC DE"           },
