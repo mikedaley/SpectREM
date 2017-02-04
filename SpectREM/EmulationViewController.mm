@@ -26,6 +26,8 @@
 #import "ZXSpectrumSE.h"
 #import "SerialCore.h"
 
+#import <OpenGL/gl.h>
+
 #pragma mark - Enums
 
 NS_ENUM(NSUInteger, MachineType)
@@ -116,7 +118,6 @@ NS_ENUM(NSUInteger, MachineType)
     // Setup the tape view view controller;
     _tapeBrowserWindowController = [_storyBoard instantiateControllerWithIdentifier:@"TAPBrowserWindow"];
     _tapeViewController = (TapeViewController *)_tapeBrowserWindowController.contentViewController;
-//    [_tapeBrowserWindowController showWindow:nil];
     
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
@@ -590,6 +591,11 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)showKeyboardMapWindow:(id)sender
 {
     [self.view.window addChildWindow:_keyboardMapWindowController.window ordered:NSWindowAbove];
+}
+
+- (IBAction)tapeBrowser:(id)sender
+{
+    [_tapeBrowserWindowController showWindow:nil];
 }
 
 #pragma mark - User Notifications

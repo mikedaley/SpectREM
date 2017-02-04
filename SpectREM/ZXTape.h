@@ -11,6 +11,8 @@
 
 #pragma mark - Constants
 
+extern NSString *const cTapeBlocksChanged;
+
 static int const cHeaderLength = 21;
 
 static int cPilotHeaderPulses = 8063;
@@ -90,6 +92,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 @property (assign) NSUInteger totalBytes;
 @property (strong) NSURL *tapeFileURL;
 @property (strong) NSMutableArray *tapBlocks;
+@property (assign) NSInteger currentBlockIndex;
 
 #pragma mark - Methods
 

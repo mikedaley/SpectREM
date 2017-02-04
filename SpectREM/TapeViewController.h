@@ -12,8 +12,6 @@
 
 @interface TapeViewController : NSViewController <NSTableViewDelegate, NSTableViewDataSource>
 
-@property (weak) IBOutlet NSTableView *tableView;
-
 @property (strong) ZXTape *tape;
 
 @end

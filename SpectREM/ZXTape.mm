@@ -9,6 +9,8 @@
 #import "ZXTape.h"
 #import "Z80Core.h"
 
+NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
+
 @implementation ZXTape
 {
     // How many Ts have passed since the start of the pilot pulses
@@ -35,10 +37,6 @@
     int dataBitTStates;
     // How many pulses have been generated for the current data bit;
     int dataPulseCount;
-    
-    // The current block within the tapBlocks array being processed
-    int currentBlockIndex;
-    
     // Is a new block about to start
     BOOL newBlock;
 }
@@ -83,6 +81,7 @@
     [self processTAPFileData:tapeData];
     [self printTAPContents];
     self.tapeLoaded = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
 }
 
 - (void)processTAPFileData:(NSData *)data
@@ -91,7 +90,8 @@
     
     self.playing = NO;
     currentBytePointer = 0;
-    currentBlockIndex = 0;
+    self.currentBlockIndex = 0;
+    self.totalBytes = 0;
     self.bytesRemaining = 0;
     newBlock = YES;
     
@@ -134,7 +134,6 @@
         }
 
         newTAPBlock.blockLength = blockLength;
-        newTAPBlock.blockType = @"Testing";
         newTAPBlock.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
         memcpy(newTAPBlock.blockData, &tapeBytes[currentBytePointer], blockLength);
         self.totalBytes += blockLength + 1;
@@ -149,11 +148,13 @@
 - (void)updateTapeWithTStates:(int)tStates
 {
     
-    if (currentBlockIndex > self.tapBlocks.count - 1)
+    if (self.currentBlockIndex > self.tapBlocks.count - 1)
     {
         NSLog(@"TAPE STOPPED");
         self.playing = NO;
         tapeInputBit = 0;
+        self.currentBlockIndex = self.tapBlocks.count - 1;
+        [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
         return;
     }
 
@@ -161,7 +162,7 @@
     {
         newBlock = NO;
         
-        TAPBlock *tapBlock = [self.tapBlocks objectAtIndex:currentBlockIndex];
+        TAPBlock *tapBlock = [self.tapBlocks objectAtIndex:self.currentBlockIndex];
 
         if ([tapBlock isKindOfClass:[ProgramHeader class]])
         {
@@ -200,6 +201,7 @@
         pilotPulses = 0;
         dataPulseTStates = 0;
         flipTapeBit = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
     }
     
     switch (processingState) {
@@ -333,8 +335,8 @@
 
 - (void)generateDataStreamWithTStates:(int)tStates
 {
-    int currentBlockLength = [[self.tapBlocks objectAtIndex:currentBlockIndex] getDataLength];
-    unsigned char byte = [[self.tapBlocks objectAtIndex:currentBlockIndex] blockData][currentBytePointer];
+    int currentBlockLength = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] getDataLength];
+    unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     
     currentDataBit += 1;
@@ -370,7 +372,7 @@
 - (void)generateHeaderDataStreamWithTStates:(int)tStates
 {
     int currentBlockLength = 19;
-    unsigned char byte = [[self.tapBlocks objectAtIndex:currentBlockIndex] blockData][currentBytePointer];
+    unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     
     currentDataBit += 1;
@@ -435,7 +437,7 @@
     blockPauseTStates += tStates;
     if (blockPauseTStates > 3500000 * 2)
     {
-        currentBlockIndex += 1;
+        self.currentBlockIndex += 1;
         newBlock = YES;
     }
 
@@ -450,6 +452,7 @@
 - (void)play
 {
     self.playing = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
 }
 
 - (void)save
@@ -469,6 +472,7 @@
 {
     self.playing = NO;
     tapeInputBit = 0;
+    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
 }
 
 - (void)rewind
@@ -481,14 +485,27 @@
     blockPauseTStates = 0;
     tapeInputBit = 0;
     currentBytePointer = 0;
-    currentBlockIndex = 0;
+    self.currentBlockIndex = 0;
     newBlock = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
 }
 
 - (void)eject
 {
-    self.tapBlocks = [NSMutableArray new];
+    [self.tapBlocks removeAllObjects];
+    pilotPulseTStates = 0;
+    syncPulseTStates = 0;
+    pilotPulses = 0;
+    processingState = eNoTape;
+    blockPauseTStates = 0;
+    tapeInputBit = 0;
+    currentBytePointer = 0;
+    self.currentBlockIndex = 0;
+    newBlock = YES;
     self.tapeLoaded = NO;
+    self.totalBytes = 0;
+    self.bytesRemaining = 0;
+    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
 }
 
 - (void)reset
@@ -496,6 +513,9 @@
     self.tapeLoaded = NO;
     self.playing = NO;
     [self.tapBlocks removeAllObjects];
+    self.totalBytes = 0;
+    self.bytesRemaining = 0;
+    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
 }
 
 #pragma mark - Saving
@@ -621,6 +641,16 @@
 
 @implementation ProgramHeader
 
+- (NSString *)blockType
+{
+    int lineNumber = [self getAutostartLine];
+    if (lineNumber == 32768)
+    {
+        lineNumber = 0;
+    }
+    return [NSString stringWithFormat:@"Program Header: '%@' Line %i", [self getFilename], lineNumber];
+}
+
 - (unsigned short)getAutostartLine
 {
     return ((unsigned short *)&self.blockData[cProgramHeaderAutostartLineOffset])[0];
@@ -642,6 +672,11 @@
 
 @implementation NumericDataHeader
 
+- (NSString *)blockType
+{
+    return @"Numeric Data Header";
+}
+
 - (unsigned char)getVariableName
 {
     return self.blockData[cNumericDataHeaderVariableNameOffset];
@@ -652,6 +687,11 @@
 #pragma mark - Alpha Numeric Data Header
 
 @implementation AlphaNumericDataHeader
+
+- (NSString *)blockType
+{
+    return @"Alpha Numeric Data Header";
+}
 
 - (unsigned char)getVariableName
 {
@@ -664,6 +704,11 @@
 
 @implementation ByteHeader
 
+- (NSString *)blockType
+{
+    return [NSString stringWithFormat:@"   Byte Header: '%@' %i, %i", [self getFilename], [self getStartAddress], [self getDataLength]];
+}
+
 - (unsigned short)getStartAddress
 {
     return ((unsigned short *)&self.blockData[cByteHeaderStartAddressOffset])[0];
@@ -674,6 +719,11 @@
 #pragma mark - Data Block
 
 @implementation DataBlock
+
+- (NSString *)blockType
+{
+    return [NSString stringWithFormat:@"          Data:              %i", [self getDataLength] - 2];
+}
 
 - (NSString *)getFilename
 {
