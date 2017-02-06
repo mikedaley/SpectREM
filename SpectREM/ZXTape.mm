@@ -385,7 +385,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (void)generateHeaderDataStreamWithTStates:(int)tStates
 {
-    int currentBlockLength = 19;
+    int currentBlockLength = cHeaderBlockLength;
     unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][self.currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     

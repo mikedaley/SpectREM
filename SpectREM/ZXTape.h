@@ -50,6 +50,8 @@ static int cDataBlockDataLengthOffset = 1;
 
 static int cHeaderFilenameLength = 10;
 
+static int cHeaderBlockLength = 19;
+
 #pragma mark - Enums
 
 typedef NS_ENUM(int, ProcessingState)
