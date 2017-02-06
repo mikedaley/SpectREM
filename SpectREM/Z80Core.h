@@ -18,8 +18,11 @@
 //-----------------------------------------------------------------------------------------
 
 typedef unsigned char (*Z80CoreRead)(unsigned short address, void *param);
-typedef void (* Z80CoreWrite)(unsigned short address, unsigned char data, void *param);
-typedef void (* Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
+typedef void (*Z80CoreWrite)(unsigned short address, unsigned char data, void *param);
+typedef void (*Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
+typedef unsigned char(*Z80CoreDebugRead)(unsigned int address, void *param, void *data);
+typedef void (*Z80OpcodeCallback)(unsigned char opcode, unsigned short address);
+typedef char *(*Z80DebugCallback)(unsigned short address, void *data);
 
 //-----------------------------------------------------------------------------------------
 
@@ -84,6 +87,8 @@ public:
 	static const unsigned char FLAG_Z = 0x40;
 	static const unsigned char FLAG_S = 0x80;
 	
+private:
+
 	static const unsigned int OPCODEFLAG_AltersFlags = (1 << 0);
 
 	typedef struct
@@ -171,11 +176,16 @@ public:
 	~CZ80Core();
 	
 public:
-	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreContention io_contention_handling, void *member_class);
+	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, void *member_class);
 
 	void					Reset(bool hardReset = true);
-	void					Debug();
-	int						Execute(unsigned int num_tstates = -1, unsigned int int_t_states = 32);
+	unsigned int			Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, void *data);
+	unsigned int			Debug_GetOpcodeLength(unsigned int address, void *data);
+	bool					Debug_HasValidOpcode(unsigned int address, void *data);
+	int						Execute(unsigned int num_tstates = 0, unsigned int int_t_states = 32);
+
+	void					RegisterOpcodeCallback(Z80OpcodeCallback callback);
+	void					RegisterDebugCallback(Z80DebugCallback callback);
 
 	void					SignalInterrupt();
 
@@ -208,7 +218,8 @@ public:
 	void					Z80CoreIOWrite(unsigned short address, unsigned char data);
 	void					Z80CoreMemoryContention(unsigned short address, unsigned int t_states);
 	void					Z80CoreIOContention(unsigned short address, unsigned int t_states);
-    
+	unsigned char			Z80CoreDebugMemRead(unsigned int address, void *data);
+
     bool                    saveTrapTriggered;
 
 protected:
@@ -245,6 +256,11 @@ protected:
 	void					Set(unsigned char &r, unsigned char b);
 	void					Res(unsigned char &r, unsigned char b);
 
+	const char			*	Debug_GetOpcodeDetails(unsigned int &address, void *data);
+	char				*	Debug_WriteByte(char *pStr, unsigned int &StrLen, unsigned int address, void *data);
+	char				*	Debug_WriteWord(char *pStr, unsigned int &StrLen, unsigned int address, void *data);
+	char				*	Debug_WriteOffset(char *pStr, unsigned int &StrLen, unsigned int address, void *data);
+
 protected:
 	static Z80OpcodeTable	Main_Opcodes;
 	static Z80OpcodeTable	CB_Opcodes;
@@ -267,7 +283,10 @@ protected:
 	Z80CoreRead				m_IORead;
 	Z80CoreWrite			m_IOWrite;
 	Z80CoreContention		m_MemContentionHandling;
-	Z80CoreContention		m_IOContentionHandling;
+	Z80CoreDebugRead		m_DebugRead;
+
+	Z80OpcodeCallback		m_OpcodeCallback;
+	Z80DebugCallback		m_DebugCallback;
 };
 
 

@@ -19,7 +19,9 @@ CZ80Core::CZ80Core()
 	m_IORead = NULL;
 	m_IOWrite = NULL;
 	m_MemContentionHandling = NULL;
-	m_IOContentionHandling = NULL;
+	m_DebugRead = NULL;
+	m_OpcodeCallback = NULL;
+	m_DebugCallback = NULL;
     m_CPUType = eCPUTYPE_Zilog;
 	m_PrevOpcodeFlags = 0;
 
@@ -35,7 +37,7 @@ CZ80Core::~CZ80Core()
 
 //-----------------------------------------------------------------------------------------
 
-void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreContention io_contention_handling, void *param)
+void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, void *param)
 {
 	// Store our settings
 	m_Param = param;
@@ -44,7 +46,7 @@ void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreR
 	m_IORead = io_read;
 	m_IOWrite = io_write;
 	m_MemContentionHandling = mem_contention_handling;
-	m_IOContentionHandling = io_contention_handling;
+	m_DebugRead = debug_read_handler;
 
 	// Setup the flags tables
 	for (int i = 0; i < 256; i++)
@@ -63,6 +65,22 @@ void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreR
 
 		m_ParityTable[i] = (parity ? 0 : FLAG_P);
 	}
+}
+
+//-----------------------------------------------------------------------------------------
+
+void CZ80Core::RegisterOpcodeCallback(Z80OpcodeCallback callback)
+{
+	// Set the callback
+	m_OpcodeCallback = callback;
+}
+
+//-----------------------------------------------------------------------------------------
+
+void CZ80Core::RegisterDebugCallback(Z80DebugCallback callback)
+{
+	// Set the callback
+	m_DebugCallback = callback;
 }
 
 //-----------------------------------------------------------------------------------------
@@ -130,14 +148,14 @@ void CZ80Core::Z80CoreMemoryContention(unsigned short address, unsigned int t_st
 
 //-----------------------------------------------------------------------------------------
 
-void CZ80Core::Z80CoreIOContention(unsigned short address, unsigned int t_states)
+unsigned char CZ80Core::Z80CoreDebugMemRead(unsigned int address, void *data)
 {
-	if (m_IOContentionHandling != NULL)
+	if (m_DebugRead != NULL)
 	{
-		m_IOContentionHandling(address, t_states, m_Param);
+		return m_DebugRead(address, m_Param, data);
 	}
 
-	m_CPURegisters.TStates += t_states;
+	return 0;
 }
 
 //-----------------------------------------------------------------------------------------
@@ -300,6 +318,13 @@ int CZ80Core::Execute(unsigned int num_tstates, unsigned int int_t_states)
                     }
                     break;
             }
+
+			// Handle a callback if needed
+			if (m_OpcodeCallback != NULL)
+			{
+				// Callback before doing the opcode
+				m_OpcodeCallback(opcode, m_CPURegisters.regPC - 1);
+			}
             
             // We can now execute the instruction
             if (table->entries[opcode].function != NULL)
@@ -476,9 +501,297 @@ void CZ80Core::SetRegister(eZ80WORDREGISTERS reg, unsigned short data)
 
 //-----------------------------------------------------------------------------------------
 
-void CZ80Core::Debug()
+unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, void *data)
 {
-	// TO DO
+	// Why would you do this! ;)
+	if (pStr == NULL)
+	{
+		return 0;
+	}
+
+	// Get the details we need
+	unsigned int start_address = address;
+	const char *pDisassembleString = Debug_GetOpcodeDetails(address, data);
+
+	// Now write out the string including the extra bits
+	while (StrLen > 1 && *pDisassembleString != '\0')
+	{
+		// Is this a special command
+		if (*pDisassembleString == '%')
+		{
+			// Yes - See which
+			pDisassembleString++;
+
+			switch (*pDisassembleString++)
+			{
+			case '\0':
+			default:
+				break;
+
+			case 'O':
+				// This is an offset byte - always 2 bytes passed the start
+				pStr = Debug_WriteByte(pStr, StrLen, start_address + 2, data);
+				break;
+
+			case 'B':
+				// This is a data byte - always the previous byte
+				pStr = Debug_WriteByte(pStr, StrLen, address - 1, data);
+				break;
+
+			case 'W':
+				// This is a data word - always the previous word
+				pStr = Debug_WriteWord(pStr, StrLen, address - 2, data);
+				break;
+
+			case 'R':
+				// Write the relative offset
+				pStr = Debug_WriteOffset(pStr, StrLen, address - 1, data);
+				break;
+			}
+		}
+		else
+		{
+			// No just copy
+			*pStr++ = *pDisassembleString++;
+			StrLen--;
+		}
+	}
+
+	// Terminate the string
+	*pStr++ = '\0';
+
+	return (address - start_address);
+}
+
+//-----------------------------------------------------------------------------------------
+
+char *CZ80Core::Debug_WriteByte(char *pStr, unsigned int &StrLen, unsigned int address, void *data)
+{
+	// Read the data byte
+	unsigned char num = Z80CoreDebugMemRead(address, data);
+	
+	// Get this as a local string to copy - we can make it hex or decimal if we want at some point
+	// Using a local allows us to ensure we dont go over the buffer
+	char number_buffer[16];
+	sprintf(number_buffer, "0%02Xh", num);
+
+	// Now copy it
+	char *buffer = number_buffer;
+	while (StrLen > 1 && *buffer != '\0')
+	{
+		*pStr++ = *buffer++;
+		StrLen--;
+	}
+
+	return pStr;
+}
+
+//-----------------------------------------------------------------------------------------
+
+char *CZ80Core::Debug_WriteWord(char *pStr, unsigned int &StrLen, unsigned int address, void *data)
+{
+	// Read the data word
+	unsigned short num = Z80CoreDebugMemRead(address, data) | (Z80CoreDebugMemRead(address + 1, data) << 8);
+
+	// Get this as a local string to copy - we can make it hex or decimal if we want at some point
+	// Using a local allows us to ensure we dont go over the buffer
+	char number_buffer[16];
+	sprintf(number_buffer, "0%04Xh", num);
+	char *buffer = number_buffer;
+
+	// See if we want to alter the address
+	if (m_DebugCallback != NULL)
+	{
+		char *new_details = m_DebugCallback(num, data);
+
+		// If we returned something, 
+		if (new_details != NULL)
+		{
+			buffer = new_details;
+		}
+	}
+
+	// Now copy it
+	while (StrLen > 1 && *buffer != '\0')
+	{
+		*pStr++ = *buffer++;
+		StrLen--;
+	}
+
+	return pStr;
+}
+
+//-----------------------------------------------------------------------------------------
+
+char *CZ80Core::Debug_WriteOffset(char *pStr, unsigned int &StrLen, unsigned int address, void *data)
+{
+	// Read the data word
+	unsigned short num = address + (signed char)Z80CoreDebugMemRead(address, data) + 1;
+
+	// Get this as a local string to copy - we can make it hex or decimal if we want at some point
+	// Using a local allows us to ensure we dont go over the buffer
+	char number_buffer[16];
+	sprintf(number_buffer, "0%04Xh", num);
+	char *buffer = number_buffer;
+
+	// See if we want to alter the address
+	if (m_DebugCallback != NULL)
+	{
+		char *new_details = m_DebugCallback(num, data);
+
+		// If we returned something, 
+		if (new_details != NULL)
+		{
+			buffer = new_details;
+		}
+	}
+
+	// Now copy it
+	while (StrLen > 1 && *buffer != '\0')
+	{
+		*pStr++ = *buffer++;
+		StrLen--;
+	}
+
+	return pStr;
+}
+
+//-----------------------------------------------------------------------------------------
+
+unsigned int CZ80Core::Debug_GetOpcodeLength(unsigned int address, void *data)
+{
+	// Remember the start
+	unsigned int start_address = address;
+
+	// Get the details
+	Debug_GetOpcodeDetails(address, data);
+
+	return (address - start_address);
+}
+
+//-----------------------------------------------------------------------------------------
+
+bool CZ80Core::Debug_HasValidOpcode(unsigned int address, void *data)
+{
+	if (Debug_GetOpcodeDetails(address, data) == NULL)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------------------
+
+const char *CZ80Core::Debug_GetOpcodeDetails(unsigned int &address, void *data)
+{
+	Z80OpcodeTable *table = &Main_Opcodes;
+
+	// Read the opcode
+	unsigned int opcode_length = 0;
+	unsigned char opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+	opcode_length++;
+
+	// Handle the main bits
+	switch (opcode)
+	{
+	case 0xcb:
+		table = &CB_Opcodes;
+		opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+		opcode_length++;
+		break;
+
+	case 0xdd:
+		opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+		opcode_length++;
+
+		if (opcode == 0xcb)
+		{
+			table = &DDCB_Opcodes;
+
+			// Skip the offset
+			opcode_length++;
+
+			// Get the next byte
+			opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+			opcode_length++;
+		}
+		else
+		{
+			table = &DD_Opcodes;
+		}
+		break;
+
+	case 0xed:
+		table = &ED_Opcodes;
+		opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+		opcode_length++;
+		break;
+
+	case 0xfd:
+		opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+		opcode_length++;
+
+		if (opcode == 0xcb)
+		{
+			table = &FDCB_Opcodes;
+
+			// Skip the offset
+			opcode_length++;
+
+			// Get the next byte
+			opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+			opcode_length++;
+		}
+		else
+		{
+			table = &FD_Opcodes;
+		}
+		break;
+	}
+
+	// If this is invalid - return 0
+	if (table->entries[opcode].function == NULL)
+	{
+		return NULL;
+	}
+
+	// Now we need to scan the string for any extra bytes needed
+	const char *pDisassembleString = table->entries[opcode].format;
+
+	while (*pDisassembleString != '\0')
+	{
+		// Extra data
+		if (*pDisassembleString == '%')
+		{
+			pDisassembleString++;
+
+			switch (*pDisassembleString)
+			{
+			case '\0':
+			default:
+				break;
+
+			case 'B':
+			case 'O':
+			case 'R':
+				opcode_length++;
+				break;
+
+			case 'W':
+				opcode_length += 2;
+				break;
+			}
+		}
+
+		pDisassembleString++;
+	}
+
+	// Offset the address
+	address += opcode_length;
+
+	// Return the string
+	return table->entries[opcode].format;
 }
 
 //-----------------------------------------------------------------------------------------
