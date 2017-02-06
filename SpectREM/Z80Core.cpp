@@ -529,22 +529,22 @@ unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsign
 
 				case 'O':
 					// This is an offset byte - always 2 bytes passed the start
-					pStr = Debug_WriteByte(pStr, StrLen, start_address + 2, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_IndexOffset, pStr, StrLen, start_address + 2, data);
 					break;
 
 				case 'B':
 					// This is a data byte - always the previous byte
-					pStr = Debug_WriteByte(pStr, StrLen, address - 1, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_Byte, pStr, StrLen, address - 1, data);
 					break;
 
 				case 'W':
 					// This is a data word - always the previous word
-					pStr = Debug_WriteWord(pStr, StrLen, address - 2, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_Word, pStr, StrLen, address - 2, data);
 					break;
 
 				case 'R':
 					// Write the relative offset
-					pStr = Debug_WriteOffset(pStr, StrLen, address - 1, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_RelativeOffset, pStr, StrLen, address - 1, data);
 					break;
 				}
 			}
@@ -568,92 +568,46 @@ unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsign
 
 //-----------------------------------------------------------------------------------------
 
-char *CZ80Core::Debug_WriteByte(char *pStr, unsigned int &StrLen, unsigned int address, void *data)
+char *CZ80Core::Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, void *data)
 {
-	// Read the data byte
-	unsigned char num = Z80CoreDebugMemRead(address, data);
+	// Get the number
+	unsigned char num = 0;
+	char number_buffer[16];
+	char *buffer = number_buffer;
 	
-	// Get this as a local string to copy - we can make it hex or decimal if we want at some point
-	// Using a local allows us to ensure we dont go over the buffer
-	char number_buffer[16];
-	sprintf(number_buffer, "0%02Xh", num);
-
-	// Now copy it
-	char *buffer = number_buffer;
-	while (StrLen > 1 && *buffer != '\0')
+	switch (variableType)
 	{
-		*pStr++ = *buffer++;
-		StrLen--;
+		case eVARIABLETYPE_IndexOffset:
+		case eVARIABLETYPE_Byte:
+			num = Z80CoreDebugMemRead(address, data);
+			sprintf(number_buffer, "$%02X", num);
+			break;
+			
+		case eVARIABLETYPE_RelativeOffset:
+			num = Z80CoreDebugMemRead(address, data);
+			sprintf(number_buffer, "$%04X", address + num + 1);
+			break;
+			
+		case eVARIABLETYPE_Word:
+			num = Z80CoreDebugMemRead(address, data) | (Z80CoreDebugMemRead(address + 1, data) << 8);
+			sprintf(number_buffer, "$%04X", num);
+			break;
+	}
+	
+	// See if the program wants to alter the display
+	if ( m_DebugCallback != NULL )
+	{
+		buffer = m_DebugCallback(variableType, address, num, m_Param, data);
 	}
 
-	return pStr;
-}
-
-//-----------------------------------------------------------------------------------------
-
-char *CZ80Core::Debug_WriteWord(char *pStr, unsigned int &StrLen, unsigned int address, void *data)
-{
-	// Read the data word
-	unsigned short num = Z80CoreDebugMemRead(address, data) | (Z80CoreDebugMemRead(address + 1, data) << 8);
-
-	// Get this as a local string to copy - we can make it hex or decimal if we want at some point
-	// Using a local allows us to ensure we dont go over the buffer
-	char number_buffer[16];
-	sprintf(number_buffer, "0%04Xh", num);
-	char *buffer = number_buffer;
-
-	// See if we want to alter the address
-	if (m_DebugCallback != NULL)
+	// Now copy it
+	if ( buffer != NULL )
 	{
-		char *new_details = m_DebugCallback(num, data);
-
-		// If we returned something, 
-		if (new_details != NULL)
+		while (StrLen > 1 && *buffer != '\0')
 		{
-			buffer = new_details;
+			*pStr++ = *buffer++;
+			StrLen--;
 		}
-	}
-
-	// Now copy it
-	while (StrLen > 1 && *buffer != '\0')
-	{
-		*pStr++ = *buffer++;
-		StrLen--;
-	}
-
-	return pStr;
-}
-
-//-----------------------------------------------------------------------------------------
-
-char *CZ80Core::Debug_WriteOffset(char *pStr, unsigned int &StrLen, unsigned int address, void *data)
-{
-	// Read the data word
-	unsigned short num = address + (signed char)Z80CoreDebugMemRead(address, data) + 1;
-
-	// Get this as a local string to copy - we can make it hex or decimal if we want at some point
-	// Using a local allows us to ensure we dont go over the buffer
-	char number_buffer[16];
-	sprintf(number_buffer, "0%04Xh", num);
-	char *buffer = number_buffer;
-
-	// See if we want to alter the address
-	if (m_DebugCallback != NULL)
-	{
-		char *new_details = m_DebugCallback(num, data);
-
-		// If we returned something, 
-		if (new_details != NULL)
-		{
-			buffer = new_details;
-		}
-	}
-
-	// Now copy it
-	while (StrLen > 1 && *buffer != '\0')
-	{
-		*pStr++ = *buffer++;
-		StrLen--;
 	}
 
 	return pStr;

@@ -22,7 +22,7 @@ typedef void (*Z80CoreWrite)(unsigned short address, unsigned char data, void *p
 typedef void (*Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
 typedef unsigned char(*Z80CoreDebugRead)(unsigned int address, void *param, void *data);
 typedef bool (*Z80OpcodeCallback)(unsigned char opcode, unsigned short address, void *param);
-typedef char *(*Z80DebugCallback)(unsigned short address, void *data);
+typedef char *(*Z80DebugCallback)(unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data);
 
 //-----------------------------------------------------------------------------------------
 
@@ -77,6 +77,14 @@ public:
         eCPUTYPE_Nec
     } eCPUTYPE;
 
+	typedef enum
+	{
+		eVARIABLETYPE_Byte,
+		eVARIABLETYPE_Word,
+		eVARIABLETYPE_IndexOffset,
+		eVARIABLETYPE_RelativeOffset,
+	} eVARIABLETYPE;
+	
 	static const unsigned char FLAG_C = 0x01;
 	static const unsigned char FLAG_N = 0x02;
 	static const unsigned char FLAG_P = 0x04;
@@ -255,9 +263,7 @@ protected:
 	void					Res(unsigned char &r, unsigned char b);
 
 	const char			*	Debug_GetOpcodeDetails(unsigned int &address, void *data);
-	char				*	Debug_WriteByte(char *pStr, unsigned int &StrLen, unsigned int address, void *data);
-	char				*	Debug_WriteWord(char *pStr, unsigned int &StrLen, unsigned int address, void *data);
-	char				*	Debug_WriteOffset(char *pStr, unsigned int &StrLen, unsigned int address, void *data);
+	char				*	Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, void *data);
 
 protected:
 	static Z80OpcodeTable	Main_Opcodes;
