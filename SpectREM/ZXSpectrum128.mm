@@ -153,18 +153,31 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
     }
 }
 
-static unsigned char coreDebugRead(unsigned int address, void *m)
+static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {
 	ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
-
-	// Not really right as we probably want to pass extra stuff through to allow us to read all the memory
+	
 	int page = address / 16384;
-	if (page == 1 ||
-		(page == 3 &&
-		 (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7)))
+	address &= 16383;
+	
+	if (page == 0)
 	{
-		machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->machineInfo.tsPerFrame] );
+		return (machine->rom[(machine->currentROMPage * 16384) + address]);
 	}
+	else if (page == 1)
+	{
+		return (machine->memory[(5 * 16384) + address]);
+	}
+	else if (page == 2)
+	{
+		return (machine->memory[(2 * 16384) + address]);
+	}
+	else if (page == 3)
+	{
+		return (machine->memory[(machine->currentRAMPage * 16384) + address]);
+	}
+	
+	return 0;
 }
 
 #pragma mark - Load ROM

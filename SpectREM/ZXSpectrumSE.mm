@@ -103,7 +103,7 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
     }
 }
 
-static unsigned char coreDebugRead(unsigned short address, void *m)
+static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {
 	ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
 	return machine->memory[address];
