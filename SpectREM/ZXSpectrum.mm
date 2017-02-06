@@ -164,6 +164,7 @@
         [self loadDefaultROM];
     }
     frameCounter = 0;
+	saveTrapTriggered = false;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -242,7 +243,7 @@
             [self.zxTape updateTapeWithTStates:tsCPU];
         }
         
-        if(core->saveTrapTriggered)
+        if(saveTrapTriggered)
         {
             [self.zxTape saveTAPBlockWithMachine:self];
         }

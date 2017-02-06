@@ -154,7 +154,10 @@ typedef NS_ENUM(int, TapeLoadingState)
     int pilotPulses;
     BOOL flipTapeBit;
     int tapeInputBit;
-    
+	
+	// trap saving
+	bool saveTrapTriggered;
+	
     // Holds the kempston joystick last byte value read either through the emulator or SmartLINK
     char kempston;
     

@@ -235,120 +235,116 @@ int CZ80Core::Execute(unsigned int num_tstates, unsigned int int_t_states)
 
         m_CPURegisters.regPC++;
         m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-        
-        // Trap the SAVE command and flag it so the machine can perform the save function
-        if (opcode == 0x08 && (m_CPURegisters.regPC == 0x04d1 || m_CPURegisters.regPC == 0x0077))
-        {
-            saveTrapTriggered = true;
+		
+        // Handle the main bits
+        switch (opcode)
+		{
+            case 0xcb:
+                table = &CB_Opcodes;
+					
+                // Get the next byte
+                opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
+                m_CPURegisters.regPC++;
+                m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+                break;
+                    
+            case 0xdd:
+					
+                // Get the next byte
+                opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
+                m_CPURegisters.regPC++;
+                m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+					
+                if ( opcode == 0xcb )
+                {
+                    table = &DDCB_Opcodes;
+						
+                    // Read the offset
+                    signed char offset = Z80CoreMemRead(m_CPURegisters.regPC);
+                    m_CPURegisters.regPC++;
+                    m_MEMPTR = m_CPURegisters.reg_pairs.regIX + offset;
+						
+                    // Get the next byte
+                    opcode = Z80CoreMemRead(m_CPURegisters.regPC);
+                    m_CPURegisters.regPC++;
+                }
+                else
+                {
+                    table = &DD_Opcodes;
+                }
+                break;
+					
+            case 0xed:
+                table = &ED_Opcodes;
+					
+                // Get the next byte
+                opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
+                m_CPURegisters.regPC++;
+                m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+                break;
+					
+            case 0xfd:
+					
+                // Get the next byte
+                opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
+                m_CPURegisters.regPC++;
+                m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
+					
+                if (opcode == 0xcb)
+                {
+                    table = &FDCB_Opcodes;
+						
+                    // Read the offset
+                    signed char offset = Z80CoreMemRead(m_CPURegisters.regPC);
+                    m_CPURegisters.regPC++;
+                    m_MEMPTR = m_CPURegisters.reg_pairs.regIY + offset;
+						
+                    // Get the next byte
+                    opcode = Z80CoreMemRead(m_CPURegisters.regPC);
+                    m_CPURegisters.regPC++;
+                }
+                else
+                {
+                    table = &FD_Opcodes;
+                }
+                break;
         }
-        else
-        {
-            saveTrapTriggered = false;
-            
-            // Handle the main bits
-            switch (opcode)
-            {
-                case 0xcb:
-                    table = &CB_Opcodes;
-                    
-                    // Get the next byte
-                    opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
-                    m_CPURegisters.regPC++;
-                    m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-                    break;
-                    
-                case 0xdd:
-                    
-                    // Get the next byte
-                    opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
-                    m_CPURegisters.regPC++;
-                    m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-                    
-                    if ( opcode == 0xcb )
-                    {
-                        table = &DDCB_Opcodes;
-                        
-                        // Read the offset
-                        signed char offset = Z80CoreMemRead(m_CPURegisters.regPC);
-                        m_CPURegisters.regPC++;
-                        m_MEMPTR = m_CPURegisters.reg_pairs.regIX + offset;
-                        
-                        // Get the next byte
-                        opcode = Z80CoreMemRead(m_CPURegisters.regPC);
-                        m_CPURegisters.regPC++;
-                    }
-                    else
-                    {
-                        table = &DD_Opcodes;
-                    }
-                    break;
-                    
-                case 0xed:
-                    table = &ED_Opcodes;
-                    
-                    // Get the next byte
-                    opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
-                    m_CPURegisters.regPC++;
-                    m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-                    break;
-                    
-                case 0xfd:
-                    
-                    // Get the next byte
-                    opcode = Z80CoreMemRead(m_CPURegisters.regPC, 4);
-                    m_CPURegisters.regPC++;
-                    m_CPURegisters.regR = (m_CPURegisters.regR & 0x80) | ((m_CPURegisters.regR + 1) & 0x7f);
-                    
-                    if (opcode == 0xcb)
-                    {
-                        table = &FDCB_Opcodes;
-                        
-                        // Read the offset
-                        signed char offset = Z80CoreMemRead(m_CPURegisters.regPC);
-                        m_CPURegisters.regPC++;
-                        m_MEMPTR = m_CPURegisters.reg_pairs.regIY + offset;
-                        
-                        // Get the next byte
-                        opcode = Z80CoreMemRead(m_CPURegisters.regPC);
-                        m_CPURegisters.regPC++;
-                    }
-                    else
-                    {
-                        table = &FD_Opcodes;
-                    }
-                    break;
-            }
 
-			// Handle a callback if needed
-			if (m_OpcodeCallback != NULL)
-			{
-				// Callback before doing the opcode
-				m_OpcodeCallback(opcode, m_CPURegisters.regPC - 1);
-			}
-            
-            // We can now execute the instruction
-            if (table->entries[opcode].function != NULL)
-            {
-                // Execute the opcode
-                (this->*table->entries[opcode].function)(opcode);
+		// Handle if the callback wants to skip over this instruction
+		bool skip_instruction = false;
+		
+		// Handle a callback if needed
+		if (m_OpcodeCallback != NULL)
+		{
+			// Callback before doing the opcode
+			skip_instruction = m_OpcodeCallback(opcode, m_CPURegisters.regPC - 1, m_Param);
+		}
+		
+		if ( !skip_instruction )
+		{
+        	// We can now execute the instruction
+        	if (table->entries[opcode].function != NULL)
+        	{
+        	    // Execute the opcode
+        	    (this->*table->entries[opcode].function)(opcode);
 				
 				// Remember the details of if we updated flags
 				m_PrevOpcodeFlags = table->entries[opcode].flags;
-            }
-            else
-            {
-                // If no function has been found for the second opcode of a DD/FD multibyte instruction
-                // then use it as a prefix. Drop the PC back 1 and carry on processing the next opcode and set
-                // the chaining flag so we can stop interrupts until the chain has finished
-                
-                // TODO: This could be run if an undocumented opcode is found which would break!!!
-                m_CPURegisters.DDFDmultiByte = true;
-                m_CPURegisters.regPC--;
-                m_CPURegisters.regR--;
-                m_CPURegisters.TStates -= 4;
-            }
-        }
-
+        	}
+        	else
+        	{
+        	    // If no function has been found for the second opcode of a DD/FD multibyte instruction
+        	    // then use it as a prefix. Drop the PC back 1 and carry on processing the next opcode and set
+        	    // the chaining flag so we can stop interrupts until the chain has finished
+				
+        	    // TODO: This could be run if an undocumented opcode is found which would break!!!
+        	    m_CPURegisters.DDFDmultiByte = true;
+        	    m_CPURegisters.regPC--;
+        	    m_CPURegisters.regR--;
+        	    m_CPURegisters.TStates -= 4;
+			}
+		}
+		
     } while (m_CPURegisters.TStates - tstates < num_tstates);
 	
 	return m_CPURegisters.TStates - tstates;

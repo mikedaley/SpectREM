@@ -21,7 +21,7 @@ typedef unsigned char (*Z80CoreRead)(unsigned short address, void *param);
 typedef void (*Z80CoreWrite)(unsigned short address, unsigned char data, void *param);
 typedef void (*Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
 typedef unsigned char(*Z80CoreDebugRead)(unsigned int address, void *param, void *data);
-typedef void (*Z80OpcodeCallback)(unsigned char opcode, unsigned short address);
+typedef bool (*Z80OpcodeCallback)(unsigned char opcode, unsigned short address, void *param);
 typedef char *(*Z80DebugCallback)(unsigned short address, void *data);
 
 //-----------------------------------------------------------------------------------------
@@ -219,8 +219,6 @@ public:
 	void					Z80CoreMemoryContention(unsigned short address, unsigned int t_states);
 	void					Z80CoreIOContention(unsigned short address, unsigned int t_states);
 	unsigned char			Z80CoreDebugMemRead(unsigned int address, void *data);
-
-    bool                    saveTrapTriggered;
 
 protected:
 	#include "Z80Core_MainOpcodes.h"

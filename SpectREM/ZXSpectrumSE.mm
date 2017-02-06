@@ -49,7 +49,10 @@
                          coreDebugRead,
                          (__bridge void *)self);
         
-        displayPage = 1;
+		// Register the opcode callback for the save trapping
+		core->RegisterOpcodeCallback(opcodeCallback);
+		
+		displayPage = 1;
         disablePaging = YES;
         
         [self reset:YES];
@@ -107,6 +110,30 @@ static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {
 	ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
 	return machine->memory[address];
+}
+
+#pragma mark - Callback functions
+
+static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m)
+{
+	ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
+	
+	if (opcode == 0x08 && (address == 0x04d0 || address == 0x0076))
+	{
+		machine->saveTrapTriggered = true;
+		
+		// Skip the instruction
+		return true;
+	}
+	else
+	{
+		machine->saveTrapTriggered = false;
+		
+		// carry on with instruction
+		return false;
+	}
+	
+	return false;
 }
 
 #pragma mark - Load ROM
