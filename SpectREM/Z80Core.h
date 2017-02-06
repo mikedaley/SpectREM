@@ -22,7 +22,7 @@ typedef void (*Z80CoreWrite)(unsigned short address, unsigned char data, void *p
 typedef void (*Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
 typedef unsigned char(*Z80CoreDebugRead)(unsigned int address, void *param, void *data);
 typedef bool (*Z80OpcodeCallback)(unsigned char opcode, unsigned short address, void *param);
-typedef char *(*Z80DebugCallback)(unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data);
+typedef char *(*Z80DebugCallback)(char *buffer, unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data);
 
 //-----------------------------------------------------------------------------------------
 

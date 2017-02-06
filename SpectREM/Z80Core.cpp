@@ -571,8 +571,8 @@ unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsign
 char *CZ80Core::Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, void *data)
 {
 	// Get the number
-	unsigned char num = 0;
-	char number_buffer[16];
+	unsigned short num = 0;
+	char number_buffer[64];
 	char *buffer = number_buffer;
 	
 	switch (variableType)
@@ -597,7 +597,7 @@ char *CZ80Core::Debug_WriteData(unsigned int variableType, char *pStr, unsigned 
 	// See if the program wants to alter the display
 	if ( m_DebugCallback != NULL )
 	{
-		buffer = m_DebugCallback(variableType, address, num, m_Param, data);
+		buffer = m_DebugCallback(buffer, variableType, address, num, m_Param, data);
 	}
 
 	// Now copy it
