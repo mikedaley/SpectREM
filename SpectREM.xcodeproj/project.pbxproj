@@ -93,6 +93,7 @@
 		99A79E6B1DC14A2E00B8D4CD /* ZXSpectrum128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum128.h; sourceTree = "<group>"; };
 		99A79E6C1DC2295000B8D4CD /* 128-0.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = "128-0.rom"; sourceTree = "<group>"; };
 		99A79E6D1DC2295000B8D4CD /* 128-1.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = "128-1.rom"; sourceTree = "<group>"; };
+		99B6B4891E486576001B328C /* ZXTapeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXTapeProtocol.h; sourceTree = "<group>"; };
 		99BFAA281DBA0AE00049D811 /* EmulationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationView.h; sourceTree = "<group>"; };
 		99BFAA291DBA0AE00049D811 /* EmulationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationView.m; sourceTree = "<group>"; };
 		99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationWindowController.h; sourceTree = "<group>"; };
@@ -285,6 +286,7 @@
 				EDEBA79F1DEEDCB000671446 /* Snapshot.mm */,
 				EDAAD8C01E05893F0070153E /* ZXTape.h */,
 				EDAAD8C11E05893F0070153E /* ZXTape.mm */,
+				99B6B4891E486576001B328C /* ZXTapeProtocol.h */,
 			);
 			name = Snapshot/Tape;
 			sourceTree = "<group>";

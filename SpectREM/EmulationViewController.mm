@@ -127,6 +127,7 @@ NS_ENUM(NSUInteger, MachineType)
 
     // Create an instance of the ZXTape controller
     _zxTape = [ZXTape new];
+    _zxTape.delegate = _tapeViewController;
 
     [self setupLocalObservers];
     [self setupSceneBindings];
@@ -159,9 +160,7 @@ NS_ENUM(NSUInteger, MachineType)
                 if ([_cpuWindowController.window isVisible])
                 {
                     [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
-                }
-                
-                self.tapeBytesRemaining = _machine.zxTape.bytesRemaining;
+                }                
             }
         });
     });
@@ -373,7 +372,6 @@ NS_ENUM(NSUInteger, MachineType)
                       NSMenuItem *menuItem = (NSMenuItem *)sender;
                       [self.view.window setTitle:@"SpectREM"];
                       [_zxTape reset];
-                      self.tapeBytesLabel.hidden = YES;
                       _machine.zxTape = _zxTape;
                       [_machine.audioCore reset];
                       [_machine reset:menuItem.tag];
@@ -441,7 +439,6 @@ NS_ENUM(NSUInteger, MachineType)
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
     {
         [_zxTape openTapeWithURL:url];
-        [self.tapeBytesLabel.animator setHidden:NO];
     }
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"ROM"])
     {
@@ -583,7 +580,6 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)ejectTape:(id)sender
 {
     [_zxTape eject];
-    [self.tapeBytesLabel.animator setHidden:YES];
     [self.view.window setTitle:@"SpectREM"];
     [self notifyUserWithMessage:NSLocalizedString(@"Tape Ejected", nil)];
 }

@@ -710,12 +710,12 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         [machine.audioCore writeAYData:data];
     }
     
+    // Handles SpecDrum port writes. The value written is merged into the usual audio output.
     if ((address & 0xff) == 0xdf)
     {
-        machine->specDrumValue = ((data * 128) - 16384) / cAudioBeeperVolumeMultiplier;
+        machine->specDrumValue = ((data * 128) - 16384) / 12;
     }
-    
-//    NSLog(@"%x", address);
+
 }
 
 #pragma mark - Build Display Tables

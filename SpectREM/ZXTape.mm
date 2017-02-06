@@ -9,7 +9,8 @@
 #import "ZXTape.h"
 #import "Z80Core.h"
 
-NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
+NSString *const cTapeBlocksChanged = @"cTapeBlocksChanged";
+NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 @implementation ZXTape
 {
@@ -27,8 +28,6 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     int processingState;
     // Next processing state to be used
     int nextProcessingState;
-    // Current byte location in the tape data being processed
-    int currentBytePointer;
     // Which bit of the current byte in the data stream is being processed
     int currentDataBit;
     // How many tStates have passed since starting the pause between data blocks
@@ -39,6 +38,10 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     int dataPulseCount;
     // Is a new block about to start
     BOOL newBlock;
+    // Timer used to update the progress indicators during a tape load
+    NSTimer *progressTimer;
+    // Current tape block
+    TAPBlock *currentBlock;
 }
 
 - (instancetype)init
@@ -51,12 +54,22 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
         pilotPulses = 0;
         processingState = eNoTape;
         blockPauseTStates = 0;
-        currentBytePointer = 0;
+        self.currentBytePointer = 0;
         flipTapeBit = NO;
         tapeInputBit = 0;
         _playing = NO;
         
         self.tapBlocks = [NSMutableArray new];
+        
+        progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 repeats:YES block:^(NSTimer * _Nonnull timer) {
+            if (self.playing)
+            {
+                if (self.delegate)
+                {
+                    [self.delegate tapeBytesProcessed:self.currentBytePointer];
+                }
+            }
+        }];
     }
     return self;
 }
@@ -81,7 +94,15 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     [self processTAPFileData:tapeData];
     [self printTAPContents];
     self.tapeLoaded = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+    [self blocksChanged];
+}
+
+- (void)blocksChanged
+{
+    if (self.delegate)
+    {
+        [self.delegate blocksChanged];
+    }
 }
 
 - (void)processTAPFileData:(NSData *)data
@@ -89,10 +110,8 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     const char *tapeBytes = (const char*)[data bytes];
     
     self.playing = NO;
-    currentBytePointer = 0;
+    self.currentBytePointer = 0;
     self.currentBlockIndex = 0;
-    self.totalBytes = 0;
-    self.bytesRemaining = 0;
     newBlock = YES;
     
     unsigned short blockLength = 0;
@@ -100,15 +119,15 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     unsigned char dataType = 0;
     
     // Build an array of all the blocks in the TAP file
-    while (currentBytePointer < data.length) {
+    while (self.currentBytePointer < data.length) {
         
-        blockLength = ((unsigned short *)&tapeBytes[currentBytePointer])[0];
+        blockLength = ((unsigned short *)&tapeBytes[self.currentBytePointer])[0];
         
         // Move the pointer to the start of the actual tap block
-        currentBytePointer += 2;
+        self.currentBytePointer += 2;
         
-        flag = tapeBytes[currentBytePointer + cHeaderFlagOffset];
-        dataType = tapeBytes[currentBytePointer + cHeaderDataTypeOffset];
+        flag = tapeBytes[self.currentBytePointer + cHeaderFlagOffset];
+        dataType = tapeBytes[self.currentBytePointer + cHeaderDataTypeOffset];
         
         TAPBlock *newTAPBlock = nil;
         
@@ -135,14 +154,12 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
 
         newTAPBlock.blockLength = blockLength;
         newTAPBlock.blockData = (unsigned char *)calloc(blockLength, sizeof(unsigned char));
-        memcpy(newTAPBlock.blockData, &tapeBytes[currentBytePointer], blockLength);
-        self.totalBytes += blockLength + 1;
+        memcpy(newTAPBlock.blockData, &tapeBytes[self.currentBytePointer], blockLength);
         [self.tapBlocks addObject:newTAPBlock];
 
-        currentBytePointer += blockLength;
+        self.currentBytePointer += blockLength;
     }
     
-    self.bytesRemaining = self.totalBytes;
 }
 
 - (void)updateTapeWithTStates:(int)tStates
@@ -154,7 +171,7 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
         self.playing = NO;
         tapeInputBit = 0;
         self.currentBlockIndex = self.tapBlocks.count - 1;
-        [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+        [self blocksChanged];
         return;
     }
 
@@ -162,46 +179,46 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     {
         newBlock = NO;
         
-        TAPBlock *tapBlock = [self.tapBlocks objectAtIndex:self.currentBlockIndex];
-
-        if ([tapBlock isKindOfClass:[ProgramHeader class]])
+        currentBlock = [self.tapBlocks objectAtIndex:self.currentBlockIndex];
+        
+        if ([currentBlock isKindOfClass:[ProgramHeader class]])
         {
             NSLog(@"Processing Program Header");
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-        else if ([tapBlock isKindOfClass:[NumericDataHeader class]])
+        else if ([currentBlock isKindOfClass:[NumericDataHeader class]])
         {
             NSLog(@"Processing Numberic Header");
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-        else if ([tapBlock isKindOfClass:[AlphaNumericDataHeader class]])
+        else if ([currentBlock isKindOfClass:[AlphaNumericDataHeader class]])
         {
             NSLog(@"Processing Alpha Numeric Header");
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-        else if ([tapBlock isKindOfClass:[ByteHeader class]])
+        else if ([currentBlock isKindOfClass:[ByteHeader class]])
         {
             NSLog(@"Processing Byte Header");
             processingState = eHeaderPilot;
             nextProcessingState = eHeaderDataStream;
         }
-        else if ([tapBlock isKindOfClass:[DataBlock class]])
+        else if ([currentBlock isKindOfClass:[DataBlock class]])
         {
             NSLog(@"Processing Data Block");
             processingState = eDataPilot;
             nextProcessingState = eDataStream;
         }
         
-        currentBytePointer = 0;
+        self.currentBytePointer = 0;
         currentDataBit = 0;
         pilotPulseTStates = 0;
         pilotPulses = 0;
         dataPulseTStates = 0;
         flipTapeBit = YES;
-        [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+        [self blocksChanged];
     }
     
     switch (processingState) {
@@ -323,7 +340,7 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     if (syncPulseTStates >= cSecondSyncPulseTStateDelay)
     {
         syncPulseTStates = 0;
-        currentBytePointer = 0;
+        self.currentBytePointer = 0;
         flipTapeBit = YES;
         processingState = nextProcessingState;
     }
@@ -336,18 +353,15 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
 - (void)generateDataStreamWithTStates:(int)tStates
 {
     int currentBlockLength = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] getDataLength];
-    unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][currentBytePointer];
+    unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][self.currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     
     currentDataBit += 1;
     if (currentDataBit > 7)
     {
         currentDataBit = 0;
-        currentBytePointer += 1;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.bytesRemaining -= 1;
-        });
-        if (currentBytePointer > currentBlockLength)
+        self.currentBytePointer += 1;
+        if (self.currentBytePointer > currentBlockLength)
         {
             processingState = eBlockPause;
             blockPauseTStates = 0;
@@ -372,18 +386,16 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
 - (void)generateHeaderDataStreamWithTStates:(int)tStates
 {
     int currentBlockLength = 19;
-    unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][currentBytePointer];
+    unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][self.currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     
     currentDataBit += 1;
     if (currentDataBit > 7)
     {
         currentDataBit = 0;
-        currentBytePointer += 1;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.bytesRemaining -= 1;
-        });
-        if (currentBytePointer > currentBlockLength)
+        self.currentBytePointer += 1;
+        currentBlock.currentByte += 1;
+        if (self.currentBytePointer > currentBlockLength)
         {
             processingState = eBlockPause;
             blockPauseTStates = 0;
@@ -452,7 +464,7 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
 - (void)play
 {
     self.playing = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+    [self blocksChanged];
 }
 
 - (void)save
@@ -472,26 +484,29 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
 {
     self.playing = NO;
     tapeInputBit = 0;
-    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+    [self blocksChanged];
 }
 
 - (void)rewind
 {
-    self.bytesRemaining = self.totalBytes;
     pilotPulseTStates = 0;
     syncPulseTStates = 0;
     pilotPulses = 0;
     processingState = eNoTape;
     blockPauseTStates = 0;
     tapeInputBit = 0;
-    currentBytePointer = 0;
-    self.currentBlockIndex = 0;
+    self.currentBytePointer = 0;
     newBlock = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+    [self blocksChanged];
+    if (self.delegate)
+    {
+        [self.delegate tapeBytesProcessed:self.currentBytePointer];
+    }
 }
 
 - (void)eject
 {
+    [self stop];
     [self.tapBlocks removeAllObjects];
     pilotPulseTStates = 0;
     syncPulseTStates = 0;
@@ -499,13 +514,11 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     processingState = eNoTape;
     blockPauseTStates = 0;
     tapeInputBit = 0;
-    currentBytePointer = 0;
-    self.currentBlockIndex = 0;
     newBlock = YES;
+    self.currentBytePointer = 0;
+    self.currentBlockIndex = 0;
     self.tapeLoaded = NO;
-    self.totalBytes = 0;
-    self.bytesRemaining = 0;
-    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+    [self blocksChanged];
 }
 
 - (void)reset
@@ -513,9 +526,7 @@ NSString *const cTapeBlocksChanged = @"kTapeBlocksChanged";
     self.tapeLoaded = NO;
     self.playing = NO;
     [self.tapBlocks removeAllObjects];
-    self.totalBytes = 0;
-    self.bytesRemaining = 0;
-    [[NSNotificationCenter defaultCenter] postNotificationName:cTapeBlocksChanged object:nil];
+    [self blocksChanged];
 }
 
 #pragma mark - Saving

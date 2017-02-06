@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "ZXSpectrum.h"
+#import "ZXTapeProtocol.h"
 
 #pragma mark - Constants
 
 extern NSString *const cTapeBlocksChanged;
+extern NSString *const cTapeByteProcessed;
 
 static int const cHeaderLength = 21;
 
@@ -88,11 +90,11 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 @property (assign, getter=isTapeLoaded) BOOL tapeLoaded;
 @property (assign) BOOL playing;
 @property (assign) BOOL saving;
-@property (assign) NSUInteger bytesRemaining;
-@property (assign) NSUInteger totalBytes;
 @property (strong) NSURL *tapeFileURL;
 @property (strong) NSMutableArray *tapBlocks;
 @property (assign) NSInteger currentBlockIndex;
+@property (assign) NSInteger currentBytePointer;
+@property (assign) id<ZXTapeProtocol> delegate;
 
 #pragma mark - Methods
 
@@ -128,6 +130,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 @property (assign) unsigned short blockLength;
 @property (assign) unsigned char *blockData;
 @property (strong, nonatomic) NSString *blockType;
+@property (assign) NSInteger currentByte;
 
 - (unsigned char)getFlag;
 - (unsigned char)getDataType;
