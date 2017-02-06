@@ -25,6 +25,7 @@
 #import "ZXSpectrum128.h"
 #import "ZXSpectrumSE.h"
 #import "SerialCore.h"
+#import "Z80Core.h"
 
 #import <OpenGL/gl.h>
 
@@ -139,6 +140,19 @@ NS_ENUM(NSUInteger, MachineType)
     [self switchToMachine:_configViewController.currentMachineType];
 
     [self setupMachineBindings];
+    
+    // Disassemble ROM into an array of strings
+    NSMutableArray *disassembly = [NSMutableArray new];
+    
+    int pc = 0;
+    CZ80Core *core = (CZ80Core *)[_machine getCore];
+    while (pc < 16384)
+    {
+        char opcode[128];
+        int length = core->Debug_Disassemble(opcode, 128, pc, NULL);
+        [disassembly addObject:[NSString stringWithCString:opcode encoding:NSUTF8StringEncoding]];
+        pc += length;
+    }
 }
 
 #pragma mark - CPU View Timer

@@ -236,6 +236,10 @@
     
     while (count > 0)
     {
+//        char opcode[128];
+//        int length = core->Debug_Disassemble(opcode, 128, core->GetRegister(CZ80Core::eREG_PC), NULL);
+//        NSLog(@"%04x - %@", core->GetRegister(CZ80Core::eREG_PC), [NSString stringWithCString:opcode encoding:NSUTF8StringEncoding]);
+
         int tsCPU = core->Execute(1, machineInfo.intLength);
         
         if (self.zxTape.playing)
