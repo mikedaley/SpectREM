@@ -52,6 +52,9 @@
 		
 		// Register the opcode callback for the save trapping
 		core->RegisterOpcodeCallback(opcodeCallback);
+
+		// Register the callback for the debug information
+		core->RegisterDebugCallback(debugDisplayCallback);
 		
         [self reset:YES];
     }
@@ -139,6 +142,32 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 	}
 	
 	return false;
+}
+
+const char *Get48KRomAddressLabel(unsigned short address);
+
+char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data)
+{
+	// First we only want to alter addresses
+	if ( variableType == CZ80Core::eVARIABLETYPE_Word || variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
+	{
+		// Words are fine, relative offsets we need to update
+		unsigned short label_address = value;
+		
+		if ( variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
+		{
+			label_address = address + value + 1;
+		}
+		
+		const char *label = Get48KRomAddressLabel(label_address);
+		
+		if ( label != NULL )
+		{
+			snprintf(buffer, 64, "%s", label);
+		}
+	}
+	
+	return buffer;
 }
 
 #pragma mark - Load ROM

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */; };
 		991D87BB1E2A5BA900667E37 /* gw03.rom in Resources */ = {isa = PBXBuildFile; fileRef = 991D87BA1E2A5BA900667E37 /* gw03.rom */; };
 		991D87C41E33937A00667E37 /* SerialCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 991D87C31E33937A00667E37 /* SerialCore.m */; };
 		991D87F21E33BD6700667E37 /* ORSSerial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; };
@@ -77,6 +78,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A6386D91E48C72300783DA4 /* AddressLabels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressLabels.h; sourceTree = "<group>"; };
+		0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = 48KRomLabels.mm; sourceTree = "<group>"; };
 		991D87BA1E2A5BA900667E37 /* gw03.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = gw03.rom; sourceTree = "<group>"; };
 		991D87C21E33937A00667E37 /* SerialCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialCore.h; sourceTree = "<group>"; };
 		991D87C31E33937A00667E37 /* SerialCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialCore.m; sourceTree = "<group>"; };
@@ -408,6 +411,8 @@
 				EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */,
 				ED06D3351E375B88001F99FB /* PixelData.h */,
 				EDFEB2941DED8D4100ED3C25 /* MachineDetails.h */,
+				0A6386D91E48C72300783DA4 /* AddressLabels.h */,
+				0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */,
 				995657F11DC1327100114FC9 /* ZXSpectrum.h */,
 				995657F21DC1327100114FC9 /* ZXSpectrum.mm */,
 				EDF3A4EE1DB0D7D000511BAF /* ZXSpectrum48.h */,
@@ -601,6 +606,7 @@
 				EDF3A4D81DB0D7AB00511BAF /* Z80Core_DDOpcodes.cpp in Sources */,
 				99F71A831DDB17B80093CAE4 /* PixelImageView.m in Sources */,
 				ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */,
+				0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */,
 				ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */,
 				EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */,
 				EDF3A4EB1DB0D7C700511BAF /* AudioCore.m in Sources */,
