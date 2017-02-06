@@ -150,8 +150,17 @@ NS_ENUM(NSUInteger, MachineType)
     {
         char opcode[128];
         int length = core->Debug_Disassemble(opcode, 128, pc, NULL);
-        [disassembly addObject:[NSString stringWithCString:opcode encoding:NSUTF8StringEncoding]];
-        pc += length;
+		
+		if ( length == 0 )
+		{
+			// Invalid opcode - probably want to display as a DB statement
+			pc++;
+		}
+		else
+		{
+        	[disassembly addObject:[NSString stringWithCString:opcode encoding:NSUTF8StringEncoding]];
+        	pc += length;
+		}
     }
 }
 

@@ -274,7 +274,7 @@ protected:
 	unsigned short			m_MEMPTR;
     eCPUTYPE				m_CPUType;
 	unsigned int			m_PrevOpcodeFlags;
-
+	
 	void *                  m_Param;
 	Z80CoreRead				m_MemRead;
 	Z80CoreWrite			m_MemWrite;

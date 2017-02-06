@@ -509,52 +509,59 @@ unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsign
 	unsigned int start_address = address;
 	const char *pDisassembleString = Debug_GetOpcodeDetails(address, data);
 
-	// Now write out the string including the extra bits
-	while (StrLen > 1 && *pDisassembleString != '\0')
+	// If we dont have a valid instruction - skip
+	if ( pDisassembleString != NULL )
 	{
-		// Is this a special command
-		if (*pDisassembleString == '%')
+		// Now write out the string including the extra bits
+		while (StrLen > 1 && *pDisassembleString != '\0')
 		{
-			// Yes - See which
-			pDisassembleString++;
-
-			switch (*pDisassembleString++)
+			// Is this a special command
+			if (*pDisassembleString == '%')
 			{
-			case '\0':
-			default:
-				break;
+				// Yes - See which
+				pDisassembleString++;
 
-			case 'O':
-				// This is an offset byte - always 2 bytes passed the start
-				pStr = Debug_WriteByte(pStr, StrLen, start_address + 2, data);
-				break;
+				switch (*pDisassembleString++)
+				{
+				case '\0':
+				default:
+					break;
 
-			case 'B':
-				// This is a data byte - always the previous byte
-				pStr = Debug_WriteByte(pStr, StrLen, address - 1, data);
-				break;
+				case 'O':
+					// This is an offset byte - always 2 bytes passed the start
+					pStr = Debug_WriteByte(pStr, StrLen, start_address + 2, data);
+					break;
 
-			case 'W':
-				// This is a data word - always the previous word
-				pStr = Debug_WriteWord(pStr, StrLen, address - 2, data);
-				break;
+				case 'B':
+					// This is a data byte - always the previous byte
+					pStr = Debug_WriteByte(pStr, StrLen, address - 1, data);
+					break;
 
-			case 'R':
-				// Write the relative offset
-				pStr = Debug_WriteOffset(pStr, StrLen, address - 1, data);
-				break;
+				case 'W':
+					// This is a data word - always the previous word
+					pStr = Debug_WriteWord(pStr, StrLen, address - 2, data);
+					break;
+
+				case 'R':
+					// Write the relative offset
+					pStr = Debug_WriteOffset(pStr, StrLen, address - 1, data);
+					break;
+				}
 			}
-		}
-		else
-		{
-			// No just copy
-			*pStr++ = *pDisassembleString++;
-			StrLen--;
+			else
+			{
+				// No just copy
+				*pStr++ = *pDisassembleString++;
+				StrLen--;
+			}
 		}
 	}
 
 	// Terminate the string
-	*pStr++ = '\0';
+	if ( StrLen > 0 )
+	{
+		*pStr++ = '\0';
+	}
 
 	return (address - start_address);
 }
