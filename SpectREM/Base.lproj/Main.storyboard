@@ -359,29 +359,12 @@
                                     </scrollView>
                                 </subviews>
                             </visualEffectView>
-                            <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="qqb-wB-XLZ">
-                                <rect key="frame" x="390" y="6" width="65" height="19"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="0000" drawsBackground="YES" id="TfU-y5-nOn">
-                                    <font key="font" size="12" name="Courier"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <binding destination="XfG-lQ-9wD" name="value" keyPath="self.tapeBytesRemaining" id="VNk-de-NMO">
-                                        <dictionary key="options">
-                                            <bool key="NSContinuouslyUpdatesValue" value="YES"/>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
-                            </textField>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="configEffectsView" destination="qoy-KM-Y5t" id="kgF-7C-d2k"/>
                         <outlet property="configScrollView" destination="xUN-0b-oUb" id="z4c-9C-R2W"/>
                         <outlet property="skView" destination="m2S-Jp-Qdl" id="qux-te-cT3"/>
-                        <outlet property="tapeBytesLabel" destination="qqb-wB-XLZ" id="6b1-Ng-2OI"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -1089,7 +1072,7 @@
             <objects>
                 <windowController storyboardIdentifier="TAPBrowserWindow" id="aEX-Zc-V4a" sceneMemberID="viewController">
                     <window key="window" title="TAP Browser" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="tapBrowser" animationBehavior="default" id="TGS-8M-haL" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="480" height="208"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
@@ -1139,17 +1122,17 @@
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="BlockTypeCellID" misplaced="YES" id="wqW-ab-Smq">
+                                                        <tableCellView identifier="BlockTypeCellID" misplaced="YES" id="wqW-ab-Smq" customClass="TapeCellView">
                                                             <rect key="frame" x="1" y="1" width="435" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Njq-ds-j5E">
-                                                                    <rect key="frame" x="3" y="3" width="17" height="17"/>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="Njq-ds-j5E">
+                                                                    <rect key="frame" x="3" y="2" width="17" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusNone" id="sbB-SY-gGl"/>
                                                                 </imageView>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" id="ooh-q3-kpa">
-                                                                    <rect key="frame" x="25" y="3" width="365" height="17"/>
+                                                                    <rect key="frame" x="25" y="3" width="330" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="vc1-DJ-WUD">
                                                                         <font key="font" size="13" name="Courier"/>
@@ -1157,13 +1140,14 @@
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                 </textField>
-                                                                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" maxValue="100" bezeled="NO" controlSize="small" style="spinning" id="l8s-pw-NiV">
-                                                                    <rect key="frame" x="396" y="4" width="16" height="16"/>
+                                                                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" maxValue="100" bezeled="NO" controlSize="small" style="bar" id="l8s-pw-NiV">
+                                                                    <rect key="frame" x="361" y="5" width="51" height="12"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                                                 </progressIndicator>
                                                             </subviews>
                                                             <connections>
                                                                 <outlet property="imageView" destination="Njq-ds-j5E" id="8LF-RA-aX8"/>
+                                                                <outlet property="progressIndicator" destination="l8s-pw-NiV" id="Wfz-vd-EfL"/>
                                                                 <outlet property="textField" destination="ooh-q3-kpa" id="S6i-aw-hEL"/>
                                                             </connections>
                                                         </tableCellView>

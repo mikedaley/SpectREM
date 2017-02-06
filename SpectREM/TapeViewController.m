@@ -7,6 +7,7 @@
 //
 
 #import "TapeViewController.h"
+#import "TapeCellView.h"
 #import "ZXTape.h"
 
 @interface TapeViewController ()
@@ -17,11 +18,23 @@
 
 @implementation TapeViewController
 
+- (void)dealloc
+{
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self)
+    {
+        self.tape.delegate = self;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do view setup here.
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blocksChanged:) name:cTapeBlocksChanged object:nil];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -31,12 +44,14 @@
 
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    NSTableCellView *view = [tableView makeViewWithIdentifier:@"BlockTypeCellID" owner:nil];
+    TapeCellView *view = [tableView makeViewWithIdentifier:@"BlockTypeCellID" owner:nil];
     if (view)
     {
         view.textField.stringValue = [(TAPBlock *)[self.tape.tapBlocks objectAtIndex:row] blockType];
+        view.progressIndicator.usesThreadedAnimation = YES;
         if (row == self.tape.currentBlockIndex)
         {
+            [view.progressIndicator setHidden:NO];
             if (self.tape.playing)
             {
                 view.imageView.image = [NSImage imageNamed:NSImageNameStatusAvailable];
@@ -49,6 +64,7 @@
         else
         {
             view.imageView.image = nil;
+            [view.progressIndicator setHidden:YES];
         }
     }
     return view;
@@ -57,12 +73,23 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     self.tape.currentBlockIndex = self.tableView.selectedRow;
+    [self.tape stop];
+    [self.tape rewind];
     [self reloadTable];
 }
 
-- (void)blocksChanged:(NSNotification *)notification
+- (void)blocksChanged
 {
     [self reloadTable];
+}
+
+- (void)tapeBytesProcessed:(NSInteger)bytes
+{
+    TAPBlock *block = [self.tape.tapBlocks objectAtIndex:self.tape.currentBlockIndex];
+    TapeCellView *view = [self.tableView viewAtColumn:0 row:self.tape.currentBlockIndex makeIfNecessary:NO];
+    double length = block.blockLength;
+    double val = (100 / length) * bytes;
+    view.progressIndicator.doubleValue = val;
 }
 
 - (void)reloadTable
@@ -76,6 +103,8 @@
 
 - (IBAction)previous:(id)sender {
     self.tape.currentBlockIndex = (self.tape.currentBlockIndex - 1 >= 0) ? self.tape.currentBlockIndex - 1 : 0 ;
+    [self.tape stop];
+    [self.tape rewind];
     [self.tableView reloadData];
 }
 
@@ -89,6 +118,8 @@
 
 - (IBAction)next:(id)sender {
     self.tape.currentBlockIndex = (self.tape.currentBlockIndex + 1 < self.tape.tapBlocks.count) ? self.tape.currentBlockIndex + 1 : self.tape.tapBlocks.count - 1;
+    [self.tape stop];
+    [self.tape rewind];
     [self reloadTable];
 }
 

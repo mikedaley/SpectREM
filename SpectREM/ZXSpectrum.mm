@@ -177,6 +177,7 @@
     audioTsStepCounter = 0;
     audioBeeperLeft = 0;
     audioBeeperRight = 0;
+    specDrumValue = 0;
     [self.audioCore reset];
 }
 
@@ -313,7 +314,7 @@ void updateAudioWithTStates(int numberTs, void *m)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes
-        signed int beeperLevelLeft = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier);
+        signed int beeperLevelLeft = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier) | machine->specDrumValue;
         signed int beeperLevelRight = beeperLevelLeft;
         
         // Setting the channel mix 0.5 causes the output to to be centered between left and right speakers
@@ -702,12 +703,19 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         [machine.audioCore setAYRegister:(data & 0x0f)];
     }
     
-       if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY || (machine->machineInfo.hasAY ||
-                                                                           (machine->machineInfo.machineType == 0 &&
-                                                                            machine.useAYOn48k) )))
+    if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY || (machine->machineInfo.hasAY ||
+                                                                        (machine->machineInfo.machineType == 0 &&
+                                                                         machine.useAYOn48k) )))
     {
         [machine.audioCore writeAYData:data];
     }
+    
+    // Handles SpecDrum port writes. The value written is merged into the usual audio output.
+    if ((address & 0xff) == 0xdf)
+    {
+        machine->specDrumValue = ((data * 128) - 16384) / 12;
+    }
+
 }
 
 #pragma mark - Build Display Tables

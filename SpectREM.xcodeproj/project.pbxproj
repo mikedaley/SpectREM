@@ -14,6 +14,7 @@
 		992B25941E453B68008538EF /* OpenGL.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 992B25931E453B68008538EF /* OpenGL.fsh */; };
 		995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 995657F21DC1327100114FC9 /* ZXSpectrum.mm */; };
 		996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */ = {isa = PBXBuildFile; fileRef = 996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */; };
+		999698981E467BD7007FD246 /* TapeCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 999698971E467BD7007FD246 /* TapeCellView.m */; };
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
 		99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */ = {isa = PBXBuildFile; fileRef = 99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */; };
 		99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */ = {isa = PBXBuildFile; fileRef = 99A79E6C1DC2295000B8D4CD /* 128-0.rom */; };
@@ -84,12 +85,15 @@
 		995657F11DC1327100114FC9 /* ZXSpectrum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum.h; sourceTree = "<group>"; };
 		995657F21DC1327100114FC9 /* ZXSpectrum.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum.mm; sourceTree = "<group>"; };
 		996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = Open_SEBASIC_3.12.rom; sourceTree = "<group>"; };
+		999698961E467BD7007FD246 /* TapeCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapeCellView.h; sourceTree = "<group>"; };
+		999698971E467BD7007FD246 /* TapeCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeCellView.m; sourceTree = "<group>"; };
 		99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
 		99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
 		99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum128.mm; sourceTree = "<group>"; };
 		99A79E6B1DC14A2E00B8D4CD /* ZXSpectrum128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum128.h; sourceTree = "<group>"; };
 		99A79E6C1DC2295000B8D4CD /* 128-0.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = "128-0.rom"; sourceTree = "<group>"; };
 		99A79E6D1DC2295000B8D4CD /* 128-1.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = "128-1.rom"; sourceTree = "<group>"; };
+		99B6B4891E486576001B328C /* ZXTapeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXTapeProtocol.h; sourceTree = "<group>"; };
 		99BFAA281DBA0AE00049D811 /* EmulationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationView.h; sourceTree = "<group>"; };
 		99BFAA291DBA0AE00049D811 /* EmulationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmulationView.m; sourceTree = "<group>"; };
 		99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmulationWindowController.h; sourceTree = "<group>"; };
@@ -269,6 +273,8 @@
 			children = (
 				EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */,
 				EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */,
+				999698961E467BD7007FD246 /* TapeCellView.h */,
+				999698971E467BD7007FD246 /* TapeCellView.m */,
 			);
 			name = TapeViewController;
 			sourceTree = "<group>";
@@ -280,6 +286,7 @@
 				EDEBA79F1DEEDCB000671446 /* Snapshot.mm */,
 				EDAAD8C01E05893F0070153E /* ZXTape.h */,
 				EDAAD8C11E05893F0070153E /* ZXTape.mm */,
+				99B6B4891E486576001B328C /* ZXTapeProtocol.h */,
 			);
 			name = Snapshot/Tape;
 			sourceTree = "<group>";
@@ -570,6 +577,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				999698981E467BD7007FD246 /* TapeCellView.m in Sources */,
 				EDF3A4DA1DB0D7AB00511BAF /* Z80Core_DDCB_FDCBOpcodes.cpp in Sources */,
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,
 				99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */,

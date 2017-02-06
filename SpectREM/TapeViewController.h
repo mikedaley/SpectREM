@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "ZXTapeProtocol.h"
 
 @class ZXTape;
 
-@interface TapeViewController : NSViewController <NSTableViewDelegate, NSTableViewDataSource>
+@interface TapeViewController : NSViewController <NSTableViewDelegate, NSTableViewDataSource, ZXTapeProtocol>
 
 @property (strong) ZXTape *tape;
 
