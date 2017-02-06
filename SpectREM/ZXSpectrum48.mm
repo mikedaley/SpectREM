@@ -47,7 +47,7 @@
                          coreIORead,
                          coreIOWrite,
                          coreMemoryContention,
-                         coreIOContention,
+                         coreDebugRead,
                          (__bridge void *)self);
         
         [self reset:YES];
@@ -108,9 +108,10 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
     }
 }
 
-static void coreIOContention(unsigned short address, unsigned int tstates, void *m)
+static unsigned char coreDebugRead(unsigned int address, void *m)
 {
-    // NOT USED
+	ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
+	return machine->memory[address];
 }
 
 #pragma mark - Load ROM
