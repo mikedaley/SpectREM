@@ -37,6 +37,8 @@
 		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */; };
+		EDE99ED81E48D3C8006F8E63 /* DebugViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDE99ED71E48D3C8006F8E63 /* DebugViewController.mm */; };
+		EDE99EDE1E48D745006F8E63 /* DebugCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = EDE99EDD1E48D745006F8E63 /* DebugCellView.m */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
 		EDF3A4A51DB0D60700511BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A41DB0D60700511BAF /* main.m */; };
@@ -128,6 +130,10 @@
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapeViewController.h; sourceTree = "<group>"; };
 		EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeViewController.m; sourceTree = "<group>"; };
+		EDE99ED61E48D3C8006F8E63 /* DebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
+		EDE99ED71E48D3C8006F8E63 /* DebugViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DebugViewController.mm; sourceTree = "<group>"; };
+		EDE99EDC1E48D745006F8E63 /* DebugCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugCellView.h; sourceTree = "<group>"; };
+		EDE99EDD1E48D745006F8E63 /* DebugCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugCellView.m; sourceTree = "<group>"; };
 		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
 		EDEBA79F1DEEDCB000671446 /* Snapshot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Snapshot.mm; sourceTree = "<group>"; };
 		EDF3A49D1DB0D60700511BAF /* SpectREM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpectREM.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -274,12 +280,23 @@
 		EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */ = {
 			isa = PBXGroup;
 			children = (
-				EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */,
-				EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */,
 				999698961E467BD7007FD246 /* TapeCellView.h */,
 				999698971E467BD7007FD246 /* TapeCellView.m */,
+				EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */,
+				EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */,
 			);
 			name = TapeViewController;
+			sourceTree = "<group>";
+		};
+		EDE99ED51E48D3AC006F8E63 /* Debug View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				EDE99EDC1E48D745006F8E63 /* DebugCellView.h */,
+				EDE99EDD1E48D745006F8E63 /* DebugCellView.m */,
+				EDE99ED61E48D3C8006F8E63 /* DebugViewController.h */,
+				EDE99ED71E48D3C8006F8E63 /* DebugViewController.mm */,
+			);
+			name = "Debug View Controller";
 			sourceTree = "<group>";
 		};
 		EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */ = {
@@ -373,6 +390,7 @@
 				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,
 				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
 				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
+				EDE99ED51E48D3AC006F8E63 /* Debug View Controller */,
 				99BFAA271DBA0AC50049D811 /* Views */,
 			);
 			name = "View/Window Controllers";
@@ -591,6 +609,7 @@
 				99F71A861DDB1A4B0093CAE4 /* CPUViewController.mm in Sources */,
 				995657F31DC1327100114FC9 /* ZXSpectrum.mm in Sources */,
 				99BFAA2D1DBA0CA50049D811 /* EmulationWindowController.m in Sources */,
+				EDE99ED81E48D3C8006F8E63 /* DebugViewController.mm in Sources */,
 				EDF3A4EC1DB0D7C700511BAF /* AudioQueue.m in Sources */,
 				EDF3A4D51DB0D7AB00511BAF /* Z80Core_MainOpcodes.cpp in Sources */,
 				ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */,
@@ -610,6 +629,7 @@
 				ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */,
 				EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */,
 				EDF3A4EB1DB0D7C700511BAF /* AudioCore.m in Sources */,
+				EDE99EDE1E48D745006F8E63 /* DebugCellView.m in Sources */,
 				EDF3A4D71DB0D7AB00511BAF /* Z80Core_EDOpcodes.cpp in Sources */,
 				ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */,
 				EDF3A4D41DB0D7AB00511BAF /* Z80Core.cpp in Sources */,

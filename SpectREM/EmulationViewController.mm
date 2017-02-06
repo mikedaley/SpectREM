@@ -17,6 +17,7 @@
 #import "GraphicalMemViewController.h"
 #import "CPUViewController.h"
 #import "TapeViewController.h"
+#import "DebugViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
 #import "ZXTape.h"
@@ -56,6 +57,9 @@ NS_ENUM(NSUInteger, MachineType)
     
     NSWindowController      *_tapeBrowserWindowController;
     TapeViewController      *_tapeViewController;
+    
+    NSWindowController      *_debugWindowController;
+    DebugViewController     *_debugViewController;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
@@ -101,8 +105,8 @@ NS_ENUM(NSUInteger, MachineType)
     _graphicalMemoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"GraphicalMemoryView"];
     _graphicalMemViewController = (GraphicalMemViewController *)_graphicalMemoryWindowController.contentViewController;
     
-    _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
-    _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
+//    _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
+//    _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
     
     // Setup the config view controller used for the config panel on the right. This initially places the view off the
     // left edge of the window and drops the configViewController view into the config scroll view.
@@ -119,6 +123,10 @@ NS_ENUM(NSUInteger, MachineType)
     // Setup the tape view view controller;
     _tapeBrowserWindowController = [_storyBoard instantiateControllerWithIdentifier:@"TAPBrowserWindow"];
     _tapeViewController = (TapeViewController *)_tapeBrowserWindowController.contentViewController;
+    
+    // Setup the debug window
+    _debugWindowController = [_storyBoard instantiateControllerWithIdentifier:@"DebugWindow"];
+    _debugViewController = (DebugViewController *)_debugWindowController.contentViewController;
     
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
@@ -140,28 +148,7 @@ NS_ENUM(NSUInteger, MachineType)
     [self switchToMachine:_configViewController.currentMachineType];
 
     [self setupMachineBindings];
-    
-    // Disassemble ROM into an array of strings
-    NSMutableArray *disassembly = [NSMutableArray new];
-    
-    int pc = 0;
-    CZ80Core *core = (CZ80Core *)[_machine getCore];
-    while (pc < 16384)
-    {
-        char opcode[128];
-        int length = core->Debug_Disassemble(opcode, 128, pc, NULL);
-		
-		if ( length == 0 )
-		{
-			// Invalid opcode - probably want to display as a DB statement
-			pc++;
-		}
-		else
-		{
-        	[disassembly addObject:[NSString stringWithCString:opcode encoding:NSUTF8StringEncoding]];
-        	pc += length;
-		}
-    }
+
 }
 
 #pragma mark - CPU View Timer
@@ -236,6 +223,7 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:cUseSmartLink toObject:_configViewController withKeyPath:cUseSmartLink options:nil];
     
     [_tapeViewController bind:@"tape" toObject:self withKeyPath:@"zxTape" options:nil];
+    [_debugViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
 }
 
 - (void)setupLocalObservers
@@ -544,17 +532,17 @@ NS_ENUM(NSUInteger, MachineType)
     //    [_graphicalMemoryWindowController.window makeKeyAndOrderFront:nil];
 }
 
-- (IBAction)showCPUWindow:(id)sender
-{
-    [self.view.window addChildWindow:_cpuWindowController.window ordered:NSWindowAbove];
-    [_cpuViewController updateViewWithMachine:(__bridge void*)_machine];
-    //    [_cpuWindowController.window orderFront:nil];
-    //    [_cpuWindowController.window setLevel:NSPopUpMenuWindowLevel];
-}
+//- (IBAction)showCPUWindow:(id)sender
+//{
+//    [self.view.window addChildWindow:_cpuWindowController.window ordered:NSWindowAbove];
+//    [_cpuViewController updateViewWithMachine:(__bridge void*)_machine];
+//    //    [_cpuWindowController.window orderFront:nil];
+//    //    [_cpuWindowController.window setLevel:NSPopUpMenuWindowLevel];
+//}
 
 - (IBAction)switchHexDecValues:(id)sender
 {
-    _cpuViewController.decimalFormat = (_cpuViewController.decimalFormat) ? NO : YES;
+    _debugViewController.decimalFormat = (_debugViewController.decimalFormat) ? NO : YES;
 }
 
 - (IBAction)pause:(id)sender
@@ -615,6 +603,11 @@ NS_ENUM(NSUInteger, MachineType)
 - (IBAction)tapeBrowser:(id)sender
 {
     [_tapeBrowserWindowController showWindow:nil];
+}
+
+- (IBAction)showDebugWindow:(id)sender
+{
+    [_debugWindowController showWindow:nil];
 }
 
 #pragma mark - User Notifications
