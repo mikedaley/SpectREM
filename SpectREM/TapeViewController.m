@@ -123,9 +123,32 @@
     [self reloadTable];
 }
 
+- (IBAction)rewind:(id)sender
+{
+    [self.tape stop];
+    [self.tape rewind];
+    [self reloadTable];
+}
+
 - (IBAction)eject:(id)sender {
     [self.tape eject];
     [self reloadTable];
+}
+
+- (IBAction)save:(id)sender
+{
+    NSSavePanel *savePanel = [NSSavePanel new];
+    savePanel.allowedFileTypes = @[@"TAP"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [savePanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
+            if (result == NSModalResponseOK)
+            {
+                [self.tape saveToURL:savePanel.URL];
+            }
+        }];
+    });
+
 }
 
 @end

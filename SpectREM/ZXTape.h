@@ -111,7 +111,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 
 // Currently loaded tape controls
 - (void)play;
-- (void)save;
+- (void)saveToURL:(NSURL *)url;
 - (void)stop;
 - (void)rewind;
 - (void)eject;

@@ -562,7 +562,7 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (IBAction)saveTape:(id)sender
 {
-    [_zxTape save];
+
 }
 
 - (IBAction)stopTape:(id)sender

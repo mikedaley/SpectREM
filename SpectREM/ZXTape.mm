@@ -94,7 +94,6 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     [self processTAPFileData:tapeData];
     [self printTAPContents];
     self.tapeLoaded = YES;
-    [self blocksChanged];
 }
 
 - (void)blocksChanged
@@ -158,8 +157,12 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
         [self.tapBlocks addObject:newTAPBlock];
 
         self.currentBytePointer += blockLength;
+        
     }
-    
+    if (self.delegate)
+    {
+        [self.delegate blocksChanged];
+    }
 }
 
 - (void)updateTapeWithTStates:(int)tStates
@@ -467,17 +470,17 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     [self blocksChanged];
 }
 
-- (void)save
+- (void)saveToURL:(NSURL *)url
 {
     NSMutableData *saveData = [NSMutableData new];
     
     for (TAPBlock *tapBlock in self.tapBlocks) {
-        unsigned char length = tapBlock.blockLength;
+        unsigned short length = tapBlock.blockLength;
         [saveData appendBytes:&length length:sizeof(unsigned short)];
         [saveData appendBytes:tapBlock.blockData length:length];
     }
     
-    [saveData writeToFile:@"/Users/mikedaley/Desktop/testing.tap" atomically:YES];
+    [saveData writeToURL:url atomically:NO];
 }
 
 - (void)stop
@@ -633,7 +636,9 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 {
     char *filename = (char *)calloc(cHeaderFilenameLength, sizeof(char));
     memcpy(filename, &_blockData[cHeaderFilenameOffset], cHeaderFilenameLength);
-    return [NSString stringWithCString:filename encoding:NSASCIIStringEncoding];
+    NSString *filenameString = [NSString stringWithCString:filename encoding:NSASCIIStringEncoding];
+    free(filename);
+    return filenameString;
 }
 
 - (unsigned short)getDataLength

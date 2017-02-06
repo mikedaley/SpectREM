@@ -1074,10 +1074,10 @@
                     <window key="window" title="TAP Browser" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="tapBrowser" animationBehavior="default" id="TGS-8M-haL" customClass="NSPanel">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="425" y="461" width="480" height="208"/>
+                        <rect key="contentRect" x="425" y="461" width="593" height="208"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
-                        <value key="minSize" type="size" width="480" height="312"/>
-                        <value key="maxSize" type="size" width="480" height="1000"/>
+                        <value key="minSize" type="size" width="593" height="292"/>
+                        <value key="maxSize" type="size" width="593" height="1000"/>
                     </window>
                     <connections>
                         <segue destination="Y2K-MQ-n4V" kind="relationship" relationship="window.shadowedContentViewController" id="7Pl-eP-t35"/>
@@ -1085,31 +1085,31 @@
                 </windowController>
                 <customObject id="V0c-IT-ucs" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="596" y="960"/>
+            <point key="canvasLocation" x="652.5" y="956"/>
         </scene>
         <!--TAP View Controller-->
         <scene sceneID="ef2-PT-cdk">
             <objects>
                 <viewController title="TAP View Controller" id="Y2K-MQ-n4V" customClass="TapeViewController" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="7I0-xD-BdR">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="312"/>
+                        <rect key="frame" x="0.0" y="0.0" width="593" height="292"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="7jO-cz-urT">
-                                <rect key="frame" x="20" y="59" width="440" height="233"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="20" y="20" width="464" height="252"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Gpc-G9-s4Q">
-                                    <rect key="frame" x="1" y="0.0" width="438" height="232"/>
+                                    <rect key="frame" x="1" y="0.0" width="462" height="251"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" headerView="ES5-bc-7r3" viewBased="YES" floatsGroupRows="NO" id="6Ii-f8-x0u">
-                                            <rect key="frame" x="0.0" y="0.0" width="438" height="209"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="462" height="228"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn width="435" minWidth="40" maxWidth="1000" id="9no-ZI-poa">
+                                                <tableColumn width="459" minWidth="40" maxWidth="1000" id="9no-ZI-poa">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Blocks">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1123,7 +1123,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="BlockTypeCellID" misplaced="YES" id="wqW-ab-Smq" customClass="TapeCellView">
-                                                            <rect key="frame" x="1" y="1" width="435" height="20"/>
+                                                            <rect key="frame" x="1" y="1" width="459" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="Njq-ds-j5E">
@@ -1132,7 +1132,7 @@
                                                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusNone" id="sbB-SY-gGl"/>
                                                                 </imageView>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" id="ooh-q3-kpa">
-                                                                    <rect key="frame" x="25" y="3" width="330" height="17"/>
+                                                                    <rect key="frame" x="25" y="3" width="356" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="vc1-DJ-WUD">
                                                                         <font key="font" size="13" name="Courier"/>
@@ -1141,8 +1141,8 @@
                                                                     </textFieldCell>
                                                                 </textField>
                                                                 <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" maxValue="100" bezeled="NO" controlSize="small" style="bar" id="l8s-pw-NiV">
-                                                                    <rect key="frame" x="361" y="5" width="51" height="12"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                    <rect key="frame" x="387" y="5" width="62" height="12"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                                                 </progressIndicator>
                                                             </subviews>
                                                             <connections>
@@ -1163,7 +1163,7 @@
                                     <nil key="backgroundColor"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="NG5-Dx-U9m">
-                                    <rect key="frame" x="1" y="233" width="438" height="16"/>
+                                    <rect key="frame" x="1" y="216" width="462" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Qpr-ay-ZUu">
@@ -1171,13 +1171,13 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="ES5-bc-7r3">
-                                    <rect key="frame" x="0.0" y="0.0" width="438" height="23"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="462" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
                             <button verticalHuggingPriority="750" misplaced="YES" id="KcQ-Hy-pap">
-                                <rect key="frame" x="107" y="13" width="66" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="486" y="178" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="AG3-CE-smO">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1187,8 +1187,8 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="2dw-AH-WII">
-                                <rect key="frame" x="14" y="13" width="93" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="486" y="244" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Previous" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jcs-3x-OiU">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1197,9 +1197,20 @@
                                     <action selector="previous:" target="Y2K-MQ-n4V" id="TEV-u9-gfW"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" misplaced="YES" id="Lhb-UR-02T">
+                                <rect key="frame" x="486" y="112" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Rewind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="o0L-2K-fxu">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="rewind:" target="xY4-Rg-kYp" id="AHs-YP-m71"/>
+                                </connections>
+                            </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="CP6-vB-YUP">
-                                <rect key="frame" x="173" y="13" width="69" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="486" y="145" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Stop" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="W8L-wz-GyR">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1209,8 +1220,8 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="LFi-Hk-Lbb">
-                                <rect key="frame" x="242" y="13" width="69" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="486" y="211" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Next" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Dae-4U-njS">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1220,8 +1231,8 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="kuF-nV-YGq">
-                                <rect key="frame" x="310" y="13" width="71" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="486" y="79" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Eject" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Va0-yI-L5L">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1231,14 +1242,25 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="KLI-2N-n4R">
-                                <rect key="frame" x="397" y="13" width="67" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <buttonCell key="cell" type="push" title="New" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZi-Kf-zhe">
+                                <rect key="frame" x="486" y="46" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="New Tape" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZi-Kf-zhe">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="next:" target="Y2K-MQ-n4V" id="HhZ-nz-pBo"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" misplaced="YES" id="cPb-S9-o1z">
+                                <rect key="frame" x="486" y="13" width="93" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ohp-Td-87p">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="save:" target="xY4-Rg-kYp" id="XyG-XZ-rUn"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1255,7 +1277,7 @@
                 </arrayController>
                 <userDefaultsController id="DCi-Kb-qB4"/>
             </objects>
-            <point key="canvasLocation" x="596" y="1361"/>
+            <point key="canvasLocation" x="652.5" y="1351"/>
         </scene>
         <!--Keyboard View Controller-->
         <scene sceneID="ahz-sD-Vlf">
