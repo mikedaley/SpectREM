@@ -22,9 +22,8 @@
 
 @property (weak) IBOutlet NSVisualEffectView *configEffectsView;
 @property (weak) IBOutlet NSScrollView *configScrollView;
-@property (weak) IBOutlet NSTextField *tapeBytesLabel;
 
-@property (assign) NSUInteger tapeBytesRemaining;
+@property (strong) NSMutableArray *disassemblyArray;
 
 #pragma mark - Methods
 
