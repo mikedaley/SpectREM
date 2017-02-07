@@ -1101,8 +1101,8 @@ static unsigned char floatingBus(void *m)
                 case 57: // Caps Lock
                     if (theEvent.modifierFlags & NSEventModifierFlagCapsLock)
                     {
-                        keyboardMap[0] &= ~0x01;
-                        keyboardMap[3] &= ~0x02;
+//                        keyboardMap[0] &= ~0x01;
+//                        keyboardMap[3] &= ~0x02;
                     }
                     break;
 

@@ -37,6 +37,8 @@
     // Do view setup here.
 }
 
+#pragma mark - Table View Delegates
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return self.tape.tapBlocks.count;
@@ -77,6 +79,13 @@
     [self.tape rewind];
     [self reloadTable];
 }
+
+- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
+{
+    return 30;
+}
+
+#pragma mark - Delegate Methods
 
 - (void)blocksChanged
 {
@@ -148,6 +157,23 @@
             }
         }];
     });
+
+}
+
+- (IBAction)deleteBlock:(id)sender
+{
+    NSAlert *alert = [NSAlert new];
+    alert.informativeText = @"Delete the current block?";
+    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:@"Yes"];
+    [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode)
+     {
+         if (returnCode == NSAlertSecondButtonReturn)
+         {
+             [self.tape.tapBlocks removeObjectAtIndex:self.tableView.selectedRow - 1];
+             [self.tableView reloadData];
+         }
+     }];
 
 }
 
