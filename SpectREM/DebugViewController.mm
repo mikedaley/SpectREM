@@ -95,7 +95,7 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-
+    [self.disassemblyTableview reloadData];
 }
 
 #pragma mark - CPU Details

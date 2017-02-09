@@ -76,8 +76,8 @@
 {
     self.tape.currentBlockIndex = self.tableView.selectedRow;
     [self.tape stop];
-    [self.tape rewind];
-    [self reloadTable];
+//    [self.tape rewind];
+//    [self reloadTable];
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row

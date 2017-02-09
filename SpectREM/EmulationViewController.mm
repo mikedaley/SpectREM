@@ -290,12 +290,14 @@ NS_ENUM(NSUInteger, MachineType)
         {
             [self notifyUserWithMessage:NSLocalizedString(@"Acceleration mode on", nil)];
             [_machine.audioCore stop];
+            _machine.accelerated = YES;
             dispatch_resume(_fastTimer);
         }
         else
         {
             [self notifyUserWithMessage:NSLocalizedString(@"Acceleration mode off", nil)];
             [_machine.audioCore start];
+            _machine.accelerated = NO;
             dispatch_suspend(_fastTimer);
         }
     }
@@ -428,9 +430,8 @@ NS_ENUM(NSUInteger, MachineType)
     
     if (_machine.accelerated)
     {
-        _machine.accelerated = NO;
-        dispatch_suspend(_fastTimer);
-        [_machine.audioCore start];
+        [_configViewController setValue:@(NO) forKey:cAccelerate];
+        [self notifyUserWithMessage:NSLocalizedString(@"Acceleration mode off", nil)];
     }
     
     if ([[[url pathExtension] uppercaseString] isEqualToString:@"Z80"] ||
@@ -474,11 +475,13 @@ NS_ENUM(NSUInteger, MachineType)
 
 - (void)switchToMachine:(NSInteger)machineType
 {
-    [_machine stop];
     if (_machine.accelerated)
     {
-        dispatch_suspend(_fastTimer);
+        [_configViewController setValue:@(NO) forKey:cAccelerate];
+        [self notifyUserWithMessage:NSLocalizedString(@"Acceleration mode off", nil)];
     }
+
+    [_machine stop];
     
     [self removeBindings];
     switch (machineType) {

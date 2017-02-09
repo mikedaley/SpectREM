@@ -236,10 +236,6 @@
     
     while (count > 0)
     {
-//        char opcode[128];
-//        int length = core->Debug_Disassemble(opcode, 128, core->GetRegister(CZ80Core::eREG_PC), NULL);
-//        NSLog(@"%04x - %@", core->GetRegister(CZ80Core::eREG_PC), [NSString stringWithCString:opcode encoding:NSUTF8StringEncoding]);
-
         int tsCPU = core->Execute(1, machineInfo.intLength);
         
         if (self.zxTape.playing)
@@ -255,24 +251,40 @@
         {
             count -= tsCPU;
                         
-            updateAudioWithTStates(tsCPU, (__bridge void *)self);
+            if (!self.accelerated) {
+                updateAudioWithTStates(tsCPU, (__bridge void *)self);
+            }
             
             if (core->GetTStates() >= machineInfo.tsPerFrame )
             {
                 // Must reset count to ensure we leave the while loop at the correct point
                 count = 0;
                 
-                updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
-                
                 core->ResetTStates( machineInfo.tsPerFrame );
                 core->SignalInterrupt();
-                                
-                // Updating the emulators texture must be done on the main thread
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
-                                                                              length:(CFIndex)emuDisplayBufferLength
-                                                                                size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
-                });
+
+                updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+                
+                if (self.accelerated)
+                {
+                    if (frameCounter % 5)
+                    {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
+                                                                                      length:(CFIndex)emuDisplayBufferLength
+                                                                                        size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
+                        });
+                    }
+                }
+                else
+                {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
+                                                                                  length:(CFIndex)emuDisplayBufferLength
+                                                                                    size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
+                    });
+                }
+                
                 
                 frameCounter++;
             }
@@ -427,6 +439,11 @@ void updateAudioWithTStates(int numberTs, void *m)
 void updateScreenWithTStates(int numberTs, void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    
+    if (machine.accelerated && machine->frameCounter % 5)
+    {
+        return;
+    }
     
     while (numberTs > 0)
     {
