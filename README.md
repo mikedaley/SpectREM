@@ -34,5 +34,6 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
   - Breakpoints
   - Break on Read/Write/Execute of a memory location
   - Import Labels and other info from assemblers such as Pasmo
-- Screen debugger that shows what has been drawn to screen even when single stepping instructions
-- Screen debugger that can be used to show a specific memory page for 128k screen debugging e.g. look at the page updating that is going to be flipped too
+  - Screen debugger that shows what has been drawn to screen even when single stepping instructions
+  - Screen debugger that can be used to show a specific memory page for 128k screen debugging e.g. look at the page updating that is going to be flipped too
+  - Show on screen where the screen refresh location is for debugging colour effects
