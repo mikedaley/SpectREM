@@ -29,3 +29,5 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - ULAplus
 - SNA/Z80 creation
 - Full debugger/disassembler
+- Screen debugger that shows what has been drawn to screen even when single stepping instructions
+- Screen debugger that can be used to show a specific memory page for 128k screen debugging e.g. look at the page updating that is going to be flipped too
