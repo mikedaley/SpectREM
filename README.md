@@ -29,5 +29,10 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - ULAplus
 - SNA/Z80 creation
 - Full debugger/disassembler
+  - Step In
+  - Step Over (Step over a CALL nn and run until a RET is hit)
+  - Breakpoints
+  - Break on Read/Write/Execute of a memory location
+  - Import Labels and other info from assemblers such as Pasmo
 - Screen debugger that shows what has been drawn to screen even when single stepping instructions
 - Screen debugger that can be used to show a specific memory page for 128k screen debugging e.g. look at the page updating that is going to be flipped too
