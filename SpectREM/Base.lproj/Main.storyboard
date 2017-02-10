@@ -1074,10 +1074,10 @@
                     <window key="window" title="TAP Browser" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="tapBrowser" animationBehavior="default" id="TGS-8M-haL" customClass="NSPanel">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="425" y="461" width="593" height="208"/>
+                        <rect key="contentRect" x="425" y="461" width="515" height="208"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
-                        <value key="minSize" type="size" width="593" height="292"/>
-                        <value key="maxSize" type="size" width="593" height="1000"/>
+                        <value key="minSize" type="size" width="515" height="292"/>
+                        <value key="maxSize" type="size" width="515" height="1000"/>
                     </window>
                     <connections>
                         <segue destination="Y2K-MQ-n4V" kind="relationship" relationship="window.shadowedContentViewController" id="7Pl-eP-t35"/>

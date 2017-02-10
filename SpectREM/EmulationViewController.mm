@@ -384,7 +384,6 @@ NS_ENUM(NSUInteger, MachineType)
                   {
                       NSMenuItem *menuItem = (NSMenuItem *)sender;
                       [self.view.window setTitle:@"SpectREM"];
-                      [_zxTape reset];
                       _machine.zxTape = _zxTape;
                       [_machine.audioCore reset];
                       [_machine reset:menuItem.tag];

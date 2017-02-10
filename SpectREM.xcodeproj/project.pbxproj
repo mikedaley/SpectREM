@@ -277,6 +277,15 @@
 			name = "CPU View Controller";
 			sourceTree = "<group>";
 		};
+		ED8BD2491E4DA3D60033DBAA /* Debugger */ = {
+			isa = PBXGroup;
+			children = (
+				0A6386D91E48C72300783DA4 /* AddressLabels.h */,
+				0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */,
+			);
+			name = Debugger;
+			sourceTree = "<group>";
+		};
 		EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,11 +435,10 @@
 		EDF3A4C21DB0D77D00511BAF /* Machines */ = {
 			isa = PBXGroup;
 			children = (
+				ED8BD2491E4DA3D60033DBAA /* Debugger */,
 				EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */,
 				ED06D3351E375B88001F99FB /* PixelData.h */,
 				EDFEB2941DED8D4100ED3C25 /* MachineDetails.h */,
-				0A6386D91E48C72300783DA4 /* AddressLabels.h */,
-				0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */,
 				995657F11DC1327100114FC9 /* ZXSpectrum.h */,
 				995657F21DC1327100114FC9 /* ZXSpectrum.mm */,
 				EDF3A4EE1DB0D7D000511BAF /* ZXSpectrum48.h */,
