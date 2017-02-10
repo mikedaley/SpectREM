@@ -267,7 +267,7 @@
                 
                 if (self.accelerated)
                 {
-                    if (frameCounter % 5)
+                    if (frameCounter % cAcceleratedSkipFrames)
                     {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
@@ -440,10 +440,14 @@ void updateScreenWithTStates(int numberTs, void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     
-    if (machine.accelerated && machine->frameCounter % 5)
+    if (machine.accelerated && machine->frameCounter % cAcceleratedSkipFrames)
     {
         return;
     }
+    
+    
+    
+    
     
     while (numberTs > 0)
     {
@@ -480,6 +484,9 @@ void updateScreenWithTStates(int numberTs, void *m)
                 int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
                 int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
                 
+                int flash = (attributeByte & 0x80);
+                int bright = (attributeByte & 0x40);
+                
                 // Switch ink and paper if the flash phase has changed
                 if ((machine->frameCounter & 16) && (attributeByte & 0x80))
                 {
@@ -488,21 +495,46 @@ void updateScreenWithTStates(int numberTs, void *m)
                     ink = tempPaper;
                 }
                 
-                for (int b = 0x80; b; b >>= 1)
+                if (machine->ulaPlusPalletteOn)
                 {
-                    if (pixelByte & b) {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].r;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].g;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].b;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].a;
-                    }
-                    else
+                    for (int b = 0x80; b; b >>= 1)
                     {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].r;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].g;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].b;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].a;
+                        if (pixelByte & b) {
+                            int ulaPlusColor = machine->clut[(flash * 2 + bright) * 16 + ink];
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 0b00000011) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        }
+                        else
+                        {
+                            int ulaPlusColor = machine->clut[(flash * 2 + bright) * 16 + paper + 8];
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 0b00000011) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        }
                     }
+                }
+                else
+                {
+                    for (int b = 0x80; b; b >>= 1)
+                    {
+                        if (pixelByte & b) {
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].r;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].g;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].b;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        }
+                        else
+                        {
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].r;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].g;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].b;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        }
+                    }
+                    
                 }
                 break;
             }
@@ -616,6 +648,19 @@ unsigned char coreIORead(unsigned short address, void *m)
     
     // Default return value
     int result = 0xff;
+
+    // ULAplus
+    if (address == 0xff3b)
+    {
+        if (machine->ulaPlusMode == eULAplusPalletteGroup)
+        {
+            return machine->clut[machine->ulaPlusCurrentReg] & 63;
+        }
+        else
+        {
+            return result;
+        }
+    }
     
     // Check to see if any keys have been pressed
     for (int i = 0; i < 8; i++)
@@ -737,7 +782,40 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     {
         machine->specDrumValue = ((data * 128) - 16384) / 12;
     }
-
+    
+    // ULAplus ports
+    if (address == 0xbf3b)
+    {
+        if (data & 0xc0)
+        {
+            NSLog(@"ULA MODE GROUP SET");
+            machine->ulaPlusMode = eULAplusModeGroup;
+        }
+        else if (machine->ulaPlusMode == eULAplusModeGroup)
+        {
+            NSLog(@"ULA PALLETTE GROUP SET");
+            machine->ulaPlusMode = eULAplusPalletteGroup;
+        }
+        else if (machine->ulaPlusMode == eULAplusPalletteGroup)
+        {
+            NSLog(@"ULA Register: 0x%02x", (data & 63));
+            machine->ulaPlusCurrentReg = (data & 63);
+        }
+    }
+    
+    if (address == 0xff3b)
+    {
+        if (machine->ulaPlusMode == eULAplusModeGroup)
+        {
+            machine->ulaPlusPalletteOn = (data & 0x01);
+            NSLog(@"ULA PALLETTE IS: %i", machine->ulaPlusPalletteOn);
+        }
+        else
+        {
+            NSLog(@"ULA Register Data: 0x%02x", data);
+            machine->clut[machine->ulaPlusCurrentReg] = data;
+        }
+    }
 }
 
 // When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the

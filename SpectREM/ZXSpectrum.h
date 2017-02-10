@@ -32,6 +32,9 @@ static int const cAudioSampleRate = 192000;
 static unsigned char const cContentionValues[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 
+// Number of frames to skip when running in accelerated mode
+static int const cAcceleratedSkipFrames = 10;
+
 #pragma mark - Type Definitions
 
 // Defines an enum for each type of display action used when drawing the screen
@@ -65,6 +68,12 @@ typedef NS_ENUM(int, TapeLoadingState)
     eFirstSyncPulse,
     eSecondSyncPulse,
     eDataPulse
+};
+
+typedef NS_ENUM(int, ULAplusMode)
+{
+    eULAplusPalletteGroup = 0,
+    eULAplusModeGroup
 };
 
 #pragma mark - Interface
@@ -125,6 +134,12 @@ typedef NS_ENUM(int, TapeLoadingState)
 
     // Used to track the flash phase
     int frameCounter;
+    
+    // ULAplus
+    int ulaPlusMode;
+    int ulaPlusPalletteOn;
+    int ulaPlusCurrentReg;
+    char clut[64];
     
     // Audio
     double audioBeeperLeft;
