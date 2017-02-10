@@ -153,7 +153,7 @@
     [self.audioCore stop];
 }
 
-#pragma mark - Reset
+#pragma mark - Various Reset Entry points
 
 - (void)reset:(BOOL)hard
 {
@@ -314,7 +314,7 @@
     }
 }
 
-#pragma mark - Audio
+#pragma mark - Load Default ROM
 
 - (void)loadDefaultROM
 {
@@ -516,7 +516,7 @@ void updateScreenWithTStates(int numberTs, void *m)
     }
 }
 
-#pragma mark - IO Access
+#pragma mark - ULA
 
 // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
 // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
@@ -589,7 +589,7 @@ unsigned char coreIORead(unsigned short address, void *m)
     // If the address is odd and does not belong to the ULA then return the floating bus value
     if (address & 0x01)
     {
-        // TODO: Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
+        // Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
         // format: 000FDULR. F = Fire, D = Down, U = Up, L = Left, R = Right
         // Joystick is read first as it takes priority if you read from a port that activates the keyboard as well on a
         // real machine.
@@ -740,9 +740,71 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
 
 }
 
+// When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
+// Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
+// is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
+// predict if the ULA is reading a pixel or attribute byte based on the current t-state.
+// This routine works out what would be on the ULA bus for a given t-state and returns the result
+static unsigned char floatingBus(void *m)
+{
+    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    CZ80Core *core = (CZ80Core *)[machine getCore];
+    
+    int cpuTs = core->GetTStates() - 1;
+    int currentDisplayLine = (cpuTs / machine->machineInfo.tsPerLine);
+    int currentTs = (cpuTs % machine->machineInfo.tsPerLine);
+    
+    // If the line and tState are within the bitmap of the screen then grab the
+    // pixel or attribute value
+    if (currentDisplayLine >= (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank)
+        && currentDisplayLine < (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
+        && currentTs <= machine->machineInfo.tsHorizontalDisplay)
+    {
+        unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
+        
+        int y = currentDisplayLine - (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank);
+        int x = currentTs >> 2;
+        
+        if (ulaValueType == FloatingBusValueType::ePixel)
+        {
+            return machine->memory[cBitmapAddress + machine->emuTsLine[y] + x];
+        }
+        
+        if (ulaValueType == FloatingBusValueType::eAttribute)
+        {
+            return machine->memory[cBitmapAddress + cBitmapSize + ((y >> 3) << 5) + x];
+        }
+    }
+    
+    return 0xff;
+}
+
+#pragma mark - Contention Tables
+
+- (void)buildContentionTable
+{
+    for (int i = 0; i < machineInfo.tsPerFrame; i++)
+    {
+        memoryContentionTable[i] = 0;
+        ioContentionTable[i] = 0;
+        
+        if (i >= machineInfo.tsToOrigin)
+        {
+            uint32 line = (i - machineInfo.tsToOrigin) / machineInfo.tsPerLine;
+            uint32 ts = (i - machineInfo.tsToOrigin) % machineInfo.tsPerLine;
+            
+            if (line < 192 && ts < 128)
+            {
+                memoryContentionTable[i] = cContentionValues[ ts & 0x07 ];
+                ioContentionTable[i] = cContentionValues[ ts & 0x07 ];
+            }
+        }
+    }
+}
+
 #pragma mark - Build Display Tables
 
-// Stores the memory address for the start of each bitmap line on the screen
+// Stores the memory address for the start of each paper line on the screen
 - (void)buildScreenLineAddressTable
 {
     for(int i = 0; i < 3; i++)
@@ -814,70 +876,6 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                 }
             }
             
-        }
-    }
-}
-
-#pragma mark - Floating Bus
-
-// When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
-// Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
-// is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
-// predict if the ULA is reading a pixel or attribute byte based on the current t-state.
-// This routine works out what would be on the ULA bus for a given t-state and returns the result
-static unsigned char floatingBus(void *m)
-{
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    CZ80Core *core = (CZ80Core *)[machine getCore];
-
-    int cpuTs = core->GetTStates() - 1;
-    int currentDisplayLine = (cpuTs / machine->machineInfo.tsPerLine);
-    int currentTs = (cpuTs % machine->machineInfo.tsPerLine);
-    
-    // If the line and tState are within the bitmap of the screen then grab the
-    // pixel or attribute value
-    if (currentDisplayLine >= (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank)
-        && currentDisplayLine < (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
-        && currentTs <= machine->machineInfo.tsHorizontalDisplay)
-    {
-        unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
-        
-        int y = currentDisplayLine - (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank);
-        int x = currentTs >> 2;
-        
-        if (ulaValueType == FloatingBusValueType::ePixel)
-        {
-            return machine->memory[cBitmapAddress + machine->emuTsLine[y] + x];
-        }
-        
-        if (ulaValueType == FloatingBusValueType::eAttribute)
-        {
-            return machine->memory[cBitmapAddress + cBitmapSize + ((y >> 3) << 5) + x];
-        }
-    }
-    
-    return 0xff;
-}
-
-#pragma mark - Contention Tables
-
-- (void)buildContentionTable
-{
-    for (int i = 0; i < machineInfo.tsPerFrame; i++)
-    {
-        memoryContentionTable[i] = 0;
-        ioContentionTable[i] = 0;
-        
-        if (i >= machineInfo.tsToOrigin)
-        {
-            uint32 line = (i - machineInfo.tsToOrigin) / machineInfo.tsPerLine;
-            uint32 ts = (i - machineInfo.tsToOrigin) % machineInfo.tsPerLine;
-            
-            if (line < 192 && ts < 128)
-            {
-                memoryContentionTable[i] = cContentionValues[ ts & 0x07 ];
-                ioContentionTable[i] = cContentionValues[ ts & 0x07 ];
-            }
         }
     }
 }
@@ -1210,13 +1208,6 @@ static unsigned char floatingBus(void *m)
         default:
             break;
     }
-}
-
-#pragma mark - TAP saving
-
-- (void)saveTAPBlock
-{
-    
 }
 
 #pragma mark - Properties

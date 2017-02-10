@@ -176,13 +176,8 @@ char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned sho
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"48" ofType:@"rom"];
     NSData *data = [NSData dataWithContentsOfFile:path];
-    
     const char *fileBytes = (const char*)[data bytes];
-    
-    for (int addr = 0; addr < data.length; addr++)
-    {
-        memory[addr] = fileBytes[addr];
-    }
+    memcpy(memory, fileBytes, data.length);
 }
 
 #pragma mark - Core getters

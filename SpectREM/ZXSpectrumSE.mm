@@ -145,10 +145,7 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
     
     const char *fileBytes = (const char*)[data bytes];
     
-    for (int addr = 0; addr < data.length; addr++)
-    {
-        memory[addr] = fileBytes[addr];
-    }
+    memcpy(memory, fileBytes, data.length);
 }
 
 - (void *)getCore

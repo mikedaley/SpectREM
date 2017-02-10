@@ -216,20 +216,15 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
     
     const char *fileBytes = (const char*)[data bytes];
     
-    for (int addr = 0; addr < data.length; addr++)
-    {
-        rom[addr] = fileBytes[addr];
-    }
+    memcpy(rom, fileBytes, data.length);
 
     path = [[NSBundle mainBundle] pathForResource:@"128-1" ofType:@"rom"];
     data = [NSData dataWithContentsOfFile:path];
     
     fileBytes = (const char*)[data bytes];
+
+    memcpy(rom + 16384, fileBytes, data.length);
     
-    for (int addr = 0; addr < data.length; addr++)
-    {
-        rom[addr + 16384] = fileBytes[addr];
-    }
 }
 
 #pragma mark - Getters
