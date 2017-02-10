@@ -165,6 +165,7 @@
     }
     frameCounter = 0;
 	saveTrapTriggered = false;
+    ulaPlusPalletteOn = 0;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -484,11 +485,11 @@ void updateScreenWithTStates(int numberTs, void *m)
                 int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
                 int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
                 
-                int flash = (attributeByte & 0x80);
-                int bright = (attributeByte & 0x40);
+                int flash = (attributeByte & 0x40) ? 1 : 0;
+                int bright = (attributeByte & 0x80) ? 1 : 0;
                 
                 // Switch ink and paper if the flash phase has changed
-                if ((machine->frameCounter & 16) && (attributeByte & 0x80))
+                if ((machine->frameCounter & 16) && (attributeByte & 0x80) && !machine->ulaPlusPalletteOn)
                 {
                     int tempPaper = paper;
                     paper = ink;
@@ -500,7 +501,8 @@ void updateScreenWithTStates(int numberTs, void *m)
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
-                            int ulaPlusColor = machine->clut[(flash * 2 + bright) * 16 + ink];
+                            int index = (flash * 2 + bright) * 16 + ink;
+                            char ulaPlusColor = machine->clut[index];
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 0b00000011) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
@@ -508,7 +510,8 @@ void updateScreenWithTStates(int numberTs, void *m)
                         }
                         else
                         {
-                            int ulaPlusColor = machine->clut[(flash * 2 + bright) * 16 + paper + 8];
+                            int index = (flash * 2 + bright) * 16 + paper + 8;
+                            char ulaPlusColor = machine->clut[index];
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 0b00000011) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
