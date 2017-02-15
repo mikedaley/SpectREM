@@ -10,7 +10,7 @@
 #define PixelData_h
 
 // Structure of pixel data used in the emulation display buffer
-struct PixelData
+struct PixelColor
 {
     unsigned char r;
     unsigned char g;
@@ -19,7 +19,7 @@ struct PixelData
 };
 
 // Pallette
-static struct PixelData pallette[] = {
+static struct PixelColor pallette[] = {
     
     // Normal colours
     {0, 0, 0, 255},         // Black

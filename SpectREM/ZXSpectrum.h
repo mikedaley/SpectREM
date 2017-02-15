@@ -140,6 +140,7 @@ typedef NS_ENUM(int, ULAplusMode)
     int ulaPlusPalletteOn;
     int ulaPlusCurrentReg;
     char clut[64];
+    struct PixelColor ulaColor[256];
     
     // Audio
     double audioBeeperLeft;

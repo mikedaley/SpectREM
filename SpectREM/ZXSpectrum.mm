@@ -90,7 +90,7 @@
         };
 
         // Setup the display buffer and length used to store the output from the emulator
-        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelData);
+        emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelColor);
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
 
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
@@ -109,6 +109,7 @@
         [self buildContentionTable];
         [self buildScreenLineAddressTable];
         [self buildDisplayTsTable];
+        [self buildULAColorTable];
         [self resetKeyboardMap];
     
         self.audioCore = [[AudioCore alloc] initWithSampleRate:cAudioSampleRate
@@ -481,27 +482,17 @@ void updateScreenWithTStates(int numberTs, void *m)
                 int pixelByte = machine->memory[(machine->displayPage * 16384) + pixelAddress];
                 int attributeByte = machine->memory[(machine->displayPage * 16384) + attributeAddress];
                 
-                // Extract the ink and paper colours from the attribute byte read in
-                int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
-                int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
-                
-                int flash = (attributeByte & 0x40) ? 1 : 0;
-                int bright = (attributeByte & 0x80) ? 1 : 0;
-                
-                // Switch ink and paper if the flash phase has changed
-                if ((machine->frameCounter & 16) && (attributeByte & 0x80) && !machine->ulaPlusPalletteOn)
-                {
-                    int tempPaper = paper;
-                    paper = ink;
-                    ink = tempPaper;
-                }
-                
                 if (machine->ulaPlusPalletteOn)
                 {
+                    int flash = (attributeByte & 0x80) ? 1 : 0;
+                    int bright = (attributeByte & 0x40) ? 1 : 0;
+                    int ulaPlusInk = (attributeByte & 0x07);
+                    int ulaPlusPaper = ((attributeByte >> 3) & 0x07);
+                    
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
-                            int index = (flash * 2 + bright) * 16 + ink;
+                            int index = (flash * 2 + bright) * 16 + ulaPlusInk;
                             char ulaPlusColor = machine->clut[index];
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
@@ -510,7 +501,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                         }
                         else
                         {
-                            int index = (flash * 2 + bright) * 16 + paper + 8;
+                            int index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
                             char ulaPlusColor = machine->clut[index];
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
@@ -521,6 +512,19 @@ void updateScreenWithTStates(int numberTs, void *m)
                 }
                 else
                 {
+
+                    // Extract the ink and paper colours from the attribute byte read in
+                    int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
+                    int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
+                    
+                    // Switch ink and paper if the flash phase has changed
+                    if ((machine->frameCounter & 16) && (attributeByte & 0x80) && !machine->ulaPlusPalletteOn)
+                    {
+                        int tempPaper = paper;
+                        paper = ink;
+                        ink = tempPaper;
+                    }
+                    
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
@@ -897,6 +901,35 @@ static unsigned char floatingBus(void *m)
                 emuTsLine[(i << 6) + (j << 3) + k] = (i << 11) + (j << 5) + (k << 8);
             }
         }
+    }
+}
+
+- (void)buildULAColorTable
+{
+    // With 3 bits of color for G and R max value is 7, so 255 / 7 = 36.42, so each value for a colour is in
+    // steps of 36
+    unsigned char lookup[] = {0, 36, 73, 109, 146, 182, 219, 255};
+    
+    char r, g, b, r8, g8, b8;
+    
+    for (int color = 0; color <= 256; color++)
+    {
+        r = (color >> 2) & 7;
+        g = (color >> 5) & 7;
+        b = (color & 3);
+        b = (b << 1);
+        if (b)
+        {
+            b = b | 1;
+        }
+        
+        r8 = lookup[r];
+        g8 = lookup[g];
+        b8 = lookup[b];
+        ulaColor[color].r = r8;
+        ulaColor[color].g = g8;
+        ulaColor[color].b = b8;
+        ulaColor[color].a = 255;
     }
 }
 
