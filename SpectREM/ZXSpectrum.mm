@@ -446,11 +446,7 @@ void updateScreenWithTStates(int numberTs, void *m)
     {
         return;
     }
-    
-    
-    
-    
-    
+
     while (numberTs > 0)
     {
         int line = machine->emuDisplayTs / machine->machineInfo.tsPerLine;
@@ -462,12 +458,29 @@ void updateScreenWithTStates(int numberTs, void *m)
                 break;
                 
             case DisplayAction::eDisplayBorder:
-                for (int i = 0; i < 8; i++)
+                
+                if (machine->ulaPlusPalletteOn)
                 {
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].r;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].g;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].b;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].a;                    
+                    int index = machine->borderColor + 8;
+                    char ulaPlusColor = machine->clut[index];
+
+                    for (int i = 0; i < 8; i++)
+                    {
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].r;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].g;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].b;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].a;
+                    }
                 }
                 break;
                 
@@ -494,31 +507,30 @@ void updateScreenWithTStates(int numberTs, void *m)
                         if (pixelByte & b) {
                             int index = (flash * 2 + bright) * 16 + ulaPlusInk;
                             char ulaPlusColor = machine->clut[index];
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 0b00000011) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                         }
                         else
                         {
                             int index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
                             char ulaPlusColor = machine->clut[index];
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b00011100) >> 2) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 0b11100000) >> 5) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 0b00000011) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                         }
                     }
                 }
                 else
                 {
-
                     // Extract the ink and paper colours from the attribute byte read in
                     int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
                     int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
                     
                     // Switch ink and paper if the flash phase has changed
-                    if ((machine->frameCounter & 16) && (attributeByte & 0x80) && !machine->ulaPlusPalletteOn)
+                    if ((machine->frameCounter & 16) && (attributeByte & 0x80))
                     {
                         int tempPaper = paper;
                         paper = ink;
@@ -541,7 +553,6 @@ void updateScreenWithTStates(int numberTs, void *m)
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                         }
                     }
-                    
                 }
                 break;
             }
