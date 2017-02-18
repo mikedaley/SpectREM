@@ -462,13 +462,17 @@ void updateScreenWithTStates(int numberTs, void *m)
                 if (machine->ulaPlusPalletteOn)
                 {
                     int index = machine->borderColor + 8;
-                    char ulaPlusColor = machine->clut[index];
 
                     for (int i = 0; i < 8; i++)
                     {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+  
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].r;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].g;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].b;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                     }
                 }
@@ -502,25 +506,28 @@ void updateScreenWithTStates(int numberTs, void *m)
                     int ulaPlusInk = (attributeByte & 0x07);
                     int ulaPlusPaper = ((attributeByte >> 3) & 0x07);
                     
+                    int index = 0;
+                    
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
-                            int index = (flash * 2 + bright) * 16 + ulaPlusInk;
-                            char ulaPlusColor = machine->clut[index];
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                            index = (flash * 2 + bright) * 16 + ulaPlusInk;
                         }
                         else
                         {
-                            int index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
-                            char ulaPlusColor = machine->clut[index];
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                            index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
                         }
+
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].r;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].g;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].b;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                    
                     }
                 }
                 else
@@ -806,17 +813,17 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     {
         if (data & 0xc0)
         {
-            NSLog(@"ULA MODE GROUP SET");
+//            NSLog(@"ULA MODE GROUP SET");
             machine->ulaPlusMode = eULAplusModeGroup;
         }
         else if (machine->ulaPlusMode == eULAplusModeGroup)
         {
-            NSLog(@"ULA PALLETTE GROUP SET");
+//            NSLog(@"ULA PALLETTE GROUP SET");
             machine->ulaPlusMode = eULAplusPalletteGroup;
         }
         else if (machine->ulaPlusMode == eULAplusPalletteGroup)
         {
-            NSLog(@"ULA Register: 0x%02x", (data & 63));
+//            NSLog(@"ULA Register: 0x%02x", (data & 63));
             machine->ulaPlusCurrentReg = (data & 63);
         }
     }
@@ -826,11 +833,11 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         if (machine->ulaPlusMode == eULAplusModeGroup)
         {
             machine->ulaPlusPalletteOn = (data & 0x01);
-            NSLog(@"ULA PALLETTE IS: %i", machine->ulaPlusPalletteOn);
+//            NSLog(@"ULA PALLETTE IS: %i", machine->ulaPlusPalletteOn);
         }
         else
         {
-            NSLog(@"ULA Register Data: 0x%02x", data);
+//            NSLog(@"ULA Register Data: 0x%02x", data);
             machine->clut[machine->ulaPlusCurrentReg] = data;
         }
     }
@@ -917,30 +924,24 @@ static unsigned char floatingBus(void *m)
 
 - (void)buildULAColorTable
 {
-    // With 3 bits of color for G and R max value is 7, so 255 / 7 = 36.42, so each value for a colour is in
-    // steps of 36
-    unsigned char lookup[] = {0, 36, 73, 109, 146, 182, 219, 255};
-    
-    char r, g, b, r8, g8, b8;
+    char r, g, b;
     
     for (int color = 0; color <= 256; color++)
     {
-        r = (color >> 2) & 7;
-        g = (color >> 5) & 7;
-        b = (color & 3);
-        b = (b << 1);
-        if (b)
-        {
-            b = b | 1;
-        }
         
-        r8 = lookup[r];
-        g8 = lookup[g];
-        b8 = lookup[b];
-        ulaColor[color].r = r8;
-        ulaColor[color].g = g8;
-        ulaColor[color].b = b8;
+        g = ((color & 224) >> 5) * 36;
+        r = ((color & 28) >> 2) * 36;
+        b = (((color & 3) << 1) | (color & 2) | (color & 1)) * 36;
+        
+        ulaColor[color].g = g;
+        ulaColor[color].r = r;
+        ulaColor[color].b = b;
         ulaColor[color].a = 255;
+    }
+    
+    for (int i = 0; i < 64; i++)
+    {
+        clut[i] = 0;
     }
 }
 
