@@ -18,6 +18,7 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - CPU view (registers and flags)
 - Virtual tape browser
 - Debugger (early days but being actively developed)
+- ULAplus
 
 ## Peripheral Emulation
 
@@ -25,8 +26,8 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 
 ## Todo list
 
+- SZX
 - TAP insta-load
-- ULAplus
 - SNA/Z80 creation
 - Full debugger/disassembler
   - Step In
