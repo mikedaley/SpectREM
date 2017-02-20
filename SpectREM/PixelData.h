@@ -19,7 +19,7 @@ struct PixelColor
 };
 
 // Pallette
-static struct PixelColor pallette[] = {
+static struct PixelColor palette[] = {
     
     // Normal colours
     {0, 0, 0, 255},         // Black
