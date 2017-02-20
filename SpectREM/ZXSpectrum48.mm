@@ -126,20 +126,35 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 {
 	ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
 	
-	if (opcode == 0x08 && (address == 0x04d0 || address == 0x0076))
+	// Trap ROM tape saving
+    if (opcode == 0x08 && (address == 0x04d0 || address == 0x0076))
 	{
 		machine->saveTrapTriggered = true;
 		
 		// Skip the instruction
 		return true;
 	}
-	else
+	else if (machine->saveTrapTriggered)
 	{
 		machine->saveTrapTriggered = false;
 		
 		// carry on with instruction
 		return false;
 	}
+    
+    // Trap ROM loading
+    if (opcode == 0xc0 && (address == 0x056b || address == 0x0111))
+    {
+        return false;
+        machine->loadTrapTriggered = true;
+        return true;
+    }
+    else if (machine->loadTrapTriggered)
+    {
+        machine->loadTrapTriggered = false;
+        return false;
+    }
+    
 	
 	return false;
 }

@@ -563,6 +563,21 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     core->SetRegister(CZ80Core::eREG_PC, 0x053d);
 }
 
+#pragma mark - Turbo Loading
+
+- (void)instaloadWithMachine:(ZXSpectrum *)m
+{
+    CZ80Core *core = (CZ80Core *)[m getCore];
+
+    if (!self.isTapeLoaded)
+    {
+        return;
+    }
+    
+    
+}
+
+
 #pragma mark - Debug print
 
 - (void)printTAPContents

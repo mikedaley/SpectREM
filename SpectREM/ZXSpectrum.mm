@@ -166,7 +166,7 @@
     }
     frameCounter = 0;
 	saveTrapTriggered = false;
-    ulaPlusPalletteOn = 0;
+    ulaPlusPaletteOn = 0;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -245,9 +245,13 @@
             [self.zxTape updateTapeWithTStates:tsCPU];
         }
         
-        if(saveTrapTriggered)
+        if (saveTrapTriggered)
         {
             [self.zxTape saveTAPBlockWithMachine:self];
+        }
+        else if (loadTrapTriggered)
+        {
+            [self.zxTape instaloadWithMachine:self];
         }
         else
         {
@@ -459,31 +463,31 @@ void updateScreenWithTStates(int numberTs, void *m)
                 
             case DisplayAction::eDisplayBorder:
                 
-                if (machine->ulaPlusPalletteOn)
+                if (machine->ulaPlusPaletteOn)
                 {
                     int index = machine->borderColor + 8;
-
+//                    char ulaColor = machine->clut[index];
                     for (int i = 0; i < 8; i++)
                     {
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
-  
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].r;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].g;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].b;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].r;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].g;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].b;
+//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                     }
                 }
                 else
                 {
                     for (int i = 0; i < 8; i++)
                     {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].r;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].g;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].b;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[machine->borderColor].a;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].r;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].g;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].b;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].a;
                     }
                 }
                 break;
@@ -499,35 +503,31 @@ void updateScreenWithTStates(int numberTs, void *m)
                 int pixelByte = machine->memory[(machine->displayPage * 16384) + pixelAddress];
                 int attributeByte = machine->memory[(machine->displayPage * 16384) + attributeAddress];
                 
-                if (machine->ulaPlusPalletteOn)
+                if (machine->ulaPlusPaletteOn)
                 {
                     int flash = (attributeByte & 0x80) ? 1 : 0;
                     int bright = (attributeByte & 0x40) ? 1 : 0;
                     int ulaPlusInk = (attributeByte & 0x07);
                     int ulaPlusPaper = ((attributeByte >> 3) & 0x07);
-                    
                     int index = 0;
+                    char ulaPlusColor = 0;
                     
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
                             index = (flash * 2 + bright) * 16 + ulaPlusInk;
+                            ulaPlusColor = machine->clut[index];
                         }
                         else
                         {
                             index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
+                            ulaPlusColor = machine->clut[index];
                         }
 
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].r;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].g;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[machine->clut[index]].b;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
-
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
-                    
                     }
                 }
                 else
@@ -547,16 +547,16 @@ void updateScreenWithTStates(int numberTs, void *m)
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].r;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].g;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[ink].b;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].r;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].g;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].b;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                         }
                         else
                         {
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].r;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].g;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = pallette[paper].b;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].r;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].g;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].b;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                         }
                     }
@@ -643,6 +643,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         }
     }
     
+    // ULA Unowned ports
     // If the address is odd and does not belong to the ULA then return the floating bus value
     if (address & 0x01)
     {
@@ -661,6 +662,8 @@ unsigned char coreIORead(unsigned short address, void *m)
                 return 0x0;
             }
         }
+        
+        // AY-3-8912 ports
         else if ((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY ||
                                                   (machine->machineInfo.machineType == 0 &&
                                                    machine.useAYOn48k) ))
@@ -668,24 +671,21 @@ unsigned char coreIORead(unsigned short address, void *m)
             return [machine.audioCore readAYData];
         }
         
+        // ULAplus
+        else if (address == 0xff3b)
+        {
+            if (machine->ulaPlusMode == eULAplusPaletteGroup)
+            {
+                return machine->clut[machine->ulaPlusCurrentReg] & 63;
+            }
+        }
+
         return floatingBus(m);
     }
     
-    // Default return value
+    // ULA Owned Ports
+    
     int result = 0xff;
-
-    // ULAplus
-    if (address == 0xff3b)
-    {
-        if (machine->ulaPlusMode == eULAplusPalletteGroup)
-        {
-            return machine->clut[machine->ulaPlusCurrentReg] & 63;
-        }
-        else
-        {
-            return result;
-        }
-    }
     
     // Check to see if any keys have been pressed
     for (int i = 0; i < 8; i++)
@@ -720,7 +720,10 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // Identify contention in the 128k
     if (machine->machineInfo.hasPaging &&
              (page == 1 ||
-              (page == 3 && (machine->currentRAMPage == 1 || machine->currentRAMPage == 3 || machine->currentRAMPage == 5 || machine->currentRAMPage == 7))))
+              (page == 3 && (machine->currentRAMPage == 1 ||
+                             machine->currentRAMPage == 3 ||
+                             machine->currentRAMPage == 5 ||
+                             machine->currentRAMPage == 7))))
     {
         contended = true;
     }
@@ -774,20 +777,21 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->borderColor = data & 0x07;
     }
     
-    if ( (address & 0x8002) == 0 && machine->disablePaging == NO)
+    // Memory paging port
+    if ( !(address & 0x8002) && machine->disablePaging == NO)
     {
         if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
         {
             updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
         }
         
-        // This is the paging port
         machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
         machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
         machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
         machine->currentRAMPage = (data & 0x07);
     }
     
+    // AY-3-8912 ports
     if((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY || (machine->machineInfo.hasAY ||
                                                                        (machine->machineInfo.machineType == 0 &&
                                                                         machine.useAYOn48k) )))
@@ -802,42 +806,43 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         [machine.audioCore writeAYData:data];
     }
     
-    // Handles SpecDrum port writes. The value written is merged into the usual audio output.
+    // SPECDRUM port
     if ((address & 0xff) == 0xdf)
     {
+        // The value written is merged into the usual audio output.
         machine->specDrumValue = ((data * 128) - 16384) / 12;
     }
     
     // ULAplus ports
     if (address == 0xbf3b)
     {
-        if (data & 0xc0)
+        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs), m);
+        
+        if (data & 0x40)
         {
-//            NSLog(@"ULA MODE GROUP SET");
             machine->ulaPlusMode = eULAplusModeGroup;
         }
         else if (machine->ulaPlusMode == eULAplusModeGroup)
         {
-//            NSLog(@"ULA PALLETTE GROUP SET");
-            machine->ulaPlusMode = eULAplusPalletteGroup;
+            machine->ulaPlusMode = eULAplusPaletteGroup;
         }
-        else if (machine->ulaPlusMode == eULAplusPalletteGroup)
+        
+        if (machine->ulaPlusMode == eULAplusPaletteGroup)
         {
-//            NSLog(@"ULA Register: 0x%02x", (data & 63));
             machine->ulaPlusCurrentReg = (data & 63);
         }
     }
     
     if (address == 0xff3b)
     {
+        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs), m);
+
         if (machine->ulaPlusMode == eULAplusModeGroup)
         {
-            machine->ulaPlusPalletteOn = (data & 0x01);
-//            NSLog(@"ULA PALLETTE IS: %i", machine->ulaPlusPalletteOn);
+            machine->ulaPlusPaletteOn = (data & 0x01);
         }
         else
         {
-//            NSLog(@"ULA Register Data: 0x%02x", data);
             machine->clut[machine->ulaPlusCurrentReg] = data;
         }
     }
@@ -857,8 +862,8 @@ static unsigned char floatingBus(void *m)
     int currentDisplayLine = (cpuTs / machine->machineInfo.tsPerLine);
     int currentTs = (cpuTs % machine->machineInfo.tsPerLine);
     
-    // If the line and tState are within the bitmap of the screen then grab the
-    // pixel or attribute value
+    // If the line and tState are within the paper area of the screen then grab the
+    // pixel or attribute value which is determined by looking at the current tState
     if (currentDisplayLine >= (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank)
         && currentDisplayLine < (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
         && currentTs <= machine->machineInfo.tsHorizontalDisplay)
@@ -922,29 +927,6 @@ static unsigned char floatingBus(void *m)
     }
 }
 
-- (void)buildULAColorTable
-{
-    char r, g, b;
-    
-    for (int color = 0; color <= 256; color++)
-    {
-        
-        g = ((color & 224) >> 5) * 36;
-        r = ((color & 28) >> 2) * 36;
-        b = (((color & 3) << 1) | (color & 2) | (color & 1)) * 36;
-        
-        ulaColor[color].g = g;
-        ulaColor[color].r = r;
-        ulaColor[color].b = b;
-        ulaColor[color].a = 255;
-    }
-    
-    for (int i = 0; i < 64; i++)
-    {
-        clut[i] = 0;
-    }
-}
-
 // Generates a table that holds what screen activity should be happening based on each T-States within a Frame e.g. should the
 // border be drawn, bitmap screen or beam retrace. The values have been adjusted to ensure that the image drawn will be 320x256.
 - (void)buildDisplayTsTable
@@ -1003,6 +985,37 @@ static unsigned char floatingBus(void *m)
             }
             
         }
+    }
+}
+
+// Build a table of all the possible ULAplus colours using G3R3B2.
+- (void)buildULAColorTable
+{
+    char r, g, b;
+    
+    for (int color = 0; color <= 256; color++)
+    {
+        g = ((color & 224) >> 5) * 36;
+        r = ((color & 28) >> 2) * 36;
+        b = (((color & 3) << 1) | (color & 2) | (color & 1)) * 36;
+        
+        ulaColor[color].g = g;
+        ulaColor[color].r = r;
+        ulaColor[color].b = b;
+        ulaColor[color].a = 255;
+    }
+    
+    // Blank out the CLUT (Color Lookup Table)
+    for (int i = 0; i < 64 / 8; i++)
+    {
+        clut[i] = 0x00;
+        clut[i + 1] = 0x02;
+        clut[i + 2] = 0x18;
+        clut[i + 3] = 0x1b;
+        clut[i + 4] = 0xc0;
+        clut[i + 5] = 0xc3;
+        clut[i + 6] = 0xd8;
+        clut[i + 7] = 0xdb;
     }
 }
 

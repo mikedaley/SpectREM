@@ -72,7 +72,7 @@ typedef NS_ENUM(int, TapeLoadingState)
 
 typedef NS_ENUM(int, ULAplusMode)
 {
-    eULAplusPalletteGroup = 0,
+    eULAplusPaletteGroup = 0,
     eULAplusModeGroup
 };
 
@@ -137,7 +137,7 @@ typedef NS_ENUM(int, ULAplusMode)
     
     // ULAplus
     int ulaPlusMode;
-    int ulaPlusPalletteOn;
+    int ulaPlusPaletteOn;
     int ulaPlusCurrentReg;
     char clut[64];
     struct PixelColor ulaColor[256];
@@ -171,9 +171,13 @@ typedef NS_ENUM(int, ULAplusMode)
     BOOL flipTapeBit;
     int tapeInputBit;
 	
-	// trap saving
+	// Has a ROM save trap been reiggered
 	bool saveTrapTriggered;
 	
+    // has a ROM load trap been triggered
+    bool loadTrapTriggered;
+    
+    //
     // Holds the kempston joystick last byte value read either through the emulator or SmartLINK
     char kempston;
     

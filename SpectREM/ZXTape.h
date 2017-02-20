@@ -123,6 +123,9 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 // which is then used to extract the data being written for the current block to tape.
 - (void)saveTAPBlockWithMachine:(ZXSpectrum *)m;
 
+// Called from the main emulation loop when a load is performed and insta loading has been enabled.
+- (void)instaloadWithMachine:(ZXSpectrum *)m;
+
 @end
 
 #pragma mark - TAP Block
