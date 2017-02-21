@@ -1006,16 +1006,9 @@ static unsigned char floatingBus(void *m)
     }
     
     // Blank out the CLUT (Color Lookup Table)
-    for (int i = 0; i < 64 / 8; i++)
+    for (int i = 0; i < 64; i++)
     {
         clut[i] = 0x00;
-        clut[i + 1] = 0x02;
-        clut[i + 2] = 0x18;
-        clut[i + 3] = 0x1b;
-        clut[i + 4] = 0xc0;
-        clut[i + 5] = 0xc3;
-        clut[i + 6] = 0xd8;
-        clut[i + 7] = 0xdb;
     }
 }
 

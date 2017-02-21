@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */; };
-		991D87BB1E2A5BA900667E37 /* gw03.rom in Resources */ = {isa = PBXBuildFile; fileRef = 991D87BA1E2A5BA900667E37 /* gw03.rom */; };
 		991D87C41E33937A00667E37 /* SerialCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 991D87C31E33937A00667E37 /* SerialCore.m */; };
 		991D87F21E33BD6700667E37 /* ORSSerial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; };
 		991D87F31E33BD6700667E37 /* ORSSerial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -17,6 +16,7 @@
 		996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */ = {isa = PBXBuildFile; fileRef = 996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */; };
 		999698981E467BD7007FD246 /* TapeCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 999698971E467BD7007FD246 /* TapeCellView.m */; };
 		99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */; };
+		99A268521E5C3C450079DB5E /* SZX.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A268511E5C3C450079DB5E /* SZX.m */; };
 		99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */ = {isa = PBXBuildFile; fileRef = 99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */; };
 		99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */ = {isa = PBXBuildFile; fileRef = 99A79E6C1DC2295000B8D4CD /* 128-0.rom */; };
 		99A79E6F1DC2295000B8D4CD /* 128-1.rom in Resources */ = {isa = PBXBuildFile; fileRef = 99A79E6D1DC2295000B8D4CD /* 128-1.rom */; };
@@ -82,7 +82,6 @@
 /* Begin PBXFileReference section */
 		0A6386D91E48C72300783DA4 /* AddressLabels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressLabels.h; sourceTree = "<group>"; };
 		0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = 48KRomLabels.mm; sourceTree = "<group>"; };
-		991D87BA1E2A5BA900667E37 /* gw03.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = gw03.rom; sourceTree = "<group>"; };
 		991D87C21E33937A00667E37 /* SerialCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialCore.h; sourceTree = "<group>"; };
 		991D87C31E33937A00667E37 /* SerialCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialCore.m; sourceTree = "<group>"; };
 		991D87F11E33BD6700667E37 /* ORSSerial.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ORSSerial.framework; sourceTree = "<group>"; };
@@ -94,6 +93,8 @@
 		999698971E467BD7007FD246 /* TapeCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeCellView.m; sourceTree = "<group>"; };
 		99A265251DB6A8E300E7DFB3 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
 		99A265261DB6A8E300E7DFB3 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
+		99A268501E5C3C450079DB5E /* SZX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SZX.h; sourceTree = "<group>"; };
+		99A268511E5C3C450079DB5E /* SZX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SZX.m; sourceTree = "<group>"; };
 		99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrum128.mm; sourceTree = "<group>"; };
 		99A79E6B1DC14A2E00B8D4CD /* ZXSpectrum128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum128.h; sourceTree = "<group>"; };
 		99A79E6C1DC2295000B8D4CD /* 128-0.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = "128-0.rom"; sourceTree = "<group>"; };
@@ -316,6 +317,8 @@
 				EDAAD8C01E05893F0070153E /* ZXTape.h */,
 				EDAAD8C11E05893F0070153E /* ZXTape.mm */,
 				99B6B4891E486576001B328C /* ZXTapeProtocol.h */,
+				99A268501E5C3C450079DB5E /* SZX.h */,
+				99A268511E5C3C450079DB5E /* SZX.m */,
 			);
 			name = Snapshot/Tape;
 			sourceTree = "<group>";
@@ -476,7 +479,6 @@
 		EDF3A4C41DB0D79100511BAF /* ROMS */ = {
 			isa = PBXGroup;
 			children = (
-				991D87BA1E2A5BA900667E37 /* gw03.rom */,
 				99A79E6C1DC2295000B8D4CD /* 128-0.rom */,
 				99A79E6D1DC2295000B8D4CD /* 128-1.rom */,
 				EDF3A4DD1DB0D7BB00511BAF /* 48.rom */,
@@ -585,7 +587,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
-				991D87BB1E2A5BA900667E37 /* gw03.rom in Resources */,
 				996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */,
 				EDF3A4F81DB0F25F00511BAF /* CRT_old.fsh in Resources */,
 				99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */,
@@ -631,6 +632,7 @@
 				EDF3A4D61DB0D7AB00511BAF /* Z80Core_CBOpcodes.cpp in Sources */,
 				EDF3A4AF1DB0D60700511BAF /* EmulationViewController.mm in Sources */,
 				EDF3A4D81DB0D7AB00511BAF /* Z80Core_DDOpcodes.cpp in Sources */,
+				99A268521E5C3C450079DB5E /* SZX.m in Sources */,
 				99F71A831DDB17B80093CAE4 /* PixelImageView.m in Sources */,
 				ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */,
 				0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */,
