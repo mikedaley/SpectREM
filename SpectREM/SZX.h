@@ -29,7 +29,14 @@ typedef NS_ENUM(int, SZXMachineType)
     ZXSpectrum128KE
 };
 
+static const char *cSZXFileSignature = "ZXST";
+static const int cSZXFileSignatureLength = 4;
+
+static
+
 @interface SZX : NSObject
 
+
++ (void)machineNeededForSZXWithURL:(NSURL *)url;
 
 @end
