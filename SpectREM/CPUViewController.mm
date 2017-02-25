@@ -11,6 +11,9 @@
 #import "Z80Core.h"
 
 @interface CPUViewController ()
+{
+    NSTimer *_viewUpdateTimer;
+}
 
 @end
 
@@ -22,10 +25,25 @@
     _decimalFormat = NO;
 }
 
-- (void)updateViewWithMachine:(void *)m
+- (void)viewWillAppear
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    CZ80Core *core = (CZ80Core *)[machine getCore];
+    if (!_viewUpdateTimer)
+    {
+        _viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
+            [self updateViewDetails];
+        }];
+    }
+}
+
+- (void)viewWillDisappear
+{
+    [_viewUpdateTimer invalidate];
+    _viewUpdateTimer = nil;
+}
+
+- (void)updateViewDetails
+{
+    CZ80Core *core = (CZ80Core *)[self.machine getCore];
     
     if (!self.decimalFormat)
     {

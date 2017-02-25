@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class ZXSpectrum;
+
 @interface CPUViewController : NSViewController
 
 @property (assign) BOOL decimalFormat;
@@ -50,8 +52,10 @@
 
 @property (strong) NSString *tStates;
 
+@property (assign) ZXSpectrum *machine;
+
 #pragma mark - Methods
 
-- (void)updateViewWithMachine:(void *)m;
+- (void)updateViewDetails;
 
 @end

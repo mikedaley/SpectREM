@@ -6,46 +6,81 @@
 //  Copyright © 2017 71Squared Ltd. All rights reserved.
 //
 
-#import "DebugViewController.h"
-#import "DebugCellView.h"
+#import "DisassemblyViewController.h"
 #import "ZXSpectrum.h"
 #import "Z80Core.h"
+#import "DecimalOnlyFormatter.h"
+#import "HexOnlyFormatter.h"
 
-@interface DebugViewController ()
+@interface DisassemblyViewController ()
+{
+    DecimalOnlyFormatter *_decimalFormatter;
+    HexOnlyFormatter *_hexFormatter;
+    
+    int _disassembleAddress;
+    BOOL _viewVisilbe;
+}
 
 @property (strong) NSMutableArray *disassemblyArray;
-
 @property (assign) NSTimer *viewUpdateTimer;
+
 
 @end
 
-@implementation DebugViewController
+@implementation DisassemblyViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do view setup here.
     
+    _decimalFormatter = [DecimalOnlyFormatter new];
+    _hexFormatter = [HexOnlyFormatter new];
+//    self.addressTextField.formatter = _hexFormatter;
+    self.decimalFormat = NO;
+    _disassembleAddress = 0;
 }
 
 - (void)viewWillAppear
+{
+    _viewVisilbe = YES;
+    [self disassemmbleFromAddress:_disassembleAddress length:65535 - _disassembleAddress];
+    [self.disassemblyTableview reloadData];
+    self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        if (_viewVisilbe)
+        {
+            [self updateCPUDetails];
+            [self updateMemoryContents];
+        }
+    }];
+    
+}
+
+- (void)viewWillDisappear
+{
+    _viewVisilbe = NO;
+}
+
+#pragma mark - Disassemble
+
+- (void)disassemmbleFromAddress:(int)address length:(int)length
 {
     CZ80Core *core = (CZ80Core *)[self.machine getCore];
     
     // Disassemble ROM into an array of strings
     self.disassemblyArray = [NSMutableArray new];
     
-    int pc = 0;
-    while (pc < 16384)
+    int pc = address;
+    while (pc < address + length)
     {
         char opcode[128];
-        int length = core->Debug_Disassemble(opcode, 128, pc, NULL);
+        int length = core->Debug_Disassemble(opcode, 128, pc, false, NULL);
         
         if ( length == 0 )
         {
             // Invalid opcode - probably want to display as a DB statement
             DisassembledInstruction *instruction = [DisassembledInstruction new];
             instruction.address = pc;
-            instruction.instruction = @"NOP";
+            instruction.instruction = @"DB";
             [self.disassemblyArray addObject:instruction];
             pc++;
         }
@@ -58,47 +93,105 @@
             pc += length;
         }
     }
-    [self.disassemblyTableview reloadData];
     
-    self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        [self updateCPUDetails];
-    }];
+}
+
+#pragma mark - Textfield Methods
+
+- (void)controlTextDidEndEditing:(NSNotification *)obj
+{
+    NSTextField *tf = [obj object];
+    NSScanner *scanner = [NSScanner scannerWithString:[tf stringValue]];
+    int address = 0;
+    if (self.decimalFormat)
+    {
+        int decNumber = 0;
+        [scanner scanInt:&decNumber];
+        address = decNumber;
+    }
+    else
+    {
+        unsigned int hexNumber = 0;
+        [scanner scanHexInt:&hexNumber];
+        address = hexNumber;
+    }
     
+    if ([tf.identifier isEqualToString:@"DisassembleAddressField"])
+    {
+        _disassembleAddress = address;
+        [self disassemmbleFromAddress:address length:(65535 - address)];
+        [self.disassemblyTableview reloadData];
+    }
 }
 
 #pragma mark - Table View Methods
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return self.disassemblyArray.count;
+    if ([tableView.identifier isEqualToString:@"DisassembleTableView"])
+    {
+        return self.disassemblyArray.count;
+    }
+    
+    return 0;
 }
 
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    NSTableCellView *view;
-    view = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
-    if (view)
+    
+    if ([tableView.identifier isEqualToString:@"DisassembleTableView"])
     {
-        if ([tableColumn.identifier isEqualToString:@"AddressColID"])
+        NSTableCellView *view;
+        view = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
+        if (view)
         {
-            int address = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address];
-            view.textField.stringValue = [NSString stringWithFormat:@"$%04X", address];
+            if ([tableColumn.identifier isEqualToString:@"AddressColID"])
+            {
+                int address = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address];
+                if (self.decimalFormat)
+                {
+                    view.textField.stringValue = [NSString stringWithFormat:@"%05i", address];
+                }
+                else
+                {
+                    view.textField.stringValue = [NSString stringWithFormat:@"$%04X", address];
+                }
+            }
+            else if ([tableColumn.identifier isEqualToString:@"DisassemblyColID"])
+            {
+                view.textField.stringValue = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] instruction];
+            }
         }
-        else if ([tableColumn.identifier isEqualToString:@"DisassemblyColID"])
-        {
-            view.textField.stringValue = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] instruction];
-        }
+        
+        return view;
     }
     
-    return view;
+    return nil;
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-    [self.disassemblyTableview reloadData];
+//    [self.disassemblyTableview reloadData];
 }
 
-#pragma mark - CPU Details
+#pragma mark - Update methods
+
+- (void)updateMemoryContents
+{
+    NSRect visibleRect = self.memoryContentTableview.visibleRect;
+    NSRange visibleRows = [self.memoryContentTableview rowsInRect:visibleRect];
+    NSIndexSet *visibleCols = [self.memoryContentTableview columnIndexesInRect:visibleRect];
+    [self.memoryContentTableview reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRows] columnIndexes:visibleCols];
+}
+
+- (void)updateDisassembly
+{
+    [self disassemmbleFromAddress:_disassembleAddress length:65535 - _disassembleAddress];
+    NSRect visibleRect = self.disassemblyTableview.visibleRect;
+    NSRange visibleRows = [self.disassemblyTableview rowsInRect:visibleRect];
+    NSIndexSet *visibleCols = [self.disassemblyTableview columnIndexesInRect:visibleRect];
+    [self.disassemblyTableview reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRows] columnIndexes:visibleCols];
+}
 
 - (void)updateCPUDetails
 {
@@ -173,6 +266,20 @@
     self.fpv = (core->GetRegister(CZ80Core::eREG_F) & core->FLAG_P) ? @"◉" : @"";
     self.fn = (core->GetRegister(CZ80Core::eREG_F) & core->FLAG_N) ? @"◉" : @"";
     self.fc = (core->GetRegister(CZ80Core::eREG_F) & core->FLAG_C) ? @"◉" : @"";
+}
+
+- (void)setDecimalFormat:(BOOL)decimalFormat
+{
+    _decimalFormat = decimalFormat;
+//    if (self.decimalFormat)
+//    {
+//        self.addressTextField.formatter = _decimalFormatter;
+//    }
+//    else
+//    {
+//        self.addressTextField.formatter = _hexFormatter;
+//    }
+    [self.disassemblyTableview reloadData];
 }
 
 @end

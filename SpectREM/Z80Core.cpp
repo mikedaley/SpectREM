@@ -497,7 +497,7 @@ void CZ80Core::SetRegister(eZ80WORDREGISTERS reg, unsigned short data)
 
 //-----------------------------------------------------------------------------------------
 
-unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, void *data)
+unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, bool hexFormat, void *data)
 {
 	// Why would you do this! ;)
 	if (pStr == NULL)
@@ -529,22 +529,22 @@ unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsign
 
 				case 'O':
 					// This is an offset byte - always 2 bytes passed the start
-					pStr = Debug_WriteData(eVARIABLETYPE_IndexOffset, pStr, StrLen, start_address + 2, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_IndexOffset, pStr, StrLen, start_address + 2, hexFormat, data);
 					break;
 
 				case 'B':
 					// This is a data byte - always the previous byte
-					pStr = Debug_WriteData(eVARIABLETYPE_Byte, pStr, StrLen, address - 1, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_Byte, pStr, StrLen, address - 1, hexFormat, data);
 					break;
 
 				case 'W':
 					// This is a data word - always the previous word
-					pStr = Debug_WriteData(eVARIABLETYPE_Word, pStr, StrLen, address - 2, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_Word, pStr, StrLen, address - 2, hexFormat, data);
 					break;
 
 				case 'R':
 					// Write the relative offset
-					pStr = Debug_WriteData(eVARIABLETYPE_RelativeOffset, pStr, StrLen, address - 1, data);
+					pStr = Debug_WriteData(eVARIABLETYPE_RelativeOffset, pStr, StrLen, address - 1, hexFormat, data);
 					break;
 				}
 			}
@@ -568,7 +568,7 @@ unsigned int CZ80Core::Debug_Disassemble(char *pStr, unsigned int StrLen, unsign
 
 //-----------------------------------------------------------------------------------------
 
-char *CZ80Core::Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, void *data)
+char *CZ80Core::Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, bool hexFormat, void *data)
 {
 	// Get the number
 	unsigned short num = 0;
@@ -580,17 +580,38 @@ char *CZ80Core::Debug_WriteData(unsigned int variableType, char *pStr, unsigned 
 		case eVARIABLETYPE_IndexOffset:
 		case eVARIABLETYPE_Byte:
 			num = Z80CoreDebugMemRead(address, data);
-			sprintf(number_buffer, "$%02X", num);
+			if ( hexFormat )
+			{
+				sprintf(number_buffer, "$%02X", num);
+			}
+			else
+			{
+				sprintf(number_buffer, "%02i", num);
+			}
 			break;
 			
 		case eVARIABLETYPE_RelativeOffset:
 			num = Z80CoreDebugMemRead(address, data);
-			sprintf(number_buffer, "$%04X", address + num + 1);
+			if (hexFormat)
+			{
+				sprintf(number_buffer, "$%04X", address + num + 1);
+			}
+			else
+			{
+				sprintf(number_buffer, "%04i", address + num + 1);
+			}
 			break;
 			
 		case eVARIABLETYPE_Word:
 			num = Z80CoreDebugMemRead(address, data) | (Z80CoreDebugMemRead(address + 1, data) << 8);
-			sprintf(number_buffer, "$%04X", num);
+			if ( hexFormat )
+			{
+				sprintf(number_buffer, "$%04X", num);
+			}
+			else
+			{
+				sprintf(number_buffer, "%04i", num);
+			}
 			break;
 	}
 	

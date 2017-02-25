@@ -156,7 +156,7 @@ typedef NS_ENUM(int, ULAplusMode)
     int audioAYTStates;
     int audioAYTStatesStep;
     
-    int specDrumValue;
+    int specDrumOutput;
     
     EventType event;
     
@@ -171,15 +171,12 @@ typedef NS_ENUM(int, ULAplusMode)
     BOOL flipTapeBit;
     int tapeInputBit;
 	
-	// Has a ROM save trap been reiggered
+	// Has a ROM save/load trap been reiggered
 	bool saveTrapTriggered;
-	
-    // has a ROM load trap been triggered
     bool loadTrapTriggered;
     
-    //
     // Holds the kempston joystick last byte value read either through the emulator or SmartLINK
-    char kempston;
+    char smartlinkKempston;
     
     // Byte request used to get data from SmartLink
     NSData *smartLinkRequest;

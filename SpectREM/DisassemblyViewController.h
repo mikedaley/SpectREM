@@ -10,7 +10,7 @@
 
 @class ZXSpectrum;
 
-@interface DebugViewController : NSViewController <NSTableViewDataSource, NSTabViewDelegate>
+@interface DisassemblyViewController : NSViewController <NSTableViewDataSource, NSTabViewDelegate, NSTextFieldDelegate>
 
 #pragma mark - UI
 
@@ -52,10 +52,13 @@
 
 #pragma mark -
 
-@property (assign) BOOL decimalFormat;
+@property (assign, nonatomic) BOOL decimalFormat;
 
 @property (assign) ZXSpectrum *machine;
 @property (weak) IBOutlet NSTableView *disassemblyTableview;
+@property (weak) IBOutlet NSTextField *addressTextField;
+@property (weak) IBOutlet NSTableView *memoryContentTableview;
+
 
 @end
 

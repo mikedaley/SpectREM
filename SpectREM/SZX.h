@@ -29,14 +29,33 @@ typedef NS_ENUM(int, SZXMachineType)
     ZXSpectrum128KE
 };
 
-static const char *cSZXFileSignature = "ZXST";
-static const int cSZXFileSignatureLength = 4;
+#pragma mark - SZX Header
 
-static
+static const int cSZXHeaderLength = 8;
+
+static const char *cSZXHeaderSignature = "ZXST";
+static const int cSZXHeaderSignatureLength = 4;
+
+static const int cSZXHeaderSignaturePosition = 0;
+static const int cSZXHeaderMajorVersionPosition = 4;
+static const int cSZXHeaderMinorVersionPosition = 5;
+static const int cSZXHeaderMachineIdPosition = 6;
+static const int cSZXHeaderFlagsPosition = 7;
+
+static const int cSZXHeaderFlag_AlternateTimings = 1;
+
+#pragma mark - SZX Block
+
+static const int cSZXBlockHeaderLength = 8;
+
+static const int cSZXBlockHeaderSignatureLength = 4;
+
+static const int cSZXBlockHeader_SignaturePosition = 0;
+static const int cSZXBlockHeader_SizePosition = 4;
 
 @interface SZX : NSObject
 
-
-+ (void)machineNeededForSZXWithURL:(NSURL *)url;
++ (BOOL)isSZXValidWithURL:(NSURL *)url;
++ (int)machineNeededForSZXWithURL:(NSURL *)url;
 
 @end

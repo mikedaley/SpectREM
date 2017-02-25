@@ -187,7 +187,7 @@ public:
 	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, void *member_class);
 
 	void					Reset(bool hardReset = true);
-	unsigned int			Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, void *data);
+	unsigned int			Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, bool hexFormat, void *data);
 	unsigned int			Debug_GetOpcodeLength(unsigned int address, void *data);
 	bool					Debug_HasValidOpcode(unsigned int address, void *data);
 	int						Execute(unsigned int num_tstates = 0, unsigned int int_t_states = 32);
@@ -263,7 +263,7 @@ protected:
 	void					Res(unsigned char &r, unsigned char b);
 
 	const char			*	Debug_GetOpcodeDetails(unsigned int &address, void *data);
-	char				*	Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, void *data);
+	char				*	Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, bool hexFormat, void *data);
 
 protected:
 	static Z80OpcodeTable	Main_Opcodes;

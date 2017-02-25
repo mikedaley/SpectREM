@@ -9,6 +9,7 @@
 #import "ZXSpectrum.h"
 #import "KeyboardMatrix.h"
 #import "Snapshot.h"
+#import "SZX.h"
 #import "Z80Core.h"
 #import "SerialCore.h"
 
@@ -18,8 +19,6 @@
 
 @implementation ZXSpectrum
 {
-    NSMutableData *_emptyTAP;
-    int blocks;
 }
 
 - (void)dealloc
@@ -53,47 +52,9 @@
         
         emuDisplayTs = 0;
         
-        _emptyTAP = [NSMutableData new];
-        blocks = 0;
-        
-        // SmartLINK. A request byte of 0x77 causes SmartLINK to respond
-        kempston = 0x0;
-        char smartLinkRequestBuffer[1];
-        smartLinkRequestBuffer[0] = 0x77;
-        smartLinkRequest = [NSData dataWithBytes:smartLinkRequestBuffer length:1];
-
-        self.serialCore = [SerialCore new];
-        
-        // Setup the block to be run when data is received in the Serial Core. This checks the response
-        // from SmartLINK and if necessary udpates the keyboard map based on what has been sent from the
-        // real ZX Spectrum.
-        ZXSpectrum *__weak weakSelf = self;
-        self.serialCore.dataReceivedBlock = ^(NSData *responseData){
-          
-            if (responseData.length == 10)
-            {
-                __block char responseBuffer[10], *dataPtr;
-                [responseData getBytes:responseBuffer range:NSMakeRange(0, 10)];
-                dataPtr = responseBuffer;
-                
-                if (responseBuffer[0] == 0x77)
-                {
-                    dispatch_sync(weakSelf.emulationQueue, ^{
-                        for (int row = 0; row < 8; row++)
-                        {
-                            keyboardMap[row] ^= keyboardMap[row] ^ dataPtr[row + 1];
-                        };
-                        kempston = dataPtr[9];
-                    });
-                }
-            }
-        };
-
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelColor);
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
-
-        self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
 
         float fps = 50;
         
@@ -111,14 +72,19 @@
         [self buildDisplayTsTable];
         [self buildULAColorTable];
         [self resetKeyboardMap];
-    
+        [self setupSmartLink];
+
+        self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
         self.audioCore = [[AudioCore alloc] initWithSampleRate:cAudioSampleRate
-                                               framesPerSecond:50
+                                               framesPerSecond:fps
                                                 emulationQueue:self.emulationQueue
                                                        machine:self];
         [self.audioCore reset];
         [self setupObservers];
-    
+        
+        // DEBUGGING SZX
+//        NSURL *url = [[NSBundle mainBundle] URLForResource:@"AgentX" withExtension:@"szx"];
+//        BOOL szxValid = [SZX isSZXValidWithURL:url];
     }
     return self;
 }
@@ -154,6 +120,44 @@
     [self.audioCore stop];
 }
 
+#pragma mark - SMARTLink setup
+
+- (void)setupSmartLink
+{
+    // SmartLINK. A request byte of 0x77 causes SmartLINK to respond
+    smartlinkKempston = 0x0;
+    char smartLinkRequestBuffer[1];
+    smartLinkRequestBuffer[0] = 0x77;
+    smartLinkRequest = [NSData dataWithBytes:smartLinkRequestBuffer length:1];
+    
+    self.serialCore = [SerialCore new];
+    
+    // Setup the block to be run when data is received in the Serial Core. This checks the response
+    // from SmartLINK and if necessary udpates the keyboard map based on what has been sent from the
+    // real ZX Spectrum.
+    ZXSpectrum *__weak weakSelf = self;
+    self.serialCore.dataReceivedBlock = ^(NSData *responseData){
+        
+        if (responseData.length == 10)
+        {
+            __block char responseBuffer[10], *dataPtr;
+            [responseData getBytes:responseBuffer range:NSMakeRange(0, 10)];
+            dataPtr = responseBuffer;
+            
+            if (responseBuffer[0] == 0x77)
+            {
+                dispatch_sync(weakSelf.emulationQueue, ^{
+                    for (int row = 0; row < 8; row++)
+                    {
+                        keyboardMap[row] ^= keyboardMap[row] ^ dataPtr[row + 1];
+                    };
+                    smartlinkKempston = dataPtr[9];
+                });
+            }
+        }
+    };
+}
+
 #pragma mark - Various Reset Entry points
 
 - (void)reset:(BOOL)hard
@@ -180,7 +184,7 @@
     audioTsStepCounter = 0;
     audioBeeperLeft = 0;
     audioBeeperRight = 0;
-    specDrumValue = 0;
+    specDrumOutput = 0;
     [self.audioCore reset];
 }
 
@@ -337,7 +341,7 @@ void updateAudioWithTStates(int numberTs, void *m)
     for(int i = 0; i < numberTs; i++)
     {
         // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes
-        signed int beeperLevelLeft = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier) | machine->specDrumValue;
+        signed int beeperLevelLeft = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier) | machine->specDrumOutput;
         signed int beeperLevelRight = beeperLevelLeft;
         
         // Setting the channel mix 0.5 causes the output to to be centered between left and right speakers
@@ -643,8 +647,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         }
     }
     
-    // ULA Unowned ports
-    // If the address is odd and does not belong to the ULA then return the floating bus value
+    // Handle ULA Un-owned ports
     if (address & 0x01)
     {
         // Add Kemptston joystick support. Until then return 0. Byte returned by a Kempston joystick is in the
@@ -655,7 +658,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         {
             if (machine.useSmartLink)
             {
-                return machine->kempston;
+                return machine->smartlinkKempston;
             }
             else
             {
@@ -680,11 +683,11 @@ unsigned char coreIORead(unsigned short address, void *m)
             }
         }
 
+        // Getting here means that nothing has handled that port read so based on a resl Spectrum return the floating bus value
         return floatingBus(m);
     }
     
-    // ULA Owned Ports
-    
+    // Handle ULA Owned Ports
     int result = 0xff;
     
     // Check to see if any keys have been pressed
@@ -806,11 +809,11 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         [machine.audioCore writeAYData:data];
     }
     
-    // SPECDRUM port
+    // SPECDRUM port, all ports ending in 0xdf
     if ((address & 0xff) == 0xdf)
     {
         // The value written is merged into the usual audio output.
-        machine->specDrumValue = ((data * 128) - 16384) / 12;
+        machine->specDrumOutput = ((data * 128) - 16384) / 12;
     }
     
     // ULAplus ports

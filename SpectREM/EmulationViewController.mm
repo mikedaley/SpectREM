@@ -17,7 +17,8 @@
 #import "GraphicalMemViewController.h"
 #import "CPUViewController.h"
 #import "TapeViewController.h"
-#import "DebugViewController.h"
+#import "DisassemblyViewController.h"
+#import "MemoryViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
 #import "ZXTape.h"
@@ -58,8 +59,11 @@ NS_ENUM(NSUInteger, MachineType)
     NSWindowController      *_tapeBrowserWindowController;
     TapeViewController      *_tapeViewController;
     
-    NSWindowController      *_debugWindowController;
-    DebugViewController     *_debugViewController;
+    NSWindowController      *_disassemblyWindowController;
+    DisassemblyViewController *_disassemblyViewController;
+    
+    NSWindowController      *_memoryWindowController;
+    MemoryViewController    *_memoryViewController;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
@@ -105,8 +109,8 @@ NS_ENUM(NSUInteger, MachineType)
     _graphicalMemoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"GraphicalMemoryView"];
     _graphicalMemViewController = (GraphicalMemViewController *)_graphicalMemoryWindowController.contentViewController;
     
-//    _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
-//    _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
+    _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
+    _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
     
     // Setup the config view controller used for the config panel on the right. This initially places the view off the
     // left edge of the window and drops the configViewController view into the config scroll view.
@@ -125,8 +129,12 @@ NS_ENUM(NSUInteger, MachineType)
     _tapeViewController = (TapeViewController *)_tapeBrowserWindowController.contentViewController;
     
     // Setup the debug window
-    _debugWindowController = [_storyBoard instantiateControllerWithIdentifier:@"DebugWindow"];
-    _debugViewController = (DebugViewController *)_debugWindowController.contentViewController;
+    _disassemblyWindowController = [_storyBoard instantiateControllerWithIdentifier:@"DisassemblyWindow"];
+    _disassemblyViewController = (DisassemblyViewController *)_disassemblyWindowController.contentViewController;
+    
+    //  Setup memory view window
+    _memoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"MemoryWindow"];
+    _memoryViewController = (MemoryViewController *)_memoryWindowController.contentViewController;
     
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
@@ -167,10 +175,6 @@ NS_ENUM(NSUInteger, MachineType)
                 {
                     [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
                 }
-                if ([_cpuWindowController.window isVisible])
-                {
-                    [_cpuViewController updateViewWithMachine:(__bridge void *)_machine];
-                }                
             }
         });
     });
@@ -223,7 +227,9 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:cUseSmartLink toObject:_configViewController withKeyPath:cUseSmartLink options:nil];
     
     [_tapeViewController bind:@"tape" toObject:self withKeyPath:@"zxTape" options:nil];
-    [_debugViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
+    [_disassemblyViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
+    [_cpuViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
+    [_memoryViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
 }
 
 - (void)setupLocalObservers
@@ -503,6 +509,8 @@ NS_ENUM(NSUInteger, MachineType)
     [self notifyUserWithMessage:[NSString stringWithFormat:NSLocalizedString(@"%@ Loaded", nil), _machine.machineName]];
     
     [_machine start];
+    
+    
 }
 
 - (IBAction)switchMachine:(id)sender
@@ -527,24 +535,10 @@ NS_ENUM(NSUInteger, MachineType)
     }
 }
 
-- (IBAction)showGraphicalMemoryWindow:(id)sender
-{
-    [self.view.window addChildWindow:_graphicalMemoryWindowController.window ordered:NSWindowAbove];
-    [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
-    //    [_graphicalMemoryWindowController.window makeKeyAndOrderFront:nil];
-}
-
-//- (IBAction)showCPUWindow:(id)sender
-//{
-//    [self.view.window addChildWindow:_cpuWindowController.window ordered:NSWindowAbove];
-//    [_cpuViewController updateViewWithMachine:(__bridge void*)_machine];
-//    //    [_cpuWindowController.window orderFront:nil];
-//    //    [_cpuWindowController.window setLevel:NSPopUpMenuWindowLevel];
-//}
-
 - (IBAction)switchHexDecValues:(id)sender
 {
-    _debugViewController.decimalFormat = (_debugViewController.decimalFormat) ? NO : YES;
+    _cpuViewController.decimalFormat = (_cpuViewController.decimalFormat) ? NO : YES;
+    _disassemblyViewController.decimalFormat = (_disassemblyViewController.decimalFormat) ? NO : YES;
 }
 
 - (IBAction)pause:(id)sender
@@ -607,9 +601,24 @@ NS_ENUM(NSUInteger, MachineType)
     [_tapeBrowserWindowController showWindow:nil];
 }
 
-- (IBAction)showDebugWindow:(id)sender
+- (IBAction)showDisassemblyWindow:(id)sender
 {
-    [_debugWindowController showWindow:nil];
+    [_disassemblyWindowController showWindow:nil];
+}
+
+- (IBAction)showCPUWindow:(id)sender
+{
+    [_cpuWindowController showWindow:nil];
+}
+
+- (IBAction)showGraphicalMemoryWindow:(id)sender
+{
+    [_graphicalMemoryWindowController showWindow:nil];
+}
+
+- (IBAction)showMemoryWindow:(id)sender
+{
+    [_memoryWindowController showWindow:nil];
 }
 
 #pragma mark - User Notifications
