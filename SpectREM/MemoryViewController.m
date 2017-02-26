@@ -88,7 +88,6 @@
                 }
                 view.textField.stringValue = content;
             }
-                
         }
         
         return view;
