@@ -687,11 +687,8 @@ const char *CZ80Core::Debug_GetOpcodeDetails(unsigned int &address, void *data)
 		{
 			table = &DDCB_Opcodes;
 
-			// Skip the offset
-			opcode_length++;
-
 			// Get the next byte
-			opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+			opcode = Z80CoreDebugMemRead(address + opcode_length + 1, data);
 			opcode_length++;
 		}
 		else
@@ -714,11 +711,8 @@ const char *CZ80Core::Debug_GetOpcodeDetails(unsigned int &address, void *data)
 		{
 			table = &FDCB_Opcodes;
 
-			// Skip the offset
-			opcode_length++;
-
 			// Get the next byte
-			opcode = Z80CoreDebugMemRead(address + opcode_length, data);
+			opcode = Z80CoreDebugMemRead(address + opcode_length + 1, data);
 			opcode_length++;
 		}
 		else
