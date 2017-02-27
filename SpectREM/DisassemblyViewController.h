@@ -67,6 +67,7 @@
 @interface DisassembledInstruction : NSObject
 
 @property (assign) int address;
+@property (strong) NSString *bytes;
 @property (strong) NSString *instruction;
 
 @end

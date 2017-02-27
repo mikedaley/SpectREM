@@ -2201,12 +2201,12 @@
             <objects>
                 <windowController storyboardIdentifier="DisassemblyWindow" id="Cm4-8B-A1s" sceneMemberID="viewController">
                     <window key="window" title="Disassembly Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="disassemblyWindow" animationBehavior="default" id="Cxy-Qm-BaW" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="544" y="461" width="280" height="287"/>
+                        <rect key="contentRect" x="544" y="461" width="361" height="287"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
-                        <value key="minSize" type="size" width="280" height="140"/>
-                        <value key="maxSize" type="size" width="280" height="10000"/>
+                        <value key="minSize" type="size" width="361" height="140"/>
+                        <value key="maxSize" type="size" width="361" height="10000"/>
                     </window>
                     <connections>
                         <segue destination="I9y-0Q-dHM" kind="relationship" relationship="window.shadowedContentViewController" id="anm-dl-79p"/>
@@ -2214,7 +2214,7 @@
                 </windowController>
                 <customObject id="ImZ-FR-aGI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1685" y="204"/>
+            <point key="canvasLocation" x="1733" y="196"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="DTQ-nu-qZb">
@@ -2441,46 +2441,34 @@
                 <customObject id="h8X-aX-Jak" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="G4V-hP-FRj"/>
             </objects>
-            <point key="canvasLocation" x="2263" y="759"/>
+            <point key="canvasLocation" x="2466" y="759"/>
         </scene>
         <!--Disassembly View Controller-->
         <scene sceneID="Elc-OR-UI0">
             <objects>
                 <viewController id="I9y-0Q-dHM" customClass="DisassemblyViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" misplaced="YES" id="2HF-VO-vav">
-                        <rect key="frame" x="0.0" y="0.0" width="280" height="378"/>
+                        <rect key="frame" x="0.0" y="0.0" width="361" height="378"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField identifier="DisassembleAddressField" focusRingType="none" verticalHuggingPriority="750" misplaced="YES" tag="1" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="L0q-Eo-5Ux">
-                                <rect key="frame" x="138" y="339" width="67" height="19"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" drawsBackground="YES" id="kP6-ju-lvi">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <outlet property="delegate" destination="I9y-0Q-dHM" id="NbC-rp-4Zf"/>
-                                </connections>
-                            </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="Ov9-3U-mlo">
-                                <rect key="frame" x="18" y="342" width="114" height="14"/>
+                                <rect key="frame" x="18" y="342" width="120" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Disassmble Address:" id="PgC-IB-QOO">
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Disassembly Address:" id="PgC-IB-QOO">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Shv-h1-xAW">
-                                <rect key="frame" x="20" y="20" width="240" height="311"/>
+                                <rect key="frame" x="20" y="20" width="321" height="311"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <clipView key="contentView" drawsBackground="NO" id="a1q-lE-GB7">
-                                    <rect key="frame" x="1" y="0.0" width="238" height="310"/>
+                                    <rect key="frame" x="1" y="0.0" width="319" height="310"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView identifier="DisassembleTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="AXg-mX-dqP" viewBased="YES" id="Qh5-lO-X2h">
-                                            <rect key="frame" x="0.0" y="0.0" width="238" height="287"/>
+                                        <tableView identifier="DisassembleTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="AXg-mX-dqP" viewBased="YES" id="Qh5-lO-X2h">
+                                            <rect key="frame" x="0.0" y="0.0" width="319" height="287"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2520,7 +2508,40 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="DisassemblyColID" width="165" minWidth="10" maxWidth="3.4028234663852886e+38" id="KPZ-Yb-HhR">
+                                                <tableColumn identifier="BytesColID" width="98" minWidth="10" maxWidth="3.4028234663852886e+38" id="fFp-Wm-dKX">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Bytes">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    </tableHeaderCell>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ixX-o6-sms">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                    <prototypeCellViews>
+                                                        <tableCellView identifier="BytesColID" id="aO2-tr-NtN">
+                                                            <rect key="frame" x="71" y="1" width="98" height="17"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" id="9U8-Ch-DBC">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="zZQ-3O-I0V">
+                                                                        <font key="font" size="13" name="Courier"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                </textField>
+                                                            </subviews>
+                                                            <connections>
+                                                                <outlet property="textField" destination="9U8-Ch-DBC" id="kFd-Y0-YoQ"/>
+                                                            </connections>
+                                                        </tableCellView>
+                                                    </prototypeCellViews>
+                                                </tableColumn>
+                                                <tableColumn identifier="DisassemblyColID" width="145" minWidth="10" maxWidth="3.4028234663852886e+38" id="KPZ-Yb-HhR">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Instruction">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -2534,11 +2555,11 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="DisassemblyColID" id="BPL-Q0-mGL">
-                                                            <rect key="frame" x="71" y="1" width="165" height="17"/>
+                                                            <rect key="frame" x="172" y="1" width="145" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" id="VGD-2c-vbg">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="165" height="17"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="145" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="fuJ-iS-tWm">
                                                                         <font key="font" size="13" name="Courier"/>
@@ -2562,8 +2583,8 @@
                                     </subviews>
                                     <nil key="backgroundColor"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Mpa-Au-3Aw">
-                                    <rect key="frame" x="1" y="301" width="238" height="16"/>
+                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="Mpa-Au-3Aw">
+                                    <rect key="frame" x="1" y="294" width="319" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="NAc-4G-n8J">
@@ -2571,10 +2592,22 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="AXg-mX-dqP">
-                                    <rect key="frame" x="0.0" y="0.0" width="238" height="23"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="319" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
+                            <textField identifier="DisassembleAddressField" focusRingType="none" verticalHuggingPriority="750" misplaced="YES" tag="1" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="L0q-Eo-5Ux">
+                                <rect key="frame" x="144" y="339" width="67" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" drawsBackground="YES" id="kP6-ju-lvi">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <outlet property="delegate" destination="I9y-0Q-dHM" id="NbC-rp-4Zf"/>
+                                </connections>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
@@ -2584,7 +2617,7 @@
                 </viewController>
                 <customObject id="0a8-Dw-EYR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1685" y="715"/>
+            <point key="canvasLocation" x="1725.5" y="715"/>
         </scene>
         <!--Graphical Mem View Controller-->
         <scene sceneID="KMB-hG-mTJ">

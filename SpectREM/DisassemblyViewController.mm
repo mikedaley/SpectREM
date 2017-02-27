@@ -42,7 +42,7 @@
 - (void)viewWillAppear
 {
     _viewVisilbe = YES;
-    [self disassemmbleFromAddress:_disassembleAddress length:65535 - _disassembleAddress];
+    [self disassemmbleFromAddress:_disassembleAddress length:65536 - _disassembleAddress];
     [self.disassemblyTableview reloadData];
     self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
         if (_viewVisilbe)
@@ -71,13 +71,19 @@
     while (pc < address + length)
     {
         char opcode[128];
-        int length = core->Debug_Disassemble(opcode, 128, pc, false, NULL);
+        int length = core->Debug_Disassemble(opcode, 128, pc, !self.decimalFormat, NULL);
         
         if ( length == 0 )
         {
             // Invalid opcode - probably want to display as a DB statement
             DisassembledInstruction *instruction = [DisassembledInstruction new];
             instruction.address = pc;
+            NSMutableString *bytes = [NSMutableString new];
+            for (int i = 0; i <= length - 1; i++)
+            {
+                [bytes appendFormat:@"%02X ", core->Z80CoreDebugMemRead(pc + i, NULL)];
+            }
+            instruction.bytes = bytes;
             instruction.instruction = @"DB";
             [self.disassemblyArray addObject:instruction];
             pc++;
@@ -86,9 +92,30 @@
         {
             DisassembledInstruction *instruction = [DisassembledInstruction new];
             instruction.address = pc;
+            
+            NSMutableString *bytes = [NSMutableString new];
+            for (int i = 0; i <= length - 1; i++)
+            {
+                [bytes appendFormat:@"%02X ", core->Z80CoreDebugMemRead(pc + i, NULL)];
+            }
+            
+            instruction.bytes = bytes;
             instruction.instruction = [NSString stringWithCString:opcode encoding:NSUTF8StringEncoding];
             [self.disassemblyArray addObject:instruction];
             pc += length;
+            
+            // Add a blank row if the last instruction was RET, JP, JR to space things out
+            if ([instruction.instruction containsString:@"RET"] ||
+                [instruction.instruction containsString:@"JP"] ||
+                [instruction.instruction containsString:@"JR"])
+            {
+                instruction = [DisassembledInstruction new];
+                instruction.address = -1;
+                instruction.bytes = @"";
+                instruction.instruction = @"";
+                [self.disassemblyArray addObject:instruction];
+            }
+            
         }
     }
 }
@@ -144,15 +171,27 @@
         {
             if ([tableColumn.identifier isEqualToString:@"AddressColID"])
             {
-                int address = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address];
-                if (self.decimalFormat)
+                // If the address is -1 then this is a blank row
+                if ([(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address] != -1)
                 {
-                    view.textField.stringValue = [NSString stringWithFormat:@"%05i", address];
+                    int address = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address];
+                    if (self.decimalFormat)
+                    {
+                        view.textField.stringValue = [NSString stringWithFormat:@"%05i", address];
+                    }
+                    else
+                    {
+                        view.textField.stringValue = [NSString stringWithFormat:@"$%04X", address];
+                    }
                 }
                 else
                 {
-                    view.textField.stringValue = [NSString stringWithFormat:@"$%04X", address];
+                    view.textField.stringValue = @"";
                 }
+            }
+            else if ([tableColumn.identifier isEqualToString:@"BytesColID"])
+            {
+                view.textField.stringValue = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] bytes];
             }
             else if ([tableColumn.identifier isEqualToString:@"DisassemblyColID"])
             {
@@ -276,7 +315,11 @@
 //    {
 //        self.addressTextField.formatter = _hexFormatter;
 //    }
-    [self.disassemblyTableview reloadData];
+    if (self.machine)
+    {
+        [self disassemmbleFromAddress:_disassembleAddress length:65536 - _disassembleAddress];
+        [self.disassemblyTableview reloadData];
+    }
 }
 
 @end
