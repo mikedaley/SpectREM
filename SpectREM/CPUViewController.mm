@@ -103,6 +103,10 @@
         
     }
 
+    self.currentRom = [NSString stringWithFormat:@"%02i", self.machine->currentROMPage];
+    self.displayPage = [NSString stringWithFormat:@"%02i", self.machine->displayPage];
+    self.ramPage = [NSString stringWithFormat:@"%02i", self.machine->currentRAMPage];
+    
     self.tStates = [NSString stringWithFormat:@"%04i", core->GetTStates()];
 
     self.fs = (core->GetRegister(CZ80Core::eREG_F) & core->FLAG_S) ? @"◉" : @"";

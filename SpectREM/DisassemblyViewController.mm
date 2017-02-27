@@ -24,7 +24,6 @@
 @property (strong) NSMutableArray *disassemblyArray;
 @property (assign) NSTimer *viewUpdateTimer;
 
-
 @end
 
 @implementation DisassemblyViewController
@@ -52,7 +51,6 @@
             [self updateMemoryContents];
         }
     }];
-    
 }
 
 - (void)viewWillDisappear
@@ -93,7 +91,6 @@
             pc += length;
         }
     }
-    
 }
 
 #pragma mark - Textfield Methods

@@ -10,6 +10,11 @@
 #import "ZXSpectrum.h"
 
 @interface MemoryViewController ()
+{
+
+}
+
+@property (strong) NSTimer *viewUpdateTimer;
 
 @end
 
@@ -33,6 +38,15 @@
 - (void)viewWillAppear
 {
     [self.memoryTableView reloadData];
+    self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [self updateMemoryContents];
+    }];
+}
+
+- (void)viewWillDisappear
+{
+    [self.viewUpdateTimer invalidate];
+    self.viewUpdateTimer = nil;
 }
 
 #pragma mark - Table View Methods
@@ -41,7 +55,7 @@
 {
     if ([tableView.identifier isEqualToString:@"MemoryTableView"])
     {
-        return 65535 / self.byteWidth;
+        return (65535 / self.byteWidth) + 1;
     }
     
     return 0;
@@ -97,9 +111,29 @@
     return nil;
 }
 
+- (BOOL)tableView:(NSTableView *)tableView isGroupRow:(NSInteger)row
+{
+//    if (row == 0 || row == 4000 / self.byteWidth)
+//    {
+//        return YES;
+//    }
+    
+    return NO;
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
 
+}
+
+#pragma mark - Updates
+
+- (void)updateMemoryContents
+{
+    NSRect visibleRect = self.memoryTableView.visibleRect;
+    NSRange visibleRows = [self.memoryTableView rowsInRect:visibleRect];
+    NSIndexSet *visibleCols = [self.memoryTableView columnIndexesInRect:visibleRect];
+    [self.memoryTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRows] columnIndexes:visibleCols];
 }
 
 #pragma mark - Getters/Setters

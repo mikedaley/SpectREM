@@ -156,8 +156,10 @@ typedef NS_ENUM(int, ULAplusMode)
     int audioAYTStates;
     int audioAYTStatesStep;
     
+    // SpecDrum
     int specDrumOutput;
     
+    // Thread event e.g. should a snap shot be loaded
     EventType event;
     
     unsigned char memoryContentionTable[80000];
@@ -218,13 +220,14 @@ typedef NS_ENUM(int, ULAplusMode)
 
 @property (assign) bool stepping;
 
-@property (assign) BOOL tapePlaying;
-
 @property (assign) BOOL accelerated;
 
 // Serial core used to communicate with SmartLINK
 @property (strong) SerialCore *serialCore;
 @property (nonatomic, assign) BOOL useSmartLink;
+
+// Debug properties
+
 
 #pragma mark - Methods
 

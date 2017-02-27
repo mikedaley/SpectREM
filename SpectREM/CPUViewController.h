@@ -50,6 +50,10 @@
 @property (strong) NSString *fn;
 @property (strong) NSString *fc;
 
+@property (strong) NSString *currentRom;
+@property (strong) NSString *displayPage;
+@property (strong) NSString *ramPage;
+
 @property (strong) NSString *tStates;
 
 @property (assign) ZXSpectrum *machine;
