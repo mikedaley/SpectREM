@@ -184,7 +184,7 @@ public:
 	~CZ80Core();
 	
 public:
-	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, void *member_class);
+	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write,Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, void *member_class);
 
 	void					Reset(bool hardReset = true);
 	unsigned int			Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, bool hexFormat, void *data);

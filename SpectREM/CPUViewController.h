@@ -53,6 +53,7 @@
 @property (strong) NSString *currentRom;
 @property (strong) NSString *displayPage;
 @property (strong) NSString *ramPage;
+@property (strong) NSString *iff1;
 
 @property (strong) NSString *tStates;
 

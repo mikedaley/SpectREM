@@ -59,11 +59,9 @@
         self.l = [NSString stringWithFormat:@"$%02X", core->GetRegister(CZ80Core::eREG_L)];
         self.i = [NSString stringWithFormat:@"$%02X", core->GetRegister(CZ80Core::eREG_I)];
         self.r = [NSString stringWithFormat:@"$%02X", core->GetRegister(CZ80Core::eREG_R)];
-        self.im = [NSString stringWithFormat:@"$%02X", core->GetIMMode()];
         self.ix = [NSString stringWithFormat:@"$%04X", core->GetRegister(CZ80Core::eREG_IX)];
         self.iy = [NSString stringWithFormat:@"$%04X", core->GetRegister(CZ80Core::eREG_IY)];
 
-    
         self.aa = [NSString stringWithFormat:@"$%02X", core->GetRegister(CZ80Core::eREG_ALT_A)];
         self.ff = [NSString stringWithFormat:@"$%02X", core->GetRegister(CZ80Core::eREG_ALT_F)];
         self.bb = [NSString stringWithFormat:@"$%02X", core->GetRegister(CZ80Core::eREG_ALT_B)];
@@ -87,7 +85,6 @@
         self.l = [NSString stringWithFormat:@"%02i", core->GetRegister(CZ80Core::eREG_L)];
         self.i = [NSString stringWithFormat:@"%02i", core->GetRegister(CZ80Core::eREG_I)];
         self.r = [NSString stringWithFormat:@"%02i", core->GetRegister(CZ80Core::eREG_R)];
-        self.im = [NSString stringWithFormat:@"%02i", core->GetIMMode()];
         self.ix = [NSString stringWithFormat:@"%02i", core->GetRegister(CZ80Core::eREG_IX)];
         self.iy = [NSString stringWithFormat:@"%02i", core->GetRegister(CZ80Core::eREG_IY)];
         
@@ -105,6 +102,8 @@
     self.currentRom = [NSString stringWithFormat:@"%02i", self.machine->currentROMPage];
     self.displayPage = [NSString stringWithFormat:@"%02i", self.machine->displayPage];
     self.ramPage = [NSString stringWithFormat:@"%02i", self.machine->currentRAMPage];
+    self.iff1 = [NSString stringWithFormat:@"%02i", core->GetIFF1()];
+    self.im = [NSString stringWithFormat:@"%02i", core->GetIMMode()];
     
     self.tStates = [NSString stringWithFormat:@"%04i", core->GetTStates()];
 
