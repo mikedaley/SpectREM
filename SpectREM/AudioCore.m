@@ -32,6 +32,7 @@
     int             envelopeStep;
     unsigned char	AYRegisters[eAY_MAX_REGISTERS];
     unsigned char	currentAYRegister;
+    unsigned char   floatingAYRegister;
     signed short    AYVolumes[16];
     signed int      channelOutput[3];
     bool			envelopeHolding;
@@ -298,6 +299,10 @@ static float fAYVolBase[] = {
             data &= 0x1f;
             break;
             
+        case eAYREGISTER_FLOATING:
+            AYRegisters[ eAYREGISTER_FLOATING] = data;
+            break;
+            
         default:
             break;
     }
@@ -469,6 +474,9 @@ static OSStatus renderAudio(void *inRefCon,AudioUnitRenderActionFlags *ioActionF
     // The format being used has 4 bytes per frame so multiply inNumberFrames by 4
     int16_t *buffer = ioData->mBuffers[0].mData;
     memset(buffer, 0, inNumberFrames << 2);
+    
+    // Decay the floating AY register value
+    audioCore->AYRegisters[ eAYREGISTER_FLOATING ] >>= 1;
     
     // Update the queue with the reset buffer
     [audioCore.queue read:buffer count:(inNumberFrames << 1)];

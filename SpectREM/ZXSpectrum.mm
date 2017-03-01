@@ -795,16 +795,18 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
     
     // AY-3-8912 ports
-    if((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY || (machine->machineInfo.hasAY ||
-                                                                       (machine->machineInfo.machineType == 0 &&
-                                                                        machine.useAYOn48k) )))
+    if(address == 0xfffd && (machine->machineInfo.hasAY ||
+                                        (machine->machineInfo.hasAY ||
+                                        (machine->machineInfo.machineType == 0 &&
+                                        machine.useAYOn48k) )))
     {
-        [machine.audioCore setAYRegister:(data & 0x0f)];
+        [machine.audioCore setAYRegister:data];
     }
     
-    if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY || (machine->machineInfo.hasAY ||
-                                                                        (machine->machineInfo.machineType == 0 &&
-                                                                         machine.useAYOn48k) )))
+    if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY ||
+                                         (machine->machineInfo.hasAY ||
+                                         (machine->machineInfo.machineType == 0 &&
+                                         machine.useAYOn48k) )))
     {
         [machine.audioCore writeAYData:data];
     }

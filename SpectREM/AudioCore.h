@@ -31,6 +31,11 @@ typedef NS_ENUM(NSUInteger, AY_Registers)
     eAYREGISTER_PORT_A,
     eAYREGISTER_PORT_B,
     
+    // Used to emulate the odd floating behaviour of setting an AY register > 15. The value
+    // written to registers > 15 decays over time and this is the value returned when reading
+    // a register > 15
+    eAYREGISTER_FLOATING,
+    
     eAY_MAX_REGISTERS
 };
 
