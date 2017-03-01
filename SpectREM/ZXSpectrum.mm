@@ -13,18 +13,28 @@
 #import "Z80Core.h"
 #import "SerialCore.h"
 
+
+#pragma mark - Interface
+
+
 @interface ZXSpectrum ()
 
 @end
+
+
+#pragma mark - Implementation 
+
 
 @implementation ZXSpectrum
 {
 }
 
+
 - (void)dealloc
 {
     NSLog(@"Deallocating ZXSpectrum");
 }
+
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info
 {
@@ -89,7 +99,9 @@
     return self;
 }
 
+
 #pragma mark - Binding
+
 
 - (void)setupObservers
 {
@@ -98,6 +110,7 @@
     [self addObserver:self.audioCore forKeyPath:@"soundVolume" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
+
 - (void)removeObservers
 {
     [self removeObserver:self.audioCore forKeyPath:@"soundLowPassFilter"];
@@ -105,7 +118,9 @@
     [self removeObserver:self.audioCore forKeyPath:@"soundVolume"];
 }
 
+
 #pragma mark - Emulation Control
+
 
 - (void)start
 {
@@ -114,13 +129,16 @@
     [self doFrame];
 }
 
+
 - (void)stop
 {
     [self removeObservers];
     [self.audioCore stop];
 }
 
+
 #pragma mark - SMARTLink setup
+
 
 - (void)setupSmartLink
 {
@@ -158,7 +176,9 @@
     };
 }
 
+
 #pragma mark - Various Reset Entry points
+
 
 - (void)reset:(BOOL)hard
 {
@@ -176,6 +196,7 @@
     [self resetFrame];
 }
 
+
 - (void)resetSound
 {
     memset(self.audioBuffer, 0, audioBufferSize);
@@ -187,6 +208,7 @@
     specDrumOutput = 0;
     [self.audioCore reset];
 }
+
 
 - (void)resetFrame
 {
@@ -200,7 +222,9 @@
     audioTsStepCounter = 0;
 }
 
+
 #pragma mark - CPU Frames
+
 
 - (void)doFrame
 {
@@ -233,6 +257,7 @@
                       }
                   });
 }
+
 
 - (void)generateFrame
 {
@@ -310,7 +335,9 @@
     
 }
 
+
 #pragma mark - Load IF2 ROM
+
 
 - (void)loadROMWithPath:(NSString *)path
 {
@@ -324,14 +351,18 @@
     }
 }
 
+
 #pragma mark - Load Default ROM
+
 
 - (void)loadDefaultROM
 {
     // Implemented in subclasses
 }
 
+
 #pragma mark - Audio
+
 
 void updateAudioWithTStates(int numberTs, void *m)
 {
@@ -444,7 +475,9 @@ void updateAudioWithTStates(int numberTs, void *m)
     }
 }
 
+
 #pragma mark - Display
+
 
 void updateScreenWithTStates(int numberTs, void *m)
 {
@@ -470,18 +503,12 @@ void updateScreenWithTStates(int numberTs, void *m)
                 if (machine->ulaPlusPaletteOn)
                 {
                     int index = machine->borderColor + 8;
-                    //                    char ulaColor = machine->clut[index];
                     for (int i = 0; i < 8; i++)
                     {
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
-                        
-                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].r;
-                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].g;
-                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].b;
-                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                     }
                 }
                 else
@@ -577,7 +604,9 @@ void updateScreenWithTStates(int numberTs, void *m)
     }
 }
 
+
 #pragma mark - ULA
+
 
 // Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
 // All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
@@ -854,6 +883,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
 }
 
+
 // When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
 // Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
 // is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
@@ -893,7 +923,9 @@ static unsigned char floatingBus(void *m)
     return 0xff;
 }
 
+
 #pragma mark - Build Contention Tables
+
 
 - (void)buildContentionTable
 {
@@ -916,7 +948,9 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 #pragma mark - Build Display Tables
+
 
 // Stores the memory address for the start of each paper line on the screen
 - (void)buildScreenLineAddressTable
@@ -933,11 +967,11 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 // Generates a table that holds what screen activity should be happening based on each T-States within a Frame e.g. should the
 // border be drawn, bitmap screen or beam retrace. The values have been adjusted to ensure that the image drawn will be 320x256.
 - (void)buildDisplayTsTable
 {
-    
     for(int line = 0; line < machineInfo.pxVerticalTotal; line++)
     {
         for(int ts = 0 ; ts < machineInfo.tsPerLine; ts++)
@@ -994,6 +1028,7 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 // Build a table of all the possible ULAplus colours using G3R3B2.
 - (void)buildULAColorTable
 {
@@ -1018,11 +1053,12 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 #pragma mark - View Event Protocol Methods
+
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    
     if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink )
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
@@ -1124,6 +1160,7 @@ static unsigned char floatingBus(void *m)
         });
     }
 }
+
 
 - (void)keyUp:(NSEvent *)theEvent
 {
@@ -1230,6 +1267,7 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 - (void)flagsChanged:(NSEvent *)theEvent
 {
     if (!(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
@@ -1291,6 +1329,7 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 - (void)resetKeyboardMap
 {
     for (int i = 0; i < 8; i++)
@@ -1299,7 +1338,9 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 #pragma mark - Snapshot Loading
+
 
 - (void)loadSnapshotWithPath:(NSString *)path
 {
@@ -1321,6 +1362,7 @@ static unsigned char floatingBus(void *m)
                   });
 }
 
+
 - (void)loadSnapshot
 {
     [self reset:NO];
@@ -1328,12 +1370,14 @@ static unsigned char floatingBus(void *m)
     [self verifySnapshotLoadWithStatus:status];
 }
 
+
 - (void)loadZ80Snapshot
 {
     [self reset:NO];
     int status = [Snapshot loadZ80SnapshotWithPath:self.snapshotPath intoMachine:self];
     [self verifySnapshotLoadWithStatus:status];
 }
+
 
 - (void)verifySnapshotLoadWithStatus:(int)status
 {
@@ -1350,7 +1394,9 @@ static unsigned char floatingBus(void *m)
     }
 }
 
+
 #pragma mark - Properties
+
 
 // This is implemented within each machine class and returna a reference to the core being used for that machinne
 - (void *)getCore;
@@ -1358,11 +1404,13 @@ static unsigned char floatingBus(void *m)
     return nil;
 }
 
+
 // Returns the string name for a machine. Each machine class implements this method and returns the appropriate machine name
 - (NSString *)machineName
 {
     return @"Unknown";
 }
+
 
 - (void)setUseSmartLink:(BOOL)useSmartLink
 {

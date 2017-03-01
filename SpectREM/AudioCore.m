@@ -252,6 +252,12 @@ static float fAYVolBase[] = {
     {
         currentAYRegister = reg;
     }
+    else
+    {
+        // If an AY register > 16 is selected then point it at the floating register used to
+        // emulate this behaviour
+        currentAYRegister = eAYREGISTER_FLOATING;
+    }
 }
 
 - (void)writeAYData:(unsigned char)data
@@ -300,7 +306,6 @@ static float fAYVolBase[] = {
             break;
             
         case eAYREGISTER_FLOATING:
-            AYRegisters[ eAYREGISTER_FLOATING] = data;
             break;
             
         default:
