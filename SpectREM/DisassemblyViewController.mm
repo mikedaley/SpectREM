@@ -9,14 +9,9 @@
 #import "DisassemblyViewController.h"
 #import "ZXSpectrum.h"
 #import "Z80Core.h"
-#import "DecimalOnlyFormatter.h"
-#import "HexOnlyFormatter.h"
 
 @interface DisassemblyViewController ()
 {
-    DecimalOnlyFormatter *_decimalFormatter;
-    HexOnlyFormatter *_hexFormatter;
-    
     int _disassembleAddress;
     BOOL _viewVisilbe;
 }
@@ -32,9 +27,6 @@
     [super viewDidLoad];
     // Do view setup here.
     
-    _decimalFormatter = [DecimalOnlyFormatter new];
-    _hexFormatter = [HexOnlyFormatter new];
-//    self.addressTextField.formatter = _hexFormatter;
     self.decimalFormat = NO;
     _disassembleAddress = 0;
 }

@@ -37,7 +37,7 @@
 {
     if (self = [super initWithEmulationViewController:emulationViewController machineInfo:info])
     {
-        // We need 64k of memory total for the 128k Speccy
+        // We need 128k of memory total for the 128k Speccy and also two 16k ROM chips
         memory = (unsigned char*)calloc(128 * 1024, sizeof(unsigned char));
         rom = (unsigned char*)calloc(32 * 1024, sizeof(unsigned char));
         
@@ -155,6 +155,8 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
         machine->core->AddContentionTStates( machine->memoryContentionTable[machine->core->GetTStates() % machine->machineInfo.tsPerFrame] );
     }
 }
+
+#pragma mark - Debug Memory Access
 
 static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {

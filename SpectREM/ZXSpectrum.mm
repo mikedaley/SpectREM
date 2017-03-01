@@ -29,7 +29,7 @@
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info
 {
     if (self = [super init])
-    {        
+    {
         machineInfo = info;
         _emulationViewController = emulationViewController;
         
@@ -55,7 +55,7 @@
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelColor);
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
-
+        
         float fps = 50;
         
         audioBufferSize = (cAudioSampleRate / fps) * 6;
@@ -73,7 +73,7 @@
         [self buildULAColorTable];
         [self resetKeyboardMap];
         [self setupSmartLink];
-
+        
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
         self.audioCore = [[AudioCore alloc] initWithSampleRate:cAudioSampleRate
                                                framesPerSecond:fps
@@ -83,8 +83,8 @@
         [self setupObservers];
         
         // DEBUGGING SZX
-//        NSURL *url = [[NSBundle mainBundle] URLForResource:@"AgentX" withExtension:@"szx"];
-//        BOOL szxValid = [SZX isSZXValidWithURL:url];
+        //        NSURL *url = [[NSBundle mainBundle] URLForResource:@"AgentX" withExtension:@"szx"];
+        //        BOOL szxValid = [SZX isSZXValidWithURL:url];
     }
     return self;
 }
@@ -169,7 +169,7 @@
         [self loadDefaultROM];
     }
     frameCounter = 0;
-	saveTrapTriggered = false;
+    saveTrapTriggered = false;
     ulaPlusPaletteOn = 0;
     [self resetKeyboardMap];
     [self resetSound];
@@ -200,44 +200,44 @@
     audioTsStepCounter = 0;
 }
 
-#pragma mark - CPU
+#pragma mark - CPU Frames
 
 - (void)doFrame
 {
     // Ensure that the frame is run on the emulation queue
     dispatch_sync(self.emulationQueue, ^
-                   {
-                       @autoreleasepool {
-                           switch (event)
-                           {
-                               case EventType::eNone:
-                                   break;
-                                   
-                               case EventType::eReset:
-                                   break;
-                                   
-                               case EventType::eSnapshot:
-                                   [self loadSnapshot];
-                                   break;
-                                   
-                               case EventType::eZ80Snapshot:
-                                   [self loadZ80Snapshot];
-                                   break;
-                                   
-                               default:
-                                   break;
-                           }
-                           event = EventType::eNone;
-                           [self resetFrame];
-                           [self generateFrame];                           
-                       }
-                   });
+                  {
+                      @autoreleasepool {
+                          switch (event)
+                          {
+                              case EventType::eNone:
+                                  break;
+                                  
+                              case EventType::eReset:
+                                  break;
+                                  
+                              case EventType::eSnapshot:
+                                  [self loadSnapshot];
+                                  break;
+                                  
+                              case EventType::eZ80Snapshot:
+                                  [self loadZ80Snapshot];
+                                  break;
+                                  
+                              default:
+                                  break;
+                          }
+                          event = EventType::eNone;
+                          [self resetFrame];
+                          [self generateFrame];
+                      }
+                  });
 }
 
 - (void)generateFrame
 {
     CZ80Core *core = (CZ80Core *)[self getCore];
-
+    
     int count = machineInfo.tsPerFrame;
     
     while (count > 0)
@@ -260,7 +260,7 @@
         else
         {
             count -= tsCPU;
-                        
+            
             if (!self.accelerated) {
                 updateAudioWithTStates(tsCPU, (__bridge void *)self);
             }
@@ -272,7 +272,7 @@
                 
                 core->ResetTStates( machineInfo.tsPerFrame );
                 core->SignalInterrupt();
-
+                
                 updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
                 
                 if (self.accelerated)
@@ -307,7 +307,7 @@
     {
         [self.serialCore sendData:smartLinkRequest];
     }
-
+    
 }
 
 #pragma mark - Load IF2 ROM
@@ -454,7 +454,7 @@ void updateScreenWithTStates(int numberTs, void *m)
     {
         return;
     }
-
+    
     while (numberTs > 0)
     {
         int line = machine->emuDisplayTs / machine->machineInfo.tsPerLine;
@@ -470,7 +470,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                 if (machine->ulaPlusPaletteOn)
                 {
                     int index = machine->borderColor + 8;
-//                    char ulaColor = machine->clut[index];
+                    //                    char ulaColor = machine->clut[index];
                     for (int i = 0; i < 8; i++)
                     {
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
@@ -478,10 +478,10 @@ void updateScreenWithTStates(int numberTs, void *m)
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                         
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].r;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].g;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].b;
-//                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].r;
+                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].g;
+                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->ulaColor[ulaColor].b;
+                        //                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                     }
                 }
                 else
@@ -527,7 +527,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                             index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
                             ulaPlusColor = machine->clut[index];
                         }
-
+                        
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
@@ -682,8 +682,8 @@ unsigned char coreIORead(unsigned short address, void *m)
                 return machine->clut[machine->ulaPlusCurrentReg] & 63;
             }
         }
-
-        // Getting here means that nothing has handled that port read so based on a resl Spectrum return the floating bus value
+        
+        // Getting here means that nothing has handled that port read so based on a real Spectrum return the floating bus value
         return floatingBus(m);
     }
     
@@ -698,13 +698,14 @@ unsigned char coreIORead(unsigned short address, void *m)
             result &= machine->keyboardMap[i];
         }
     }
-
+    
     // To emulate a series 3, the result of reading a ULA port should have bits 5+7 set and bit 6 should be set
-    // to the last value of the bit 4 when writing to port 0xFE.
+    // to the last value of bit 4 when writing to port 0xFE.
     result = (result & 191) | (machine->audioEarBit << 6) | (machine->_zxTape->tapeInputBit << 6);
     
     return result;
 }
+
 
 void coreIOWrite(unsigned short address, unsigned char data, void *m)
 {
@@ -722,11 +723,11 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     
     // Identify contention in the 128k
     if (machine->machineInfo.hasPaging &&
-             (page == 1 ||
-              (page == 3 && (machine->currentRAMPage == 1 ||
-                             machine->currentRAMPage == 3 ||
-                             machine->currentRAMPage == 5 ||
-                             machine->currentRAMPage == 7))))
+        (page == 1 ||
+         (page == 3 && (machine->currentRAMPage == 1 ||
+                        machine->currentRAMPage == 3 ||
+                        machine->currentRAMPage == 5 ||
+                        machine->currentRAMPage == 7))))
     {
         contended = true;
     }
@@ -814,7 +815,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // SPECDRUM port, all ports ending in 0xdf
     if ((address & 0xff) == 0xdf)
     {
-        // The value written is merged into the usual audio output.
+        // Adjust the output from SpecDrum to get the right volume. This value is then merged into the overall sound output
         machine->specDrumOutput = ((data * 128) - 16384) / 12;
     }
     
@@ -841,7 +842,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     if (address == 0xff3b)
     {
         updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs), m);
-
+        
         if (machine->ulaPlusMode == eULAplusModeGroup)
         {
             machine->ulaPlusPaletteOn = (data & 0x01);
@@ -892,7 +893,7 @@ static unsigned char floatingBus(void *m)
     return 0xff;
 }
 
-#pragma mark - Contention Tables
+#pragma mark - Build Contention Tables
 
 - (void)buildContentionTable
 {
@@ -958,7 +959,7 @@ static unsigned char floatingBus(void *m)
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
             }
-
+            
             // Border + Paper + Border
             if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder) && line < (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay))
             {
@@ -975,7 +976,7 @@ static unsigned char floatingBus(void *m)
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayPaper;
                 }
             }
-
+            
             // Bottom Border
             if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay) && line < machineInfo.pxVerticalTotal - 24)
             {
@@ -1021,6 +1022,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyDown:(NSEvent *)theEvent
 {
+    
     if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink )
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
@@ -1032,57 +1034,57 @@ static unsigned char floatingBus(void *m)
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[3] &= ~0x08; // 4
                     break;
-
+                    
                 case 33: // True Video
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[3] &= ~0x04; // 3
                     break;
-
+                    
                 case 39: // "
                     keyboardMap[7] &= ~0x02; // Sym
                     keyboardMap[5] &= ~0x01; // P
                     break;
-
+                    
                 case 41: // ;
                     keyboardMap[7] &= ~0x02; // Sym
                     keyboardMap[5] &= ~0x02; // O
                     break;
-
+                    
                 case 43: // ,
                     keyboardMap[7] &= ~0x02; // Sym
                     keyboardMap[7] &= ~0x08; // N
                     break;
-
+                    
                 case 27: // -
                     keyboardMap[7] &= ~0x02; // Sym
                     keyboardMap[6] &= ~0x08; // J
                     break;
-
+                    
                 case 24: // +
                     keyboardMap[7] &= ~0x02; // Sym
                     keyboardMap[6] &= ~0x04; // K
                     break;
-
+                    
                 case 47: // .
                     keyboardMap[7] &= ~0x02; // Sym
                     keyboardMap[7] &= ~0x04; // M
                     break;
-
+                    
                 case 48: // Edit
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[3] &= ~0x01; // 1
                     break;
-
+                    
                 case 50: // Graph
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[4] &= ~0x02; // 9
                     break;
-
+                    
                 case 53: // Break
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[7] &= ~0x01; // Space
                     break;
-
+                    
                 case 51: // Backspace
                     keyboardMap[0] &= ~0x01; // Shift
                     keyboardMap[4] &= ~0x01; // 0
@@ -1125,6 +1127,7 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyUp:(NSEvent *)theEvent
 {
+    
     if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
@@ -1136,57 +1139,57 @@ static unsigned char floatingBus(void *m)
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[3] |= 0x08; // 4
                     break;
-
+                    
                 case 33: // True Video
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[3] |= 0x04; // 3
                     break;
-
+                    
                 case 39: // "
                     keyboardMap[7] |= 0x02; // Sym
                     keyboardMap[5] |= 0x01; // P
                     break;
-
+                    
                 case 41: // "
                     keyboardMap[7] |= 0x02; // Sym
                     keyboardMap[5] |= 0x02; // O
                     break;
-
+                    
                 case 43: // ,
                     keyboardMap[7] |= 0x02; // Sym
                     keyboardMap[7] |= 0x08; // M
                     break;
-
+                    
                 case 24: // +
                     keyboardMap[7] |= 0x02; // Sym
                     keyboardMap[6] |= 0x04; // K
                     break;
-
+                    
                 case 27: // -
                     keyboardMap[7] |= 0x02; // Sym
                     keyboardMap[6] |= 0x08; // J
                     break;
-
+                    
                 case 47: // .
                     keyboardMap[7] |= 0x02; // Sym
                     keyboardMap[7] |= 0x04; // N
                     break;
-
+                    
                 case 48: // Edit
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[3] |= 0x01; // 1
                     break;
-
+                    
                 case 50: // Graph
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[4] |= 0x02; // 9
                     break;
-
+                    
                 case 53: // Break
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[7] |= 0x01; // Space
                     break;
-
+                    
                 case 51: // Backspace
                     keyboardMap[0] |= 0x01; // Shift
                     keyboardMap[4] |= 0x01; // 0
@@ -1249,15 +1252,15 @@ static unsigned char floatingBus(void *m)
                         keyboardMap[7] |= 0x02;
                     }
                     break;
-
+                    
                 case 57: // Caps Lock
                     if (theEvent.modifierFlags & NSEventModifierFlagCapsLock)
                     {
-//                        keyboardMap[0] &= ~0x01;
-//                        keyboardMap[3] &= ~0x02;
+                        //                        keyboardMap[0] &= ~0x01;
+                        //                        keyboardMap[3] &= ~0x02;
                     }
                     break;
-
+                    
                 case 56: // Left Shift
                 case 60: // Right Shift
                     if (theEvent.modifierFlags & NSEventModifierFlagShift)
@@ -1280,7 +1283,7 @@ static unsigned char floatingBus(void *m)
                         keyboardMap[7] |= 0x02;
                     }
                     break;
-                
+                    
                 default:
                     break;
             }
@@ -1302,20 +1305,20 @@ static unsigned char floatingBus(void *m)
 {
     // This will be called from the main thread so it needs to by sync'd with the emulation queue
     dispatch_sync(self.emulationQueue, ^
-      {
-          self.snapshotPath = path;
-          NSString *extension = [[path pathExtension] uppercaseString];
-          
-          if ([extension isEqualToString:@"SNA"])
-          {
-              event = EventType::eSnapshot;
-          }
-          
-          if ([extension isEqualToString:@"Z80"])
-          {
-              event = EventType::eZ80Snapshot;
-          }
-      });
+                  {
+                      self.snapshotPath = path;
+                      NSString *extension = [[path pathExtension] uppercaseString];
+                      
+                      if ([extension isEqualToString:@"SNA"])
+                      {
+                          event = EventType::eSnapshot;
+                      }
+                      
+                      if ([extension isEqualToString:@"Z80"])
+                      {
+                          event = EventType::eZ80Snapshot;
+                      }
+                  });
 }
 
 - (void)loadSnapshot

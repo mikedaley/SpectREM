@@ -41,13 +41,29 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SpectREM/MemoryViewController.m"
-            timestampString = "509734632.209403"
+            filePath = "SpectREM/AudioCore.m"
+            timestampString = "510068334.988796"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
-            landmarkName = "-initWithCoder:"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
+            landmarkName = "-writeAYData:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpectREM/AudioCore.m"
+            timestampString = "510068372.958537"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
+            landmarkName = "-setAYRegister:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

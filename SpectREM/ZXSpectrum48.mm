@@ -114,6 +114,8 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
     }
 }
 
+#pragma mark - Debug Memory Access
+
 static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {
 	ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
@@ -155,7 +157,6 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
         return false;
     }
     
-	
 	return false;
 }
 

@@ -36,8 +36,6 @@
 		ED804FD71DD32443004B6F31 /* NSClipView+Flipped.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */; };
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
 		ED8BD24B1E5CAC490033DBAA /* AgentX.szx in Resources */ = {isa = PBXBuildFile; fileRef = ED8BD24A1E5CA6980033DBAA /* AgentX.szx */; };
-		ED9C05A81E5DDDA3003B9E10 /* DecimalOnlyFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = ED9C05A71E5DDDA3003B9E10 /* DecimalOnlyFormatter.m */; };
-		ED9C05AB1E5DE2EE003B9E10 /* HexOnlyFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = ED9C05AA1E5DE2EE003B9E10 /* HexOnlyFormatter.m */; };
 		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */; };
@@ -131,10 +129,6 @@
 		ED804FD81DD32EAC004B6F31 /* NSView+Vibrancy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+Vibrancy.h"; sourceTree = "<group>"; };
 		ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+Vibrancy.m"; sourceTree = "<group>"; };
 		ED8BD24A1E5CA6980033DBAA /* AgentX.szx */ = {isa = PBXFileReference; lastKnownFileType = file; path = AgentX.szx; sourceTree = "<group>"; };
-		ED9C05A61E5DDDA3003B9E10 /* DecimalOnlyFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecimalOnlyFormatter.h; sourceTree = "<group>"; };
-		ED9C05A71E5DDDA3003B9E10 /* DecimalOnlyFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DecimalOnlyFormatter.m; sourceTree = "<group>"; };
-		ED9C05A91E5DE2EE003B9E10 /* HexOnlyFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexOnlyFormatter.h; sourceTree = "<group>"; };
-		ED9C05AA1E5DE2EE003B9E10 /* HexOnlyFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexOnlyFormatter.m; sourceTree = "<group>"; };
 		EDAAD8C01E05893F0070153E /* ZXTape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXTape.h; sourceTree = "<group>"; };
 		EDAAD8C11E05893F0070153E /* ZXTape.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXTape.mm; sourceTree = "<group>"; };
 		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
@@ -320,10 +314,6 @@
 			children = (
 				EDE99ED61E48D3C8006F8E63 /* DisassemblyViewController.h */,
 				EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */,
-				ED9C05A61E5DDDA3003B9E10 /* DecimalOnlyFormatter.h */,
-				ED9C05A71E5DDDA3003B9E10 /* DecimalOnlyFormatter.m */,
-				ED9C05A91E5DE2EE003B9E10 /* HexOnlyFormatter.h */,
-				ED9C05AA1E5DE2EE003B9E10 /* HexOnlyFormatter.m */,
 			);
 			name = "Disassembly View Controller";
 			sourceTree = "<group>";
@@ -631,7 +621,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED9C05AB1E5DE2EE003B9E10 /* HexOnlyFormatter.m in Sources */,
 				ED61BE721E61E02A0024FEBB /* MemoryViewController.m in Sources */,
 				999698981E467BD7007FD246 /* TapeCellView.m in Sources */,
 				EDF3A4DA1DB0D7AB00511BAF /* Z80Core_DDCB_FDCBOpcodes.cpp in Sources */,
@@ -663,7 +652,6 @@
 				ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */,
 				EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */,
 				EDF3A4EB1DB0D7C700511BAF /* AudioCore.m in Sources */,
-				ED9C05A81E5DDDA3003B9E10 /* DecimalOnlyFormatter.m in Sources */,
 				EDF3A4D71DB0D7AB00511BAF /* Z80Core_EDOpcodes.cpp in Sources */,
 				ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */,
 				EDF3A4D41DB0D7AB00511BAF /* Z80Core.cpp in Sources */,

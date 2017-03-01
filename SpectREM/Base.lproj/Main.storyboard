@@ -1055,7 +1055,7 @@
                 </windowController>
                 <customObject id="akj-Wl-v3M" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1215" y="195"/>
+            <point key="canvasLocation" x="1215" y="187"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="ihi-53-5WE">
@@ -2230,7 +2230,7 @@
             <objects>
                 <windowController storyboardIdentifier="DisassemblyWindow" id="Cm4-8B-A1s" sceneMemberID="viewController">
                     <window key="window" title="Disassembly Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="disassemblyWindow" animationBehavior="default" id="Cxy-Qm-BaW" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="544" y="461" width="325" height="287"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
@@ -2261,7 +2261,7 @@
                 </windowController>
                 <customObject id="LkW-6L-Peq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2394" y="204"/>
+            <point key="canvasLocation" x="2332" y="187"/>
         </scene>
         <!--Memory View Controller-->
         <scene sceneID="wcp-Og-HE1">
@@ -2449,7 +2449,7 @@
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Z8b-db-Z89">
-                                    <rect key="frame" x="1" y="402" width="658" height="16"/>
+                                    <rect key="frame" x="1" y="382" width="658" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="cRF-LE-9hd">
@@ -2470,7 +2470,7 @@
                 <customObject id="h8X-aX-Jak" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="G4V-hP-FRj"/>
             </objects>
-            <point key="canvasLocation" x="2391" y="741"/>
+            <point key="canvasLocation" x="2332" y="761"/>
         </scene>
         <!--Disassembly View Controller-->
         <scene sceneID="Elc-OR-UI0">
@@ -2492,7 +2492,7 @@
                             <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Shv-h1-xAW">
                                 <rect key="frame" x="20" y="20" width="285" height="311"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                <clipView key="contentView" drawsBackground="NO" id="a1q-lE-GB7">
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="a1q-lE-GB7">
                                     <rect key="frame" x="1" y="0.0" width="283" height="310"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
