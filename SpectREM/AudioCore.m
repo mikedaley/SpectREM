@@ -34,7 +34,6 @@
     unsigned char	currentAYRegister;
     unsigned char   floatingAYRegister;
     signed short    AYVolumes[16];
-    signed int      channelOutput[3];
     bool			envelopeHolding;
     bool			envelopeHold;
     bool			envelopeAlt;
@@ -320,18 +319,18 @@ static float fAYVolBase[] = {
     return AYRegisters[ currentAYRegister ];
 }
 
-- (unsigned int)getNoiseFrequency
-{
-    int freq = AYRegisters[ eAYREGISTER_NOISEPER ];
-    
-    // 0 is assumed to be 1
-    if (freq == 0)
-    {
-        freq = 1;
-    }
-    
-    return freq;
-}
+//- (unsigned int)getNoiseFrequency
+//{
+//    int freq = AYRegisters[ eAYREGISTER_NOISEPER ];
+//    
+//    // 0 is assumed to be 1
+//    if (freq == 0)
+//    {
+//        freq = 1;
+//    }
+//    
+//    return freq;
+//}
 
 unsigned int getChannelFrequency(int c, void* ac)
 {
@@ -385,7 +384,15 @@ unsigned int getEnvelopePeriod(void* ac)
     {
         noiseCount++;
         
-        if (noiseCount >= [self getNoiseFrequency])
+        int freq = AYRegisters[ eAYREGISTER_NOISEPER ];
+        
+        // 0 is assumed to be 1
+        if (freq == 0)
+        {
+            freq = 1;
+        }
+        
+        if (noiseCount >= freq)
         {
             noiseCount = 0;
             
@@ -423,28 +430,6 @@ unsigned int getEnvelopePeriod(void* ac)
             channelOutput[c] += AYVolumes[vol];
         }
     }
-}
-
-- (signed int)getChannelA
-{
-    return channelOutput[0];
-}
-
-- (signed int)getChannelB
-{
-    return channelOutput[1];
-}
-
-- (signed int)getChannelC
-{
-    return channelOutput[2];
-}
-
-- (void)endFrame
-{
-    channelOutput[0] = 0;
-    channelOutput[1] = 0;
-    channelOutput[2] = 0;
 }
 
 - (void)reset

@@ -398,7 +398,7 @@ void updateAudioWithTStates(int numberTs, void *m)
                         leftMix = 1.0 - (machine.AYChannelABalance * 2);
                         rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
                     }
-                    signed int channelA = machine.audioCore.getChannelA;
+                    signed int channelA = machine.audioCore->channelOutput[0];
                     beeperLevelLeft += (channelA * leftMix);
                     beeperLevelRight += (channelA * rightMix);
                 }
@@ -416,7 +416,7 @@ void updateAudioWithTStates(int numberTs, void *m)
                         leftMix = 1.0 - (machine.AYChannelBBalance * 2);
                         rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
                     }
-                    signed int channelB = machine.audioCore.getChannelB;
+                    signed int channelB = machine.audioCore->channelOutput[1];
                     beeperLevelLeft += (channelB * leftMix);
                     beeperLevelRight += (channelB * rightMix);
                 }
@@ -434,12 +434,16 @@ void updateAudioWithTStates(int numberTs, void *m)
                         leftMix = 1.0 - (machine.AYChannelCBalance * 2);
                         rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
                     }
-                    signed int channelC = machine.audioCore.getChannelC;
+                    signed int channelC = machine.audioCore->channelOutput[2];
                     beeperLevelLeft += (channelC * leftMix);
                     beeperLevelRight += (channelC * rightMix);
                 }
                 
-                [machine.audioCore endFrame];
+                // Reset the cores channel values
+                machine.audioCore->channelOutput[0] = 0;
+                machine.audioCore->channelOutput[1] = 0;
+                machine.audioCore->channelOutput[2] = 0;
+                
                 machine->audioAYTStates -= machine->audioAYTStatesStep;
             }
         }
