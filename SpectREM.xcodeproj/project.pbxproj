@@ -25,6 +25,8 @@
 		99F71A801DDB13CC0093CAE4 /* CenteredClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99F71A7F1DDB13CC0093CAE4 /* CenteredClipView.m */; };
 		99F71A831DDB17B80093CAE4 /* PixelImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99F71A821DDB17B80093CAE4 /* PixelImageView.m */; };
 		99F71A861DDB1A4B0093CAE4 /* CPUViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 99F71A851DDB1A4B0093CAE4 /* CPUViewController.mm */; };
+		99FB318E1E6CB4B100DF9C91 /* MF1.rom in Resources */ = {isa = PBXBuildFile; fileRef = 99FB318D1E6CB4B100DF9C91 /* MF1.rom */; };
+		99FB31901E6CB4C100DF9C91 /* MF128.rom in Resources */ = {isa = PBXBuildFile; fileRef = 99FB318F1E6CB4C100DF9C91 /* MF128.rom */; };
 		ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED06D3301E362B8D001F99FB /* KeyboardViewController.m */; };
 		ED06D3371E37794D001F99FB /* CRT.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ED06D3361E37794D001F99FB /* CRT.fsh */; };
 		ED0ABFB31E37BD5F00287363 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED0ABFB21E37BD5F00287363 /* Assets.xcassets */; };
@@ -111,6 +113,8 @@
 		99F71A821DDB17B80093CAE4 /* PixelImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PixelImageView.m; sourceTree = "<group>"; };
 		99F71A841DDB1A4B0093CAE4 /* CPUViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPUViewController.h; sourceTree = "<group>"; };
 		99F71A851DDB1A4B0093CAE4 /* CPUViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CPUViewController.mm; sourceTree = "<group>"; };
+		99FB318D1E6CB4B100DF9C91 /* MF1.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = MF1.rom; sourceTree = "<group>"; };
+		99FB318F1E6CB4C100DF9C91 /* MF128.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = MF128.rom; sourceTree = "<group>"; };
 		ED06D32F1E362B8D001F99FB /* KeyboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardViewController.h; sourceTree = "<group>"; };
 		ED06D3301E362B8D001F99FB /* KeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardViewController.m; sourceTree = "<group>"; };
 		ED06D3351E375B88001F99FB /* PixelData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PixelData.h; sourceTree = "<group>"; };
@@ -494,6 +498,8 @@
 				99A79E6D1DC2295000B8D4CD /* 128-1.rom */,
 				EDF3A4DD1DB0D7BB00511BAF /* 48.rom */,
 				996318EC1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom */,
+				99FB318D1E6CB4B100DF9C91 /* MF1.rom */,
+				99FB318F1E6CB4C100DF9C91 /* MF128.rom */,
 			);
 			name = ROMS;
 			sourceTree = "<group>";
@@ -600,6 +606,8 @@
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
 				996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */,
 				EDF3A4F81DB0F25F00511BAF /* CRT_old.fsh in Resources */,
+				99FB31901E6CB4C100DF9C91 /* MF128.rom in Resources */,
+				99FB318E1E6CB4B100DF9C91 /* MF1.rom in Resources */,
 				99A79E6E1DC2295000B8D4CD /* 128-0.rom in Resources */,
 				EDF3A5001DB8E22C00511BAF /* Credits.rtf in Resources */,
 				992B25941E453B68008538EF /* OpenGL.fsh in Resources */,
