@@ -87,6 +87,9 @@ typedef NS_ENUM(int, ULAplusMode)
     unsigned char *memory;
     unsigned char *rom;
     
+    // Multiface ROM
+    unsigned char *multifaceMemory;
+    
     // 128k paging
     int currentROMPage;
     int currentRAMPage;

@@ -97,17 +97,16 @@
             pc += length;
             
             // Add a blank row if the last instruction was RET, JP, JR to space things out
-            if ([instruction.instruction containsString:@"RET"] ||
-                [instruction.instruction containsString:@"JP"] ||
-                [instruction.instruction containsString:@"JR"])
-            {
-                instruction = [DisassembledInstruction new];
-                instruction.address = -1;
-                instruction.bytes = @"";
-                instruction.instruction = @"";
-                [self.disassemblyArray addObject:instruction];
-            }
-            
+//            if ([instruction.instruction containsString:@"RET"] ||
+//                [instruction.instruction containsString:@"JP"] ||
+//                [instruction.instruction containsString:@"JR"])
+//            {
+//                instruction = [DisassembledInstruction new];
+//                instruction.address = -1;
+//                instruction.bytes = @"";
+//                instruction.instruction = @"";
+//                [self.disassemblyArray addObject:instruction];
+//            }
         }
     }
 }
@@ -176,10 +175,10 @@
                         view.textField.stringValue = [NSString stringWithFormat:@"$%04X", address];
                     }
                 }
-                else
-                {
-                    view.textField.stringValue = @"";
-                }
+//                else
+//                {
+//                    view.textField.stringValue = @"";
+//                }
             }
             else if ([tableColumn.identifier isEqualToString:@"BytesColID"])
             {

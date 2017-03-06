@@ -104,7 +104,7 @@
                                                 <action selector="machineRestart:" target="Ady-hI-5gd" id="Lyz-79-5Ov"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="NMI" tag="1" id="U1o-nN-nnz" userLabel="NMI">
+                                        <menuItem title="NMI" tag="1" keyEquivalent="" id="U1o-nN-nnz" userLabel="NMI">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="NMI:" target="Ady-hI-5gd" id="2qT-Qg-oJK"/>

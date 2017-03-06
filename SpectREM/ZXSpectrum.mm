@@ -230,12 +230,7 @@
     {
         multifacePagedIn = true;
     }
-    core->setNMIReq(true);
-    
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"MF1" ofType:@"rom"];
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    const char *fileBytes = (const char*)[data bytes];
-    memcpy(memory, fileBytes, data.length);
+    core->setNMIReq(true);    
 }
 
 #pragma mark - CPU Frames
@@ -704,13 +699,25 @@ unsigned char coreIORead(unsigned short address, void *m)
         // real machine.
         if ((address & 0xff) == 0x1f)
         {
-            if (machine.useSmartLink)
+            if (machine->multifacePagedIn)
+            {
+                machine->multifacePagedIn = false;
+            }
+            else if (machine.useSmartLink)
             {
                 return machine->smartlinkKempston;
             }
             else
             {
                 return 0x0;
+            }
+        }
+        
+        if ((address & 0xff) == 0x3f && machine->machineInfo.machineType == 1)
+        {
+            if (machine->multifacePagedIn)
+            {
+                machine->multifacePagedIn = false;
             }
         }
         
@@ -731,6 +738,26 @@ unsigned char coreIORead(unsigned short address, void *m)
             }
         }
         
+        // Multiface 1
+        else if ((address & 0xff) == 0x9f && !machine->multifacePagedIn && machine->machineInfo.machineType == 0)
+        {
+            machine->multifacePagedIn = true;
+        }
+
+        // Multiface 128
+        else if ((address & 0xff) == 0xbf && !machine->multifacePagedIn && machine->machineInfo.machineType == 1)
+        {
+            machine->multifacePagedIn = true;
+            if (machine->displayPage == 7)
+            {
+                return 0xff;
+            }
+            else
+            {
+                return 0x7f;
+            }
+        }
+
         // Getting here means that nothing has handled that port read so based on a real Spectrum return the floating bus value
         return floatingBus(m);
     }
@@ -833,7 +860,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
     
     // Memory paging port
-    if ( !(address & 0x8002) && machine->disablePaging == NO)
+    if ( address == 0x7ffd && machine->disablePaging == NO)
     {
         if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
         {

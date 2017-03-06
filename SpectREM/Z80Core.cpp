@@ -171,17 +171,16 @@ int CZ80Core::Execute(unsigned int num_tstates, unsigned int int_t_states)
 		{
 			m_CPURegisters.NMIReq = false;
 			m_CPURegisters.IFF1 = 0;
-//			if (!m_CPURegisters.IntReq)
-//			{
-//				m_CPURegisters.IFF2 = 0;
-//			}
+			if (!m_CPURegisters.IntReq)
+			{
+				m_CPURegisters.IFF2 = 0;
+			}
 			Z80CoreMemWrite(--m_CPURegisters.regSP, (m_CPURegisters.regPC >> 8) & 0xff);
 			Z80CoreMemWrite(--m_CPURegisters.regSP, (m_CPURegisters.regPC >> 0) & 0xff);
 			
 			if ( m_CPURegisters.Halted )
 			{
 				m_CPURegisters.Halted = false;
-				m_CPURegisters.regPC++;
 			}
 			
 			m_CPURegisters.regPC = 0x0066;

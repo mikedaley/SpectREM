@@ -41,6 +41,14 @@
         memory = (unsigned char*)calloc(128 * 1024, sizeof(unsigned char));
         rom = (unsigned char*)calloc(32 * 1024, sizeof(unsigned char));
         
+        // Multiface ROM/RAM setup
+        multifaceMemory = (unsigned char*)calloc(16 * 1024, sizeof(unsigned char));
+        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"MF128" ofType:@"rom"];
+        NSData *data = [NSData dataWithContentsOfFile:path];
+        const char *fileBytes = (const char*)[data bytes];
+        memcpy(multifaceMemory, fileBytes, data.length);
+
         self.emulationViewController = emulationViewController;
         
         core = new CZ80Core;
@@ -96,6 +104,10 @@ static unsigned char coreMemoryRead(unsigned short address, void *m)
     
     if (page == 0)
     {
+        if (machine->multifacePagedIn)
+        {
+            return machine->multifaceMemory[ address ];
+        }
         return (machine->rom[(machine->currentROMPage * 16384) + address]);
     }
     else if (page == 1)
@@ -123,6 +135,10 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     
     if (page == 0)
     {
+        if (machine->multifacePagedIn && address > 8192)
+        {
+            machine->multifaceMemory[ address ] = data;
+        }
         return;
     }
     else if (page == 1)

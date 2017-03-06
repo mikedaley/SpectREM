@@ -41,6 +41,14 @@
         // We need 64k of memory total for the 48k Speccy
         memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
         
+        // Multiface ROM/RAM setup
+        multifaceMemory = (unsigned char*)calloc(16 * 1024, sizeof(unsigned char));
+        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"MF1" ofType:@"rom"];
+        NSData *data = [NSData dataWithContentsOfFile:path];
+        const char *fileBytes = (const char*)[data bytes];
+        memcpy(multifaceMemory, fileBytes, data.length);
+
         core = new CZ80Core;
         core->Initialise(coreMemoryRead,
                          coreMemoryWrite,
@@ -88,6 +96,12 @@
 static unsigned char coreMemoryRead(unsigned short address, void *m)
 {
     ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
+    
+    if (address < 16384 && machine->multifacePagedIn)
+    {
+        return machine->multifaceMemory[ address ];
+    }
+    
     return machine->memory[address];
 }
 
@@ -95,8 +109,13 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
 {
     ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
 
-    if (address < 16384 && !machine->multifacePagedIn)
+    if (address < 16384)
     {
+        if (machine->multifacePagedIn && address > 8192)
+        {
+            machine->multifaceMemory[ address ] = data;
+        }
+        
         return;
     }
 
