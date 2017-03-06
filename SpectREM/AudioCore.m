@@ -319,33 +319,6 @@ static float fAYVolBase[] = {
     return AYRegisters[ currentAYRegister ];
 }
 
-//- (unsigned int)getNoiseFrequency
-//{
-//    int freq = AYRegisters[ eAYREGISTER_NOISEPER ];
-//    
-//    // 0 is assumed to be 1
-//    if (freq == 0)
-//    {
-//        freq = 1;
-//    }
-//    
-//    return freq;
-//}
-
-unsigned int getChannelFrequency(int c, void* ac)
-{
-    AudioCore *audioCore = (__bridge AudioCore *)ac;
-    
-    int freq = audioCore->AYRegisters[ (c << 1) + eAYREGISTER_A_FINE ] | (audioCore->AYRegisters[ (c << 1) + eAYREGISTER_A_COARSE] << 8);
-    
-    if (freq == 0)
-    {
-        freq = 1;
-    }
-    
-    return freq;
-}
-
 unsigned int getEnvelopePeriod(void* ac)
 {
     AudioCore *audioCore = (__bridge AudioCore *)ac;
@@ -409,9 +382,17 @@ unsigned int getEnvelopePeriod(void* ac)
     {
         AYChannelCount[c] += 2;
         
-        if (AYChannelCount[c] >= getChannelFrequency(c, (__bridge void*)self))
+        // Noise frequency
+        int freq = AYRegisters[ (c << 1) + eAYREGISTER_A_FINE ] | (AYRegisters[ (c << 1) + eAYREGISTER_A_COARSE] << 8);
+        
+        if (freq == 0)
         {
-            AYChannelCount[c]  -= getChannelFrequency(c, (__bridge void*)self);
+            freq = 1;
+        }
+
+        if (AYChannelCount[c] >= freq)
+        {
+            AYChannelCount[c]  -= freq;
             AYOutput ^= (1 << c);
         }
         
