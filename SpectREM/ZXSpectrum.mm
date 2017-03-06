@@ -184,13 +184,14 @@
 {
     CZ80Core *core = (CZ80Core *)[self getCore];
     core->Reset(hard);
-    if (hard)
+    if (hard || multifacePagedIn)
     {
         [self loadDefaultROM];
     }
     frameCounter = 0;
     saveTrapTriggered = false;
     ulaPlusPaletteOn = 0;
+    multifacePagedIn = false;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -222,6 +223,20 @@
     audioTsStepCounter = 0;
 }
 
+- (void)NMI
+{
+    CZ80Core *core = (CZ80Core *)[self getCore];
+    if (!multifacePagedIn)
+    {
+        multifacePagedIn = true;
+    }
+    core->setNMIReq(true);
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"MF1" ofType:@"rom"];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    const char *fileBytes = (const char*)[data bytes];
+    memcpy(memory, fileBytes, data.length);
+}
 
 #pragma mark - CPU Frames
 
@@ -723,12 +738,15 @@ unsigned char coreIORead(unsigned short address, void *m)
     // Handle ULA Owned Ports
     int result = 0xff;
     
-    // Check to see if any keys have been pressed
-    for (int i = 0; i < 8; i++)
+    // Check to see if the keyboard is being read and if so return any keys currently pressed
+    if (address & 0xfe)
     {
-        if (!(address & (0x100 << i)))
+        for (int i = 0; i < 8; i++)
         {
-            result &= machine->keyboardMap[i];
+            if (!(address & (0x100 << i)))
+            {
+                result &= machine->keyboardMap[i];
+            }
         }
     }
     

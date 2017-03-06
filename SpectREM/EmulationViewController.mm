@@ -396,6 +396,11 @@ NS_ENUM(NSUInteger, MachineType)
                   });
 }
 
+- (IBAction)NMI:(id)sender
+{
+    [_machine NMI];
+}
+
 - (IBAction)configButtonPressed:(id)sender
 {
     NSRect configFrame = self.configEffectsView.frame;

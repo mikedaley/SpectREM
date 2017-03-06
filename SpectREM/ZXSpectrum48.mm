@@ -93,12 +93,12 @@ static unsigned char coreMemoryRead(unsigned short address, void *m)
 
 static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
 {
-    if (address < 16384)
+    ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
+
+    if (address < 16384 && !machine->multifacePagedIn)
     {
         return;
     }
-    
-    ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
 
     updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
     machine->memory[address] = data;

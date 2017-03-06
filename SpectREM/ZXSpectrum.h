@@ -182,6 +182,8 @@ typedef NS_ENUM(int, ULAplusMode)
     
     // Byte request used to get data from SmartLink
     NSData *smartLinkRequest;
+    
+    bool multifacePagedIn;
 }
 
 #pragma mark - Properties
@@ -313,6 +315,8 @@ Loads an SNA based snapshot file with the path provided
 Sets up observers between the machine and the audio core
  */
 - (void)setupObservers;
+
+- (void)NMI;
 
 /**
 Returns a reference to the Z80 core being used inside the machine
