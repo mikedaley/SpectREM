@@ -160,6 +160,7 @@ private:
 		bool			Halted;
 		bool			EIHandled;
 		bool			IntReq;
+        bool            NMIReq;
         
         bool            DDFDmultiByte;
         
@@ -212,6 +213,7 @@ public:
 	unsigned char			GetIFF2(void) const { return m_CPURegisters.IFF2; }
 	bool					GetHalted(void) const { return m_CPURegisters.Halted; }
 	void					SetHalted(bool halted) { m_CPURegisters.Halted = halted; }
+    void                    setNMIReq(bool nmi) { m_CPURegisters.NMIReq = nmi; };
 		 
 	void					AddContentionTStates(unsigned int extra_tstates) { m_CPURegisters.TStates += extra_tstates; }
 	void					AddTStates(unsigned int extra_tstates) { m_CPURegisters.TStates += extra_tstates; }
