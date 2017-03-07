@@ -192,6 +192,7 @@
     saveTrapTriggered = false;
     ulaPlusPaletteOn = 0;
     multifacePagedIn = false;
+    multifaceLockedOut = false;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -718,6 +719,7 @@ unsigned char coreIORead(unsigned short address, void *m)
             if (machine->multifacePagedIn)
             {
                 machine->multifacePagedIn = false;
+                return 0x0;
             }
         }
         
@@ -745,7 +747,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         }
 
         // Multiface 128
-        else if ((address & 0xff) == 0xbf && !machine->multifacePagedIn && machine->machineInfo.machineType == 1)
+        else if ((address & 0xff) == 0xbf && !machine->multifacePagedIn && machine->machineInfo.machineType == 1 && !machine->multifaceLockedOut)
         {
             machine->multifacePagedIn = true;
             if (machine->displayPage == 7)
@@ -929,6 +931,12 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         {
             machine->clut[machine->ulaPlusCurrentReg] = data;
         }
+    }
+    
+    // Multiface 128
+    if ((address & 0xff) == 0x1f && machine->machineInfo.machineType == 1)
+    {
+        machine->multifaceLockedOut = (machine->multifaceLockedOut) ? false : true;
     }
 }
 

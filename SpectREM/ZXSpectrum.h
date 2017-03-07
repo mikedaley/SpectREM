@@ -186,7 +186,9 @@ typedef NS_ENUM(int, ULAplusMode)
     // Byte request used to get data from SmartLink
     NSData *smartLinkRequest;
     
+    // Multiface
     bool multifacePagedIn;
+    bool multifaceLockedOut;
 }
 
 #pragma mark - Properties
