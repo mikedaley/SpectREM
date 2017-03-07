@@ -140,7 +140,7 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
 
 #pragma mark - Debug Memory Access
 
-static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
+unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {
 	ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
 	return machine->memory[address];
@@ -153,7 +153,7 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 	ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
 	
 	// Trap ROM tape saving
-    if (opcode == 0x08 && (address == 0x04d0 || address == 0x0076))
+    if (opcode == 0x08 && address == 0x04d0)
 	{
 		machine->saveTrapTriggered = true;
 		
@@ -163,8 +163,6 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 	else if (machine->saveTrapTriggered)
 	{
 		machine->saveTrapTriggered = false;
-		
-		// carry on with instruction
 		return false;
 	}
     

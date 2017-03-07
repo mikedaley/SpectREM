@@ -534,9 +534,9 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 #pragma mark - Saving
 
-- (void)saveTAPBlockWithMachine:(ZXSpectrum *)m
+- (void)saveTAPBlockWithMachine:(ZXSpectrum *)machine
 {
-    CZ80Core *core = (CZ80Core *)[m getCore];
+    CZ80Core *core = (CZ80Core *)[machine getCore];
     
     char parity = 0;
     short length = core->GetRegister(CZ80Core::eREG_DE) + 2;
@@ -550,7 +550,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     
     for (int i = 0; i < core->GetRegister(CZ80Core::eREG_DE); i++)
     {
-        char byte = m->memory[core->GetRegister(CZ80Core::eREG_IX) + i];
+        char byte = machine->memory[core->GetRegister(CZ80Core::eREG_IX) + i];
         parity ^= byte;
         [data appendBytes:&byte length:1];
     }
@@ -567,14 +567,14 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (void)instaloadWithMachine:(ZXSpectrum *)m
 {
-    CZ80Core *core = (CZ80Core *)[m getCore];
-
-    if (!self.isTapeLoaded)
-    {
-        return;
-    }
-    
-    
+//    CZ80Core *core = (CZ80Core *)[m getCore];
+//
+//    if (!self.isTapeLoaded)
+//    {
+//        return;
+//    }
+//    
+//    
 }
 
 

@@ -1488,5 +1488,8 @@ static unsigned char floatingBus(void *m)
     [self resetKeyboardMap];
 }
 
-
+static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
+{
+    return 0;
+}
 @end

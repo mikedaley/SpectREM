@@ -246,6 +246,7 @@ static NS_ENUM(NSUInteger, MachineType)
 
 // Debug properties
 
+static unsigned char coreDebugRead(unsigned int address, void *m, void *d);
 
 #pragma mark - Methods
 
@@ -363,5 +364,7 @@ unsigned char coreIORead(unsigned short address, void *m);
  Returns the name of the machine
  */
 - (NSString *)machineName;
+
+
 
 @end
