@@ -184,12 +184,13 @@
 {
     CZ80Core *core = (CZ80Core *)[self getCore];
     core->Reset(hard);
-    if (hard || multifacePagedIn)
+    if (hard)
     {
         [self loadDefaultROM];
     }
     frameCounter = 0;
     saveTrapTriggered = false;
+    loadTrapTriggered = false;
     ulaPlusPaletteOn = 0;
     multifacePagedIn = false;
     multifaceLockedOut = false;
@@ -390,7 +391,7 @@ void updateAudioWithTStates(int numberTs, void *m)
         double leftMix = 0.5;
         double rightMix = 0.5;
         
-        if (machine->machineInfo.hasAY || (machine->machineInfo.machineType == 0 && machine.useAYOn48k))
+        if (machine->machineInfo.hasAY || (machine->machineInfo.machineType == eZXSpectrum48 && machine.useAYOn48k))
         {
             machine->audioAYTStates++;
             if (machine->audioAYTStates >= machine->audioAYTStatesStep)
@@ -623,18 +624,19 @@ void updateScreenWithTStates(int numberTs, void *m)
 #pragma mark - ULA
 
 
-// Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
-// All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
-// C:x means that contention should be calculated based on the current tState value and then x tStates are to be
-// added to the current tState count
-//
-// in 40 - 7F?| Low bit | Contention pattern
-//------------+---------+-------------------
-//		No    |  Reset  | N:1, C:3
-//		No    |   Set   | N:4
-//		Yes   |  Reset  | C:1, C:3
-//		Yes   |   Set   | C:1, C:1, C:1, C:1
-//
+/**
+ Calculate the necessary contention based on the Port number being accessed and if the port belongs to the ULA.
+ All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
+ C:x means that contention should be calculated based on the current tState value and then x tStates are to be
+ added to the current tState count
+
+   in 40 - 7F?| Low bit | Contention pattern
+  ------------+---------+-------------------
+        No    |  Reset  | N:1, C:3
+		No    |   Set   | N:4
+		Yes   |  Reset  | C:1, C:3
+		Yes   |   Set   | C:1, C:1, C:1, C:1
+**/
 unsigned char coreIORead(unsigned short address, void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
@@ -714,7 +716,7 @@ unsigned char coreIORead(unsigned short address, void *m)
             }
         }
         
-        if ((address & 0xff) == 0x3f && machine->machineInfo.machineType == 1)
+        if ((address & 0xff) == 0x3f && machine->machineInfo.machineType == eZXSpectrum128)
         {
             if (machine->multifacePagedIn)
             {
@@ -725,7 +727,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         
         // AY-3-8912 ports
         else if ((address & 0xc002) == 0xc000 && (machine->machineInfo.hasAY ||
-                                                  (machine->machineInfo.machineType == 0 &&
+                                                  (machine->machineInfo.machineType == eZXSpectrum48 &&
                                                    machine.useAYOn48k) ))
         {
             return [machine.audioCore readAYData];
@@ -741,15 +743,17 @@ unsigned char coreIORead(unsigned short address, void *m)
         }
         
         // Multiface 1
-        else if ((address & 0xff) == 0x9f && !machine->multifacePagedIn && machine->machineInfo.machineType == 0)
+        else if ((address & 0xff) == 0x9f && !machine->multifacePagedIn && machine->machineInfo.machineType == eZXSpectrum48 && machine.multiface1)
         {
             machine->multifacePagedIn = true;
+            [machine.audioCore reset];
         }
 
         // Multiface 128
-        else if ((address & 0xff) == 0xbf && !machine->multifacePagedIn && machine->machineInfo.machineType == 1 && !machine->multifaceLockedOut)
+        else if ((address & 0xff) == 0xbf && !machine->multifacePagedIn && machine->machineInfo.machineType == eZXSpectrum128 && machine.multiface128)
         {
             machine->multifacePagedIn = true;
+            [machine.audioCore reset];
             if (machine->displayPage == 7)
             {
                 return 0xff;
@@ -862,7 +866,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
     
     // Memory paging port
-    if ( address == 0x7ffd && machine->disablePaging == NO)
+    if ( (address & 0x8002) == 0 && machine->disablePaging == NO)
     {
         if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
         {
@@ -878,7 +882,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // AY-3-8912 ports
     if(address == 0xfffd && (machine->machineInfo.hasAY ||
                                         (machine->machineInfo.hasAY ||
-                                        (machine->machineInfo.machineType == 0 &&
+                                        (machine->machineInfo.machineType == eZXSpectrum48 &&
                                         machine.useAYOn48k) )))
     {
         [machine.audioCore setAYRegister:data];
@@ -886,14 +890,14 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     
     if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY ||
                                          (machine->machineInfo.hasAY ||
-                                         (machine->machineInfo.machineType == 0 &&
+                                         (machine->machineInfo.machineType == eZXSpectrum48 &&
                                          machine.useAYOn48k) )))
     {
         [machine.audioCore writeAYData:data];
     }
     
     // SPECDRUM port, all ports ending in 0xdf
-    if ((address & 0xff) == 0xdf)
+    if ((address & 0xff) == 0xdf && machine.specDrum)
     {
         // Adjust the output from SpecDrum to get the right volume. This value is then merged into the overall sound output
         machine->specDrumOutput = ((data * 128) - 16384) / 12;
@@ -934,18 +938,19 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
     
     // Multiface 128
-    if ((address & 0xff) == 0x1f && machine->machineInfo.machineType == 1)
+    if ((address & 0xff) == 0x1f && machine->machineInfo.machineType == eZXSpectrum128 && machine.multiface128)
     {
         machine->multifaceLockedOut = (machine->multifaceLockedOut) ? false : true;
     }
 }
 
 
-// When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
-// Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
-// is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
-// predict if the ULA is reading a pixel or attribute byte based on the current t-state.
-// This routine works out what would be on the ULA bus for a given t-state and returns the result
+/** When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
+   Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
+   is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
+   predict if the ULA is reading a pixel or attribute byte based on the current t-state.
+   This routine works out what would be on the ULA bus for a given t-state and returns the result
+ **/
 static unsigned char floatingBus(void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
@@ -1025,8 +1030,10 @@ static unsigned char floatingBus(void *m)
 }
 
 
-// Generates a table that holds what screen activity should be happening based on each T-States within a Frame e.g. should the
-// border be drawn, bitmap screen or beam retrace. The values have been adjusted to ensure that the image drawn will be 320x256.
+/**
+ Generates a table that holds what screen activity should be happening based on each T-States within a Frame e.g. should the
+ border be drawn, bitmap screen or beam retrace. The values have been adjusted to ensure that the image drawn will be 320x256.
+ **/
 - (void)buildDisplayTsTable
 {
     for(int line = 0; line < machineInfo.pxVerticalTotal; line++)
@@ -1086,7 +1093,9 @@ static unsigned char floatingBus(void *m)
 }
 
 
-// Build a table of all the possible ULAplus colours using G3R3B2.
+/**
+ Build a table of all the possible ULAplus colours using G3R3B2.
+ **/
 - (void)buildULAColorTable
 {
     char r, g, b;
@@ -1455,14 +1464,18 @@ static unsigned char floatingBus(void *m)
 #pragma mark - Properties
 
 
-// This is implemented within each machine class and returna a reference to the core being used for that machinne
+/**
+ This is implemented within each machine class and returna a reference to the core being used for that machinne
+ **/
 - (void *)getCore;
 {
     return nil;
 }
 
 
-// Returns the string name for a machine. Each machine class implements this method and returns the appropriate machine name
+/**
+ Returns the string name for a machine. Each machine class implements this method and returns the appropriate machine name
+ **/
 - (NSString *)machineName
 {
     return @"Unknown";
