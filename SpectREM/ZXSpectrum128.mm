@@ -85,6 +85,12 @@
         {
             memory[i] = arc4random_uniform(255);
         }
+        
+        for (int i = 8192; i < 16384; i++)
+        {
+            multifaceMemory[i] = 0;
+        }
+
     }
     [super reset:hard];
     currentROMPage = 0;

@@ -47,6 +47,10 @@ extern NSString *const cSerialPort;
 extern NSString *const cUseSmartLink;
 extern NSString *const cSceneScaleMode;
 extern NSString *const cUseAYOn48k;;
+extern NSString *const cSpecDrum;
+extern NSString *const cMultiface1;
+extern NSString *const cMultiface128;
+extern NSString *const cMultiface128Lockout;
 
 @interface ConfigViewController : NSViewController
 
@@ -83,16 +87,23 @@ extern NSString *const cUseAYOn48k;;
 @property (assign) float AYChannelABalance;
 @property (assign) float AYChannelBBalance;
 @property (assign) float AYChannelCBalance;
+
+// Peripherals
 @property (assign) bool useAYOn48k;
+@property (assign) bool specDrum;
+@property (assign) bool multiface1;
+@property (assign) bool multiface128;
+@property (assign) bool multiface128Lockout;
+@property (nonatomic, readonly) ORSSerialPortManager *serialPortManager;
+@property (nonatomic, strong) ORSSerialPort *serialPort;
+@property (nonatomic, assign) BOOL useSmartLink;
 
 // Emulation Properties
 @property (assign) NSInteger currentMachineType;
 @property (strong) IBOutlet NSView *scrollDocView;
 @property (weak) IBOutlet NSScrollView *scrollView;
 
-@property (nonatomic, readonly) ORSSerialPortManager *serialPortManager;
-@property (nonatomic, strong) ORSSerialPort *serialPort;
-@property (nonatomic, assign) BOOL useSmartLink;
+#pragma mark - Methods
 
 - (void)resetPreferences;
 

@@ -56,5 +56,13 @@
 	<integer>0</integer>
 	<key>useAYOn48k</key>
 	<false/>
+	<key>specDrum</key>
+	<false/>
+	<key>multiface1</key>
+	<false/>
+	<key>multiface128</key>
+	<false/>
+	<key>multiface128Lockout</key>
+	<false/>
 </dict>
 </plist>

@@ -33,13 +33,6 @@
 
 #pragma mark - Enums
 
-NS_ENUM(NSUInteger, MachineType)
-{
-    eZXSpectrum48 = 0,
-    eZXSpectrum128,
-    eZXSpectrumSE
-};
-
 #pragma mark - Implementation
 
 @implementation EmulationViewController
@@ -225,6 +218,11 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine bind:cUseAYOn48k toObject:_configViewController withKeyPath:cUseAYOn48k options:nil];
     [_machine.serialCore bind:cSerialPort toObject:_configViewController withKeyPath:cSerialPort options:nil];
     [_machine bind:cUseSmartLink toObject:_configViewController withKeyPath:cUseSmartLink options:nil];
+
+    [_machine bind:cSpecDrum toObject:_configViewController withKeyPath:cSpecDrum options:nil];
+    [_machine bind:cMultiface1 toObject:_configViewController withKeyPath:cMultiface1 options:nil];
+    [_machine bind:cMultiface128 toObject:_configViewController withKeyPath:cMultiface128 options:nil];
+    [_machine bind:cMultiface128Lockout toObject:_configViewController withKeyPath:cMultiface128Lockout options:nil];
     
     [_tapeViewController bind:@"tape" toObject:self withKeyPath:@"zxTape" options:nil];
     [_disassemblyViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
@@ -274,6 +272,10 @@ NS_ENUM(NSUInteger, MachineType)
     [_machine unbind:cUseAYOn48k];
     [_machine unbind:cUseSmartLink];
     [_machine.serialCore unbind:cSerialPort];
+    [_machine unbind:cSpecDrum];
+    [_machine unbind:cMultiface1];
+    [_machine unbind:cMultiface128];
+    [_machine unbind:cMultiface128Lockout];
 }
 
 #pragma mark - Observers

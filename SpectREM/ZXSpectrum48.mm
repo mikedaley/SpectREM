@@ -83,6 +83,11 @@
         {
             memory[i] = arc4random_uniform(255);
         }
+        
+        for (int i = 8192; i < 16384; i++)
+        {
+            multifaceMemory[i] = 0;
+        }
     }
     [super reset:hard];
     currentRAMPage = 0;
@@ -178,6 +183,8 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
     
 	return false;
 }
+
+#pragma mark - Debug Display Callback
 
 const char *Get48KRomAddressLabel(unsigned short address);
 

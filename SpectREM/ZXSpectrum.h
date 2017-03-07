@@ -76,6 +76,13 @@ typedef NS_ENUM(int, ULAplusMode)
     eULAplusModeGroup
 };
 
+static NS_ENUM(NSUInteger, MachineType)
+{
+    eZXSpectrum48 = 0,
+    eZXSpectrum128,
+    eZXSpectrumSE
+};
+
 #pragma mark - Interface
 
 @class SerialCore;
@@ -215,6 +222,10 @@ typedef NS_ENUM(int, ULAplusMode)
 @property (assign) float AYChannelBBalance;
 @property (assign) float AYChannelCBalance;
 @property (assign) bool useAYOn48k;
+@property (assign) bool specDrum;
+@property (assign) bool multiface1;
+@property (assign) bool multiface128;
+@property (assign) bool multiface128Lockout;
 
 @property (strong) NSString *snapshotPath;
 

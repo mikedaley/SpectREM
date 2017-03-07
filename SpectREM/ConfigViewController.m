@@ -42,6 +42,10 @@ NSString *const cSerialPort = @"serialPort";
 NSString *const cUseSmartLink = @"useSmartLink";
 NSString *const cSceneScaleMode = @"sceneScaleMode";
 NSString *const cUseAYOn48k = @"useAYOn48k";
+NSString *const cSpecDrum = @"specDrum";
+NSString *const cMultiface1 = @"multiface1";
+NSString *const cMultiface128 = @"multiface128";
+NSString *const cMultiface128Lockout = @"multiface128Lockout";
 
 #pragma mark - Implementation 
 
@@ -79,6 +83,11 @@ NSString *const cUseAYOn48k = @"useAYOn48k";
     [_preferences removeObserver:self forKeyPath:cAYChannelBBalance];
     [_preferences removeObserver:self forKeyPath:cAYChannelCBalance];
     [_preferences removeObserver:self forKeyPath:cUseAYOn48k];
+
+    [_preferences removeObserver:self forKeyPath:cSpecDrum];
+    [_preferences removeObserver:self forKeyPath:cMultiface1];
+    [_preferences removeObserver:self forKeyPath:cMultiface128];
+    [_preferences removeObserver:self forKeyPath:cMultiface128Lockout];
 
     [_preferences removeObserver:self forKeyPath:cCurrentMachineType];
 }
@@ -119,7 +128,12 @@ NSString *const cUseAYOn48k = @"useAYOn48k";
         [_preferences addObserver:self forKeyPath:cAYChannelBBalance options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cAYChannelCBalance options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cUseAYOn48k options:NSKeyValueObservingOptionNew context:NULL];
-        
+
+        [_preferences addObserver:self forKeyPath:cSpecDrum options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cMultiface1 options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cMultiface128 options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cMultiface128Lockout options:NSKeyValueObservingOptionNew context:NULL];
+
         [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
         
         self.accelerate = NO;
@@ -225,7 +239,11 @@ NSString *const cUseAYOn48k = @"useAYOn48k";
              cAYChannelB,
              cAYChannelC,
              cUseAYOn48k,
-             cAccelerate
+             cAccelerate,
+             cSpecDrum,
+             cMultiface1,
+             cMultiface128,
+             cMultiface128Lockout
              ];
 }
 
