@@ -550,7 +550,9 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     
     for (int i = 0; i < core->GetRegister(CZ80Core::eREG_DE); i++)
     {
-        char byte = machine->memory[core->GetRegister(CZ80Core::eREG_IX) + i];
+        // Read memory using the debug read from the core which takes into account any paging
+        // on the 128k Spectrum
+        char byte = core->Z80CoreDebugMemRead(core->GetRegister(CZ80Core::eREG_IX) + i, NULL);
         parity ^= byte;
         [data appendBytes:&byte length:1];
     }
@@ -560,7 +562,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     [self processTAPFileData:data];
 
     // Once a block has been saved this is the RET address
-    core->SetRegister(CZ80Core::eREG_PC, 0x053d);
+    core->SetRegister(CZ80Core::eREG_PC, 0x053e);
 }
 
 #pragma mark - Turbo Loading
