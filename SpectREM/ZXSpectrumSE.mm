@@ -134,15 +134,25 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 		// Skip the instruction
 		return true;
 	}
-	else
-	{
-		machine->saveTrapTriggered = false;
-		
-		// carry on with instruction
-		return false;
-	}
-	
-	return false;
+    else if (machine->saveTrapTriggered)
+    {
+        machine->saveTrapTriggered = false;
+        return false;
+    }
+    
+    // Trap ROM loading
+    if (opcode == 0xc0 && (address == 0x056b || address == 0x0111) && machine.instaTAPLoading)
+    {
+        machine->loadTrapTriggered = true;
+        return true;
+    }
+    else if (machine->loadTrapTriggered)
+    {
+        machine->loadTrapTriggered = false;
+        return false;
+    }
+    
+    return false;
 }
 
 #pragma mark - Load ROM

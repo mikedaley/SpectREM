@@ -64,5 +64,7 @@
 	<false/>
 	<key>multiface128Lockout</key>
 	<false/>
+	<key>instaTAPLoading</key>
+	<true/>
 </dict>
 </plist>

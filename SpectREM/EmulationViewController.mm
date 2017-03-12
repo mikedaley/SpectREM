@@ -223,6 +223,7 @@
     [_machine bind:cMultiface1 toObject:_configViewController withKeyPath:cMultiface1 options:nil];
     [_machine bind:cMultiface128 toObject:_configViewController withKeyPath:cMultiface128 options:nil];
     [_machine bind:cMultiface128Lockout toObject:_configViewController withKeyPath:cMultiface128Lockout options:nil];
+    [_machine bind:cInstaTAPLoading toObject:_configViewController withKeyPath:cInstaTAPLoading options:nil];
     
     [_tapeViewController bind:@"tape" toObject:self withKeyPath:@"zxTape" options:nil];
     [_disassemblyViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
@@ -276,6 +277,7 @@
     [_machine unbind:cMultiface1];
     [_machine unbind:cMultiface128];
     [_machine unbind:cMultiface128Lockout];
+    [_machine unbind:cInstaTAPLoading];
 }
 
 #pragma mark - Observers

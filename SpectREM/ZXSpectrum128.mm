@@ -252,7 +252,7 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 	}
     
     // Trap ROM loading
-    if (opcode == 0xc0 && (address == 0x056b || address == 0x0111))
+    if (opcode == 0xc0 && (address == 0x056b || address == 0x0111) && machine.instaTAPLoading)
     {
         machine->loadTrapTriggered = true;
         return true;

@@ -51,6 +51,7 @@ extern NSString *const cSpecDrum;
 extern NSString *const cMultiface1;
 extern NSString *const cMultiface128;
 extern NSString *const cMultiface128Lockout;
+extern NSString *const cInstaTAPLoading;
 
 @interface ConfigViewController : NSViewController
 
@@ -98,8 +99,11 @@ extern NSString *const cMultiface128Lockout;
 @property (nonatomic, strong) ORSSerialPort *serialPort;
 @property (nonatomic, assign) BOOL useSmartLink;
 
-// Emulation Properties
+// Emulation
 @property (assign) NSInteger currentMachineType;
+@property (assign) BOOL instaTAPLoading;
+
+// UI Properties
 @property (strong) IBOutlet NSView *scrollDocView;
 @property (weak) IBOutlet NSScrollView *scrollView;
 
