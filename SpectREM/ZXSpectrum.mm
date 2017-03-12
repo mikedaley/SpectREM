@@ -292,7 +292,7 @@
         }
         else if (loadTrapTriggered)
         {
-            [self.zxTape instaloadWithMachine:self];
+            [self.zxTape instaloadTAPWithMachine:self];
         }
         else
         {

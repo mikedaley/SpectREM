@@ -47,6 +47,7 @@
                          coreIOWrite,
                          coreMemoryContention,
                          coreDebugRead,
+                         coreDebugWrite,
                          (__bridge void *)self);
         
 		// Register the opcode callback for the save trapping
@@ -112,6 +113,12 @@ static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {
 	ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
 	return machine->memory[address];
+}
+
+static void coreDebugWrite(unsigned int address, unsigned char byte, void *m, void *d)
+{
+    ZXSpectrumSE *machine = (__bridge ZXSpectrumSE *)m;
+    machine->memory[address] = byte;
 }
 
 #pragma mark - Callback functions
