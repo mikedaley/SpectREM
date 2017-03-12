@@ -21,6 +21,7 @@ typedef unsigned char (*Z80CoreRead)(unsigned short address, void *param);
 typedef void (*Z80CoreWrite)(unsigned short address, unsigned char data, void *param);
 typedef void (*Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
 typedef unsigned char(*Z80CoreDebugRead)(unsigned int address, void *param, void *data);
+typedef void (*Z80CoreDebugWrite)(unsigned int address, unsigned char byte, void *param, void *data);
 typedef bool (*Z80OpcodeCallback)(unsigned char opcode, unsigned short address, void *param);
 typedef char *(*Z80DebugCallback)(char *buffer, unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data);
 
@@ -185,7 +186,7 @@ public:
 	~CZ80Core();
 	
 public:
-	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write,Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, void *member_class);
+	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write,Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, Z80CoreDebugWrite debug_write_handler,void *member_class);
 
 	void					Reset(bool hardReset = true);
 	unsigned int			Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, bool hexFormat, void *data);
@@ -229,7 +230,7 @@ public:
 	void					Z80CoreMemoryContention(unsigned short address, unsigned int t_states);
 	void					Z80CoreIOContention(unsigned short address, unsigned int t_states);
 	unsigned char			Z80CoreDebugMemRead(unsigned int address, void *data);
-
+    void                    Z80CoreDebugMemWrite(unsigned int address, unsigned char byte, void *data);
 protected:
 	#include "Z80Core_MainOpcodes.h"
 	#include "Z80Core_CBOpcodes.h"
@@ -290,6 +291,7 @@ protected:
 	Z80CoreWrite			m_IOWrite;
 	Z80CoreContention		m_MemContentionHandling;
 	Z80CoreDebugRead		m_DebugRead;
+    Z80CoreDebugWrite       m_Debugwrite;
 
 	Z80OpcodeCallback		m_OpcodeCallback;
 	Z80DebugCallback		m_DebugCallback;
