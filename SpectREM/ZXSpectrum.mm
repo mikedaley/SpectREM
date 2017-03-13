@@ -228,7 +228,7 @@
 - (void)NMI
 {
     CZ80Core *core = (CZ80Core *)[self getCore];
-    if (!multifacePagedIn)
+    if (!multifacePagedIn && (self.multiface1 || self.multiface128))
     {
         multifacePagedIn = true;
     }
@@ -291,13 +291,14 @@
             [self.zxTape updateTapeWithTStates:tsCPU];
         }
         
+        // Deal with save/load if traps have been triggered
         if (saveTrapTriggered)
         {
             [self.zxTape saveTAPBlockWithMachine:self];
         }
         else if (loadTrapTriggered)
         {
-            [self.zxTape instaloadTAPWithMachine:self];
+            [self.zxTape loadTAPBlockWithMachine:self];
         }
         else
         {

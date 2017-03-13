@@ -573,7 +573,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 #pragma mark - Turbo Loading
 
-- (void)instaloadTAPWithMachine:(ZXSpectrum *)machine
+- (void)loadTAPBlockWithMachine:(ZXSpectrum *)machine
 {
     CZ80Core *core = (CZ80Core *)[machine getCore];
 
@@ -716,7 +716,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned short)getDataLength
 {
-    return ((unsigned short *)&self.blockData[cHeaderDataLengthOffset])[0];
+    return self.blockLength;
 }
 
 - (unsigned char)getChecksum
@@ -856,10 +856,10 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     return self.blockData[cHeaderFlagOffset];
 }
 
-- (unsigned short)getDataLength
-{
-    return self.blockLength;
-}
+//- (unsigned short)getDataLength
+//{
+//    return self.blockLength;
+//}
 
 - (unsigned char)getChecksum
 {
