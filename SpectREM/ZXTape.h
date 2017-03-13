@@ -124,7 +124,7 @@ typedef NS_ENUM(unsigned char, BlockDataType)
 - (void)saveTAPBlockWithMachine:(ZXSpectrum *)m;
 
 // Called from the main emulation loop when a load is performed and insta loading has been enabled.
-- (void)instaloadWithMachine:(ZXSpectrum *)m;
+- (void)instaloadTAPWithMachine:(ZXSpectrum *)machine;
 
 @end
 

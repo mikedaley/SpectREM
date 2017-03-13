@@ -301,7 +301,7 @@ static float fAYVolBase[] = {
         case eAYREGISTER_A_VOL:
         case eAYREGISTER_B_VOL:
         case eAYREGISTER_C_VOL:
-            data &= 0x1f;
+            data &= 0xff;
             break;
             
         case eAYREGISTER_FLOATING:
@@ -319,19 +319,13 @@ static float fAYVolBase[] = {
     return AYRegisters[ currentAYRegister ];
 }
 
-unsigned int getEnvelopePeriod(void* ac)
-{
-    AudioCore *audioCore = (__bridge AudioCore *)ac;
-    return (audioCore->AYRegisters[ eAYREGISTER_E_FINE ] | (audioCore->AYRegisters[ eAYREGISTER_E_COARSE] << 8));
-}
-
 - (void)updateAY:(int)audioSteps
 {
     if (!envelopeHolding)
     {
         envelopeCount++;
         
-        if ( envelopeCount >= getEnvelopePeriod((__bridge void*)self))
+        if ( envelopeCount >= (AYRegisters[ eAYREGISTER_E_FINE ] | (AYRegisters[ eAYREGISTER_E_COARSE] << 8)))
         {
             envelopeCount = 0;
             envelopeStep--;

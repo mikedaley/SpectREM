@@ -227,6 +227,8 @@ static NS_ENUM(NSUInteger, MachineType)
 @property (assign) bool multiface128;
 @property (assign) bool multiface128Lockout;
 
+@property (assign) bool instaTAPLoading;
+
 @property (strong) NSString *snapshotPath;
 
 @property (weak) EmulationViewController *emulationViewController;

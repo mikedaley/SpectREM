@@ -58,6 +58,7 @@
                          coreIOWrite,
                          coreMemoryContention,
                          coreDebugRead,
+                         coreDebugWrite,
                          (__bridge void *)self);
         
 		// Register the opcode callback for the save trapping
@@ -207,6 +208,30 @@ static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 	return 0;
 }
 
+static void coreDebugWrite(unsigned int address, unsigned char byte, void *m, void *d)
+{
+    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    int page = address / 16384;
+    address &= 16383;
+    
+    if (page == 0)
+    {
+        machine->rom[(machine->currentROMPage * 16384) + address] = byte;
+    }
+    else if (page == 1)
+    {
+        machine->memory[(5 * 16384) + address] = byte;
+    }
+    else if (page == 2)
+    {
+        machine->memory[(2 * 16384) + address] = byte;
+    }
+    else if (page == 3)
+    {
+        machine->memory[(machine->currentRAMPage * 16384) + address] = byte;
+    }
+}
+
 #pragma mark - Callback functions
 
 static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m)
@@ -220,11 +245,23 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 		// Skip the instruction
 		return true;
 	}
-	else
+	else if (machine->saveTrapTriggered)
 	{
 		machine->saveTrapTriggered = false;
 		return false;
 	}
+    
+    // Trap ROM loading
+    if (opcode == 0xc0 && (address == 0x056b || address == 0x0111) && machine.instaTAPLoading)
+    {
+        machine->loadTrapTriggered = true;
+        return true;
+    }
+    else if (machine->loadTrapTriggered)
+    {
+        machine->loadTrapTriggered = false;
+        return false;
+    }
 	
 	return false;
 }

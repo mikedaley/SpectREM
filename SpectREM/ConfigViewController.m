@@ -46,6 +46,7 @@ NSString *const cSpecDrum = @"specDrum";
 NSString *const cMultiface1 = @"multiface1";
 NSString *const cMultiface128 = @"multiface128";
 NSString *const cMultiface128Lockout = @"multiface128Lockout";
+NSString *const cInstaTAPLoading = @"instaTAPLoading";
 
 #pragma mark - Implementation 
 
@@ -89,6 +90,7 @@ NSString *const cMultiface128Lockout = @"multiface128Lockout";
     [_preferences removeObserver:self forKeyPath:cMultiface128];
     [_preferences removeObserver:self forKeyPath:cMultiface128Lockout];
 
+    [_preferences removeObserver:self forKeyPath:cInstaTAPLoading];
     [_preferences removeObserver:self forKeyPath:cCurrentMachineType];
 }
 
@@ -134,6 +136,7 @@ NSString *const cMultiface128Lockout = @"multiface128Lockout";
         [_preferences addObserver:self forKeyPath:cMultiface128 options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cMultiface128Lockout options:NSKeyValueObservingOptionNew context:NULL];
 
+        [_preferences addObserver:self forKeyPath:cInstaTAPLoading options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
         
         self.accelerate = NO;
@@ -243,7 +246,8 @@ NSString *const cMultiface128Lockout = @"multiface128Lockout";
              cSpecDrum,
              cMultiface1,
              cMultiface128,
-             cMultiface128Lockout
+             cMultiface128Lockout,
+             cInstaTAPLoading
              ];
 }
 

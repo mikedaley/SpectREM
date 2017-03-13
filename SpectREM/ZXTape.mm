@@ -146,9 +146,15 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
         {
             newTAPBlock = [ByteHeader new];
         }
-        else if (flag == 0xff || flag == 0xfe)
+        else
         {
             newTAPBlock = [DataBlock new];
+        }
+        
+        if (!newTAPBlock)
+        {
+            NSLog(@"Invalid flag found: %i", flag);
+            return;
         }
 
         newTAPBlock.blockLength = blockLength;
@@ -567,18 +573,68 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 #pragma mark - Turbo Loading
 
-- (void)instaloadWithMachine:(ZXSpectrum *)m
+- (void)instaloadTAPWithMachine:(ZXSpectrum *)machine
 {
-//    CZ80Core *core = (CZ80Core *)[m getCore];
-//
-//    if (!self.isTapeLoaded)
-//    {
-//        return;
-//    }
-//    
-//    
-}
+    CZ80Core *core = (CZ80Core *)[machine getCore];
 
+    if (self.currentBlockIndex >= self.tapBlocks.count)
+    {
+        machine->loadTrapTriggered = false;
+        core->SetRegister(CZ80Core::eREG_F, core->GetRegister(CZ80Core::eREG_F) & ~CZ80Core::FLAG_C);
+        core->SetRegister(CZ80Core::eREG_PC, 0x05e2);
+        return;
+    }
+    
+    int expectedBlockType = core->GetRegister(CZ80Core::eREG_ALT_A);
+    int startAddress = core->GetRegister(CZ80Core::eREG_IX);
+    
+    // Some TAP files have blocks which are shorter that what is expected in DE (Chuckie Egg 2)
+    // so just take the smallest value
+    int blockLength = core->GetRegister(CZ80Core::eREG_DE);
+//    int tapBlockLength = [self.tapBlocks[self.currentBlockIndex] getDataLength] ;
+//    blockLength = (blockLength < tapBlockLength) ? blockLength : tapBlockLength;
+    int success = 1;
+    
+    if ([self.tapBlocks[self.currentBlockIndex] getFlag] == expectedBlockType)
+    {
+        if (core->GetRegister(CZ80Core::eREG_ALT_F) & CZ80Core::FLAG_C)
+        {
+            self.currentBytePointer = cHeaderDataTypeOffset;
+            int checksum = expectedBlockType;
+            
+            for (int i = 0; i < blockLength; i++)
+            {
+                unsigned char tapByte = [self.tapBlocks[self.currentBlockIndex] blockData][self.currentBytePointer];
+                core->Z80CoreDebugMemWrite(startAddress + i, tapByte, NULL);
+                checksum ^= tapByte;
+                self.currentBytePointer++;
+            }
+            
+            int expectedChecksum = [self.tapBlocks[self.currentBlockIndex] getChecksum];
+            if (expectedChecksum != checksum)
+            {
+                success = 0;
+            }
+        }
+        else
+        {
+            success = 1;
+        }
+    }
+    
+    if (success)
+    {
+        core->SetRegister(CZ80Core::eREG_F, (core->GetRegister(CZ80Core::eREG_F) | CZ80Core::FLAG_C));
+    }
+    else
+    {
+        core->SetRegister(CZ80Core::eREG_F, (core->GetRegister(CZ80Core::eREG_F) & ~CZ80Core::FLAG_C));
+    }
+    
+    self.currentBlockIndex++;
+    [self blocksChanged];
+    core->SetRegister(CZ80Core::eREG_PC, 0x05e2);
+}
 
 #pragma mark - Debug print
 
@@ -747,6 +803,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     return ((unsigned short *)&self.blockData[cByteHeaderStartAddressOffset])[0];
 }
 
+- (unsigned char)getChecksum
+{
+    return self.blockData[self.blockLength - 1];
+}
+
 @end
 
 #pragma mark - Data Block
@@ -770,6 +831,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     return dataBlock;
 }
 
+- (unsigned char)getDataType
+{
+    return self.blockData[cHeaderFlagOffset];
+}
+
 - (unsigned short)getDataLength
 {
     return self.blockLength;
@@ -777,7 +843,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned char)getChecksum
 {
-    return self.blockData[self.blockLength + 1];
+    return self.blockData[self.blockLength - 1];
 }
 
 @end

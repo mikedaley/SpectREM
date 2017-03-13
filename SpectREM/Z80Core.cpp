@@ -37,7 +37,7 @@ CZ80Core::~CZ80Core()
 
 //-----------------------------------------------------------------------------------------
 
-void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, void *param)
+void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, Z80CoreDebugWrite debug_write_handler,void *param)
 {
 	// Store our settings
 	m_Param = param;
@@ -47,6 +47,7 @@ void CZ80Core::Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreR
 	m_IOWrite = io_write;
 	m_MemContentionHandling = mem_contention_handling;
 	m_DebugRead = debug_read_handler;
+	m_Debugwrite = debug_write_handler;
 
 	// Setup the flags tables
 	for (int i = 0; i < 256; i++)
@@ -157,6 +158,16 @@ unsigned char CZ80Core::Z80CoreDebugMemRead(unsigned int address, void *data)
 
 	return 0;
 }
+
+//-----------------------------------------------------------------------------------------
+void CZ80Core::Z80CoreDebugMemWrite(unsigned int address, unsigned char byte, void *data)
+{
+	if (m_Debugwrite != NULL)
+	{
+		m_Debugwrite(address, byte, m_Param, data);
+	}
+}
+
 
 //-----------------------------------------------------------------------------------------
 
