@@ -591,8 +591,8 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     // Some TAP files have blocks which are shorter that what is expected in DE (Chuckie Egg 2)
     // so just take the smallest value
     int blockLength = core->GetRegister(CZ80Core::eREG_DE);
-//    int tapBlockLength = [self.tapBlocks[self.currentBlockIndex] getDataLength] ;
-//    blockLength = (blockLength < tapBlockLength) ? blockLength : tapBlockLength;
+    int tapBlockLength = [self.tapBlocks[self.currentBlockIndex] getDataLength];
+    blockLength = (blockLength < tapBlockLength) ? blockLength : tapBlockLength;
     int success = 1;
     
     if ([self.tapBlocks[self.currentBlockIndex] getFlag] == expectedBlockType)
@@ -755,6 +755,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     return self.blockData[cProgramHeaderChecksumOffset];
 }
 
+- (unsigned short)getDataLength
+{
+    return cHeaderBlockLength;
+}
+
 @end
 
 #pragma mark - Numeric Data Header
@@ -771,6 +776,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     return self.blockData[cNumericDataHeaderVariableNameOffset];
 }
 
+- (unsigned short)getDataLength
+{
+    return cHeaderBlockLength - 2;
+}
+
 @end
 
 #pragma mark - Alpha Numeric Data Header
@@ -785,6 +795,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 - (unsigned char)getVariableName
 {
     return self.blockData[cAlphaNumericDataHeaderVariableNameOffset];
+}
+
+- (unsigned short)getDataLength
+{
+    return cHeaderBlockLength - 2;
 }
 
 @end
@@ -806,6 +821,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 - (unsigned char)getChecksum
 {
     return self.blockData[self.blockLength - 1];
+}
+
+- (unsigned short)getDataLength
+{
+    return cHeaderBlockLength - 2;
 }
 
 @end
