@@ -41,6 +41,13 @@
     _viewUpdateTimer = nil;
 }
 
+#pragma mark - Debug Control
+
+- (IBAction)stepOver:(id)sender
+{
+    [_machine stepInstruction];
+}
+
 - (void)updateViewDetails
 {
     CZ80Core *core = (CZ80Core *)[self.machine getCore];

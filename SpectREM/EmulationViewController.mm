@@ -548,8 +548,11 @@
     _disassemblyViewController.decimalFormat = (_disassemblyViewController.decimalFormat) ? NO : YES;
 }
 
+// Debugging
+
 - (IBAction)pause:(id)sender
 {
+    [_machine resetSound];
     [_machine.audioCore stop];
 }
 

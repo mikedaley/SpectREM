@@ -277,9 +277,14 @@
     
     int count = machineInfo.tsPerFrame;
     
-    while (count > 0)
+    while (count > 0 && !self.paused)
     {
         int tsCPU = core->Execute(1, machineInfo.intLength);
+        
+        if (self.step)
+        {
+            self.paused = YES;
+        }
         
         if (self.zxTape.playing)
         {
@@ -347,6 +352,27 @@
     
 }
 
+#pragma mark - Debugging methods
+
+- (void)stepInstruction
+{
+    CZ80Core *core = (CZ80Core *)[self getCore];
+    core->Execute(1, machineInfo.intLength);
+    
+    if (core->GetTStates() >= machineInfo.tsPerFrame)
+    {
+        core->ResetTStates();
+        core->SignalInterrupt();
+        updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+        frameCounter ++;
+    }
+    updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
+                                                                  length:(CFIndex)emuDisplayBufferLength
+                                                                    size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
+    });
+}
 
 #pragma mark - Load IF2 ROM
 
@@ -379,6 +405,11 @@
 void updateAudioWithTStates(int numberTs, void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
+    
+    if (machine.paused)
+    {
+        return;
+    }
     
     // Loop over each tState so that the necessary audio samples can be generated
     for(int i = 0; i < numberTs; i++)
@@ -873,7 +904,11 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
             updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
         }
         
-        machine->disablePaging = ((data & 0x20) == 0x20) ? YES : NO;
+        // You should only be able to disable paging once. To enable paging again then a reset is necessary.
+        if (data & 0x20 && machine->disablePaging != YES)
+        {
+            machine->disablePaging = YES;
+        }
         machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
         machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
         machine->currentRAMPage = (data & 0x07);

@@ -236,8 +236,6 @@ static NS_ENUM(NSUInteger, MachineType)
 @property (strong) id imageRef;
 @property (assign) CGColorSpaceRef colorSpace;
 
-@property (assign) bool stepping;
-
 @property (assign) BOOL accelerated;
 
 // Serial core used to communicate with SmartLINK
@@ -245,6 +243,8 @@ static NS_ENUM(NSUInteger, MachineType)
 @property (nonatomic, assign) BOOL useSmartLink;
 
 // Debug properties
+@property (assign) BOOL paused;
+@property (assign) BOOL step;
 
 #pragma mark - Methods
 
@@ -363,6 +363,8 @@ unsigned char coreIORead(unsigned short address, void *m);
  */
 - (NSString *)machineName;
 
+#pragma mark - Debugging
 
+- (void)stepInstruction;
 
 @end
