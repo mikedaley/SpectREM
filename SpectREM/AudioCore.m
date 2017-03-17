@@ -440,7 +440,7 @@ static float fAYVolBase[] = {
     AYChannelCount[2] += 2;
     
     // Noise frequency
-    freq = AYRegisters[ (1 << 2) + eAYREGISTER_A_FINE ] | (AYRegisters[ (2 << 1) + eAYREGISTER_A_COARSE] << 8);
+    freq = AYRegisters[ (2 << 1) + eAYREGISTER_A_FINE ] | (AYRegisters[ (2 << 1) + eAYREGISTER_A_COARSE] << 8);
     
     if (freq == 0)
     {
