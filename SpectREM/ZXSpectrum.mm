@@ -381,13 +381,8 @@
 - (void)loadROMWithPath:(NSString *)path
 {
     NSData *data = [NSData dataWithContentsOfFile:path];
-    
     const char *fileBytes = (const char*)[data bytes];
-    
-    for (int addr = 0; addr < data.length; addr++)
-    {
-        memory[addr] = fileBytes[addr];
-    }
+    memcpy(memory, fileBytes, data.length);
 }
 
 
@@ -412,78 +407,95 @@ void updateAudioWithTStates(int numberTs, void *m)
         return;
     }
     
+    // Grab properties at this point and make them local vars to prevent messaging being used to get their values.
+    // Messaging is expensive especially when being used in a right loop
+    bool localAYon48k = machine.useAYOn48k;
+    bool localAYChannelA = machine.AYChannelA;
+    bool localAYChannelB = machine.AYChannelB;
+    bool localAYChannelC = machine.AYChannelC;
+    int localAYChannelABalance = machine.AYChannelABalance;
+    int localAYChannelBBalance = machine.AYChannelBBalance;
+    int localAYChannelCBalance = machine.AYChannelCBalance;
+    int localAudioAYTstatesStep = machine->audioAYTStatesStep;
+
+    // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes.
+    // Only need to do this once per audio update
+    signed int localBeeperLevel = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier) | machine->specDrumOutput;
+    signed int beeperLevelLeft = localBeeperLevel;
+    signed int beeperLevelRight = localBeeperLevel;
+
+    double leftMixA = 0.5;
+    double rightMixA = 0.5;
+    double leftMixB = 0.5;
+    double rightMixB = 0.5;
+    double leftMixC = 0.5;
+    double rightMixC = 0.5;
+    
+    if (localAYChannelABalance > 0.5)
+    {
+        leftMixA = 1.0 - localAYChannelABalance;
+        rightMixA = localAYChannelABalance;
+    }
+    else if (localAYChannelABalance < 0.5)
+    {
+        leftMixA = 1.0 - (localAYChannelABalance << 1);
+        rightMixA = 1.0 - (1.0 - localAYChannelABalance);
+    }
+
+    if (localAYChannelBBalance > 0.5)
+    {
+        leftMixB = 1.0 - localAYChannelBBalance;
+        rightMixB = localAYChannelBBalance;
+    }
+    else if (localAYChannelBBalance < 0.5)
+    {
+        leftMixB = 1.0 - (localAYChannelBBalance << 1);
+        rightMixB = 1.0 - (1.0 - localAYChannelBBalance);
+    }
+
+    if (localAYChannelCBalance > 0.5)
+    {
+        leftMixC = 1.0 - localAYChannelCBalance;
+        rightMixC = localAYChannelCBalance;
+    }
+    else if (localAYChannelCBalance < 0.5)
+    {
+        leftMixC = 1.0 - (localAYChannelCBalance << 1);
+        rightMixC = 1.0 - (1.0 - localAYChannelCBalance);
+    }
+    
     // Loop over each tState so that the necessary audio samples can be generated
     for(int i = 0; i < numberTs; i++)
     {
-        // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes
-        signed int beeperLevelLeft = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier) | machine->specDrumOutput;
-        signed int beeperLevelRight = beeperLevelLeft;
-        
-        // Setting the channel mix 0.5 causes the output to to be centered between left and right speakers
-        double leftMix = 0.5;
-        double rightMix = 0.5;
-        
-        if (machine->machineInfo.hasAY || (machine->machineInfo.machineType == eZXSpectrum48 && machine.useAYOn48k))
+        if (machine->machineInfo.hasAY || (machine->machineInfo.machineType == eZXSpectrum48 && localAYon48k))
         {
             machine->audioAYTStates++;
-            if (machine->audioAYTStates >= machine->audioAYTStatesStep)
+            if (machine->audioAYTStates >= localAudioAYTstatesStep)
             {
                 [machine.audioCore updateAY:1];
                 
-                if (machine.AYChannelA)
+                if (localAYChannelA)
                 {
-                    if (machine.AYChannelABalance > 0.5)
-                    {
-                        leftMix = 1.0 - machine.AYChannelABalance;
-                        rightMix = machine.AYChannelABalance;
-                    }
-                    else if (machine.AYChannelABalance < 0.5)
-                    {
-                        leftMix = 1.0 - (machine.AYChannelABalance * 2);
-                        rightMix = 1.0 - (1.0 - machine.AYChannelABalance);
-                    }
                     signed int channelA = machine.audioCore->channelOutput[0];
-                    beeperLevelLeft += (channelA * leftMix);
-                    beeperLevelRight += (channelA * rightMix);
-                }
-                if (machine.AYChannelB)
-                {
-                    leftMix = 0.5;
-                    rightMix = 0.5;
-                    if (machine.AYChannelBBalance > 0.5)
-                    {
-                        leftMix = 1.0 - machine.AYChannelBBalance;
-                        rightMix = machine.AYChannelBBalance;
-                    }
-                    else if (machine.AYChannelBBalance < 0.5)
-                    {
-                        leftMix = 1.0 - (machine.AYChannelBBalance * 2);
-                        rightMix = 1.0 - (1.0 - machine.AYChannelBBalance);
-                    }
-                    signed int channelB = machine.audioCore->channelOutput[1];
-                    beeperLevelLeft += (channelB * leftMix);
-                    beeperLevelRight += (channelB * rightMix);
-                }
-                if (machine.AYChannelC)
-                {
-                    leftMix = 0.5;
-                    rightMix = 0.5;
-                    if (machine.AYChannelCBalance > 0.5)
-                    {
-                        leftMix = 1.0 - machine.AYChannelCBalance;
-                        rightMix = machine.AYChannelCBalance;
-                    }
-                    else if (machine.AYChannelCBalance < 0.5)
-                    {
-                        leftMix = 1.0 - (machine.AYChannelCBalance * 2);
-                        rightMix = 1.0 - (1.0 - machine.AYChannelCBalance);
-                    }
-                    signed int channelC = machine.audioCore->channelOutput[2];
-                    beeperLevelLeft += (channelC * leftMix);
-                    beeperLevelRight += (channelC * rightMix);
+                    beeperLevelLeft += (channelA * leftMixA);
+                    beeperLevelRight += (channelA * rightMixA);
                 }
                 
-                // Reset the cores channel values
+                if (localAYChannelB)
+                {
+                    signed int channelB = machine.audioCore->channelOutput[1];
+                    beeperLevelLeft += (channelB * leftMixB);
+                    beeperLevelRight += (channelB * rightMixB);
+                }
+                
+                if (localAYChannelC)
+                {
+                    signed int channelC = machine.audioCore->channelOutput[2];
+                    beeperLevelLeft += (channelC * leftMixC);
+                    beeperLevelRight += (channelC * rightMixC);
+                }
+                
+                // Reset the core channel values
                 machine.audioCore->channelOutput[0] = 0;
                 machine.audioCore->channelOutput[1] = 0;
                 machine.audioCore->channelOutput[2] = 0;
@@ -520,6 +532,8 @@ void updateAudioWithTStates(int numberTs, void *m)
             machine->audioBeeperLeft += beeperLevelLeft;
             machine->audioBeeperRight += beeperLevelRight;
         }
+        
+        beeperLevelLeft = beeperLevelRight = localBeeperLevel;
     }
 }
 

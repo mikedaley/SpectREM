@@ -372,39 +372,102 @@ static float fAYVolBase[] = {
         }
     }
     
-    for (int c = 0; c < 3; c++)
+    // Channel 0
+    AYChannelCount[0] += 2;
+    
+    // Noise frequency
+    int freq = AYRegisters[ (0 << 1) + eAYREGISTER_A_FINE ] | (AYRegisters[ (0 << 1) + eAYREGISTER_A_COARSE] << 8);
+    
+    if (freq == 0)
     {
-        AYChannelCount[c] += 2;
-        
-        // Noise frequency
-        int freq = AYRegisters[ (c << 1) + eAYREGISTER_A_FINE ] | (AYRegisters[ (c << 1) + eAYREGISTER_A_COARSE] << 8);
-        
-        if (freq == 0)
-        {
-            freq = 1;
-        }
-
-        if (AYChannelCount[c] >= freq)
-        {
-            AYChannelCount[c]  -= freq;
-            AYOutput ^= (1 << c);
-        }
-        
-        unsigned int tone_output = ((AYOutput >> c) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> c) & 1);
-        unsigned int noise_output = ((AYOutput >> 3) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> (c + 3)) & 1);
-        
-        if ((tone_output & noise_output) == 1)
-        {
-            int vol = AYRegisters[eAYREGISTER_A_VOL + c];
-
-            if ((vol & 0x10) != 0)
-            {
-                vol = envelopeStep ^ attackEndVol;
-            }
-            
-            channelOutput[c] += AYVolumes[vol];
-        }
+        freq = 1;
     }
+    
+    if (AYChannelCount[0] >= freq)
+    {
+        AYChannelCount[0]  -= freq;
+        AYOutput ^= (1 << 0);
+    }
+    
+    unsigned int tone_output = ((AYOutput >> 0) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> 0) & 1);
+    unsigned int noise_output = ((AYOutput >> 3) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> (0 + 3)) & 1);
+    
+    if ((tone_output & noise_output) == 1)
+    {
+        int vol = AYRegisters[eAYREGISTER_A_VOL + 0];
+        
+        if ((vol & 0x10) != 0)
+        {
+            vol = envelopeStep ^ attackEndVol;
+        }
+        
+        channelOutput[0] += AYVolumes[vol];
+    }
+    
+    // Channel 1
+    AYChannelCount[1] += 2;
+    
+    // Noise frequency
+    freq = AYRegisters[ (1 << 1) + eAYREGISTER_A_FINE ] | (AYRegisters[ (1 << 1) + eAYREGISTER_A_COARSE] << 8);
+    
+    if (freq == 0)
+    {
+        freq = 1;
+    }
+    
+    if (AYChannelCount[1] >= freq)
+    {
+        AYChannelCount[1]  -= freq;
+        AYOutput ^= (1 << 1);
+    }
+    
+    tone_output = ((AYOutput >> 1) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> 1) & 1);
+    noise_output = ((AYOutput >> 3) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> (1 + 3)) & 1);
+    
+    if ((tone_output & noise_output) == 1)
+    {
+        int vol = AYRegisters[eAYREGISTER_A_VOL + 1];
+        
+        if ((vol & 0x10) != 0)
+        {
+            vol = envelopeStep ^ attackEndVol;
+        }
+        
+        channelOutput[1] += AYVolumes[vol];
+    }
+   
+    // Channel 2
+    AYChannelCount[2] += 2;
+    
+    // Noise frequency
+    freq = AYRegisters[ (1 << 2) + eAYREGISTER_A_FINE ] | (AYRegisters[ (2 << 1) + eAYREGISTER_A_COARSE] << 8);
+    
+    if (freq == 0)
+    {
+        freq = 1;
+    }
+    
+    if (AYChannelCount[2] >= freq)
+    {
+        AYChannelCount[2]  -= freq;
+        AYOutput ^= (1 << 2);
+    }
+    
+    tone_output = ((AYOutput >> 2) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> 2) & 1);
+    noise_output = ((AYOutput >> 3) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> (2 + 3)) & 1);
+    
+    if ((tone_output & noise_output) == 1)
+    {
+        int vol = AYRegisters[eAYREGISTER_A_VOL + 2];
+        
+        if ((vol & 0x10) != 0)
+        {
+            vol = envelopeStep ^ attackEndVol;
+        }
+        
+        channelOutput[2] += AYVolumes[vol];
+    }
+    
 }
 
 - (void)reset
