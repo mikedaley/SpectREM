@@ -48,6 +48,19 @@
     [_machine stepInstruction];
 }
 
+- (IBAction)pause:(id)sender
+{
+    [_machine resetSound];
+    [_machine.audioCore stop];
+}
+
+- (IBAction)resume:(id)sender
+{
+    [_machine.audioCore start];
+}
+
+#pragma mark - View Updates
+
 - (void)updateViewDetails
 {
     CZ80Core *core = (CZ80Core *)[self.machine getCore];
