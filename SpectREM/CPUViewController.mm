@@ -48,6 +48,16 @@
     [_machine stepInstruction];
 }
 
+- (IBAction)stepIn:(id)sender
+{
+    
+}
+
+- (IBAction)stepOut:(id)sender
+{
+    
+}
+
 - (IBAction)pause:(id)sender
 {
     [_machine resetSound];

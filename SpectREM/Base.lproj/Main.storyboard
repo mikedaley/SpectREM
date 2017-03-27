@@ -1464,6 +1464,9 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="stepIn:" target="Pew-Ua-735" id="ZWO-qs-8hx"/>
+                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="Xbj-Bl-ba6">
                                 <rect key="frame" x="225" y="5" width="201" height="28"/>
@@ -1472,6 +1475,9 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="stepOut:" target="Pew-Ua-735" id="psL-Zi-DKl"/>
+                                </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="gZb-I0-JRd">
                                 <rect key="frame" x="94" y="349" width="54" height="14"/>
