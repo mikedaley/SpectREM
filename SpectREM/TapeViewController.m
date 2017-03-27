@@ -37,6 +37,11 @@
     // Do view setup here.
 }
 
+- (BOOL)acceptsFirstResponder
+{
+    return NO;
+}
+
 #pragma mark - Table View Delegates
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView

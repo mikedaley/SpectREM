@@ -199,7 +199,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Tape" id="wel-Ye-3xa">
                                     <items>
-                                        <menuItem title="Browser" keyEquivalent="B" id="1YL-w1-XBl" userLabel="Browser">
+                                        <menuItem title="Browser" keyEquivalent="b" id="1YL-w1-XBl" userLabel="Browser">
                                             <connections>
                                                 <action selector="tapeBrowser:" target="Ady-hI-5gd" id="ddD-rL-hBV"/>
                                             </connections>

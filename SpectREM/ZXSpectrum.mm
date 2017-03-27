@@ -39,7 +39,7 @@
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info
 {
     if (self = [super init])
-    {
+    {   
         machineInfo = info;
         _emulationViewController = emulationViewController;
         
