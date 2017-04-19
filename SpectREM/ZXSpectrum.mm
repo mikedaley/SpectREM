@@ -367,7 +367,7 @@
         updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
         frameCounter ++;
     }
-    updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
                                                                   length:(CFIndex)emuDisplayBufferLength
