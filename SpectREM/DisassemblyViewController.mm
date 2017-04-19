@@ -67,16 +67,13 @@
         
         if ( length == 0 )
         {
-            // Invalid opcode - probably want to display as a DB statement
+            // Invalid opcode, so because we don't know what it is just show it as a DB statement
             DisassembledInstruction *instruction = [DisassembledInstruction new];
             instruction.address = pc;
             NSMutableString *bytes = [NSMutableString new];
-            for (int i = 0; i <= length - 1; i++)
-            {
-                [bytes appendFormat:@"%02X ", core->Z80CoreDebugMemRead(pc + i, NULL)];
-            }
+            [bytes appendFormat:@"%02X ", core->Z80CoreDebugMemRead(pc, NULL)];
             instruction.bytes = bytes;
-            instruction.instruction = @"DB";
+            instruction.instruction = [NSString stringWithFormat:@"DEFB $%@", bytes];
             [self.disassemblyArray addObject:instruction];
             pc++;
         }
@@ -97,16 +94,16 @@
             pc += length;
             
             // Add a blank row if the last instruction was RET, JP, JR to space things out
-//            if ([instruction.instruction containsString:@"RET"] ||
-//                [instruction.instruction containsString:@"JP"] ||
-//                [instruction.instruction containsString:@"JR"])
-//            {
-//                instruction = [DisassembledInstruction new];
-//                instruction.address = -1;
-//                instruction.bytes = @"";
-//                instruction.instruction = @"";
-//                [self.disassemblyArray addObject:instruction];
-//            }
+            if ([instruction.instruction containsString:@"RET"] ||
+                [instruction.instruction containsString:@"JP"] ||
+                [instruction.instruction containsString:@"JR"])
+            {
+                instruction = [DisassembledInstruction new];
+                instruction.address = -1;
+                instruction.bytes = @"";
+                instruction.instruction = @"";
+                [self.disassemblyArray addObject:instruction];
+            }
         }
     }
 }
@@ -175,10 +172,10 @@
                         view.textField.stringValue = [NSString stringWithFormat:@"$%04X", address];
                     }
                 }
-//                else
-//                {
-//                    view.textField.stringValue = @"";
-//                }
+                else
+                {
+                    view.textField.stringValue = @"";
+                }
             }
             else if ([tableColumn.identifier isEqualToString:@"BytesColID"])
             {
