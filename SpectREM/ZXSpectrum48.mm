@@ -125,7 +125,11 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
         return;
     }
 
-    updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
+    // Only update screen if display memory has been written too
+    if (address >= 16384 && address < 16384 + 6144 + 768){
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
+    }
+    
     machine->memory[address] = data;
 }
 
