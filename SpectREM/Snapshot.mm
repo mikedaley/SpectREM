@@ -84,6 +84,79 @@
 
 #pragma mark - SNA Snapshot
 
++ (unsigned char *)createSnapshotFromMachine:(ZXSpectrum *)machine
+{
+    CZ80Core *core = (CZ80Core *)[machine getCore];
+    
+    // We don't want the machine running while the snapshot is being created
+    [machine setPaused:YES];
+    
+    unsigned char *data;
+    data = (unsigned char*)calloc(49152 + 27, sizeof(unsigned char));
+    
+    data[0] = core->GetRegister(CZ80Core::eREG_I);
+    data[1] = core->GetRegister(CZ80Core::eREG_ALT_HL) & 0xff;
+    data[2] = core->GetRegister(CZ80Core::eREG_ALT_HL) >> 8;
+    
+    data[3] = core->GetRegister(CZ80Core::eREG_ALT_DE) & 0xff;
+    data[4] = core->GetRegister(CZ80Core::eREG_ALT_DE) >> 8;
+
+    data[5] = core->GetRegister(CZ80Core::eREG_ALT_BC) & 0xff;
+    data[6] = core->GetRegister(CZ80Core::eREG_ALT_BC) >> 8;
+    
+    data[7] = core->GetRegister(CZ80Core::eREG_ALT_AF) & 0xff;
+    data[8] = core->GetRegister(CZ80Core::eREG_ALT_AF) >> 8;
+    
+    data[9] = core->GetRegister(CZ80Core::eREG_HL) & 0xff;
+    data[10] = core->GetRegister(CZ80Core::eREG_HL) >> 8;
+    
+    data[11] = core->GetRegister(CZ80Core::eREG_DE) & 0xff;
+    data[12] = core->GetRegister(CZ80Core::eREG_DE) >> 8;
+    
+    data[13] = core->GetRegister(CZ80Core::eREG_BC) & 0xff;
+    data[14] = core->GetRegister(CZ80Core::eREG_BC) >> 8;
+    
+    data[15] = core->GetRegister(CZ80Core::eREG_IY) & 0xff;
+    data[16] = core->GetRegister(CZ80Core::eREG_IY) >> 8;
+    
+    data[17] = core->GetRegister(CZ80Core::eREG_IX) & 0xff;
+    data[18] = core->GetRegister(CZ80Core::eREG_IX) >> 8;
+    
+    data[19] = (core->GetIFF1() & 1) << 2;
+    data[20] = core->GetRegister(CZ80Core::eREG_R);
+    
+    data[21] = core->GetRegister(CZ80Core::eREG_AF) & 0xff;
+    data[22] = core->GetRegister(CZ80Core::eREG_AF) >> 8;
+    
+    unsigned short pc = core->GetRegister(CZ80Core::eREG_PC);
+    unsigned short sp = core->GetRegister(CZ80Core::eREG_SP) - 2;
+    
+    data[23] = sp & 0xff;
+    data[24] = sp >> 8;
+    
+    data[25] = core->GetIMMode();
+    data[26] = machine->borderColor;
+    
+    int dataIndex = 27;
+    for (unsigned int addr = 16384; addr < 16384 + (48 * 1024); addr++)
+    {
+        data[dataIndex++] = core->Z80CoreDebugMemRead(addr, NULL);
+    }
+    
+    // Update the SP location in the snapshot buffer with the new SP, as PC has been added to the stack
+    // as part of creating the snapshot
+    data[sp - 16384 + 27] = pc & 0xff;
+    data[sp - 16384 + 27 + 1] = pc >> 8;
+    
+//    NSData *output = [NSData dataWithBytes:data length:49152 + 27];
+//    [output writeToFile:@"/Users/mikeda/Desktop/test.sna" atomically:NO];
+    
+    [machine setPaused:NO];
+    
+    return data;
+}
+
+
 + (int)loadSnapshotWithPath:(NSString *)snapshotPath IntoMachine:(ZXSpectrum *)machine
 {
     CZ80Core *core = (CZ80Core *)[machine getCore];
@@ -105,6 +178,7 @@
     core->SetRegister(CZ80Core::eREG_IX, ((unsigned short *)&fileBytes[1])[8]);
     
     core->SetRegister(CZ80Core::eREG_AF, ((unsigned short *)&fileBytes[21])[0]);
+    
     core->SetRegister(CZ80Core::eREG_SP, ((unsigned short *)&fileBytes[21])[1]);
     
     // Border colour

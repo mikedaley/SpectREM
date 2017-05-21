@@ -12,6 +12,7 @@
 
 @interface Snapshot : NSObject
 
++ (unsigned char *)createSnapshotFromMachine:(ZXSpectrum *)machine;
 + (int)machineNeededForZ80SnapshotWithPath:(NSString *)snapshotPath;
 + (int)loadSnapshotWithPath:(NSString *)snapshotPath IntoMachine:(ZXSpectrum *)machine;
 + (int)loadZ80SnapshotWithPath:(NSString *)snapshotpath intoMachine:(ZXSpectrum *)machine;

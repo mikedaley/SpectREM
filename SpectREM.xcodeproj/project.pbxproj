@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */; };
-		991D87C41E33937A00667E37 /* SerialCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 991D87C31E33937A00667E37 /* SerialCore.m */; };
+		991D87C41E33937A00667E37 /* SmartLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 991D87C31E33937A00667E37 /* SmartLink.m */; };
 		991D87F21E33BD6700667E37 /* ORSSerial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; };
 		991D87F31E33BD6700667E37 /* ORSSerial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		992B25941E453B68008538EF /* OpenGL.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 992B25931E453B68008538EF /* OpenGL.fsh */; };
@@ -85,8 +85,8 @@
 /* Begin PBXFileReference section */
 		0A6386D91E48C72300783DA4 /* AddressLabels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressLabels.h; sourceTree = "<group>"; };
 		0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = 48KRomLabels.mm; sourceTree = "<group>"; };
-		991D87C21E33937A00667E37 /* SerialCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialCore.h; sourceTree = "<group>"; };
-		991D87C31E33937A00667E37 /* SerialCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialCore.m; sourceTree = "<group>"; };
+		991D87C21E33937A00667E37 /* SmartLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartLink.h; sourceTree = "<group>"; };
+		991D87C31E33937A00667E37 /* SmartLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartLink.m; sourceTree = "<group>"; };
 		991D87F11E33BD6700667E37 /* ORSSerial.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ORSSerial.framework; sourceTree = "<group>"; };
 		992B25931E453B68008538EF /* OpenGL.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = OpenGL.fsh; sourceTree = "<group>"; };
 		995657F11DC1327100114FC9 /* ZXSpectrum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrum.h; sourceTree = "<group>"; };
@@ -203,13 +203,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		991D87C11E33935600667E37 /* Serial Core */ = {
+		991D87C11E33935600667E37 /* SmartLINK */ = {
 			isa = PBXGroup;
 			children = (
-				991D87C21E33937A00667E37 /* SerialCore.h */,
-				991D87C31E33937A00667E37 /* SerialCore.m */,
+				991D87C21E33937A00667E37 /* SmartLink.h */,
+				991D87C31E33937A00667E37 /* SmartLink.m */,
 			);
-			name = "Serial Core";
+			name = SmartLINK;
 			sourceTree = "<group>";
 		};
 		99BFAA271DBA0AC50049D811 /* Views */ = {
@@ -363,7 +363,7 @@
 				EDF3A4C41DB0D79100511BAF /* ROMS */,
 				EDF3A4C31DB0D78A00511BAF /* Z80 Core */,
 				EDF3A4C11DB0D77200511BAF /* Audio Core */,
-				991D87C11E33935600667E37 /* Serial Core */,
+				991D87C11E33935600667E37 /* SmartLINK */,
 				EDF3A4BB1DB0D67D00511BAF /* App Delegate */,
 				EDF3A4C01DB0D6EF00511BAF /* Main UI */,
 				EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */,
@@ -647,7 +647,7 @@
 				EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */,
 				EDF3A4F01DB0D7D000511BAF /* ZXSpectrum48.mm in Sources */,
 				99A265281DB6A8E300E7DFB3 /* ConfigViewController.m in Sources */,
-				991D87C41E33937A00667E37 /* SerialCore.m in Sources */,
+				991D87C41E33937A00667E37 /* SmartLink.m in Sources */,
 				99BFAA2A1DBA0AE00049D811 /* EmulationView.m in Sources */,
 				EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */,
 				EDF3A4D61DB0D7AB00511BAF /* Z80Core_CBOpcodes.cpp in Sources */,

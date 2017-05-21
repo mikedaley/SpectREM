@@ -11,7 +11,7 @@
 #import "Snapshot.h"
 #import "SZX.h"
 #import "Z80Core.h"
-#import "SerialCore.h"
+#import "SmartLink.h"
 
 
 #pragma mark - Interface
@@ -148,32 +148,7 @@
     smartLinkRequestBuffer[0] = 0x77;
     smartLinkRequest = [NSData dataWithBytes:smartLinkRequestBuffer length:1];
     
-    self.serialCore = [SerialCore new];
-    
-    // Setup the block to be run when data is received in the Serial Core. This checks the response
-    // from SmartLINK and if necessary udpates the keyboard map based on what has been sent from the
-    // real ZX Spectrum.
-    ZXSpectrum *__weak weakSelf = self;
-    self.serialCore.dataReceivedBlock = ^(NSData *responseData){
-        
-        if (responseData.length == 10)
-        {
-            __block char responseBuffer[10], *dataPtr;
-            [responseData getBytes:responseBuffer range:NSMakeRange(0, 10)];
-            dataPtr = responseBuffer;
-            
-            if (responseBuffer[0] == 0x77)
-            {
-                dispatch_sync(weakSelf.emulationQueue, ^{
-                    for (int row = 0; row < 8; row++)
-                    {
-                        keyboardMap[row] ^= keyboardMap[row] ^ dataPtr[row + 1];
-                    };
-                    smartlinkKempston = dataPtr[9];
-                });
-            }
-        }
-    };
+    self.smartLink = [SmartLink new];
 }
 
 
@@ -346,9 +321,9 @@
     
     // If smartlink is activated and a serial port has been selected then try to read from
     // SmartLINK and if successful this will update the keyboard map and Kempston joystick port
-    if (self.serialCore.serialPort && self.useSmartLink)
+    if (self.smartLink.serialPort && self.useSmartLink)
     {
-        [self.serialCore sendData:smartLinkRequest];
+        [self.smartLink sendData:smartLinkRequest code:0x77 waitForResponse:NO];
     }
     
 }

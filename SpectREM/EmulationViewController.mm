@@ -26,7 +26,7 @@
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
 #import "ZXSpectrumSE.h"
-#import "SerialCore.h"
+#import "SmartLink.h"
 #import "Z80Core.h"
 
 #import <OpenGL/gl.h>
@@ -67,6 +67,8 @@
     
     dispatch_queue_t        _serialQueue;
     dispatch_source_t       _serialTimer;
+    
+    dispatch_queue_t        _smartlinkQueue;
     
     ZXTape                  *_zxTape;
     
@@ -216,7 +218,7 @@
     [_machine bind:cAYChannelBBalance toObject:_configViewController withKeyPath:cAYChannelBBalance options:nil];
     [_machine bind:cAYChannelCBalance toObject:_configViewController withKeyPath:cAYChannelCBalance options:nil];
     [_machine bind:cUseAYOn48k toObject:_configViewController withKeyPath:cUseAYOn48k options:nil];
-    [_machine.serialCore bind:cSerialPort toObject:_configViewController withKeyPath:cSerialPort options:nil];
+    [_machine.smartLink bind:cSerialPort toObject:_configViewController withKeyPath:cSerialPort options:nil];
     [_machine bind:cUseSmartLink toObject:_configViewController withKeyPath:cUseSmartLink options:nil];
 
     [_machine bind:cSpecDrum toObject:_configViewController withKeyPath:cSpecDrum options:nil];
@@ -272,7 +274,7 @@
     [_machine unbind:cAYChannelCBalance];
     [_machine unbind:cUseAYOn48k];
     [_machine unbind:cUseSmartLink];
-    [_machine.serialCore unbind:cSerialPort];
+    [_machine.smartLink unbind:cSerialPort];
     [_machine unbind:cSpecDrum];
     [_machine unbind:cMultiface1];
     [_machine unbind:cMultiface128];
@@ -631,6 +633,16 @@
 - (IBAction)showMemoryWindow:(id)sender
 {
     [_memoryWindowController showWindow:nil];
+}
+
+- (IBAction)sendToSmartLink:(id)sender
+{
+    _machine.useSmartLink = NO;
+    
+    unsigned char *snapshotData = [Snapshot createSnapshotFromMachine:_machine];
+
+    [_machine.smartLink sendSnapshot:snapshotData];
+
 }
 
 #pragma mark - User Notifications

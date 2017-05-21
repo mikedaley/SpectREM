@@ -85,7 +85,7 @@ static NS_ENUM(NSUInteger, MachineType)
 
 #pragma mark - Interface
 
-@class SerialCore;
+@class SmartLink;
 
 @interface ZXSpectrum : NSObject <KeyboardEventProtocol>
 {
@@ -241,7 +241,7 @@ static NS_ENUM(NSUInteger, MachineType)
 @property (assign) BOOL accelerated;
 
 // Serial core used to communicate with SmartLINK
-@property (strong) SerialCore *serialCore;
+@property (strong) SmartLink *smartLink;
 @property (nonatomic, assign) BOOL useSmartLink;
 
 // Debug properties
