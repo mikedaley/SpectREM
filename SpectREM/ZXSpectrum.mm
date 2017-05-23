@@ -777,6 +777,12 @@ unsigned char coreIORead(unsigned short address, void *m)
             }
         }
 
+		// Retroleum SmartCard
+		else if ((address & 0xfff1) == 0xfaf1)
+		{
+			// Do comms stuff.
+		}
+		
         // Getting here means that nothing has handled that port read so based on a real Spectrum return the floating bus value
         return floatingBus(m);
     }
@@ -959,6 +965,12 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     {
         machine->multifaceLockedOut = (machine->multifaceLockedOut) ? false : true;
     }
+	
+	// Retroleum SmartCard
+	if ((address & 0xfff1) == 0xfaf1)
+	{
+		// Do comms stuff.
+	}
 }
 
 
