@@ -47,7 +47,7 @@ NSString *const cMultiface1 = @"multiface1";
 NSString *const cMultiface128 = @"multiface128";
 NSString *const cMultiface128Lockout = @"multiface128Lockout";
 NSString *const cInstaTAPLoading = @"instaTAPLoading";
-NSString *const cSmartCard = @"smartCard";
+NSString *const cSmartCardEnabled = @"smartCardEnabled";
 
 #pragma mark - Implementation 
 
@@ -90,7 +90,7 @@ NSString *const cSmartCard = @"smartCard";
     [_preferences removeObserver:self forKeyPath:cMultiface1];
     [_preferences removeObserver:self forKeyPath:cMultiface128];
     [_preferences removeObserver:self forKeyPath:cMultiface128Lockout];
-	[_preferences removeObserver:self forKeyPath:cSmartCard];
+	[_preferences removeObserver:self forKeyPath:cSmartCardEnabled];
 
     [_preferences removeObserver:self forKeyPath:cInstaTAPLoading];
     [_preferences removeObserver:self forKeyPath:cCurrentMachineType];
@@ -137,7 +137,7 @@ NSString *const cSmartCard = @"smartCard";
         [_preferences addObserver:self forKeyPath:cMultiface1 options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cMultiface128 options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cMultiface128Lockout options:NSKeyValueObservingOptionNew context:NULL];
-		[_preferences addObserver:self forKeyPath:cSmartCard options:NSKeyValueObservingOptionNew context:NULL];
+		[_preferences addObserver:self forKeyPath:cSmartCardEnabled options:NSKeyValueObservingOptionNew context:NULL];
 
         [_preferences addObserver:self forKeyPath:cInstaTAPLoading options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
@@ -251,7 +251,7 @@ NSString *const cSmartCard = @"smartCard";
              cMultiface128,
              cMultiface128Lockout,
              cInstaTAPLoading,
-			 cSmartCard
+			 cSmartCardEnabled
              ];
 }
 

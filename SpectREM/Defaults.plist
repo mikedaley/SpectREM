@@ -66,5 +66,7 @@
 	<false/>
 	<key>instaTAPLoading</key>
 	<true/>
+	<key>smartCard</key>
+	<false/>
 </dict>
 </plist>
