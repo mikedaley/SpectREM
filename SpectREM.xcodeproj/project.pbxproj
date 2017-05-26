@@ -85,6 +85,7 @@
 /* Begin PBXFileReference section */
 		0A6386D91E48C72300783DA4 /* AddressLabels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressLabels.h; sourceTree = "<group>"; };
 		0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = 48KRomLabels.mm; sourceTree = "<group>"; };
+		179D95581ED8C06200185F76 /* asio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = asio.hpp; sourceTree = "<group>"; };
 		991D87C21E33937A00667E37 /* SmartLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartLink.h; sourceTree = "<group>"; };
 		991D87C31E33937A00667E37 /* SmartLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartLink.m; sourceTree = "<group>"; };
 		991D87F11E33BD6700667E37 /* ORSSerial.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ORSSerial.framework; sourceTree = "<group>"; };
@@ -357,6 +358,7 @@
 		EDF3A49F1DB0D60700511BAF /* SpectREM */ = {
 			isa = PBXGroup;
 			children = (
+				179D95581ED8C06200185F76 /* asio.hpp */,
 				ED8BD24A1E5CA6980033DBAA /* AgentX.szx */,
 				EDF3A4FE1DB77D0F00511BAF /* Class Extensions */,
 				EDF3A4F61DB0F23000511BAF /* Shaders */,
