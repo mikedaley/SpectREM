@@ -42,8 +42,8 @@
         memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
         
         // Multiface ROM/RAM setup
-        multifaceMemory = (unsigned char*)calloc(16 * 1024, sizeof(unsigned char));
-        
+        multifaceMemory = (unsigned char*)calloc(cSmartCardSRAMSize, sizeof(unsigned char));
+		
         NSString *path = [[NSBundle mainBundle] pathForResource:@"MF1" ofType:@"rom"];
         NSData *data = [NSData dataWithContentsOfFile:path];
         const char *fileBytes = (const char*)[data bytes];
@@ -58,6 +58,10 @@
                          coreDebugRead,
                          coreDebugWrite,
                          (__bridge void *)self);
+		
+		// SmartCard ROM/RAM setup
+		smartCardPortFAF3 = 0;
+		smartCardSRAM = (unsigned char*)calloc(cSmartCardSRAMSize, sizeof(unsigned char));
 		
 		// Register the opcode callback for the save trapping
 		core->RegisterOpcodeCallback(opcodeCallback);
@@ -90,6 +94,10 @@
             multifaceMemory[i] = 0;
         }
     }
+	// Clear SmartCard SRAM and ports, happens on both soft and hard reset
+	smartCardPortFAF3 = 0;
+	memset(smartCardSRAM, 0, cSmartCardSRAMSize);
+	
     [super reset:hard];
     currentRAMPage = 0;
     currentROMPage = 0;
@@ -107,7 +115,12 @@ static unsigned char coreMemoryRead(unsigned short address, void *m)
     {
         return machine->multifaceMemory[ address ];
     }
-    
+
+	if (machine->smartCardActive && (machine->smartCardPortFAF3&0x80) && address >= 8912 && address < 16384)
+	{
+		return machine->multifaceMemory[ (address << (machine->smartCardPortFAF3&7)) - 8192 ];
+	}
+	
     return machine->memory[address];
 }
 
@@ -117,11 +130,16 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
 
     if (address < 16384)
     {
-        if (machine->multifacePagedIn && address >= 8192)
+        if (machine->multifacePagedIn && address > 8192)
         {
             machine->multifaceMemory[ address ] = data;
         }
-        
+		
+		if (machine->smartCardActive && (machine->smartCardPortFAF3&0x80) && address >= 8912 && address < 16384)
+		{
+			machine->multifaceMemory[ (address << (machine->smartCardPortFAF3&7)) - 8192 ] = data;
+		}
+		
         return;
     }
 

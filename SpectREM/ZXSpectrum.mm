@@ -13,6 +13,51 @@
 #import "Z80Core.h"
 #import "SmartLink.h"
 
+#define ASIO_STANDALONE
+#import "asio.hpp"
+
+
+class Network
+{
+public:
+	Network() : _socket(_io_context), _resolver(_io_context) {}
+	
+	struct _readPacket
+	{
+		uint8_t _packetType, _packetData;
+		uint16_t _packetAddress;
+	};
+	
+	void connect()
+	{
+		asio::error_code ec;
+		asio::connect(_socket, _resolver.resolve("127.0.0.1", "5555"), ec);
+	}
+	
+	uint8_t read_port(uint16_t address)
+	{
+		_readPacket _packet{ 0x1, 0, address };
+		asio::error_code ec;
+		asio::write(_socket, asio::buffer(&_packet, sizeof(_packet)), ec);
+		if(!ec)
+		{
+			asio::read(_socket, asio::buffer(&_packet, sizeof(_packet)), ec);
+		}
+		return _packet._packetData;
+	}
+	
+	void write_port(uint16_t address, uint8_t data)
+	{
+		_readPacket _packet{ 0x2, data, address };
+		asio::error_code ec;
+		asio::write(_socket, asio::buffer(&_packet, sizeof(_packet)), ec);
+	}
+	
+private:
+	asio::io_context _io_context;
+	asio::ip::tcp::socket _socket;
+	asio::ip::tcp::resolver _resolver;
+};
 
 #pragma mark - Interface
 
@@ -27,6 +72,7 @@
 
 @implementation ZXSpectrum
 {
+	Network *smart_card;
 }
 
 
@@ -127,6 +173,8 @@
     [self.audioCore start];
     [self resetFrame];
     [self doFrame];
+	smart_card = new Network;
+	smart_card->connect();
 }
 
 
@@ -134,6 +182,7 @@
 {
     [self removeObservers];
     [self.audioCore stop];
+	delete smart_card;
 }
 
 
@@ -169,6 +218,7 @@
     ulaPlusPaletteOn = 0;
     multifacePagedIn = false;
     multifaceLockedOut = false;
+	smartCardActive = true;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -780,7 +830,14 @@ unsigned char coreIORead(unsigned short address, void *m)
 		// Retroleum SmartCard
 		else if ((address & 0xfff1) == 0xfaf1)
 		{
-			// Do comms stuff.
+			if(address == 0xfaf3)
+			{
+				return machine->smartCardPortFAF3;
+			}
+			else
+			{
+				return machine->smart_card->read_port(address);
+			}
 		}
 		
         // Getting here means that nothing has handled that port read so based on a real Spectrum return the floating bus value
@@ -969,7 +1026,14 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
 	// Retroleum SmartCard
 	if ((address & 0xfff1) == 0xfaf1)
 	{
-		// Do comms stuff.
+		if(address == 0xfaf3)
+		{
+			machine->smartCardPortFAF3 = data;
+		}
+		else
+		{
+			machine->smart_card->write_port(address, data);
+		}
 	}
 }
 

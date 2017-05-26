@@ -35,6 +35,10 @@ static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 // Number of frames to skip when running in accelerated mode
 static int const cAcceleratedSkipFrames = 10;
 
+// SmartCard constants
+static size_t const cSmartCardSRAMSize = 8 * 8192;
+
+
 #pragma mark - Type Definitions
 
 // Defines an enum for each type of display action used when drawing the screen
@@ -96,6 +100,10 @@ static NS_ENUM(NSUInteger, MachineType)
     
     // Multiface ROM
     unsigned char *multifaceMemory;
+	
+	// SmartCard ROM and sundries
+	unsigned char smartCardPortFAF3;
+	unsigned char *smartCardSRAM;		// 8 * 8k banks, mapped @ $2000-$3FFF
     
     // 128k paging
     int currentROMPage;
@@ -196,6 +204,9 @@ static NS_ENUM(NSUInteger, MachineType)
     // Multiface
     bool multifacePagedIn;
     bool multifaceLockedOut;
+	
+	// SmartCard
+	bool smartCardActive;
 }
 
 #pragma mark - Properties
@@ -228,6 +239,8 @@ static NS_ENUM(NSUInteger, MachineType)
 @property (assign) bool multiface128Lockout;
 
 @property (assign) bool instaTAPLoading;
+
+@property (assign) bool smartCard;
 
 @property (strong) NSString *snapshotPath;
 
