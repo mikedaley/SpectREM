@@ -142,7 +142,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     
     if (page == 0)
     {
-        if (machine->multifacePagedIn && address > 8192)
+        if (machine->multifacePagedIn && address >= 8192)
         {
             machine->multifaceMemory[ address ] = data;
         }
