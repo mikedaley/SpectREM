@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F71b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16G8c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
@@ -406,11 +406,11 @@
             <objects>
                 <viewController storyboardIdentifier="ConfigViewController" id="eq9-hE-kE2" customClass="ConfigViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" misplaced="YES" id="a97-VP-aKI">
-                        <rect key="frame" x="0.0" y="0.0" width="236" height="1069"/>
+                        <rect key="frame" x="0.0" y="0.0" width="236" height="1086"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box misplaced="YES" borderType="line" title="Display" id="g2m-hz-Neu">
-                                <rect key="frame" x="8" y="501" width="221" height="399"/>
+                                <rect key="frame" x="8" y="518" width="221" height="399"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="rv0-nd-bwL">
                                     <rect key="frame" x="1" y="1" width="219" height="383"/>
@@ -681,7 +681,7 @@
                                 </view>
                             </box>
                             <box misplaced="YES" boxType="secondary" title="Audio" id="61y-0j-XH6">
-                                <rect key="frame" x="8" y="264" width="221" height="233"/>
+                                <rect key="frame" x="8" y="281" width="221" height="233"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="el6-kT-AL6">
                                     <rect key="frame" x="2" y="2" width="217" height="216"/>
@@ -876,7 +876,7 @@
                                 </view>
                             </box>
                             <box misplaced="YES" title="Computer" id="16N-tf-hw7">
-                                <rect key="frame" x="8" y="904" width="221" height="145"/>
+                                <rect key="frame" x="8" y="921" width="221" height="145"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="wN5-47-Bis">
                                     <rect key="frame" x="2" y="2" width="217" height="128"/>
@@ -979,7 +979,7 @@
                                 </view>
                             </box>
                             <box misplaced="YES" title="Peripherals" id="DTH-e0-9zP">
-                                <rect key="frame" x="8" y="134" width="221" height="126"/>
+                                <rect key="frame" x="8" y="151" width="221" height="126"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="kD5-ir-o3u">
                                     <rect key="frame" x="2" y="2" width="217" height="109"/>
@@ -1069,14 +1069,14 @@
                                 </view>
                             </box>
                             <box misplaced="YES" title="SmartLINK" id="PhZ-fu-zoX">
-                                <rect key="frame" x="8" y="16" width="221" height="114"/>
+                                <rect key="frame" x="8" y="16" width="221" height="131"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="4r4-3E-iDO">
-                                    <rect key="frame" x="2" y="2" width="217" height="97"/>
+                                    <rect key="frame" x="2" y="2" width="217" height="114"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="YES" id="IWH-Zo-ogT">
-                                            <rect key="frame" x="22" y="69" width="88" height="14"/>
+                                            <rect key="frame" x="22" y="64" width="88" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Use SmartLINK:" id="OJg-Qy-bu7">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -1085,7 +1085,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button misplaced="YES" id="C1t-EF-XnC">
-                                            <rect key="frame" x="114" y="66" width="18" height="20"/>
+                                            <rect key="frame" x="114" y="61" width="18" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="overlaps" controlSize="small" state="on" inset="2" id="zqr-WM-Nsp">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1096,7 +1096,7 @@
                                             </connections>
                                         </button>
                                         <popUpButton verticalHuggingPriority="750" misplaced="YES" id="D7p-PG-vqC">
-                                            <rect key="frame" x="17" y="42" width="183" height="22"/>
+                                            <rect key="frame" x="17" y="37" width="183" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="jHX-Qg-yfa" id="z37-jC-1KD">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1116,7 +1116,7 @@
                                             </connections>
                                         </popUpButton>
                                         <button verticalHuggingPriority="750" misplaced="YES" id="I9X-H4-ii6">
-                                            <rect key="frame" x="15" y="13" width="187" height="28"/>
+                                            <rect key="frame" x="15" y="8" width="187" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Send memory snapshot" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Mc6-K6-iQD">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1125,6 +1125,26 @@
                                                     <action selector="sendToSmartLink:" target="vpk-g3-oSY" id="ys0-CQ-kJd"/>
                                                 </connections>
                                             </buttonCell>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="YES" id="b2K-y4-qNI">
+                                            <rect key="frame" x="4" y="86" width="106" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Enable Smart Card:" id="J8Z-tB-dz2">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button misplaced="YES" id="ef6-FO-RIP">
+                                            <rect key="frame" x="114" y="83" width="18" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="overlaps" controlSize="small" state="on" inset="2" id="PxV-i1-u2v">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="eq9-hE-kE2" name="value" keyPath="self.smartCardEnabled" id="m0f-lB-B7p"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                 </view>
@@ -1136,7 +1156,7 @@
                 <userDefaultsController id="ywq-i7-o5s"/>
                 <userDefaultsController id="5A0-U6-2Qz"/>
             </objects>
-            <point key="canvasLocation" x="-307" y="788.5"/>
+            <point key="canvasLocation" x="-307" y="797"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">

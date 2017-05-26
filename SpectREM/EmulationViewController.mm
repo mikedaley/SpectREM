@@ -226,7 +226,7 @@
     [_machine bind:cMultiface128 toObject:_configViewController withKeyPath:cMultiface128 options:nil];
     [_machine bind:cMultiface128Lockout toObject:_configViewController withKeyPath:cMultiface128Lockout options:nil];
     [_machine bind:cInstaTAPLoading toObject:_configViewController withKeyPath:cInstaTAPLoading options:nil];
-	[_machine bind:cSmartCard toObject:_configViewController withKeyPath:cSmartCard options:nil];
+	[_machine bind:cSmartCardEnabled toObject:_configViewController withKeyPath:cSmartCardEnabled options:nil];
 	
     [_tapeViewController bind:@"tape" toObject:self withKeyPath:@"zxTape" options:nil];
     [_disassemblyViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
@@ -240,6 +240,7 @@
     [_configViewController addObserver:self forKeyPath:cAccelerationMultiplier options:NSKeyValueObservingOptionNew context:NULL];
     [_configViewController addObserver:self forKeyPath:cAccelerate options:NSKeyValueObservingOptionNew context:NULL];
     [_configViewController addObserver:self forKeyPath:cUseSmartLink options:NSKeyValueObservingOptionNew context:NULL];
+    [_configViewController addObserver:self forKeyPath:cSmartCardEnabled options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)setupNotificationCenterObservers
@@ -281,7 +282,7 @@
     [_machine unbind:cMultiface128];
     [_machine unbind:cMultiface128Lockout];
     [_machine unbind:cInstaTAPLoading];
-	[_machine unbind:cSmartCard];
+	[_machine unbind:cSmartCardEnabled];
 }
 
 #pragma mark - Observers
@@ -327,6 +328,21 @@
             [self notifyUserWithMessage:NSLocalizedString(@"SmartLINK Disabled", nil)];
         }
     }
+
+    if ([keyPath isEqualToString:cSmartCardEnabled])
+    {
+        if ([[change valueForKey:NSKeyValueChangeNewKey] boolValue])
+        {
+            [self notifyUserWithMessage:NSLocalizedString(@"SmartCard Enabled", nil)];
+            [_machine enableSmartCard];
+        }
+        else
+        {
+            [self notifyUserWithMessage:NSLocalizedString(@"SmartCard Disabled", nil)];
+            [_machine disableSmartCard];
+        }
+    }
+
 }
 
 #pragma mark - View events

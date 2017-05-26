@@ -167,14 +167,28 @@ private:
 
 #pragma mark - Emulation Control
 
+- (void)enableSmartCard
+{
+    if (self.smartCardEnabled)
+    {
+        smart_card = new Network;
+        smart_card->connect();
+    }
+}
+
+- (void)disableSmartCard
+{
+    if (smart_card)
+    {
+        delete smart_card;
+    }
+}
 
 - (void)start
 {
     [self.audioCore start];
     [self resetFrame];
     [self doFrame];
-	smart_card = new Network;
-	smart_card->connect();
 }
 
 
@@ -182,7 +196,6 @@ private:
 {
     [self removeObservers];
     [self.audioCore stop];
-	delete smart_card;
 }
 
 
@@ -828,7 +841,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         }
 
 		// Retroleum SmartCard
-		else if ((address & 0xfff1) == 0xfaf1)
+		else if ((address & 0xfff1) == 0xfaf1 && machine.smartCardEnabled && machine->smart_card)
 		{
 			if(address == 0xfaf3)
 			{
@@ -1024,7 +1037,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
 	
 	// Retroleum SmartCard
-	if ((address & 0xfff1) == 0xfaf1)
+	if ((address & 0xfff1) == 0xfaf1 && machine.smartCardEnabled && machine->smart_card)
 	{
 		if(address == 0xfaf3)
 		{

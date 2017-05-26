@@ -240,7 +240,7 @@ static NS_ENUM(NSUInteger, MachineType)
 
 @property (assign) bool instaTAPLoading;
 
-@property (assign) bool smartCard;
+@property (assign) bool smartCardEnabled;
 
 @property (strong) NSString *snapshotPath;
 
@@ -377,6 +377,9 @@ unsigned char coreIORead(unsigned short address, void *m);
  Returns the name of the machine
  */
 - (NSString *)machineName;
+
+- (void)enableSmartCard;
+- (void)disableSmartCard;
 
 #pragma mark - Debugging
 

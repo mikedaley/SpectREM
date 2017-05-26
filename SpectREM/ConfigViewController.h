@@ -52,7 +52,7 @@ extern NSString *const cMultiface1;
 extern NSString *const cMultiface128;
 extern NSString *const cMultiface128Lockout;
 extern NSString *const cInstaTAPLoading;
-extern NSString *const cSmartCard;
+extern NSString *const cSmartCardEnabled;
 
 @interface ConfigViewController : NSViewController
 
@@ -96,7 +96,7 @@ extern NSString *const cSmartCard;
 @property (assign) bool multiface1;
 @property (assign) bool multiface128;
 @property (assign) bool multiface128Lockout;
-@property (assign) bool smartCard;
+@property (assign) bool smartCardEnabled;
 @property (nonatomic, readonly) ORSSerialPortManager *serialPortManager;
 @property (nonatomic, strong) ORSSerialPort *serialPort;
 @property (nonatomic, assign) BOOL useSmartLink;
