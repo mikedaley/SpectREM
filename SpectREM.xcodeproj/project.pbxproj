@@ -41,6 +41,7 @@
 		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */; };
+		EDCEAF1D1EDDD8CC00A213B8 /* SLNetwork.hpp in Sources */ = {isa = PBXBuildFile; fileRef = EDCEAF1C1EDDD8CC00A213B8 /* SLNetwork.hpp */; };
 		EDE99ED81E48D3C8006F8E63 /* DisassemblyViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
@@ -85,7 +86,7 @@
 /* Begin PBXFileReference section */
 		0A6386D91E48C72300783DA4 /* AddressLabels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressLabels.h; sourceTree = "<group>"; };
 		0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = 48KRomLabels.mm; sourceTree = "<group>"; };
-		179D95581ED8C06200185F76 /* asio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = asio.hpp; sourceTree = "<group>"; };
+		179D95581ED8C06200185F76 /* asio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = asio.hpp; path = SpectREM/asio.hpp; sourceTree = "<group>"; };
 		991D87C21E33937A00667E37 /* SmartLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartLink.h; sourceTree = "<group>"; };
 		991D87C31E33937A00667E37 /* SmartLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartLink.m; sourceTree = "<group>"; };
 		991D87F11E33BD6700667E37 /* ORSSerial.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ORSSerial.framework; sourceTree = "<group>"; };
@@ -140,6 +141,7 @@
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapeViewController.h; sourceTree = "<group>"; };
 		EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeViewController.m; sourceTree = "<group>"; };
+		EDCEAF1C1EDDD8CC00A213B8 /* SLNetwork.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SLNetwork.hpp; sourceTree = "<group>"; };
 		EDE99ED61E48D3C8006F8E63 /* DisassemblyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisassemblyViewController.h; sourceTree = "<group>"; };
 		EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DisassemblyViewController.mm; sourceTree = "<group>"; };
 		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 			children = (
 				991D87C21E33937A00667E37 /* SmartLink.h */,
 				991D87C31E33937A00667E37 /* SmartLink.m */,
+				EDCEAF1C1EDDD8CC00A213B8 /* SLNetwork.hpp */,
 			);
 			name = SmartLINK;
 			sourceTree = "<group>";
@@ -314,6 +317,15 @@
 			name = TapeViewController;
 			sourceTree = "<group>";
 		};
+		EDCEAF1E1EDDDA4800A213B8 /* ASIO */ = {
+			isa = PBXGroup;
+			children = (
+				179D95581ED8C06200185F76 /* asio.hpp */,
+			);
+			name = ASIO;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		EDE99ED51E48D3AC006F8E63 /* Disassembly View Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -358,8 +370,8 @@
 		EDF3A49F1DB0D60700511BAF /* SpectREM */ = {
 			isa = PBXGroup;
 			children = (
-				179D95581ED8C06200185F76 /* asio.hpp */,
 				ED8BD24A1E5CA6980033DBAA /* AgentX.szx */,
+				EDCEAF1E1EDDDA4800A213B8 /* ASIO */,
 				EDF3A4FE1DB77D0F00511BAF /* Class Extensions */,
 				EDF3A4F61DB0F23000511BAF /* Shaders */,
 				EDF3A4C41DB0D79100511BAF /* ROMS */,
@@ -632,6 +644,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED61BE721E61E02A0024FEBB /* MemoryViewController.m in Sources */,
+				EDCEAF1D1EDDD8CC00A213B8 /* SLNetwork.hpp in Sources */,
 				999698981E467BD7007FD246 /* TapeCellView.m in Sources */,
 				EDF3A4DA1DB0D7AB00511BAF /* Z80Core_DDCB_FDCBOpcodes.cpp in Sources */,
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,

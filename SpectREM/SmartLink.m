@@ -135,8 +135,6 @@
     spectrumReset[0] = eRETROLEUM_RESET;
     [self sendData:[NSData dataWithBytes:spectrumReset length:1] code:eRETROLEUM_RESET waitForResponse:YES];
 
-//    return;
-    
     // Send register data
     [self sendBlockWithCode:eSEND_SNAPSHOT_REGISTERS
                    location:snapshotIndex
