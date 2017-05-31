@@ -1,14 +1,12 @@
 //
-//  Network.cpp
+//  SLNetwork.cpp
 //  SpectREM
 //
-//  Created by Mike Daley on 30/05/2017.
-//  Copyright © 2017 71Squared Ltd. All rights reserved.
+//  Created by Paul Tankard on 26/05/2017.
 //
 
 #define ASIO_STANDALONE
 #import "asio.hpp"
-
 
 class SLNetwork
 {
