@@ -38,6 +38,8 @@ static int const cAcceleratedSkipFrames = 10;
 // SmartCard constants
 static size_t const cSmartCardSRAMSize = 8 * 8192;
 
+// Multiface memory size
+static size_t const cMultifaceMemSize = 16 * 1024;
 
 #pragma mark - Type Definitions
 

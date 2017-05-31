@@ -42,7 +42,7 @@
         memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
         
         // Multiface ROM/RAM setup
-        multifaceMemory = (unsigned char*)calloc(cSmartCardSRAMSize, sizeof(unsigned char));
+        multifaceMemory = (unsigned char*)calloc(cMultifaceMemSize, sizeof(unsigned char));
 		
         NSString *path = [[NSBundle mainBundle] pathForResource:@"MF1" ofType:@"rom"];
         NSData *data = [NSData dataWithContentsOfFile:path];
