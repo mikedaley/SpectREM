@@ -97,8 +97,16 @@
                 NSMutableString *content = [NSMutableString new];
                 for (int i = 0; i < self.byteWidth; i++)
                 {
-                    char c = self.machine->memory[(row * self.byteWidth) + i];
-                    [content appendString:[NSString stringWithFormat:@"%c", c]];
+                    unsigned char c = self.machine->memory[(row * self.byteWidth) + i];
+                    if ((c >= 0 && c < 32) || c > 126)
+                    {
+                        [content appendString:@"."];
+                    }
+                    else
+                    {
+                        NSString *character = [NSString stringWithFormat:@"%c", c];
+                        [content appendString:character];
+                    }
                 }
                 view.textField.stringValue = content;
             }
