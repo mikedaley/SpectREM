@@ -99,6 +99,11 @@
 
 - (void)tapeBytesProcessed:(NSInteger)bytes
 {
+    if (!self.tape.tapBlocks || self.tape.tapBlocks.count == 0)
+    {
+        return;
+    }
+    
     TAPBlock *block = [self.tape.tapBlocks objectAtIndex:self.tape.currentBlockIndex];
     TapeCellView *view = [self.tableView viewAtColumn:0 row:self.tape.currentBlockIndex makeIfNecessary:NO];
     double length = block.blockLength;

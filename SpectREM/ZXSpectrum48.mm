@@ -42,7 +42,7 @@
         memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
         
         // Multiface ROM/RAM setup
-        multifaceMemory = (unsigned char*)calloc(cSmartCardSRAMSize, sizeof(unsigned char));
+        multifaceMemory = (unsigned char*)calloc(cMultifaceMemSize, sizeof(unsigned char));
 		
         NSString *path = [[NSBundle mainBundle] pathForResource:@"MF1" ofType:@"rom"];
         NSData *data = [NSData dataWithContentsOfFile:path];
@@ -130,7 +130,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
 
     if (address < 16384)
     {
-        if (machine->multifacePagedIn && address > 8192)
+        if (machine->multifacePagedIn && address >= 8192)
         {
             machine->multifaceMemory[ address ] = data;
         }
