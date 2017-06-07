@@ -15,9 +15,12 @@
 
 @interface SmartLink() <ORSSerialPortDelegate, NSUserNotificationCenterDelegate>
 
-@property (assign) bool slDataSent;
+@property (strong) ORSSerialPacketDescriptor *sendOkResponse;
+@property (strong) ORSSerialPacketDescriptor *verifyResponse;
 
-@property (strong) dispatch_queue_t smartLinkQueue;
+@property (strong) NSMutableData *sendData;
+@property (strong) NSMutableData *receivedData;
+@property (assign) int responseBytes;
 
 @end
 
@@ -30,7 +33,16 @@
     self = [super init];
     if (self)
     {
-        _smartLinkQueue = dispatch_queue_create("com.71squared.smartlink", DISPATCH_QUEUE_SERIAL);
+        char responseCode[1] = {eSEND_OK};
+        _sendOkResponse = [[ORSSerialPacketDescriptor alloc] initWithPacketData:[NSData dataWithBytes:responseCode
+                                                                                                          length:1]
+                                                                       userInfo:NULL];
+
+        responseCode[0] = eVERIFY_RESPONSE;
+        _verifyResponse = [[ORSSerialPacketDescriptor alloc] initWithPacketData:[NSData dataWithBytes:responseCode
+                                                                                               length:1]
+                                                                       userInfo:NULL];
+
 
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(serialPortsWereConnected:) name:ORSSerialPortsWereConnectedNotification object:nil];
@@ -46,39 +58,17 @@
 
 #pragma mark - Actions
 
-- (void)sendData:(NSData *)data code:(unsigned char)code waitForResponse:(BOOL)wait
+- (void)sendData:(NSData *)data expectedResponse:(ORSSerialPacketDescriptor *)expectedResponse responseLength:(int)length
 {
     if (self.serialPort)
     {
-        dispatch_async(_smartLinkQueue, ^{
-            
-            if (self.sendFailed)
-            {
-                NSLog(@"FAILED!");
-                return;
-            }
-            
-            NSLog(@"Sending code: %i", code);
-            
-            [self.serialPort sendData:data];
-            
-            if (wait)
-            {
-                self.dataReceived = NO;
-                CFTimeInterval startTime = CACurrentMediaTime();
-                CFTimeInterval elapsedTime = 0;
-                while(!self.dataReceived)
-                {
-                    elapsedTime = CACurrentMediaTime() - startTime;
-                    if (elapsedTime > 2)
-                    {
-                        NSLog(@"SmartLINK timeout!");
-                        self.sendFailed = YES;
-                        break;
-                    }
-                };
-            }
-        });
+        [self.sendData appendData:[data subdataWithRange:NSMakeRange(5, data.length - 5)]];
+//        NSLog(@"Send Request: %@", self.sendData.description);
+        ORSSerialRequest *request = [ORSSerialRequest requestWithDataToSend:data
+                                                                   userInfo:NULL
+                                                            timeoutInterval:2
+                                                         responseDescriptor:expectedResponse];
+        [self.serialPort sendRequest:request];
     }
 }
 
@@ -94,18 +84,24 @@
     NSLog(@"Serial port %@ encountered an error: %@", self.serialPort, error);
 }
 
+- (void)serialPort:(ORSSerialPort *)serialPort didReceiveResponse:(NSData *)responseData toRequest:(ORSSerialRequest *)request
+{
+    NSLog(@"didReceiveResponse: %@", responseData.description);
+//    self.receivedData = [NSMutableData new];
+}
+
+- (void)serialPort:(ORSSerialPort *)serialPort requestDidTimeout:(ORSSerialRequest *)request
+{
+    NSLog(@"Command timed out!");
+    [self.serialPort cancelAllQueuedRequests];
+}
+
 - (void)serialPort:(ORSSerialPort *)serialPort didReceiveData:(NSData *)data
 {
-    unsigned char responseBuffer[1], *dataPtr;
-    [data getBytes:responseBuffer range:NSMakeRange(0, data.length)];
-    dataPtr = responseBuffer;
-
-    NSLog(@"Response: %i", responseBuffer[0]);
-
-    // If the first byte of the response is 0xaa, then we know the data that was sent has been received
-    if (responseBuffer[0] == 0xaa)
+    if (data.length > 5)
     {
-        self.dataReceived = YES;
+        [self.receivedData appendData:[data subdataWithRange:NSMakeRange(1, data.length - 5)]];
+        NSLog(@"%@", data.description);
     }
 }
 
@@ -124,64 +120,97 @@
 
 - (void)sendSnapshot:(unsigned char *)snapshot
 {
-    self.sendFailed = NO;
+    if (self.sendData && self.receivedData)
+    {
+        if (self.receivedData.length > 0)
+        {
+            if (![self.receivedData isEqualToData:self.sendData])
+            {
+                NSLog(@"OH SHIT!");
+            }
+        }
+    }
+    
+    self.sendData = [NSMutableData new];
+    self.receivedData = [NSMutableData new];
+    
+    self.responseBytes = 0;
+    
     int snapshotIndex = 0;
-    int transferAmount = 48 * 1024;
+    int transferAmount = 16384;
     unsigned short blockSize = 8000;
     unsigned short spectrumAddress = 0x4000;
     
     // Reset Retroleum card
-    unsigned char spectrumReset[1];
-    spectrumReset[0] = eRETROLEUM_RESET;
-    [self sendData:[NSData dataWithBytes:spectrumReset length:1] code:eRETROLEUM_RESET waitForResponse:YES];
+//    [self sendBlockWithCommand:eRETROLEUM_RESET
+//                      location:0
+//                        length:0
+//                          data:snapshot
+//              expectedResponse:self.verifyResponse];
 
+    
     // Send register data
-    [self sendBlockWithCode:eSEND_SNAPSHOT_REGISTERS
-                   location:snapshotIndex
-                     length:27
-                       data:snapshot];
+//    [self sendBlockWithCommand:eSEND_SNAPSHOT_REGISTERS
+//                      location:snapshotIndex
+//                        length:27
+//                          data:snapshot
+//              expectedResponse:self.verifyResponse];
 
     snapshotIndex += 27;
+
+//    [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
+//                      location:0x4000
+//                        length:8000
+//                          data:snapshot + snapshotIndex
+//              expectedResponse:self.verifyResponse];
+//    
+//    return;
     
     // Send memory data
     for (int block = 0; block < (transferAmount / blockSize); block++)
     {
-        [self sendBlockWithCode:eSEND_SNAPSHOT_DATA
-                       location:spectrumAddress
-                         length:blockSize
-                           data:snapshot + snapshotIndex];
+        [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
+                          location:spectrumAddress
+                            length:blockSize
+                              data:snapshot + snapshotIndex
+                  expectedResponse:self.verifyResponse];
+
         snapshotIndex += blockSize;
         spectrumAddress += blockSize;
     }
     
+//    return;
+    
     // Deal with any partial block data left over
     if (transferAmount % blockSize)
     {
-        [self sendBlockWithCode:0xaa
-                       location:spectrumAddress
-                         length:transferAmount % blockSize
-                           data:snapshot + snapshotIndex];
+        [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
+                          location:spectrumAddress
+                            length:transferAmount % blockSize
+                              data:snapshot + snapshotIndex
+                  expectedResponse:self.verifyResponse];
     }
     
     // Send start game
-    [self sendBlockWithCode:eRUN_SNAPSHOT
-                   location:0
-                     length:0
-                       data:snapshot];
+//    [self sendBlockWithCommand:eRUN_SNAPSHOT
+//                      location:0
+//                        length:0
+//                          data:snapshot
+//              expectedResponse:self.verifyResponse];
     
 }
 
-- (void)sendBlockWithCode:(uint8_t)code location:(uint16_t)location length:(uint16_t)length data:(unsigned char *)data
+- (void)sendBlockWithCommand:(uint8_t)command location:(uint16_t)location length:(uint16_t)length data:(unsigned char *)data expectedResponse:(ORSSerialPacketDescriptor *)expectedResponse
 {
     static char tmpbuffer[5 + 8192];
-    tmpbuffer[0] = code;
+    tmpbuffer[0] = command;
     tmpbuffer[1] = location & 0xff;
     tmpbuffer[2] = location >> 8;
     tmpbuffer[3] = length & 0xff;
     tmpbuffer[4] = length >> 8;
     memcpy(tmpbuffer + 5, data, length);
     
-    [self sendData:[NSData dataWithBytes:tmpbuffer length:length + 5] code:code waitForResponse:YES];
+    [self sendData:[NSData dataWithBytes:tmpbuffer length:length + 5] expectedResponse:expectedResponse responseLength:1];
 }
 
 

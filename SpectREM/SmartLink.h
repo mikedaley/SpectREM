@@ -11,21 +11,28 @@
 
 @class ORSSerialPortManager;
 @class ORSSerialPort;
+@class ORSSerialPacketDescriptor;
 
-typedef NS_ENUM(unsigned char, command) {
+typedef NS_ENUM(unsigned char, command)
+{
     eRETROLEUM_RESET = 0x66,
     eSEND_SNAPSHOT_REGISTERS = 0xa0,
     eSEND_SNAPSHOT_DATA = 0xaa,
     eRUN_SNAPSHOT = 0x80
 };
 
+typedef NS_ENUM(unsigned char, response)
+{
+    eSEND_OK = 0xaa,
+    eVERIFY_RESPONSE = 0x88
+};
+
 @interface SmartLink : NSObject_Bindings
 
 @property (nonatomic, strong) ORSSerialPortManager *serialPortManager;
 @property (nonatomic, strong) ORSSerialPort *serialPort;
-@property (nonatomic, assign) BOOL dataReceived;
-@property (nonatomic, assign) BOOL sendFailed;
 
-- (void)sendData:(NSData *)data code:(unsigned char)code waitForResponse:(BOOL)wait;
+- (void)sendData:(NSData *)data expectedResponse:(ORSSerialPacketDescriptor *)expectedResponse responseLength:(int)length;
 - (void)sendSnapshot:(unsigned char *)snapshot;
+
 @end

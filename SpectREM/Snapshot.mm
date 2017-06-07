@@ -153,6 +153,8 @@
     
     [machine setPaused:NO];
     
+//    NSLog(@"%@", [NSData dataWithBytes:data length:49152 + 27]);
+    
     return data;
 }
 

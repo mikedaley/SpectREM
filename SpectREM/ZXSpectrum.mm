@@ -339,10 +339,10 @@
     
     // If smartlink is activated and a serial port has been selected then try to read from
     // SmartLINK and if successful this will update the keyboard map and Kempston joystick port
-    if (self.smartLink.serialPort && self.useSmartLink)
-    {
-        [self.smartLink sendData:smartLinkRequest code:0x77 waitForResponse:NO];
-    }
+//    if (self.smartLink.serialPort && self.useSmartLink)
+//    {
+//        [self.smartLink sendData:smartLinkRequest code:0x77 waitForResponse:NO];
+//    }
     
 }
 
