@@ -27,18 +27,20 @@
 
 
 int const cSERIAL_BAUD_RATE = 115200;
-int const cSNAPSHOT_START_ADDRESS = 16384;
-int const cBLOCK_SIZE = 8000;
-int const cSNAPSHOT_DATA_SIZE = 49152;
-int const cSNAPSHOT_HEADER_LENGTH = 27;
-int const cCOMMAND_HEADER_SIZE = 5;
 int const cSERIAL_TIMEOUT = 2;
+int const cSERIAL_BLOCK_SIZE = 8000;
+
+int const cSNAPSHOT_HEADER_LENGTH = 27;
+int const cSNAPSHOT_DATA_SIZE = 49152;
+int const cSNAPSHOT_START_ADDRESS = 16384;
+
+int const cCOMMAND_HEADER_SIZE = 5;
 
 
 #pragma mark - Static
 
 
-static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
+static char snapshotBuffer[cSERIAL_BLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 
 
 #pragma mark - Implementation 
@@ -94,11 +96,6 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 #pragma mark - ORSSerialPortDelegate
 
 
-- (void)serialPortWasRemovedFromSystem:(ORSSerialPort *)serialPort
-{
-    self.serialPort = nil;
-}
-
 - (void)serialPort:(ORSSerialPort *)serialPort didEncounterError:(NSError *)error
 {
     NSLog(@"Serial port %@ encountered an error: %@", self.serialPort, error);
@@ -106,28 +103,34 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 
 - (void)serialPort:(ORSSerialPort *)serialPort didReceiveResponse:(NSData *)responseData toRequest:(ORSSerialRequest *)request
 {
-    NSLog(@"didReceiveResponse: %@", responseData.description);
+    NSLog(@"Serial port didReceiveResponse: %@", responseData.description);
 }
 
 - (void)serialPort:(ORSSerialPort *)serialPort didReceiveData:(NSData *)data
 {
-    NSLog(@"didReceiveData: %@", data.description);
+    NSLog(@"Serial port didReceiveData: %@", data.description);
 }
 
 - (void)serialPort:(ORSSerialPort *)serialPort requestDidTimeout:(ORSSerialRequest *)request
 {
-    NSLog(@"Command timed out!");
     [self.serialPort cancelAllQueuedRequests];
+    NSLog(@"Serial port command timed out!");
 }
 
 - (void)serialPortWasOpened:(ORSSerialPort *)serialPort
 {
-    NSLog(@"Serial port opened");
+    NSLog(@"Serial port %@ opened", self.serialPort);
 }
 
 - (void)serialPortWasClosed:(ORSSerialPort *)serialPort
 {
-    NSLog(@"Serial port closed");
+    NSLog(@"Serial port %@ closed", self.serialPort);
+}
+
+- (void)serialPortWasRemovedFromSystem:(ORSSerialPort *)serialPort
+{
+    NSLog(@"Serial port %@ removed from system", self.serialPort);
+    self.serialPort = nil;
 }
 
 
@@ -157,24 +160,24 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
     snapshotIndex += cSNAPSHOT_HEADER_LENGTH;
     
     // Send memory data
-    for (int block = 0; block < (cSNAPSHOT_DATA_SIZE / cBLOCK_SIZE); block++)
+    for (int block = 0; block < (cSNAPSHOT_DATA_SIZE / cSERIAL_BLOCK_SIZE); block++)
     {
         [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
                           location:spectrumAddress
-                            length:cBLOCK_SIZE
+                            length:cSERIAL_BLOCK_SIZE
                               data:snapshot + snapshotIndex
                   expectedResponse:self.self.sendOkResponse];
 
-        snapshotIndex += cBLOCK_SIZE;
-        spectrumAddress += cBLOCK_SIZE;
+        snapshotIndex += cSERIAL_BLOCK_SIZE;
+        spectrumAddress += cSERIAL_BLOCK_SIZE;
     }
     
     // Deal with any partial block data left over
-    if (cSNAPSHOT_DATA_SIZE % cBLOCK_SIZE)
+    if (cSNAPSHOT_DATA_SIZE % cSERIAL_BLOCK_SIZE)
     {
         [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
                           location:spectrumAddress
-                            length:cSNAPSHOT_DATA_SIZE % cBLOCK_SIZE
+                            length:cSNAPSHOT_DATA_SIZE % cSERIAL_BLOCK_SIZE
                               data:snapshot + snapshotIndex
                   expectedResponse:self.sendOkResponse];
     }
