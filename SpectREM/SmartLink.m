@@ -11,17 +11,20 @@
 
 @import ORSSerial;
 
+
 #pragma mark - Private Interface
+
 
 @interface SmartLink() <ORSSerialPortDelegate, NSUserNotificationCenterDelegate>
 
 @property (strong) ORSSerialPacketDescriptor *sendOkResponse;
 @property (strong) ORSSerialPacketDescriptor *verifyResponse;
 
-
 @end
 
+
 #pragma mark - Constants
+
 
 int const cSERIAL_BAUD_RATE = 115200;
 int const cSNAPSHOT_START_ADDRESS = 16384;
@@ -29,12 +32,17 @@ int const cBLOCK_SIZE = 8000;
 int const cSNAPSHOT_DATA_SIZE = 49152;
 int const cSNAPSHOT_HEADER_LENGTH = 27;
 int const cCOMMAND_HEADER_SIZE = 5;
+int const cSERIAL_TIMEOUT = 2;
+
 
 #pragma mark - Static
 
+
 static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 
+
 #pragma mark - Implementation 
+
 
 @implementation SmartLink
 
@@ -58,15 +66,17 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
         [nc addObserver:self selector:@selector(serialPortsWereConnected:) name:ORSSerialPortsWereConnectedNotification object:nil];
         [nc addObserver:self selector:@selector(serialPortsWereDisconnected:) name:ORSSerialPortsWereDisconnectedNotification object:nil];
         
-#if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
-        [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
-#endif
+        #if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
+            [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
+        #endif
 
     }
     return self;
 }
 
+
 #pragma mark - Actions
+
 
 - (void)sendData:(NSData *)data expectedResponse:(ORSSerialPacketDescriptor *)expectedResponse responseLength:(int)length
 {
@@ -74,13 +84,15 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
     {
         ORSSerialRequest *request = [ORSSerialRequest requestWithDataToSend:data
                                                                    userInfo:NULL
-                                                            timeoutInterval:2
+                                                            timeoutInterval:cSERIAL_TIMEOUT
                                                          responseDescriptor:expectedResponse];
         [self.serialPort sendRequest:request];
     }
 }
 
+
 #pragma mark - ORSSerialPortDelegate
+
 
 - (void)serialPortWasRemovedFromSystem:(ORSSerialPort *)serialPort
 {
@@ -95,18 +107,17 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 - (void)serialPort:(ORSSerialPort *)serialPort didReceiveResponse:(NSData *)responseData toRequest:(ORSSerialRequest *)request
 {
     NSLog(@"didReceiveResponse: %@", responseData.description);
-//    self.receivedData = [NSMutableData new];
+}
+
+- (void)serialPort:(ORSSerialPort *)serialPort didReceiveData:(NSData *)data
+{
+    NSLog(@"didReceiveData: %@", data.description);
 }
 
 - (void)serialPort:(ORSSerialPort *)serialPort requestDidTimeout:(ORSSerialRequest *)request
 {
     NSLog(@"Command timed out!");
     [self.serialPort cancelAllQueuedRequests];
-}
-
-- (void)serialPort:(ORSSerialPort *)serialPort didReceiveData:(NSData *)data
-{
-    NSLog(@"%@", data.description);
 }
 
 - (void)serialPortWasOpened:(ORSSerialPort *)serialPort
@@ -118,6 +129,7 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 {
     NSLog(@"Serial port closed");
 }
+
 
 #pragma mark - SmartLINK
 
@@ -191,6 +203,7 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 
 #pragma mark - Properties
 
+
 - (ORSSerialPortManager *)serialPortManager
 {
     return [ORSSerialPortManager sharedSerialPortManager];
@@ -213,7 +226,9 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
     }
 }
 
+
 #pragma mark - NSUserNotificationCenterDelegate
+
 
 #if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
 
@@ -232,7 +247,9 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 
 #endif
 
+
 #pragma mark - Notifications
+
 
 - (void)serialPortsWereConnected:(NSNotification *)notification
 {
@@ -251,38 +268,38 @@ static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 
 - (void)postUserNotificationForConnectedPorts:(NSArray *)connectedPorts
 {
-#if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
-    if (!NSClassFromString(@"NSUserNotificationCenter")) return;
-    
-    NSUserNotificationCenter *unc = [NSUserNotificationCenter defaultUserNotificationCenter];
-    for (ORSSerialPort *port in connectedPorts)
-    {
-        NSUserNotification *userNote = [[NSUserNotification alloc] init];
-        userNote.title = NSLocalizedString(@"Serial Port Connected", @"Serial Port Connected");
-        NSString *informativeTextFormat = NSLocalizedString(@"Serial Port %@ was connected to your Mac.", @"Serial port connected user notification informative text");
-        userNote.informativeText = [NSString stringWithFormat:informativeTextFormat, port.name];
-        userNote.soundName = nil;
-        [unc deliverNotification:userNote];
-    }
-#endif
+    #if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
+        if (!NSClassFromString(@"NSUserNotificationCenter")) return;
+        
+        NSUserNotificationCenter *unc = [NSUserNotificationCenter defaultUserNotificationCenter];
+        for (ORSSerialPort *port in connectedPorts)
+        {
+            NSUserNotification *userNote = [[NSUserNotification alloc] init];
+            userNote.title = NSLocalizedString(@"Serial Port Connected", @"Serial Port Connected");
+            NSString *informativeTextFormat = NSLocalizedString(@"Serial Port %@ was connected to your Mac.", @"Serial port connected user notification informative text");
+            userNote.informativeText = [NSString stringWithFormat:informativeTextFormat, port.name];
+            userNote.soundName = nil;
+            [unc deliverNotification:userNote];
+        }
+    #endif
 }
 
 - (void)postUserNotificationForDisconnectedPorts:(NSArray *)disconnectedPorts
 {
-#if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
-    if (!NSClassFromString(@"NSUserNotificationCenter")) return;
-    
-    NSUserNotificationCenter *unc = [NSUserNotificationCenter defaultUserNotificationCenter];
-    for (ORSSerialPort *port in disconnectedPorts)
-    {
-        NSUserNotification *userNote = [[NSUserNotification alloc] init];
-        userNote.title = NSLocalizedString(@"Serial Port Disconnected", @"Serial Port Disconnected");
-        NSString *informativeTextFormat = NSLocalizedString(@"Serial Port %@ was disconnected from your Mac.", @"Serial port disconnected user notification informative text");
-        userNote.informativeText = [NSString stringWithFormat:informativeTextFormat, port.name];
-        userNote.soundName = nil;
-        [unc deliverNotification:userNote];
-    }
-#endif
+    #if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
+        if (!NSClassFromString(@"NSUserNotificationCenter")) return;
+        
+        NSUserNotificationCenter *unc = [NSUserNotificationCenter defaultUserNotificationCenter];
+        for (ORSSerialPort *port in disconnectedPorts)
+        {
+            NSUserNotification *userNote = [[NSUserNotification alloc] init];
+            userNote.title = NSLocalizedString(@"Serial Port Disconnected", @"Serial Port Disconnected");
+            NSString *informativeTextFormat = NSLocalizedString(@"Serial Port %@ was disconnected from your Mac.", @"Serial port disconnected user notification informative text");
+            userNote.informativeText = [NSString stringWithFormat:informativeTextFormat, port.name];
+            userNote.soundName = nil;
+            [unc deliverNotification:userNote];
+        }
+    #endif
 }
 
 @end
