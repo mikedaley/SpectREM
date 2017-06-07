@@ -63,7 +63,6 @@
     if (self.serialPort)
     {
         [self.sendData appendData:[data subdataWithRange:NSMakeRange(5, data.length - 5)]];
-//        NSLog(@"Send Request: %@", self.sendData.description);
         ORSSerialRequest *request = [ORSSerialRequest requestWithDataToSend:data
                                                                    userInfo:NULL
                                                             timeoutInterval:2
@@ -126,7 +125,7 @@
         {
             if (![self.receivedData isEqualToData:self.sendData])
             {
-                NSLog(@"OH SHIT!");
+                NSLog(@"MISMATCH!");
             }
         }
     }
