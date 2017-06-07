@@ -18,11 +18,21 @@
 @property (strong) ORSSerialPacketDescriptor *sendOkResponse;
 @property (strong) ORSSerialPacketDescriptor *verifyResponse;
 
-@property (strong) NSMutableData *sendData;
-@property (strong) NSMutableData *receivedData;
-@property (assign) int responseBytes;
 
 @end
+
+#pragma mark - Constants
+
+int const cSERIAL_BAUD_RATE = 115200;
+int const cSNAPSHOT_START_ADDRESS = 16384;
+int const cBLOCK_SIZE = 8000;
+int const cSNAPSHOT_DATA_SIZE = 49152;
+int const cSNAPSHOT_HEADER_LENGTH = 27;
+int const cCOMMAND_HEADER_SIZE = 5;
+
+#pragma mark - Static
+
+static char snapshotBuffer[cBLOCK_SIZE + cCOMMAND_HEADER_SIZE];
 
 #pragma mark - Implementation 
 
@@ -62,7 +72,6 @@
 {
     if (self.serialPort)
     {
-        [self.sendData appendData:[data subdataWithRange:NSMakeRange(5, data.length - 5)]];
         ORSSerialRequest *request = [ORSSerialRequest requestWithDataToSend:data
                                                                    userInfo:NULL
                                                             timeoutInterval:2
@@ -97,11 +106,7 @@
 
 - (void)serialPort:(ORSSerialPort *)serialPort didReceiveData:(NSData *)data
 {
-    if (data.length > 5)
-    {
-        [self.receivedData appendData:[data subdataWithRange:NSMakeRange(1, data.length - 5)]];
-        NSLog(@"%@", data.description);
-    }
+    NSLog(@"%@", data.description);
 }
 
 - (void)serialPortWasOpened:(ORSSerialPort *)serialPort
@@ -119,97 +124,68 @@
 
 - (void)sendSnapshot:(unsigned char *)snapshot
 {
-    if (self.sendData && self.receivedData)
-    {
-        if (self.receivedData.length > 0)
-        {
-            if (![self.receivedData isEqualToData:self.sendData])
-            {
-                NSLog(@"MISMATCH!");
-            }
-        }
-    }
-    
-    self.sendData = [NSMutableData new];
-    self.receivedData = [NSMutableData new];
-    
-    self.responseBytes = 0;
-    
     int snapshotIndex = 0;
-    int transferAmount = 16384;
-    unsigned short blockSize = 8000;
-    unsigned short spectrumAddress = 0x4000;
+    unsigned short spectrumAddress = cSNAPSHOT_START_ADDRESS;
     
     // Reset Retroleum card
-//    [self sendBlockWithCommand:eRETROLEUM_RESET
-//                      location:0
-//                        length:0
-//                          data:snapshot
-//              expectedResponse:self.verifyResponse];
+    [self sendBlockWithCommand:eRETROLEUM_RESET
+                      location:0
+                        length:0
+                          data:snapshot
+              expectedResponse:self.sendOkResponse];
 
     
     // Send register data
-//    [self sendBlockWithCommand:eSEND_SNAPSHOT_REGISTERS
-//                      location:snapshotIndex
-//                        length:27
-//                          data:snapshot
-//              expectedResponse:self.verifyResponse];
+    [self sendBlockWithCommand:eSEND_SNAPSHOT_REGISTERS
+                      location:snapshotIndex
+                        length:cSNAPSHOT_HEADER_LENGTH
+                          data:snapshot
+              expectedResponse:self.sendOkResponse];
 
-    snapshotIndex += 27;
-
-//    [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
-//                      location:0x4000
-//                        length:8000
-//                          data:snapshot + snapshotIndex
-//              expectedResponse:self.verifyResponse];
-//    
-//    return;
+    snapshotIndex += cSNAPSHOT_HEADER_LENGTH;
     
     // Send memory data
-    for (int block = 0; block < (transferAmount / blockSize); block++)
+    for (int block = 0; block < (cSNAPSHOT_DATA_SIZE / cBLOCK_SIZE); block++)
     {
         [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
                           location:spectrumAddress
-                            length:blockSize
+                            length:cBLOCK_SIZE
                               data:snapshot + snapshotIndex
-                  expectedResponse:self.verifyResponse];
+                  expectedResponse:self.self.sendOkResponse];
 
-        snapshotIndex += blockSize;
-        spectrumAddress += blockSize;
+        snapshotIndex += cBLOCK_SIZE;
+        spectrumAddress += cBLOCK_SIZE;
     }
     
-//    return;
-    
     // Deal with any partial block data left over
-    if (transferAmount % blockSize)
+    if (cSNAPSHOT_DATA_SIZE % cBLOCK_SIZE)
     {
         [self sendBlockWithCommand:eSEND_SNAPSHOT_DATA
                           location:spectrumAddress
-                            length:transferAmount % blockSize
+                            length:cSNAPSHOT_DATA_SIZE % cBLOCK_SIZE
                               data:snapshot + snapshotIndex
-                  expectedResponse:self.verifyResponse];
+                  expectedResponse:self.sendOkResponse];
     }
     
     // Send start game
-//    [self sendBlockWithCommand:eRUN_SNAPSHOT
-//                      location:0
-//                        length:0
-//                          data:snapshot
-//              expectedResponse:self.verifyResponse];
+    [self sendBlockWithCommand:eRUN_SNAPSHOT
+                      location:0
+                        length:0
+                          data:snapshot
+              expectedResponse:self.sendOkResponse];
     
 }
 
 - (void)sendBlockWithCommand:(uint8_t)command location:(uint16_t)location length:(uint16_t)length data:(unsigned char *)data expectedResponse:(ORSSerialPacketDescriptor *)expectedResponse
 {
-    static char tmpbuffer[5 + 8192];
-    tmpbuffer[0] = command;
-    tmpbuffer[1] = location & 0xff;
-    tmpbuffer[2] = location >> 8;
-    tmpbuffer[3] = length & 0xff;
-    tmpbuffer[4] = length >> 8;
-    memcpy(tmpbuffer + 5, data, length);
+    snapshotBuffer[0] = command;
+    snapshotBuffer[1] = location & 255;
+    snapshotBuffer[2] = location >> 8;
+    snapshotBuffer[3] = length & 255;
+    snapshotBuffer[4] = length >> 8;
+    memcpy(snapshotBuffer + cCOMMAND_HEADER_SIZE, data, length);
     
-    [self sendData:[NSData dataWithBytes:tmpbuffer length:length + 5] expectedResponse:expectedResponse responseLength:1];
+    [self sendData:[NSData dataWithBytes:snapshotBuffer length:length + cCOMMAND_HEADER_SIZE] expectedResponse:expectedResponse responseLength:1];
 }
 
 
@@ -225,7 +201,7 @@
     if (serialPort != _serialPort)
     {
         [_serialPort close];
-        _serialPort.baudRate = @115200;
+        _serialPort.baudRate = @(cSERIAL_BAUD_RATE);
         _serialPort = serialPort;
         _serialPort.delegate = self;
         _serialPort.RTS = YES;
