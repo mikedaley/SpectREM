@@ -802,6 +802,10 @@ unsigned char coreIORead(unsigned short address, void *m)
 			{
 				return machine->smartCardPortFAF3;
 			}
+			else if(address == 0xfafb)
+			{
+				return machine->smartCardPortFAFB;
+			}
 			else
 			{
 				return machine->smart_card->read_port(address);
@@ -997,6 +1001,10 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
 		if(address == 0xfaf3)
 		{
 			machine->smartCardPortFAF3 = data;
+		}
+		else if(address == 0xfafb)
+		{
+			machine->smartCardPortFAFB = data;
 		}
 		else
 		{

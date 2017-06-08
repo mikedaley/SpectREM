@@ -61,6 +61,7 @@
 		
 		// SmartCard ROM/RAM setup
 		smartCardPortFAF3 = 0;
+		smartCardPortFAFB = 0;
 		smartCardSRAM = (unsigned char*)calloc(cSmartCardSRAMSize, sizeof(unsigned char));
 		
 		// Register the opcode callback for the save trapping
@@ -97,6 +98,7 @@
 	// Clear SmartCard SRAM and ports, happens on both soft and hard reset
 	smartCardPortFAF3 = 0;
 	memset(smartCardSRAM, 0, cSmartCardSRAMSize);
+	smartCardPortFAFB = 0;
 	
     [super reset:hard];
     currentRAMPage = 0;
@@ -115,13 +117,22 @@ static unsigned char coreMemoryRead(unsigned short address, void *m)
     {
         return machine->multifaceMemory[ address ];
     }
-
-	if (machine->smartCardActive && (machine->smartCardPortFAF3&0x80) && address >= 8912 && address < 16384)
-	{
-		return machine->multifaceMemory[ (address << (machine->smartCardPortFAF3&7)) - 8192 ];
-	}
 	
-    return machine->memory[address];
+	if (machine->smartCardActive && (machine->smartCardPortFAF3&0x80) && address >= 8192 && address < 16384)
+	{
+		return machine->smartCardSRAM[ (address << (machine->smartCardPortFAF3&7)) - 8192];
+	}
+	if((address&0xff)==0x72)
+	{
+		if (machine->smartCardActive && (machine->smartCardPortFAFB&0x40))
+		{
+			unsigned char retOpCode = machine->memory[address];
+			[machine loadDefaultROM];
+			machine->smartCardPortFAFB&=~0x40;
+			return retOpCode;
+		}
+	}
+	return machine->memory[address];
 }
 
 static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
@@ -135,9 +146,9 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
             machine->multifaceMemory[ address ] = data;
         }
 		
-		if (machine->smartCardActive && (machine->smartCardPortFAF3&0x80) && address >= 8912 && address < 16384)
+		if (machine->smartCardActive && (machine->smartCardPortFAF3&0x80) && address >= 8192 && address < 16384)
 		{
-			machine->multifaceMemory[ (address << (machine->smartCardPortFAF3&7)) - 8192 ] = data;
+			machine->smartCardSRAM[ (address << (machine->smartCardPortFAF3&7)) - 8192] = data;
 		}
 		
         return;
