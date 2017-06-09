@@ -39,7 +39,7 @@
     if (self = [super initWithEmulationViewController:emulationViewController machineInfo:info])
     {
         // We need 64k of memory total for the 48k Speccy
-        memory = (unsigned char*)calloc(64 * 1024, sizeof(unsigned char));
+        memory = (unsigned char*)calloc(c64k, sizeof(unsigned char));
         
         // Multiface ROM/RAM setup
         multifaceMemory = (unsigned char*)calloc(cMultifaceMemSize, sizeof(unsigned char));

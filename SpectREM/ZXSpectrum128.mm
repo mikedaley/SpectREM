@@ -38,8 +38,8 @@
     if (self = [super initWithEmulationViewController:emulationViewController machineInfo:info])
     {
         // We need 128k of memory total for the 128k Speccy and also two 16k ROM chips
-        memory = (unsigned char*)calloc(128 * 1024, sizeof(unsigned char));
-        rom = (unsigned char*)calloc(32 * 1024, sizeof(unsigned char));
+        memory = (unsigned char*)calloc(c128k, sizeof(unsigned char));
+        rom = (unsigned char*)calloc(c32k, sizeof(unsigned char));
         
         // Multiface ROM/RAM setup
         multifaceMemory = (unsigned char*)calloc(cMultifaceMemSize, sizeof(unsigned char));

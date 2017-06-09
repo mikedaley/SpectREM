@@ -27,7 +27,7 @@
 
 
 int const cSERIAL_BAUD_RATE = 115200;
-int const cSERIAL_TIMEOUT = 2;
+int const cSERIAL_TIMEOUT = 3;
 int const cSERIAL_BLOCK_SIZE = 8000;
 
 int const cSNAPSHOT_HEADER_LENGTH = 27;
@@ -57,7 +57,6 @@ static char snapshotBuffer[cSERIAL_BLOCK_SIZE + cCOMMAND_HEADER_SIZE];
         _sendOkResponse = [[ORSSerialPacketDescriptor alloc] initWithPacketData:[NSData dataWithBytes:responseCode
                                                                                                           length:1]
                                                                        userInfo:NULL];
-
         responseCode[0] = eVERIFY_RESPONSE;
         _verifyResponse = [[ORSSerialPacketDescriptor alloc] initWithPacketData:[NSData dataWithBytes:responseCode
                                                                                                length:1]

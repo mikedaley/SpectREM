@@ -35,6 +35,11 @@ static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 // Number of frames to skip when running in accelerated mode
 static int const cAcceleratedSkipFrames = 10;
 
+// Memory sizes
+static size_t const c32k = 32 * 1024;
+static size_t const c64k = 64 * 1024;
+static size_t const c128k = 128 * 1024;
+
 // SmartCard constants
 static size_t const cSmartCardSRAMSize = 8 * 8192;
 
