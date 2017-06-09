@@ -110,6 +110,7 @@ static NS_ENUM(NSUInteger, MachineType)
 	
 	// SmartCard ROM and sundries
 	unsigned char smartCardPortFAF3;
+	unsigned char smartCardPortFAFB;
 	unsigned char *smartCardSRAM;		// 8 * 8k banks, mapped @ $2000-$3FFF
     
     // 128k paging
