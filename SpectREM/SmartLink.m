@@ -197,9 +197,12 @@ static char snapshotBuffer[cSERIAL_BLOCK_SIZE + cCOMMAND_HEADER_SIZE];
     snapshotBuffer[2] = location >> 8;
     snapshotBuffer[3] = length & 255;
     snapshotBuffer[4] = length >> 8;
+    
     memcpy(snapshotBuffer + cCOMMAND_HEADER_SIZE, data, length);
     
-    [self sendData:[NSData dataWithBytes:snapshotBuffer length:length + cCOMMAND_HEADER_SIZE] expectedResponse:expectedResponse responseLength:1];
+    [self sendData:[NSData dataWithBytes:snapshotBuffer length:length + cCOMMAND_HEADER_SIZE]
+  expectedResponse:expectedResponse
+    responseLength:1];
 }
 
 
