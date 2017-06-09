@@ -653,6 +653,17 @@
 
 - (IBAction)sendToSmartLink:(id)sender
 {
+    if (!_machine.smartLink.serialPort || !_machine.smartLink)
+    {
+        NSAlert *alert = [NSAlert new];
+        alert.informativeText = @"No SmartLINK port has been selected.";
+        [alert addButtonWithTitle:@"OK"];
+        [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode)
+         {
+         }];
+        return;
+    }
+    
     _machine.useSmartLink = NO;
     
     unsigned char *snapshotData = [Snapshot createSnapshotFromMachine:_machine];
