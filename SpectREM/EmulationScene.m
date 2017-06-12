@@ -7,6 +7,7 @@
 //
 
 #import "EmulationScene.h"
+#import "ConfigViewController.h"
 
 #pragma mark - Implementation
 
@@ -16,28 +17,59 @@
 
 }
 
-- (void)sceneDidLoad
+- (void)dealloc
 {
-    
+    NSLog(@"Deallocating Scene");
+    [self removeObserver:self forKeyPath:@"displayCurve"];
+    [self removeObserver:self forKeyPath:@"displaySaturation"];
+    [self removeObserver:self forKeyPath:@"displayContrast"];
+    [self removeObserver:self forKeyPath:@"displayBrightness"];
+    [self removeObserver:self forKeyPath:@"displayShowVignette"];
+    [self removeObserver:self forKeyPath:@"displayVignetteX"];
+    [self removeObserver:self forKeyPath:@"displayVignetteY"];
+    [self removeObserver:self forKeyPath:@"displayScanLine"];
+    [self removeObserver:self forKeyPath:@"displayRGBOffset"];
+    [self removeObserver:self forKeyPath:@"displayHorizOffset"];
+    [self removeObserver:self forKeyPath:@"displayVertJump"];
+    [self removeObserver:self forKeyPath:@"displayVertRoll"];
+    [self removeObserver:self forKeyPath:@"displayStatic"];
+    [self removeObserver:self forKeyPath:@"displayShowReflection"];
+    [self removeObserver:self forKeyPath:@"screenHeight"];
 }
 
-- (void)didMoveToView:(SKView *)view
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
-    self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"//emulationDisplaySprite"];
-    
-    _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
-    _shader.attributes = @[
-                           [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_contrast" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeFloat],
-                           [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeFloat],
-                           ];
-    self.emulationDisplaySprite.shader = _shader;
+    if (self = [super initWithCoder:aDecoder])
+    {
+        self.emulationBackingSprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationBackingSprite"];
+        self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationDisplaySprite"];
 
-    [self setupObservers];
+//        _shader = [SKShader shaderWithFileNamed:@"OpenGL.fsh"];
+        _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
+        _shader.attributes = @[
+                               [SKAttribute attributeWithName:@"u_distortion" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_saturation" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_contrast" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_brightness" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_show_vignette" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_vignette_x" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_vignette_y" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_screen_height" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_scan_line" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_rgb_offset" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_horiz_offset" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_vert_jump" type:SKAttributeTypeHalfFloat],
+//                               [SKAttribute attributeWithName:@"u_vert_roll" type:SKAttributeTypeHalfFloat],
+//                               [SKAttribute attributeWithName:@"u_static" type:SKAttributeTypeHalfFloat],
+                               [SKAttribute attributeWithName:@"u_show_reflection" type:SKAttributeTypeHalfFloat]
+                               ];
+        _shader.uniforms = @[
+                             [SKUniform uniformWithName:@"u_reflection" texture:[SKTexture textureWithImageNamed:@"reflection"]]
+                             ];
+        self.emulationDisplaySprite.shader = _shader;
+        [self setupObservers];
+    }
+    return self;
 }
 
 #pragma mark - Observers
@@ -48,8 +80,16 @@
     [self addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayScanLine" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayRGBOffset" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayHorizOffset" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayVertJump" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayVertRoll" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayStatic" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"displayShowReflection" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"screenHeight" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
@@ -71,6 +111,10 @@
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_brightness"];
     }
+    else if ([keyPath isEqualToString:@"displayShowVignette"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_show_vignette"];
+    }
     else if ([keyPath isEqualToString:@"displayVignetteX"])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_x"];
@@ -79,7 +123,34 @@
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_y"];
     }
-
+    else if ([keyPath isEqualToString:@"displayScanLine"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_scan_line"];
+    }
+    else if ([keyPath isEqualToString:@"displayRGBOffset"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_rgb_offset"];
+    }
+    else if ([keyPath isEqualToString:@"displayHorizOffset"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_horiz_offset"];
+    }
+    else if ([keyPath isEqualToString:@"displayVertJump"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vert_jump"];
+    }
+    else if ([keyPath isEqualToString:@"displayVertRoll"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vert_roll"];
+    }
+    else if ([keyPath isEqualToString:@"displayStatic"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_static"];
+    }
+    else if ([keyPath isEqualToString:@"displayShowReflection"])
+    {
+        [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_show_reflection"];
+    }
 }
 
 #pragma mark - Keyboard Events
@@ -97,7 +168,7 @@
 
 - (void)sceneViewSizeChanged:(CGSize)newSize
 {
-    [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:newSize.height] forAttributeNamed:@"u_screen_height"];
+    [self.emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:newSize.height] forAttributeNamed:@"u_screen_height"];
 }
 
 #pragma mark - Game tick

@@ -13,15 +13,24 @@
 #pragma mark - Properties
 
 @property (strong) SKSpriteNode *emulationDisplaySprite;
+@property (strong) SKSpriteNode *emulationBackingSprite;
 @property (assign) id keyboardDelegate;
 
 @property (assign) double displayCurve;
-@property (assign) float displaySaturation;
-@property (assign) float displayContrast;
-@property (assign) float displayBrightness;
-@property (assign) float displayVignetteX;
-@property (assign) float displayVignetteY;
-@property (assign) float screenHeight;
+@property (assign) double displaySaturation;
+@property (assign) double displayContrast;
+@property (assign) double displayBrightness;
+@property (assign) double displayShowVignette;
+@property (assign) double displayVignetteX;
+@property (assign) double displayVignetteY;
+@property (assign) double displayScanLine;
+@property (assign) double displayRGBOffset;
+@property (assign) double displayHorizOffset;
+@property (assign) double displayVertJump;
+@property (assign) double displayVertRoll;
+@property (assign) double displayStatic;
+@property (assign) double screenHeight;
+@property (assign) double displayShowReflection;
 
 #pragma mark - Methods
 

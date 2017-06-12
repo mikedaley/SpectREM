@@ -7,52 +7,71 @@
 //
 
 #import "EmulationView.h"
+#import "EmulationViewController.h"
 
 @implementation EmulationView
 {
 
 }
 
-- (void)viewDidMoveToSuperview
+- (instancetype)initWithCoder:(NSCoder *)coder
 {
-}
-
-- (void)viewDidMoveToWindow
-{
-    NSPoint mouseLocation = [NSEvent mouseLocation];
-    NSPoint windowLocation = self.window.frame.origin;
-    mouseLocation = (NSPoint){mouseLocation.x - windowLocation.x, mouseLocation.y - windowLocation.y};
-    [self updateButtonWithMouseLocation:mouseLocation];    
-}
-
-- (void)drawRect:(NSRect)dirtyRect
-{
-    [super drawRect:dirtyRect];
+    self = [super initWithCoder:coder];
+    if (self)
+    {
+        [self registerForDraggedTypes:@[NSFilenamesPboardType]];
+    }
     
-    // Drawing code here.
+    return self;
 }
 
-- (void)mouseMoved:(NSEvent *)event
+- (NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender
 {
-    [super mouseMoved:event];
+    NSPasteboard *pBoard;
+    NSDragOperation sourceDragMask;
+    sourceDragMask = [sender draggingSourceOperationMask];
+    pBoard = [sender draggingPasteboard];
     
-    NSPoint mouseLocation = [NSEvent mouseLocation];
-    NSPoint windowLocation = self.window.frame.origin;
-    mouseLocation = (NSPoint){mouseLocation.x - windowLocation.x, mouseLocation.y - windowLocation.y};
-    [self updateButtonWithMouseLocation:mouseLocation];
+    if ([[pBoard types] containsObject:NSFilenamesPboardType])
+    {
+        if (sourceDragMask * NSDragOperationCopy)
+        {
+            NSURL *fileURL = [NSURL URLFromPasteboard:pBoard];
+            if ([[fileURL.pathExtension uppercaseString] isEqualToString:@"Z80"] ||
+                [[fileURL.pathExtension uppercaseString]isEqualToString:@"SNA"] ||
+                [[fileURL.pathExtension uppercaseString]isEqualToString:@"TAP"] ||
+                [[fileURL.pathExtension uppercaseString]isEqualToString:@"ROM"]
+                )
+            {
+                return NSDragOperationCopy;
+            }
+            else
+            {
+                return NSDragOperationNone;
+            }
+        }
+    }
+    return NSDragOperationNone;
 }
 
-- (void)updateButtonWithMouseLocation:(NSPoint)point
+- (BOOL)performDragOperation:(id<NSDraggingInfo>)sender
 {
-    CGFloat x = fabs(NSMaxX(self.window.contentView.bounds) - point.x);
-    CGFloat y = fabs(NSMinY(self.window.contentView.bounds) - point.y);
-    
-    CGFloat distance = MAX(0, MAX(x, y) - 50);
-    
-    CGFloat intensity = 0.3 / 50.0 * (distance - 100);
-    _configButton.alphaValue = MAX(1.0 - intensity, 0.3);
+    NSPasteboard *pBoard = [sender draggingPasteboard];
+    if ([[pBoard types] containsObject:NSURLPboardType])
+    {
+        NSURL *fileURL = [NSURL URLFromPasteboard:pBoard];
+        if ([[fileURL.pathExtension uppercaseString] isEqualToString:@"Z80"] ||
+            [[fileURL.pathExtension uppercaseString] isEqualToString:@"SNA"] ||
+            [[fileURL.pathExtension uppercaseString]isEqualToString:@"TAP"] ||
+            [[fileURL.pathExtension uppercaseString]isEqualToString:@"ROM"]
+            )
+        {
+            EmulationViewController *emulationViewController = (EmulationViewController *)[self.window contentViewController];
+            [emulationViewController loadFileWithURL:fileURL];
+            return YES;
+        }
+    }
+    return NO;
 }
-
-
 
 @end

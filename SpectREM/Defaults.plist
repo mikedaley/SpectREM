@@ -16,11 +16,57 @@
 	<integer>1</integer>
 	<key>displayVignetteY</key>
 	<real>0.25</real>
+	<key>displayScanLine</key>
+	<integer>0</integer>
+	<key>displayRGBOffset</key>
+	<integer>0</integer>
+	<key>displayHorizOffset</key>
+	<integer>0</integer>
+	<key>displayStatic</key>
+	<integer>0</integer>
+	<key>displayVertJump</key>
+	<integer>0</integer>
+	<key>displayVertRoll</key>
+	<integer>0</integer>
+	<key>displayShowReflection</key>
+	<integer>0</integer>
 	<key>soundVolume</key>
-	<real>0.5</real>
+	<real>1</real>
 	<key>soundLowPassFilter</key>
 	<integer>3500</integer>
 	<key>soundHighPassFilter</key>
 	<integer>1</integer>
+	<key>currentMachineType</key>
+	<integer>0</integer>
+	<key>displayShowVignette</key>
+	<integer>0</integer>
+	<key>sceneScaleMode</key>
+	<integer>0</integer>
+	<key>AYChannelA</key>
+	<true/>
+	<key>AYChannelB</key>
+	<true/>
+	<key>AYChannelC</key>
+	<true/>
+	<key>AYChannelABalance</key>
+	<integer>1</integer>
+	<key>AYChannelBBalance</key>
+	<real>0.5</real>
+	<key>AYChannelCBalance</key>
+	<integer>0</integer>
+	<key>useAYOn48k</key>
+	<false/>
+	<key>specDrum</key>
+	<false/>
+	<key>multiface1</key>
+	<false/>
+	<key>multiface128</key>
+	<false/>
+	<key>multiface128Lockout</key>
+	<false/>
+	<key>instaTAPLoading</key>
+	<true/>
+	<key>smartCard</key>
+	<false/>
 </dict>
 </plist>

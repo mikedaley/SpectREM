@@ -8,19 +8,31 @@
 
 #import <Cocoa/Cocoa.h>
 #import <SpriteKit/SpriteKit.h>
-#import <GameplayKit/GameplayKit.h>
+#import "PixelData.h"
 
 @class EmulationView;
+@class ZXTape;
+@class EmulationScene;
 
 @interface EmulationViewController : NSViewController
 
+// Emulation view that contains the SpriteKit scene used to render the emulations display
 @property (assign) IBOutlet EmulationView *skView;
+@property (strong) EmulationScene *emulationScene;
+
+@property (weak) IBOutlet NSVisualEffectView *configEffectsView;
+@property (weak) IBOutlet NSScrollView *configScrollView;
+
+@property (strong) NSMutableArray *disassemblyArray;
+
+@property (strong) NSMutableDictionary *debugLabels;
 
 #pragma mark - Methods
 
 // Called by the machine being emulated when a new display image is ready to be displayed
-- (void)updateEmulationDisplayTextureWithImage:(SKTexture *)emulationDisplayTexture;
+- (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size;
 
+// Load the file referenced in the supplied URL into the currently running machine
 - (void)loadFileWithURL:(NSURL *)url;
 
 @end

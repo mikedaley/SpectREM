@@ -17,9 +17,13 @@
 
 //-----------------------------------------------------------------------------------------
 
-typedef unsigned char (*Z80CoreRead)(unsigned short address, int param);
-typedef void (* Z80CoreWrite)(unsigned short address, unsigned char data, int param);
-typedef void (* Z80CoreContention)(unsigned short address, unsigned int tstates, int param);
+typedef unsigned char (*Z80CoreRead)(unsigned short address, void *param);
+typedef void (*Z80CoreWrite)(unsigned short address, unsigned char data, void *param);
+typedef void (*Z80CoreContention)(unsigned short address, unsigned int tstates, void *param);
+typedef unsigned char(*Z80CoreDebugRead)(unsigned int address, void *param, void *data);
+typedef void (*Z80CoreDebugWrite)(unsigned int address, unsigned char byte, void *param, void *data);
+typedef bool (*Z80OpcodeCallback)(unsigned char opcode, unsigned short address, void *param);
+typedef char *(*Z80DebugCallback)(char *buffer, unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data);
 
 //-----------------------------------------------------------------------------------------
 
@@ -67,16 +71,34 @@ public:
 		eREG_PC,
 
 	} eZ80WORDREGISTERS;
+    
+    typedef enum
+    {
+        eCPUTYPE_Zilog,
+        eCPUTYPE_Nec
+    } eCPUTYPE;
 
-	const unsigned char FLAG_C = 0x01;
-	const unsigned char FLAG_N = 0x02;
-	const unsigned char FLAG_P = 0x04;
-	const unsigned char FLAG_V = FLAG_P;
-	const unsigned char FLAG_3 = 0x08;
-	const unsigned char FLAG_H = 0x10;
-	const unsigned char FLAG_5 = 0x20;
-	const unsigned char FLAG_Z = 0x40;
-	const unsigned char FLAG_S = 0x80;
+	typedef enum
+	{
+		eVARIABLETYPE_Byte,
+		eVARIABLETYPE_Word,
+		eVARIABLETYPE_IndexOffset,
+		eVARIABLETYPE_RelativeOffset,
+	} eVARIABLETYPE;
+	
+	static const unsigned char FLAG_C = 0x01;
+	static const unsigned char FLAG_N = 0x02;
+	static const unsigned char FLAG_P = 0x04;
+	static const unsigned char FLAG_V = FLAG_P;
+	static const unsigned char FLAG_3 = 0x08;
+	static const unsigned char FLAG_H = 0x10;
+	static const unsigned char FLAG_5 = 0x20;
+	static const unsigned char FLAG_Z = 0x40;
+	static const unsigned char FLAG_S = 0x80;
+	
+private:
+
+	static const unsigned int OPCODEFLAG_AltersFlags = (1 << 0);
 
 	typedef struct
 	{
@@ -139,13 +161,17 @@ public:
 		bool			Halted;
 		bool			EIHandled;
 		bool			IntReq;
-
+        bool            NMIReq;
+        
+        bool            DDFDmultiByte;
+        
 		unsigned int	TStates;
 	} Z80State;
 
 	typedef struct
 	{
 		void (CZ80Core::*function)(unsigned char opcode);
+		unsigned int flags;
 		const char* format;
 	} Z80Opcode;
 
@@ -160,11 +186,16 @@ public:
 	~CZ80Core();
 	
 public:
-	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write, Z80CoreContention mem_contention_handling, Z80CoreContention io_contention_handling, int member_class);
+	void					Initialise(Z80CoreRead mem_read, Z80CoreWrite mem_write, Z80CoreRead io_read, Z80CoreWrite io_write,Z80CoreContention mem_contention_handling, Z80CoreDebugRead debug_read_handler, Z80CoreDebugWrite debug_write_handler,void *member_class);
 
 	void					Reset(bool hardReset = true);
-	void					Debug();
-	int						Execute(int num_tstates = -1, int int_t_states = 32);
+	unsigned int			Debug_Disassemble(char *pStr, unsigned int StrLen, unsigned int address, bool hexFormat, void *data);
+	unsigned int			Debug_GetOpcodeLength(unsigned int address, void *data);
+	bool					Debug_HasValidOpcode(unsigned int address, void *data);
+	int						Execute(unsigned int num_tstates = 0, unsigned int int_t_states = 32);
+
+	void					RegisterOpcodeCallback(Z80OpcodeCallback callback);
+	void					RegisterDebugCallback(Z80DebugCallback callback);
 
 	void					SignalInterrupt();
 
@@ -183,6 +214,7 @@ public:
 	unsigned char			GetIFF2(void) const { return m_CPURegisters.IFF2; }
 	bool					GetHalted(void) const { return m_CPURegisters.Halted; }
 	void					SetHalted(bool halted) { m_CPURegisters.Halted = halted; }
+    void                    setNMIReq(bool nmi) { m_CPURegisters.NMIReq = nmi; };
 		 
 	void					AddContentionTStates(unsigned int extra_tstates) { m_CPURegisters.TStates += extra_tstates; }
 	void					AddTStates(unsigned int extra_tstates) { m_CPURegisters.TStates += extra_tstates; }
@@ -197,7 +229,8 @@ public:
 	void					Z80CoreIOWrite(unsigned short address, unsigned char data);
 	void					Z80CoreMemoryContention(unsigned short address, unsigned int t_states);
 	void					Z80CoreIOContention(unsigned short address, unsigned int t_states);
-
+	unsigned char			Z80CoreDebugMemRead(unsigned int address, void *data);
+    void                    Z80CoreDebugMemWrite(unsigned int address, unsigned char byte, void *data);
 protected:
 	#include "Z80Core_MainOpcodes.h"
 	#include "Z80Core_CBOpcodes.h"
@@ -232,6 +265,9 @@ protected:
 	void					Set(unsigned char &r, unsigned char b);
 	void					Res(unsigned char &r, unsigned char b);
 
+	const char			*	Debug_GetOpcodeDetails(unsigned int &address, void *data);
+	char				*	Debug_WriteData(unsigned int variableType, char *pStr, unsigned int &StrLen, unsigned int address, bool hexFormat, void *data);
+
 protected:
 	static Z80OpcodeTable	Main_Opcodes;
 	static Z80OpcodeTable	CB_Opcodes;
@@ -245,14 +281,20 @@ protected:
 	unsigned char			m_ParityTable[256];
 	unsigned char			m_SZ35Table[256];
 	unsigned short			m_MEMPTR;
-
-	int						m_Param;
+    eCPUTYPE				m_CPUType;
+	unsigned int			m_PrevOpcodeFlags;
+	
+	void *                  m_Param;
 	Z80CoreRead				m_MemRead;
 	Z80CoreWrite			m_MemWrite;
 	Z80CoreRead				m_IORead;
 	Z80CoreWrite			m_IOWrite;
 	Z80CoreContention		m_MemContentionHandling;
-	Z80CoreContention		m_IOContentionHandling;
+	Z80CoreDebugRead		m_DebugRead;
+    Z80CoreDebugWrite       m_Debugwrite;
+
+	Z80OpcodeCallback		m_OpcodeCallback;
+	Z80DebugCallback		m_DebugCallback;
 };
 
 
