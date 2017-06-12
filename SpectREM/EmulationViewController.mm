@@ -459,6 +459,17 @@
 
 - (IBAction)saveFile:(id)sender
 {
+    if (_machine->machineInfo.machineType != eZXSpectrum48)
+    {
+        NSAlert *alert = [NSAlert new];
+        alert.informativeText = @"SNA saving currently only supported on ZX Spectrum 48k.";
+        [alert addButtonWithTitle:@"OK"];
+        [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode)
+         {
+         }];
+        return;
+    }
+    
     NSSavePanel *savePanel = [NSSavePanel new];
     savePanel.allowedFileTypes = @[@"SNA"];
     dispatch_async(dispatch_get_main_queue(), ^{
