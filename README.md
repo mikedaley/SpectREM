@@ -1,3 +1,5 @@
+The latest version of the emulator is under branch 0.7
+
 # SpectREM (Spectrum Retro EMulator)
 
 This is a ZX Spectrum emulator written for MacOS 10.10+
@@ -12,6 +14,7 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - Beeper emulation
 - AY emulation
 - TAP file loading and saving
+- TAP Insta loading
 - SNA snapshot loading
 - Z80 snapshot loading
 - Graphical memory viewer
@@ -23,11 +26,12 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 ## Peripheral Emulation
 
 - SpecDrum
+- Multiface 1
+- Multiface 128
 
 ## Todo list
 
 - SZX
-- TAP insta-load
 - SNA/Z80 creation
 - Full debugger/disassembler
   - Step In
