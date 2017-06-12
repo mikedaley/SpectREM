@@ -457,6 +457,22 @@
     });
 }
 
+- (IBAction)saveFile:(id)sender
+{
+    NSSavePanel *savePanel = [NSSavePanel new];
+    savePanel.allowedFileTypes = @[@"SNA"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [savePanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
+            if (result == NSModalResponseOK)
+            {
+                unsigned char *snapshotData = [Snapshot createSnapshotFromMachine:_machine];
+                NSData *data = [NSData dataWithBytes:snapshotData length:49152 + 27];
+                [data writeToURL:savePanel.URL atomically:YES];
+            }
+        }];
+    });
+}
+
 - (void)loadFileWithURL:(NSURL *)url
 {
     
