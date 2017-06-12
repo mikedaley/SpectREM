@@ -496,6 +496,26 @@
         [_machine reset:NO];
     }
     
+    // Check to see if the loaded file has a Pasmo debug file and if so then load the labels and addresses into the debug dictionary
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *debugURL = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"dbg"];
+    
+    self.debugLabels = [NSMutableDictionary new];
+
+    if ([fileManager fileExistsAtPath:debugURL.path])
+    {
+        NSString *addresses = [NSString stringWithContentsOfURL:debugURL encoding:NSUTF8StringEncoding error:NULL];
+        [addresses enumerateLinesUsingBlock:^(NSString * _Nonnull line, BOOL * _Nonnull stop) {
+            long labelPos = [line rangeOfString:@"label"].location;
+            if (labelPos != NSNotFound)
+            {
+                NSString *addr = [line substringToIndex:4];
+                NSString *label = [line substringFromIndex:labelPos + 6];
+                [self.debugLabels setObject:label forKey:addr];
+            }
+        }];
+    }
+    
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
     [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
 }

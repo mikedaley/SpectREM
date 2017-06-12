@@ -16,6 +16,7 @@
 {
 @public
     CZ80Core *core;
+    EmulationViewController *_emuViewController;
 }
 
 @end
@@ -38,6 +39,8 @@
 {
     if (self = [super initWithEmulationViewController:emulationViewController machineInfo:info])
     {
+        _emuViewController = emulationViewController;
+        
         // We need 64k of memory total for the 48k Speccy
         memory = (unsigned char*)calloc(c64k, sizeof(unsigned char));
         
@@ -244,6 +247,16 @@ char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned sho
 		{
 			snprintf(buffer, 64, "%s", label);
 		}
+        else
+        {
+            ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)param;
+            NSString *key = [NSString stringWithFormat:@"%04X", label_address];
+            NSString *asmLabel = [machine.emulationViewController.debugLabels objectForKey:key];
+            if (asmLabel.length > 0)
+            {
+                snprintf(buffer, 64, "%s", [asmLabel cStringUsingEncoding:NSUTF8StringEncoding]);
+            }
+        }
 	}
 	
 	return buffer;

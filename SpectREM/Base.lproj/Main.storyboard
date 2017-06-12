@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16G12b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -2391,10 +2391,10 @@
                     <window key="window" title="Disassembly Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="disassemblyWindow" animationBehavior="default" id="Cxy-Qm-BaW" customClass="NSPanel">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="544" y="461" width="325" height="287"/>
+                        <rect key="contentRect" x="544" y="461" width="446" height="287"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
-                        <value key="minSize" type="size" width="325" height="140"/>
-                        <value key="maxSize" type="size" width="325" height="10000"/>
+                        <value key="minSize" type="size" width="446" height="140"/>
+                        <value key="maxSize" type="size" width="446" height="10000"/>
                     </window>
                     <connections>
                         <segue destination="I9y-0Q-dHM" kind="relationship" relationship="window.shadowedContentViewController" id="anm-dl-79p"/>
@@ -2402,7 +2402,7 @@
                 </windowController>
                 <customObject id="ImZ-FR-aGI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1733" y="196"/>
+            <point key="canvasLocation" x="1733.5" y="195.5"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="DTQ-nu-qZb">
@@ -2636,7 +2636,7 @@
             <objects>
                 <viewController id="I9y-0Q-dHM" customClass="DisassemblyViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" misplaced="YES" id="2HF-VO-vav">
-                        <rect key="frame" x="0.0" y="0.0" width="325" height="378"/>
+                        <rect key="frame" x="0.0" y="0.0" width="446" height="378"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="Ov9-3U-mlo">
@@ -2649,14 +2649,14 @@
                                 </textFieldCell>
                             </textField>
                             <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Shv-h1-xAW">
-                                <rect key="frame" x="20" y="20" width="285" height="311"/>
+                                <rect key="frame" x="20" y="20" width="406" height="311"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="a1q-lE-GB7">
-                                    <rect key="frame" x="1" y="0.0" width="283" height="310"/>
+                                    <rect key="frame" x="1" y="0.0" width="404" height="310"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="DisassembleTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="AXg-mX-dqP" viewBased="YES" id="Qh5-lO-X2h">
-                                            <rect key="frame" x="0.0" y="0.0" width="283" height="287"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="404" height="287"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2729,7 +2729,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="DisassemblyColID" width="134" minWidth="10" maxWidth="3.4028234663852886e+38" id="KPZ-Yb-HhR">
+                                                <tableColumn identifier="DisassemblyColID" width="255" minWidth="10" maxWidth="3.4028234663852886e+38" id="KPZ-Yb-HhR">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Instruction">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -2743,11 +2743,11 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="DisassemblyColID" id="BPL-Q0-mGL">
-                                                            <rect key="frame" x="147" y="1" width="134" height="17"/>
+                                                            <rect key="frame" x="147" y="1" width="255" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" id="VGD-2c-vbg">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="134" height="17"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="255" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="SET 5, (IY+$FF)" id="fuJ-iS-tWm">
                                                                         <font key="font" size="13" name="Courier"/>
@@ -2780,7 +2780,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="AXg-mX-dqP">
-                                    <rect key="frame" x="0.0" y="0.0" width="283" height="23"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="404" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
@@ -2805,7 +2805,7 @@
                 </viewController>
                 <customObject id="0a8-Dw-EYR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1733" y="717"/>
+            <point key="canvasLocation" x="1732" y="723"/>
         </scene>
         <!--Graphical Mem View Controller-->
         <scene sceneID="KMB-hG-mTJ">

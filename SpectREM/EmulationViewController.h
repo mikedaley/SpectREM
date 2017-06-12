@@ -25,6 +25,8 @@
 
 @property (strong) NSMutableArray *disassemblyArray;
 
+@property (strong) NSMutableDictionary *debugLabels;
+
 #pragma mark - Methods
 
 // Called by the machine being emulated when a new display image is ready to be displayed
