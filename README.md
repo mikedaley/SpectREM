@@ -1,5 +1,3 @@
-The latest version of the emulator is under branch 0.7
-
 # SpectREM (Spectrum Retro EMulator)
 
 This is a ZX Spectrum emulator written for MacOS 10.10+
@@ -20,7 +18,9 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - Graphical memory viewer
 - CPU view (registers and flags)
 - Virtual tape browser
-- Debugger (early days but being actively developed)
+- Debugger (Under active development)
+  - Pause, Resume
+  - Step In
 - ULAplus
 
 ## Peripheral Emulation
@@ -29,13 +29,18 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - Multiface 1
 - Multiface 128
 
+## SmartLINK
+
+- SmartLINK being developed by Paul Tankard. This uses an Arduino connected to a Retroleum SD card to allow input from the emulator to a real Spectrum e.g. keyboard and joystick. It also supports the ability to send what is running on the emulator directly to a real Spectrum in under 1 second.
+- Currently only works on 48k Spectrum hardware
+- Development goal is to use this as a development/debugger tool for the Spectrum
+
 ## Todo list
 
 - SZX
 - SNA/Z80 creation
 - Full debugger/disassembler
-  - Step In
-  - Step Over (Step over a CALL nn and run until a RET is hit)
+  - Step Over
   - Breakpoints
   - Break on Read/Write/Execute of a memory location
   - Import Labels and other info from assemblers such as Pasmo
