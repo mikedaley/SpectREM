@@ -480,11 +480,11 @@
                 NSData *data = nil;
                 if (_machine->machineInfo.machineType == eZXSpectrum48 || _machine->machineInfo.machineType == eZXSpectrumSE)
                 {
-                    data = [NSData dataWithBytes:snapshotData length:(48 * 1024) + 85 + 9];
+                    data = [NSData dataWithBytes:snapshotData length:(48 * 1024) + 86 + 9];
                 }
                 else
                 {
-                    data = [NSData dataWithBytes:snapshotData length:(128 * 1024) + 85 + 24];
+                    data = [NSData dataWithBytes:snapshotData length:(128 * 1024) + 86 + 24];
                 }
                 [data writeToURL:savePanel.URL atomically:YES];
             }

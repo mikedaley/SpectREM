@@ -75,7 +75,8 @@
     currentROMPage = 0;
     currentRAMPage = 0;
     displayPage = 5;
-    disablePaging = NO;    
+    disablePaging = NO;
+    last7ffd = 0;
 }
 
 - (void)reset:(BOOL)hard
