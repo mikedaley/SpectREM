@@ -149,7 +149,7 @@
     [self switchToMachine:_configViewController.currentMachineType];
 
     [self setupMachineBindings];
-
+    
 }
 
 #pragma mark - CPU View Timer
@@ -459,25 +459,33 @@
 
 - (IBAction)saveFile:(id)sender
 {
-    if (_machine->machineInfo.machineType != eZXSpectrum48)
-    {
-        NSAlert *alert = [NSAlert new];
-        alert.informativeText = @"SNA saving currently only supported on ZX Spectrum 48k.";
-        [alert addButtonWithTitle:@"OK"];
-        [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode)
-         {
-         }];
-        return;
-    }
+//    if (_machine->machineInfo.machineType != eZXSpectrum48)
+//    {
+//        NSAlert *alert = [NSAlert new];
+//        alert.informativeText = @"SNA saving currently only supported on ZX Spectrum 48k.";
+//        [alert addButtonWithTitle:@"OK"];
+//        [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode)
+//         {
+//         }];
+//        return;
+//    }
     
     NSSavePanel *savePanel = [NSSavePanel new];
-    savePanel.allowedFileTypes = @[@"SNA"];
+    savePanel.allowedFileTypes = @[@"z80"];
     dispatch_async(dispatch_get_main_queue(), ^{
         [savePanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
             if (result == NSModalResponseOK)
             {
-                unsigned char *snapshotData = [Snapshot createSnapshotFromMachine:_machine];
-                NSData *data = [NSData dataWithBytes:snapshotData length:49152 + 27];
+                unsigned char *snapshotData = [Snapshot createZ80SnapshotFromMachine:_machine];
+                NSData *data = nil;
+                if (_machine->machineInfo.machineType == eZXSpectrum48 || _machine->machineInfo.machineType == eZXSpectrumSE)
+                {
+                    data = [NSData dataWithBytes:snapshotData length:(48 * 1024) + 85 + 9];
+                }
+                else
+                {
+                    data = [NSData dataWithBytes:snapshotData length:(128 * 1024) + 85 + 24];
+                }
                 [data writeToURL:savePanel.URL atomically:YES];
             }
         }];

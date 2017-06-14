@@ -118,6 +118,7 @@ static NS_ENUM(NSUInteger, MachineType)
     int currentRAMPage;
     BOOL disablePaging;
     int displayPage;
+    unsigned char last7ffd;
     
     // Holds timing, display and audio data specific to each machine
     MachineInfo machineInfo;
@@ -181,6 +182,7 @@ static NS_ENUM(NSUInteger, MachineType)
     int audioBufferSize;
     int audioAYTStates;
     int audioAYTStatesStep;
+    unsigned char lastfffd;
     
     // SpecDrum
     int specDrumOutput;

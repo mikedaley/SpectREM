@@ -916,6 +916,9 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // Memory paging port
     if ( (address & 0x8002) == 0 && machine->disablePaging == NO)
     {
+        // Save the last byte set, used when generating a Z80 snapshot
+        machine->last7ffd = data;
+        
         if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
         {
             updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
@@ -937,6 +940,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                                         (machine->machineInfo.machineType == eZXSpectrum48 &&
                                         machine.useAYOn48k) )))
     {
+        machine->lastfffd = data;
         [machine.audioCore setAYRegister:data];
     }
     

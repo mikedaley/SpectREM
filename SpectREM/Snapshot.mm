@@ -13,6 +13,9 @@
 
 #pragma mark - Snapshot info
 
+static unsigned short const cZ80_V3_HEADER_SIZE = 85;
+static unsigned short const cZ80_V3_ADD_HEADER_SIZE = 54;
+
 + (int)machineNeededForZ80SnapshotWithPath:(NSString *)snapshotPath
 {
     NSData *data = [NSData dataWithContentsOfFile:snapshotPath];
@@ -148,12 +151,7 @@
     data[sp - 16384 + 27] = pc & 0xff;
     data[sp - 16384 + 27 + 1] = pc >> 8;
     
-//    NSData *output = [NSData dataWithBytes:data length:49152 + 27];
-//    [output writeToFile:@"/Users/mikeda/Desktop/test.sna" atomically:NO];
-    
     [machine setPaused:NO];
-    
-//    NSLog(@"%@", [NSData dataWithBytes:data length:49152 + 27]);
     
     return data;
 }
@@ -259,6 +257,201 @@
 
 #pragma mark - Z80 Snaphot
 
++ (unsigned char *)createZ80SnapshotFromMachine:(ZXSpectrum *)machine
+{
+    CZ80Core *core = (CZ80Core *)[machine getCore];
+    
+    [machine setPaused:YES];
+    
+    unsigned char *data;
+    size_t snapshotSize = 0;
+    if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
+    {
+        snapshotSize = (48 * 1024) + cZ80_V3_HEADER_SIZE + 9;
+    }
+    else if (machine->machineInfo.machineType == eZXSpectrum128)
+    {
+        snapshotSize = (128 * 1024) + cZ80_V3_HEADER_SIZE + 24;
+    }
+    else
+    {
+        NSLog(@"Unknown machine type");
+        return 0;
+    }
+
+    data = (unsigned char*)calloc(snapshotSize, sizeof(unsigned char));
+    
+    // Header
+    data[0] = core->GetRegister(CZ80Core::eREG_A);
+    
+    data[1] = core->GetRegister(CZ80Core::eREG_F);
+    
+    data[2] = core->GetRegister(CZ80Core::eREG_BC) & 0xff;
+    data[3] = core->GetRegister(CZ80Core::eREG_BC) >> 8;
+    
+    data[4] = core->GetRegister(CZ80Core::eREG_HL) & 0xff;
+    data[5] = core->GetRegister(CZ80Core::eREG_HL) >> 8;
+    
+    data[6] = 0x0; // PC
+    data[7] = 0x0;
+    
+    data[8] = core->GetRegister(CZ80Core::eREG_SP) & 0xff;
+    data[9] = core->GetRegister(CZ80Core::eREG_SP) >> 8;
+    
+    data[10] = core->GetRegister(CZ80Core::eREG_I);
+    
+    data[11] = core->GetRegister(CZ80Core::eREG_R);
+    
+    unsigned char byte12 = core->GetRegister(CZ80Core::eREG_R) & 0x80;
+    byte12 |= (machine->borderColor & 0x07) << 1;
+    byte12 &= ~(1 << 5);
+    data[12] = byte12;
+    
+    data[13] = core->GetRegister(CZ80Core::eREG_E);            // E
+    data[14] = core->GetRegister(CZ80Core::eREG_D);            // D
+    
+    data[15] = core->GetRegister(CZ80Core::eREG_ALT_C);        // C'
+    data[16] = core->GetRegister(CZ80Core::eREG_ALT_B);        // B'
+    
+    data[17] = core->GetRegister(CZ80Core::eREG_ALT_E);        // E'
+    data[18] = core->GetRegister(CZ80Core::eREG_ALT_D);        // D'
+    
+    data[19] = core->GetRegister(CZ80Core::eREG_ALT_L);        // L'
+    data[20] = core->GetRegister(CZ80Core::eREG_ALT_H);        // H'
+    
+    data[21] = core->GetRegister(CZ80Core::eREG_ALT_A);        // A'
+    
+    data[22] = core->GetRegister(CZ80Core::eREG_ALT_F);        // F'
+    
+    data[23] = core->GetRegister(CZ80Core::eREG_IY) & 0xff;    // IY
+    data[24] = core->GetRegister(CZ80Core::eREG_IY) >> 8;      //
+    
+    data[25] = core->GetRegister(CZ80Core::eREG_IX) & 0xff;    // IX
+    data[26] = core->GetRegister(CZ80Core::eREG_IX) >> 8;      //
+    
+    data[27] = core->GetIFF1();                                // Int FlipFlop
+    
+    data[28] = core->GetIFF2();                                // IFF2
+    
+    data[29] = core->GetIMMode() & 0x03;                       // IM Mode
+    
+    // Version 3 Additional Header
+    data[30] = (cZ80_V3_ADD_HEADER_SIZE) & 0xff;               // Addition Header Length
+    data[31] = (cZ80_V3_ADD_HEADER_SIZE) >> 8;
+    
+    data[32] = core->GetRegister(CZ80Core::eREG_PC) & 0xff;    // PC
+    data[33] = core->GetRegister(CZ80Core::eREG_PC) >> 8;
+    
+    if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
+    {
+        data[34] = 0;
+    }
+    else if (machine->machineInfo.machineType == eZXSpectrum128)
+    {
+        data[34] = 4;
+    }
+    else
+    {
+        NSLog(@"Unknown machine type");
+        return 0 ;
+    }
+    
+    if (machine->machineInfo.machineType == eZXSpectrum128)
+    {
+        data[35] = machine->last7ffd;                          // last 128k 0x7ffd port value
+    }
+    else
+    {
+        data[35] = 0;
+    }
+    
+    data[36] = 0;                                              // Interface 1 ROM
+    
+    data[37] = 0; // AY Sound
+    
+    data[38] = 0; // Last OUT fffd
+    
+    
+    data[55] = 0; // Low T State Counter
+    data[56] = 0; // Low T State Counter
+    
+    data[57] = 0; // High T State Counter
+    
+    data[58] = 0; // QL Emu
+    
+    data[59] = 0; // MGT Paged ROM
+    
+    data[60] = 0; // Multiface ROM paged
+    
+    data[61] = 0; // 0 - 8192 ROM
+    
+    data[63] = 0; // 8192 - 16384 ROM
+    
+    data[83] = 0; // MGT Type
+    data[84] = 0; // Disciple inhibit button
+    data[85] = 0; // Disciple inhibit flag
+    
+    int snapPrt = 86;
+    if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
+    {
+        data[snapPrt++] = 0xff;
+        data[snapPrt++] = 0xff;
+        data[snapPrt++] = 4;
+        
+        for (int i = 0x8000; i <= 0xbfff; i++)
+        {
+            data[snapPrt++] = core->Z80CoreDebugMemRead(i, NULL);
+        }
+
+        data[snapPrt++] = 0xff;
+        data[snapPrt++] = 0xff;
+        data[snapPrt++] = 5;
+        
+        for (int i = 0xc000; i <= 0xffff; i++)
+        {
+            data[snapPrt++] = core->Z80CoreDebugMemRead(i, NULL);
+        }
+
+        data[snapPrt++] = 0xff;
+        data[snapPrt++] = 0xff;
+        data[snapPrt++] = 8;
+        
+        for (int i = 0x4000; i <= 0x7fff; i++)
+        {
+            data[snapPrt++] = core->Z80CoreDebugMemRead(i, NULL);
+        }
+
+    }
+    else if (machine->machineInfo.machineType == eZXSpectrum128)
+    {
+        int memPage = 3;
+        for (int page = 0; page <= 7; page++)
+        {
+            data[snapPrt++] = 0xff;
+            data[snapPrt++] = 0xff;
+            data[snapPrt++] = memPage;
+            
+            for (int memAddr = (page * 0x4000); memAddr < (page * 0x4000) + 0x4000; memAddr++)
+            {
+                data[snapPrt++] = core->Z80CoreDebugMemRead(memAddr, NULL);
+            }
+            
+            memPage++;
+        }
+    }
+    else
+    {
+        NSLog(@"Unsupported hardware type");
+        return 0;
+    }
+    
+    [machine setPaused:NO];
+    
+    NSLog(@"%i", snapPrt - 1);
+    
+    return data;
+}
+
 + (int)loadZ80SnapshotWithPath:(NSString *)snapshotpath intoMachine:(ZXSpectrum *)machine
 {
     CZ80Core *core = (CZ80Core *)[machine getCore];
@@ -315,7 +508,7 @@
     unsigned char byte12 = fileBytes[12];
     
     // For campatibility reasons if byte 12 = 255 then is should be assumed to = 1
-    byte12 = (byte12 == 255) ? byte12 : 1;
+    byte12 = (byte12 == 255) ? 1 : byte12;
     
     machine->borderColor = (fileBytes[12] & 14) >> 1;
     BOOL compressed = fileBytes[12] & 32;
@@ -339,7 +532,7 @@
     switch (version) {
         case 1:
             NSLog(@"Hardware Type: 48k");
-            [self extractMemoryBlock:fileBytes memAddr:16384 fileOffset:30 compressed:compressed unpackedLength:49152 intoMachine:machine];
+            [self extractMemoryBlock:fileBytes memAddr:0x4000 fileOffset:30 compressed:compressed unpackedLength:0xc000 intoMachine:machine];
             break;
             
         case 2:
@@ -372,9 +565,9 @@
             {
                 int compressedLength = ((unsigned short *)&fileBytes[offset])[0];
                 BOOL isCompressed = YES;
-                if (compressedLength == 65535)
+                if (compressedLength == 0xffff)
                 {
-                    compressedLength = 16384;
+                    compressedLength = 0x4000;
                     isCompressed = NO;
                 }
                 
@@ -385,13 +578,13 @@
                     // 48k
                     switch (pageId) {
                         case 4:
-                            [self extractMemoryBlock:fileBytes memAddr:32768 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:0x8000 fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 5:
-                            [self extractMemoryBlock:fileBytes memAddr:49152 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:0xc000 fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 8:
-                            [self extractMemoryBlock:fileBytes memAddr:16384 fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:0x4000 fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         default:
                             break;
@@ -402,28 +595,28 @@
                     // 128k
                     switch (pageId) {
                         case 3:
-                            [self extractMemoryBlock:fileBytes memAddr:(0 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(0 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 4:
-                            [self extractMemoryBlock:fileBytes memAddr:(1 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(1 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 5:
-                            [self extractMemoryBlock:fileBytes memAddr:(2 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(2 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 6:
-                            [self extractMemoryBlock:fileBytes memAddr:(3 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(3 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 7:
-                            [self extractMemoryBlock:fileBytes memAddr:(4 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(4 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 8:
-                            [self extractMemoryBlock:fileBytes memAddr:(5 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(5 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 9:
-                            [self extractMemoryBlock:fileBytes memAddr:(6 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(6 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         case 10:
-                            [self extractMemoryBlock:fileBytes memAddr:(7 * 16384) fileOffset:offset + 3 compressed:isCompressed unpackedLength:16384 intoMachine:machine];
+                            [self extractMemoryBlock:fileBytes memAddr:(7 * 0x4000) fileOffset:offset + 3 compressed:isCompressed unpackedLength:0x4000 intoMachine:machine];
                             break;
                         default:
                             break;
