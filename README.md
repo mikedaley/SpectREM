@@ -13,8 +13,8 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - AY emulation
 - TAP file loading and saving
 - TAP Insta loading
-- SNA snapshot loading/saving
-- Z80 snapshot loading/saving
+- SNA 48k snapshot loading/saving
+- Z80 48k/128k snapshot loading/saving
 - Graphical memory viewer
 - CPU view (registers and flags)
 - Virtual tape browser
