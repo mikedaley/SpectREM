@@ -164,6 +164,7 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 
 - (void)loadDefaultROM
 {
+    [super loadDefaultROM];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Open_SEBASIC_3.12" ofType:@"rom"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     

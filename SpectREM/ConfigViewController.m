@@ -201,6 +201,7 @@ NSString *const cSmartCardEnabled = @"smartCardEnabled";
             return;
         }
     }
+
 }
 
 - (NSArray *)observableFloatKeys
@@ -254,7 +255,7 @@ NSString *const cSmartCardEnabled = @"smartCardEnabled";
 			 cSmartCardEnabled
              ];
 }
-
+    
 - (ORSSerialPortManager *)serialPortManager
 {
     return [ORSSerialPortManager sharedSerialPortManager];

@@ -178,6 +178,9 @@
     core->Reset(hard);
     if (hard)
     {
+        NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+        [preferences removeObjectForKey:@"romPath"];
+        [preferences synchronize];
         [self loadDefaultROM];
     }
     frameCounter = 0;

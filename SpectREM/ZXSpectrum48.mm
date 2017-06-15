@@ -73,7 +73,7 @@
 		// Register the callback for the debug information
 		core->RegisterDebugCallback(debugDisplayCallback);
 		
-        [self reset:YES];
+        [self reset:NO];
     }
     return self;
 }
@@ -266,6 +266,7 @@ char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned sho
 
 - (void)loadDefaultROM
 {
+    [super loadDefaultROM];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"48" ofType:@"rom"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     const char *fileBytes = (const char*)[data bytes];

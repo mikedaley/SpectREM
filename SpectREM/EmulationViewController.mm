@@ -157,8 +157,13 @@
 
     [self setupMachineBindings];
     
-    [self restoreSession];
+    if ([_preferences objectForKey:@"romPath"])
+    {
+        NSString *romPath = [_preferences objectForKey:@"romPath"];
+        [_machine loadROMWithPath:romPath];
+    }
     
+    [self restoreSession];
 }
 
 - (void)restoreSession
@@ -593,9 +598,10 @@
         if (_machine->machineInfo.machineType != eZXSpectrum48)
         {
             [self switchToMachine:eZXSpectrum48];
-            _preferences = [NSUserDefaults standardUserDefaults];
             [_preferences setValue:@(eZXSpectrum48) forKey:cCurrentMachineType];
         }
+        [_preferences setObject:url.path forKey:@"romPath"];
+        [_preferences synchronize];
         [_machine loadROMWithPath:url.path];
         [_machine reset:NO];
     }
