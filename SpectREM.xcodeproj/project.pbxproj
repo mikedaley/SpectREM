@@ -41,6 +41,7 @@
 		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
 		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */; };
+		EDC7C68E1EF28B270031BC9D /* SaveAccessoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDC7C68D1EF28B270031BC9D /* SaveAccessoryViewController.m */; };
 		EDE99ED81E48D3C8006F8E63 /* DisassemblyViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
@@ -140,6 +141,8 @@
 		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapeViewController.h; sourceTree = "<group>"; };
 		EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeViewController.m; sourceTree = "<group>"; };
+		EDC7C68C1EF28B270031BC9D /* SaveAccessoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveAccessoryViewController.h; sourceTree = "<group>"; };
+		EDC7C68D1EF28B270031BC9D /* SaveAccessoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveAccessoryViewController.m; sourceTree = "<group>"; };
 		EDCEAF1C1EDDD8CC00A213B8 /* SLNetwork.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SLNetwork.hpp; sourceTree = "<group>"; };
 		EDE99ED61E48D3C8006F8E63 /* DisassemblyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisassemblyViewController.h; sourceTree = "<group>"; };
 		EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DisassemblyViewController.mm; sourceTree = "<group>"; };
@@ -316,6 +319,15 @@
 			name = TapeViewController;
 			sourceTree = "<group>";
 		};
+		EDC7C68B1EF28AF80031BC9D /* Save Accessory View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				EDC7C68C1EF28B270031BC9D /* SaveAccessoryViewController.h */,
+				EDC7C68D1EF28B270031BC9D /* SaveAccessoryViewController.m */,
+			);
+			name = "Save Accessory View Controller";
+			sourceTree = "<group>";
+		};
 		EDCEAF1E1EDDDA4800A213B8 /* ASIO */ = {
 			isa = PBXGroup;
 			children = (
@@ -431,6 +443,7 @@
 				EDE99ED51E48D3AC006F8E63 /* Disassembly View Controller */,
 				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
 				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
+				EDC7C68B1EF28AF80031BC9D /* Save Accessory View Controller */,
 				99BFAA271DBA0AC50049D811 /* Views */,
 			);
 			name = "View/Window Controllers";
@@ -679,6 +692,7 @@
 				EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */,
 				99F71A801DDB13CC0093CAE4 /* CenteredClipView.m in Sources */,
 				EDF3A4FD1DB7745700511BAF /* NSObject+Bindings.m in Sources */,
+				EDC7C68E1EF28B270031BC9D /* SaveAccessoryViewController.m in Sources */,
 				EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

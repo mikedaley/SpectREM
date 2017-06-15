@@ -17,6 +17,7 @@
 #import "TapeViewController.h"
 #import "DisassemblyViewController.h"
 #import "MemoryViewController.h"
+#import "SaveAccessoryViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
 #import "ZXTape.h"
@@ -55,6 +56,9 @@
     
     NSWindowController      *_memoryWindowController;
     MemoryViewController    *_memoryViewController;
+    
+    SaveAccessoryViewController *_saveAccessoryController;
+    NSView                  *_saveAccessoryView;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
@@ -128,6 +132,9 @@
     //  Setup memory view window
     _memoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"MemoryWindow"];
     _memoryViewController = (MemoryViewController *)_memoryWindowController.contentViewController;
+    
+    _saveAccessoryController = [_storyBoard instantiateControllerWithIdentifier:@"SaveAccessoryController"];
+    _saveAccessoryView = _saveAccessoryController.view;
     
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
@@ -458,35 +465,44 @@
 }
 
 - (IBAction)saveFile:(id)sender
-{
-//    if (_machine->machineInfo.machineType != eZXSpectrum48)
-//    {
-//        NSAlert *alert = [NSAlert new];
-//        alert.informativeText = @"SNA saving currently only supported on ZX Spectrum 48k.";
-//        [alert addButtonWithTitle:@"OK"];
-//        [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode)
-//         {
-//         }];
-//        return;
-//    }
-    
+{    
     NSSavePanel *savePanel = [NSSavePanel new];
-    savePanel.allowedFileTypes = @[@"z80"];
+
+    if (_machine->machineInfo.machineType == eZXSpectrum48 || _machine->machineInfo.machineType == eZXSpectrumSE)
+    {
+        [[_saveAccessoryController.exportPopup itemAtIndex:cSNA_SNAPSHOT_TYPE] setEnabled:YES];
+        savePanel.allowedFileTypes = @[@"z80", @"sna"];
+    }
+    else
+    {
+        [[_saveAccessoryController.exportPopup itemAtIndex:cSNA_SNAPSHOT_TYPE] setEnabled:NO];
+        [_saveAccessoryController.exportPopup selectItemAtIndex:cZ80_SNAPSHOT_TYPE];
+        savePanel.allowedFileTypes = @[@"z80"];
+    }
+    
+    savePanel.accessoryView = _saveAccessoryController.view;
     dispatch_async(dispatch_get_main_queue(), ^{
         [savePanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
             if (result == NSModalResponseOK)
             {
-                unsigned char *snapshotData = [Snapshot createZ80SnapshotFromMachine:_machine];
-                NSData *data = nil;
-                if (_machine->machineInfo.machineType == eZXSpectrum48 || _machine->machineInfo.machineType == eZXSpectrumSE)
-                {
-                    data = [NSData dataWithBytes:snapshotData length:(48 * 1024) + 86 + 9];
+                snap snapshotData;
+                NSURL *url = savePanel.URL;
+                
+                switch (_saveAccessoryController.exportType) {
+                    case cZ80_SNAPSHOT_TYPE:
+                        snapshotData = [Snapshot createZ80SnapshotFromMachine:_machine];
+                        url = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"z80"];
+                        break;
+                        
+                    case cSNA_SNAPSHOT_TYPE:
+                        snapshotData = [Snapshot createSnapshotFromMachine:_machine];
+                        url = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"sna"];
+                    default:
+                        break;
                 }
-                else
-                {
-                    data = [NSData dataWithBytes:snapshotData length:(128 * 1024) + 86 + 24];
-                }
-                [data writeToURL:savePanel.URL atomically:YES];
+                
+                NSData *data = [NSData dataWithBytes:snapshotData.data length:snapshotData.length];
+                [data writeToURL:url atomically:YES];
             }
         }];
     });
@@ -721,9 +737,9 @@
     
     _machine.useSmartLink = NO;
     
-    unsigned char *snapshotData = [Snapshot createSnapshotFromMachine:_machine];
+    snap snapShot = [Snapshot createSnapshotFromMachine:_machine];
 
-    [_machine.smartLink sendSnapshot:snapshotData];
+    [_machine.smartLink sendSnapshot:snapShot.data];
 
 }
 

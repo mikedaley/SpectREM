@@ -13,10 +13,6 @@
 
 #pragma mark - Snapshot info
 
-static unsigned short const cZ80_V3_HEADER_SIZE = 86;
-static unsigned short const cZ80_V3_ADD_HEADER_SIZE = 54;
-static unsigned char const cZ80_V3_PAGE_HEADER_SIZE = 3;
-
 + (int)machineNeededForZ80SnapshotWithPath:(NSString *)snapshotPath
 {
     NSData *data = [NSData dataWithContentsOfFile:snapshotPath];
@@ -88,73 +84,74 @@ static unsigned char const cZ80_V3_PAGE_HEADER_SIZE = 3;
 
 #pragma mark - SNA Snapshot
 
-+ (unsigned char *)createSnapshotFromMachine:(ZXSpectrum *)machine
++ (snap)createSnapshotFromMachine:(ZXSpectrum *)machine
 {
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
     // We don't want the machine running while the snapshot is being created
     [machine setPaused:YES];
     
-    unsigned char *data;
-    data = (unsigned char*)calloc(49152 + 27, sizeof(unsigned char));
+    snap snap;
+    snap.length = (48 * 1024) + cSNA_HEADER_SIZE;
+    snap.data = (unsigned char*)calloc(snap.length, sizeof(unsigned char));
     
-    data[0] = core->GetRegister(CZ80Core::eREG_I);
-    data[1] = core->GetRegister(CZ80Core::eREG_ALT_HL) & 0xff;
-    data[2] = core->GetRegister(CZ80Core::eREG_ALT_HL) >> 8;
+    snap.data[0] = core->GetRegister(CZ80Core::eREG_I);
+    snap.data[1] = core->GetRegister(CZ80Core::eREG_ALT_HL) & 0xff;
+    snap.data[2] = core->GetRegister(CZ80Core::eREG_ALT_HL) >> 8;
     
-    data[3] = core->GetRegister(CZ80Core::eREG_ALT_DE) & 0xff;
-    data[4] = core->GetRegister(CZ80Core::eREG_ALT_DE) >> 8;
+    snap.data[3] = core->GetRegister(CZ80Core::eREG_ALT_DE) & 0xff;
+    snap.data[4] = core->GetRegister(CZ80Core::eREG_ALT_DE) >> 8;
 
-    data[5] = core->GetRegister(CZ80Core::eREG_ALT_BC) & 0xff;
-    data[6] = core->GetRegister(CZ80Core::eREG_ALT_BC) >> 8;
+    snap.data[5] = core->GetRegister(CZ80Core::eREG_ALT_BC) & 0xff;
+    snap.data[6] = core->GetRegister(CZ80Core::eREG_ALT_BC) >> 8;
     
-    data[7] = core->GetRegister(CZ80Core::eREG_ALT_AF) & 0xff;
-    data[8] = core->GetRegister(CZ80Core::eREG_ALT_AF) >> 8;
+    snap.data[7] = core->GetRegister(CZ80Core::eREG_ALT_AF) & 0xff;
+    snap.data[8] = core->GetRegister(CZ80Core::eREG_ALT_AF) >> 8;
     
-    data[9] = core->GetRegister(CZ80Core::eREG_HL) & 0xff;
-    data[10] = core->GetRegister(CZ80Core::eREG_HL) >> 8;
+    snap.data[9] = core->GetRegister(CZ80Core::eREG_HL) & 0xff;
+    snap.data[10] = core->GetRegister(CZ80Core::eREG_HL) >> 8;
     
-    data[11] = core->GetRegister(CZ80Core::eREG_DE) & 0xff;
-    data[12] = core->GetRegister(CZ80Core::eREG_DE) >> 8;
+    snap.data[11] = core->GetRegister(CZ80Core::eREG_DE) & 0xff;
+    snap.data[12] = core->GetRegister(CZ80Core::eREG_DE) >> 8;
     
-    data[13] = core->GetRegister(CZ80Core::eREG_BC) & 0xff;
-    data[14] = core->GetRegister(CZ80Core::eREG_BC) >> 8;
+    snap.data[13] = core->GetRegister(CZ80Core::eREG_BC) & 0xff;
+    snap.data[14] = core->GetRegister(CZ80Core::eREG_BC) >> 8;
     
-    data[15] = core->GetRegister(CZ80Core::eREG_IY) & 0xff;
-    data[16] = core->GetRegister(CZ80Core::eREG_IY) >> 8;
+    snap.data[15] = core->GetRegister(CZ80Core::eREG_IY) & 0xff;
+    snap.data[16] = core->GetRegister(CZ80Core::eREG_IY) >> 8;
     
-    data[17] = core->GetRegister(CZ80Core::eREG_IX) & 0xff;
-    data[18] = core->GetRegister(CZ80Core::eREG_IX) >> 8;
+    snap.data[17] = core->GetRegister(CZ80Core::eREG_IX) & 0xff;
+    snap.data[18] = core->GetRegister(CZ80Core::eREG_IX) >> 8;
     
-    data[19] = (core->GetIFF1() & 1) << 2;
-    data[20] = core->GetRegister(CZ80Core::eREG_R);
+    snap.data[19] = (core->GetIFF1() & 1) << 2;
+    snap.data[20] = core->GetRegister(CZ80Core::eREG_R);
     
-    data[21] = core->GetRegister(CZ80Core::eREG_AF) & 0xff;
-    data[22] = core->GetRegister(CZ80Core::eREG_AF) >> 8;
+    snap.data[21] = core->GetRegister(CZ80Core::eREG_AF) & 0xff;
+    snap.data[22] = core->GetRegister(CZ80Core::eREG_AF) >> 8;
     
     unsigned short pc = core->GetRegister(CZ80Core::eREG_PC);
     unsigned short sp = core->GetRegister(CZ80Core::eREG_SP) - 2;
     
-    data[23] = sp & 0xff;
-    data[24] = sp >> 8;
+    snap.data[23] = sp & 0xff;
+    snap.data[24] = sp >> 8;
     
-    data[25] = core->GetIMMode();
-    data[26] = machine->borderColor;
+    snap.data[25] = core->GetIMMode();
+    snap.data[26] = machine->borderColor & 0x07;
     
-    int dataIndex = 27;
+    int dataIndex = cSNA_HEADER_SIZE;
     for (unsigned int addr = 16384; addr < 16384 + (48 * 1024); addr++)
     {
-        data[dataIndex++] = core->Z80CoreDebugMemRead(addr, NULL);
+        snap.data[dataIndex++] = core->Z80CoreDebugMemRead(addr, NULL);
     }
     
     // Update the SP location in the snapshot buffer with the new SP, as PC has been added to the stack
     // as part of creating the snapshot
-    data[sp - 16384 + 27] = pc & 0xff;
-    data[sp - 16384 + 27 + 1] = pc >> 8;
+    snap.data[sp - 16384 + cSNA_HEADER_SIZE] = pc & 0xff;
+    snap.data[sp - 16384 + cSNA_HEADER_SIZE + 1] = pc >> 8;
     
     [machine setPaused:NO];
     
-    return data;
+    return snap;
 }
 
 
@@ -192,9 +189,9 @@ static unsigned char const cZ80_V3_PAGE_HEADER_SIZE = 3;
     core->SetIFF1((fileBytes[19] >> 2) & 1);
     core->SetIFF2((fileBytes[19] >> 2) & 1);
     
-    if (data.length == (48 * 1024) + 27)
+    if (data.length == (48 * 1024) + cSNA_HEADER_SIZE)
     {
-        int snaAddr = 27;
+        int snaAddr = cSNA_HEADER_SIZE;
         for (int i= 16384; i < (48 * 1024) + 16384; i++)
         {
             machine->memory[i] = fileBytes[snaAddr++];
@@ -205,52 +202,6 @@ static unsigned char const cZ80_V3_PAGE_HEADER_SIZE = 3;
         unsigned char pc_msb = machine->memory[core->GetRegister(CZ80Core::eREG_SP) + 1];
         core->SetRegister(CZ80Core::eREG_PC, (pc_msb << 8) | pc_lsb);
         core->SetRegister(CZ80Core::eREG_SP, core->GetRegister(CZ80Core::eREG_SP) + 2);
-        
-    }
-    else if (data.length == ((128 * 1024) + 27 + 4) || data.length == ((144 * 1024) + 27 + 4))
-    {
-        int snaAddr = (3 * 16384) + 27;
-        
-        machine->disablePaging = ((fileBytes[snaAddr + 2] & 0x20) == 0x20) ? YES : NO;
-        machine->currentROMPage = ((fileBytes[snaAddr + 2] & 0x10) == 0x10) ? 1 : 0;
-        machine->displayPage = ((fileBytes[snaAddr + 2] & 0x08) == 0x08) ? 7 : 5;
-        machine->currentRAMPage = (fileBytes[snaAddr + 2] & 0x07);
-        
-        core->SetRegister(CZ80Core::eREG_PC, (fileBytes[snaAddr + 1] << 8) | fileBytes[snaAddr]);
-        
-        snaAddr = 27;
-        
-        int memoryAddr = 5 * 16384;
-        for (int i = 0; i < 16384; i++)
-        {
-            machine->memory[memoryAddr++] = fileBytes[snaAddr++];
-        }
-        
-        memoryAddr = 2 * 16384;
-        for (int i = 0; i < 16384; i++)
-        {
-            machine->memory[memoryAddr++] = fileBytes[snaAddr++];
-        }
-        
-        memoryAddr = machine->currentRAMPage * 16384;
-        for (int i = 0; i < 16384; i++)
-        {
-            machine->memory[memoryAddr++] = fileBytes[snaAddr++];
-        }
-        
-        snaAddr += 4;
-        
-        for (int p = 0; p < 8; p++)
-        {
-            if (p != 5 && p != 2 && p != machine->currentRAMPage)
-            {
-                memoryAddr = p * 16384;
-                for (int i = 0; i < 16384; i++)
-                {
-                    machine->memory[memoryAddr++] = fileBytes[snaAddr++];
-                }
-            }
-        }
     }
     
     return 0;
@@ -258,160 +209,158 @@ static unsigned char const cZ80_V3_PAGE_HEADER_SIZE = 3;
 
 #pragma mark - Z80 Snaphot
 
-+ (unsigned char *)createZ80SnapshotFromMachine:(ZXSpectrum *)machine
++ (snap)createZ80SnapshotFromMachine:(ZXSpectrum *)machine
 {
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
     [machine setPaused:YES];
     
-    unsigned char *data;
-    size_t snapshotSize = 0;
+    int snapshotSize = 0;
     if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
     {
         snapshotSize = (48 * 1024) + cZ80_V3_HEADER_SIZE + (cZ80_V3_PAGE_HEADER_SIZE * 3);
     }
-    else if (machine->machineInfo.machineType == eZXSpectrum128)
+    else
     {
         snapshotSize = (128 * 1024) + cZ80_V3_HEADER_SIZE + (cZ80_V3_PAGE_HEADER_SIZE * 8);
     }
-    else
-    {
-        NSLog(@"Unknown machine type");
-        return 0;
-    }
-
-    data = (unsigned char*)calloc(snapshotSize, sizeof(unsigned char));
+    
+    // Structure to be returned containing the length and size of the snapshot
+    snap snapData;
+    snapData.length = snapshotSize;
+    snapData.data = (unsigned char*)calloc(snapshotSize, sizeof(unsigned char));
     
     // Header
-    data[0] = core->GetRegister(CZ80Core::eREG_A);
-    data[1] = core->GetRegister(CZ80Core::eREG_F);
-    data[2] = core->GetRegister(CZ80Core::eREG_BC) & 0xff;
-    data[3] = core->GetRegister(CZ80Core::eREG_BC) >> 8;
-    data[4] = core->GetRegister(CZ80Core::eREG_HL) & 0xff;
-    data[5] = core->GetRegister(CZ80Core::eREG_HL) >> 8;
-    data[6] = 0x0; // PC
-    data[7] = 0x0;
-    data[8] = core->GetRegister(CZ80Core::eREG_SP) & 0xff;
-    data[9] = core->GetRegister(CZ80Core::eREG_SP) >> 8;
-    data[10] = core->GetRegister(CZ80Core::eREG_I);
-    data[11] = core->GetRegister(CZ80Core::eREG_R) & 0x7f;
+    snapData.data[0] = core->GetRegister(CZ80Core::eREG_A);
+    snapData.data[1] = core->GetRegister(CZ80Core::eREG_F);
+    snapData.data[2] = core->GetRegister(CZ80Core::eREG_BC) & 0xff;
+    snapData.data[3] = core->GetRegister(CZ80Core::eREG_BC) >> 8;
+    snapData.data[4] = core->GetRegister(CZ80Core::eREG_HL) & 0xff;
+    snapData.data[5] = core->GetRegister(CZ80Core::eREG_HL) >> 8;
+    snapData.data[6] = 0x0; // PC
+    snapData.data[7] = 0x0;
+    snapData.data[8] = core->GetRegister(CZ80Core::eREG_SP) & 0xff;
+    snapData.data[9] = core->GetRegister(CZ80Core::eREG_SP) >> 8;
+    snapData.data[10] = core->GetRegister(CZ80Core::eREG_I);
+    snapData.data[11] = core->GetRegister(CZ80Core::eREG_R) & 0x7f;
     
     unsigned char byte12 = core->GetRegister(CZ80Core::eREG_R) >> 7;
     byte12 |= (machine->borderColor & 0x07) << 1;
     byte12 &= ~(1 << 5);
-    data[12] = byte12;
+    snapData.data[12] = byte12;
     
-    data[13] = core->GetRegister(CZ80Core::eREG_E);            // E
-    data[14] = core->GetRegister(CZ80Core::eREG_D);            // D
-    data[15] = core->GetRegister(CZ80Core::eREG_ALT_C);        // C'
-    data[16] = core->GetRegister(CZ80Core::eREG_ALT_B);        // B'
-    data[17] = core->GetRegister(CZ80Core::eREG_ALT_E);        // E'
-    data[18] = core->GetRegister(CZ80Core::eREG_ALT_D);        // D'
-    data[19] = core->GetRegister(CZ80Core::eREG_ALT_L);        // L'
-    data[20] = core->GetRegister(CZ80Core::eREG_ALT_H);        // H'
-    data[21] = core->GetRegister(CZ80Core::eREG_ALT_A);        // A'
-    data[22] = core->GetRegister(CZ80Core::eREG_ALT_F);        // F'
-    data[23] = core->GetRegister(CZ80Core::eREG_IY) & 0xff;    // IY
-    data[24] = core->GetRegister(CZ80Core::eREG_IY) >> 8;      //
-    data[25] = core->GetRegister(CZ80Core::eREG_IX) & 0xff;    // IX
-    data[26] = core->GetRegister(CZ80Core::eREG_IX) >> 8;      //
-    data[27] = (core->GetIFF1()) ? 0xff : 0x0;
-    data[28] = (core->GetIFF2()) ? 0xff : 0x0;
-    data[29] = core->GetIMMode() & 0x03;                       // IM Mode
+    snapData.data[13] = core->GetRegister(CZ80Core::eREG_E);            // E
+    snapData.data[14] = core->GetRegister(CZ80Core::eREG_D);            // D
+    snapData.data[15] = core->GetRegister(CZ80Core::eREG_ALT_C);        // C'
+    snapData.data[16] = core->GetRegister(CZ80Core::eREG_ALT_B);        // B'
+    snapData.data[17] = core->GetRegister(CZ80Core::eREG_ALT_E);        // E'
+    snapData.data[18] = core->GetRegister(CZ80Core::eREG_ALT_D);        // D'
+    snapData.data[19] = core->GetRegister(CZ80Core::eREG_ALT_L);        // L'
+    snapData.data[20] = core->GetRegister(CZ80Core::eREG_ALT_H);        // H'
+    snapData.data[21] = core->GetRegister(CZ80Core::eREG_ALT_A);        // A'
+    snapData.data[22] = core->GetRegister(CZ80Core::eREG_ALT_F);        // F'
+    snapData.data[23] = core->GetRegister(CZ80Core::eREG_IY) & 0xff;    // IY
+    snapData.data[24] = core->GetRegister(CZ80Core::eREG_IY) >> 8;      //
+    snapData.data[25] = core->GetRegister(CZ80Core::eREG_IX) & 0xff;    // IX
+    snapData.data[26] = core->GetRegister(CZ80Core::eREG_IX) >> 8;      //
+    snapData.data[27] = (core->GetIFF1()) ? 0xff : 0x0;
+    snapData.data[28] = (core->GetIFF2()) ? 0xff : 0x0;
+    snapData.data[29] = core->GetIMMode() & 0x03;                       // IM Mode
     
     // Version 3 Additional Header
-    data[30] = (cZ80_V3_ADD_HEADER_SIZE) & 0xff;               // Addition Header Length
-    data[31] = (cZ80_V3_ADD_HEADER_SIZE) >> 8;
-    data[32] = core->GetRegister(CZ80Core::eREG_PC) & 0xff;    // PC
-    data[33] = core->GetRegister(CZ80Core::eREG_PC) >> 8;
+    snapData.data[30] = (cZ80_V3_ADD_HEADER_SIZE) & 0xff;               // Addition Header Length
+    snapData.data[31] = (cZ80_V3_ADD_HEADER_SIZE) >> 8;
+    snapData.data[32] = core->GetRegister(CZ80Core::eREG_PC) & 0xff;    // PC
+    snapData.data[33] = core->GetRegister(CZ80Core::eREG_PC) >> 8;
     
     if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
     {
-        data[34] = 0;
+        snapData.data[34] = 0;
     }
     else
     {
-        data[34] = 4;
+        snapData.data[34] = 4;
     }
     
     if (machine->machineInfo.machineType == eZXSpectrum128)
     {
-        data[35] = machine->last7ffd; // last 128k 0x7ffd port value
+        snapData.data[35] = machine->last7ffd; // last 128k 0x7ffd port value
     }
     else
     {
-        data[35] = 0;
+        snapData.data[35] = 0;
     }
     
-    data[36] = 0; // Interface 1 ROM
-    data[37] = 0; // AY Sound
-    data[38] = 0; // Last OUT fffd
+    snapData.data[36] = 0; // Interface 1 ROM
+    snapData.data[37] = 0; // AY Sound
+    snapData.data[38] = 0; // Last OUT fffd
     
     int quarterStates = machine->machineInfo.tsPerFrame / 4;
     int lowTStates = quarterStates - (core->GetTStates() % quarterStates) - 1;
-    data[55] = lowTStates & 0xff;
-    data[56] = lowTStates >> 8;
+    snapData.data[55] = lowTStates & 0xff;
+    snapData.data[56] = lowTStates >> 8;
     
-    data[57] = ((core->GetTStates() / quarterStates) + 3) % 4;
-    data[58] = 0; // QL Emu
-    data[59] = 0; // MGT Paged ROM
-    data[60] = 0; // Multiface ROM paged
-    data[61] = 0; // 0 - 8192 ROM
-    data[63] = 0; // 8192 - 16384 ROM
-    data[83] = 0; // MGT Type
-    data[84] = 0; // Disciple inhibit button
-    data[85] = 0; // Disciple inhibit flag
+    snapData.data[57] = ((core->GetTStates() / quarterStates) + 3) % 4;
+    snapData.data[58] = 0; // QL Emu
+    snapData.data[59] = 0; // MGT Paged ROM
+    snapData.data[60] = 0; // Multiface ROM paged
+    snapData.data[61] = 0; // 0 - 8192 ROM
+    snapData.data[63] = 0; // 8192 - 16384 ROM
+    snapData.data[83] = 0; // MGT Type
+    snapData.data[84] = 0; // Disciple inhibit button
+    snapData.data[85] = 0; // Disciple inhibit flag
     
     int snapPtr = 86;
     
     if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
     {
-        data[snapPtr++] = 0xff;
-        data[snapPtr++] = 0xff;
-        data[snapPtr++] = 4;
+        snapData.data[snapPtr++] = 0xff;
+        snapData.data[snapPtr++] = 0xff;
+        snapData.data[snapPtr++] = 4;
         
         for (int memAddr = 0x8000; memAddr <= 0xbfff; memAddr++)
         {
-            data[snapPtr++] = core->Z80CoreDebugMemRead(memAddr, NULL);
+            snapData.data[snapPtr++] = core->Z80CoreDebugMemRead(memAddr, NULL);
         }
 
-        data[snapPtr++] = 0xff;
-        data[snapPtr++] = 0xff;
-        data[snapPtr++] = 5;
+        snapData.data[snapPtr++] = 0xff;
+        snapData.data[snapPtr++] = 0xff;
+        snapData.data[snapPtr++] = 5;
         
         for (int memAddr = 0xc000; memAddr <= 0xffff; memAddr++)
         {
-            data[snapPtr++] = core->Z80CoreDebugMemRead(memAddr, NULL);
+            snapData.data[snapPtr++] = core->Z80CoreDebugMemRead(memAddr, NULL);
         }
 
-        data[snapPtr++] = 0xff;
-        data[snapPtr++] = 0xff;
-        data[snapPtr++] = 8;
+        snapData.data[snapPtr++] = 0xff;
+        snapData.data[snapPtr++] = 0xff;
+        snapData.data[snapPtr++] = 8;
         
         for (int memAddr = 0x4000; memAddr <= 0x7fff; memAddr++)
         {
-            data[snapPtr++] = core->Z80CoreDebugMemRead(memAddr, NULL);
+            snapData.data[snapPtr++] = core->Z80CoreDebugMemRead(memAddr, NULL);
         }
 
     }
     else
     {
+        // 128k
         for (int page = 0; page < 8; page++)
         {
-            data[snapPtr++] = 0xff;
-            data[snapPtr++] = 0xff;
-            data[snapPtr++] = page + 3;
+            snapData.data[snapPtr++] = 0xff;
+            snapData.data[snapPtr++] = 0xff;
+            snapData.data[snapPtr++] = page + 3;
             
             for (int memAddr = page * 0x4000; memAddr < (page * 0x4000) + 0x4000; memAddr++)
             {
-                data[snapPtr++] = machine->memory[memAddr];
+                snapData.data[snapPtr++] = machine->memory[memAddr];
             }
         }
     }
     
     [machine setPaused:NO];
     
-    return data;
+    return snapData;
 }
 
 + (int)loadZ80SnapshotWithPath:(NSString *)snapshotpath intoMachine:(ZXSpectrum *)machine
