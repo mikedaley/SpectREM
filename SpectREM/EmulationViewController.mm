@@ -157,6 +157,59 @@
 
     [self setupMachineBindings];
     
+    [self restoreSession];
+    
+}
+
+- (void)restoreSession
+{
+    NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+
+    NSArray *supportDir = [fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
+    
+    if (supportDir.count > 0)
+    {
+        NSURL *supportDirUrl = [[supportDir objectAtIndex:0] URLByAppendingPathComponent:bundleID];
+
+        // Load the last session file it if exists
+        supportDirUrl = [supportDirUrl URLByAppendingPathComponent:@"session.z80"];
+        if ([fileManager fileExistsAtPath:supportDirUrl.path])
+        {
+            NSLog(@"Restoring session");
+            [self loadFileWithURL:supportDirUrl];
+        }
+        else
+        {
+            NSLog(@"No session to restore");
+        }
+    }
+}
+
+- (void)viewWillDisappear
+{
+    NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSArray *supportDir = [fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
+    
+    if (supportDir.count > 0)
+    {
+        NSURL *supportDirUrl = [[supportDir objectAtIndex:0] URLByAppendingPathComponent:bundleID];
+        
+        NSError *error = nil;
+        if (![fileManager createDirectoryAtURL:supportDirUrl withIntermediateDirectories:YES attributes:nil error:&error])
+        {
+            NSLog(@"ERROR: creating support directory.");
+            return;
+        }
+        
+        // Load the last session file it if exists
+        supportDirUrl = [supportDirUrl URLByAppendingPathComponent:@"session.z80"];
+        snap sessionSnapshot = [Snapshot createZ80SnapshotFromMachine:_machine];
+        NSData *data = [NSData dataWithBytes:sessionSnapshot.data length:sessionSnapshot.length];
+        [data writeToURL:supportDirUrl atomically:YES];
+    }
 }
 
 #pragma mark - CPU View Timer
