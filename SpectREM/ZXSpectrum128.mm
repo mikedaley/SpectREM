@@ -272,7 +272,6 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 
 - (void)loadDefaultROM
 {
-    [super loadDefaultROM];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"128-0" ofType:@"rom"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     

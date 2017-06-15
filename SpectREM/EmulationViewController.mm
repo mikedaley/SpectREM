@@ -157,13 +157,14 @@
 
     [self setupMachineBindings];
     
-    if ([_preferences objectForKey:@"romPath"])
-    {
-        NSString *romPath = [_preferences objectForKey:@"romPath"];
-        [_machine loadROMWithPath:romPath];
-    }
-    
+//    if ([_preferences objectForKey:@"romPath"])
+//    {
+//        NSString *romPath = [_preferences objectForKey:@"romPath"];
+//        [_machine loadROMWithPath:romPath];
+//    }
+
     [self restoreSession];
+
 }
 
 - (void)restoreSession
