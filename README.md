@@ -16,6 +16,7 @@ This is a ZX Spectrum emulator written for MacOS 10.10+
 - Z80 48k/128k snapshot loading/saving
 - Virtual tape browser
 - Debugger (Under active development)
+  - Memory Viewer
   - Graphical memory viewer
   - CPU view (registers and flags)
   - Pause, Resume
