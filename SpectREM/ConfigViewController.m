@@ -103,12 +103,12 @@ NSString *const cRom1281Path = @"rom1281Path";
 
     [_preferences removeObserver:self forKeyPath:cInstaTAPLoading];
     [_preferences removeObserver:self forKeyPath:cCurrentMachineType];
-//    [_preferences removeObserver:self forKeyPath:cRom48Name];
-//    [_preferences removeObserver:self forKeyPath:cRom48Path];
-//    [_preferences removeObserver:self forKeyPath:cRom1280Name];
-//    [_preferences removeObserver:self forKeyPath:cRom1280Path];
-//    [_preferences removeObserver:self forKeyPath:cRom1281Name];
-//    [_preferences removeObserver:self forKeyPath:cRom1281Path];
+    [_preferences removeObserver:self forKeyPath:cRom48Name];
+    [_preferences removeObserver:self forKeyPath:cRom48Path];
+    [_preferences removeObserver:self forKeyPath:cRom1280Name];
+    [_preferences removeObserver:self forKeyPath:cRom1280Path];
+    [_preferences removeObserver:self forKeyPath:cRom1281Name];
+    [_preferences removeObserver:self forKeyPath:cRom1281Path];
     
 }
 
@@ -157,8 +157,8 @@ NSString *const cRom1281Path = @"rom1281Path";
 
         [_preferences addObserver:self forKeyPath:cInstaTAPLoading options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
-//        [_preferences addObserver:self forKeyPath:cRom48Name options:NSKeyValueObservingOptionNew context:NULL];
-//        [_preferences addObserver:self forKeyPath:cRom48Path options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cRom48Name options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cRom48Path options:NSKeyValueObservingOptionNew context:NULL];
         
         self.accelerate = NO;
         self.accelerationMultiplier = 2.0;
@@ -233,6 +233,18 @@ NSString *const cRom1281Path = @"rom1281Path";
         }
     }
 
+    for (NSString *key in [self observableStringKeys])
+    {
+        if ([keyPath isEqualToString:key])
+        {
+            if (![[self valueForKey:key] isEqualToString:change[NSKeyValueChangeNewKey]] && [self valueForKey:key])
+            {
+                [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            }
+            return;
+        }
+    }
+
 }
 
 - (NSArray *)observableFloatKeys
@@ -291,7 +303,11 @@ NSString *const cRom1281Path = @"rom1281Path";
 {
     return @[
              cRom48Name,
-             cRom48Path
+             cRom48Path,
+             cRom1280Name,
+             cRom1280Path,
+             cRom1281Name,
+             cRom1281Path
              ];
 }
     

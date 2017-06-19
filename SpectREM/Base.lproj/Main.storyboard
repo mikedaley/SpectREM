@@ -130,21 +130,15 @@
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="80P-ky-wSs"/>
                                         <menuItem title="ZX Spectrum 48k" keyEquivalent="1" id="6EG-ZY-5u4">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="switchMachine:" target="Ady-hI-5gd" id="mRA-uK-Mun"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="ZX Spectrum 128k" tag="1" keyEquivalent="2" id="Fps-8n-58X" userLabel="ZX Spectrum 128k">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="switchMachine:" target="Ady-hI-5gd" id="tXc-7S-WdG"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="ZX Spectrum 48k SE" tag="2" keyEquivalent="3" id="4fI-rz-Ifv" userLabel="ZX Spectrum 48k SE">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="xEd-U9-PH0"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="FyH-IS-Ku3"/>
@@ -1087,7 +1081,7 @@
                                         <button verticalHuggingPriority="750" misplaced="YES" id="Iac-VT-hvj">
                                             <rect key="frame" x="11" y="5" width="192" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="Change ROM" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="u4d-sh-Yg1">
+                                            <buttonCell key="cell" type="push" title="Select ROM" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="u4d-sh-Yg1">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="smallSystem"/>
                                             </buttonCell>
@@ -1216,7 +1210,7 @@
                                             </connections>
                                         </button>
                                         <popUpButton verticalHuggingPriority="750" misplaced="YES" id="D7p-PG-vqC">
-                                            <rect key="frame" x="17" y="37" width="183" height="22"/>
+                                            <rect key="frame" x="17" y="35" width="183" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="jHX-Qg-yfa" id="z37-jC-1KD">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1236,7 +1230,7 @@
                                             </connections>
                                         </popUpButton>
                                         <button verticalHuggingPriority="750" misplaced="YES" id="I9X-H4-ii6">
-                                            <rect key="frame" x="15" y="8" width="187" height="28"/>
+                                            <rect key="frame" x="15" y="6" width="187" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Send memory snapshot" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Mc6-K6-iQD">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
