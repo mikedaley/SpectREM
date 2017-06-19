@@ -22,6 +22,8 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
   - Pause, Resume
   - Step In
 - ULAplus
+- Automatically restores your last session
+- Allows selection of the default 48k/128k ROM
 
 ## Peripheral Emulation
 
