@@ -2,10 +2,9 @@
 
 This is a ZX Spectrum emulator written for MacOS 10.10+
 
-Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
-
 ## Features
 
+- Emulates the 48k and 128k ZX Spectrum
 - Extremely accurate Z80 core (developed by Adrian Brown)
   - Passes all emulator based tests for Z80 core accuracy including FLAGS, MEMPTR and SCF/CCF Q register
 - Cycle accurate emulation of the ULA allowing all advanced colour demos to work correctly (the ones tested ;o) )
