@@ -18,13 +18,13 @@
 #import "DisassemblyViewController.h"
 #import "MemoryViewController.h"
 #import "SaveAccessoryViewController.h"
+#import "RomSelectionViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
 #import "ZXTape.h"
 
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
-#import "ZXSpectrumSE.h"
 #import "SmartLink.h"
 #import "Z80Core.h"
 
@@ -654,9 +654,6 @@
             break;
         case eZXSpectrum128:
             _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self machineInfo:machines[1]];
-            break;
-        case eZXSpectrumSE:
-            _machine = [[ZXSpectrumSE alloc] initWithEmulationViewController:self machineInfo:machines[2]];
             break;
     }
     _machine.zxTape = _zxTape;
