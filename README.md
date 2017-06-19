@@ -14,10 +14,10 @@ This is a ZX Spectrum emulator written for MacOS 10.10+
 - TAP Insta loading
 - SNA 48k snapshot loading/saving
 - Z80 48k/128k snapshot loading/saving
-- Graphical memory viewer
-- CPU view (registers and flags)
 - Virtual tape browser
 - Debugger (Under active development)
+  - Graphical memory viewer
+  - CPU view (registers and flags)
   - Pause, Resume
   - Step In
 - ULAplus
