@@ -44,6 +44,8 @@
         machineInfo = info;
         _emulationViewController = emulationViewController;
         
+        _preferences = [NSUserDefaults standardUserDefaults];
+        
         event = EventType::eNone;
         
         borderColor = 7;

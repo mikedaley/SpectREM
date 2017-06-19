@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */; };
+		178A01561EF6CB5D00CEFBB7 /* RomSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 178A01551EF6CB5D00CEFBB7 /* RomSelectionViewController.m */; };
 		991D87C41E33937A00667E37 /* SmartLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 991D87C31E33937A00667E37 /* SmartLink.m */; };
 		991D87F21E33BD6700667E37 /* ORSSerial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; };
 		991D87F31E33BD6700667E37 /* ORSSerial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -39,7 +40,6 @@
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
 		ED8BD24B1E5CAC490033DBAA /* AgentX.szx in Resources */ = {isa = PBXBuildFile; fileRef = ED8BD24A1E5CA6980033DBAA /* AgentX.szx */; };
 		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
-		EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */; };
 		EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */; };
 		EDC7C68E1EF28B270031BC9D /* SaveAccessoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDC7C68D1EF28B270031BC9D /* SaveAccessoryViewController.m */; };
 		EDE99ED81E48D3C8006F8E63 /* DisassemblyViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */; };
@@ -86,6 +86,8 @@
 /* Begin PBXFileReference section */
 		0A6386D91E48C72300783DA4 /* AddressLabels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressLabels.h; sourceTree = "<group>"; };
 		0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = 48KRomLabels.mm; sourceTree = "<group>"; };
+		178A01541EF6CB5D00CEFBB7 /* RomSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RomSelectionViewController.h; sourceTree = "<group>"; };
+		178A01551EF6CB5D00CEFBB7 /* RomSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RomSelectionViewController.m; sourceTree = "<group>"; };
 		179D95581ED8C06200185F76 /* asio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = asio.hpp; path = SpectREM/asio.hpp; sourceTree = "<group>"; };
 		991D87C21E33937A00667E37 /* SmartLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartLink.h; sourceTree = "<group>"; };
 		991D87C31E33937A00667E37 /* SmartLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartLink.m; sourceTree = "<group>"; };
@@ -137,8 +139,6 @@
 		ED8BD24A1E5CA6980033DBAA /* AgentX.szx */ = {isa = PBXFileReference; lastKnownFileType = file; path = AgentX.szx; sourceTree = "<group>"; };
 		EDAAD8C01E05893F0070153E /* ZXTape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXTape.h; sourceTree = "<group>"; };
 		EDAAD8C11E05893F0070153E /* ZXTape.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXTape.mm; sourceTree = "<group>"; };
-		EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXSpectrumSE.h; sourceTree = "<group>"; };
-		EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZXSpectrumSE.mm; sourceTree = "<group>"; };
 		EDB3FDFD1E41F65C00EE38A8 /* TapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapeViewController.h; sourceTree = "<group>"; };
 		EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeViewController.m; sourceTree = "<group>"; };
 		EDC7C68C1EF28B270031BC9D /* SaveAccessoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveAccessoryViewController.h; sourceTree = "<group>"; };
@@ -208,6 +208,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		178A01531EF6CB2E00CEFBB7 /* ROM Selection View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				178A01541EF6CB5D00CEFBB7 /* RomSelectionViewController.h */,
+				178A01551EF6CB5D00CEFBB7 /* RomSelectionViewController.m */,
+			);
+			name = "ROM Selection View Controller";
+			sourceTree = "<group>";
+		};
 		991D87C11E33935600667E37 /* SmartLINK */ = {
 			isa = PBXGroup;
 			children = (
@@ -390,7 +399,7 @@
 				EDF3A4C11DB0D77200511BAF /* Audio Core */,
 				991D87C11E33935600667E37 /* SmartLINK */,
 				EDF3A4BB1DB0D67D00511BAF /* App Delegate */,
-				EDF3A4C01DB0D6EF00511BAF /* Main UI */,
+				EDF3A4C01DB0D6EF00511BAF /* Storyboard */,
 				EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */,
 				99D359AD1DBD0A0300C49FAE /* Keyboard */,
 				EDF3A4C21DB0D77D00511BAF /* Machines */,
@@ -444,6 +453,7 @@
 				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
 				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
 				EDC7C68B1EF28AF80031BC9D /* Save Accessory View Controller */,
+				178A01531EF6CB2E00CEFBB7 /* ROM Selection View Controller */,
 				99BFAA271DBA0AC50049D811 /* Views */,
 			);
 			name = "View/Window Controllers";
@@ -457,12 +467,12 @@
 			name = Actions;
 			sourceTree = "<group>";
 		};
-		EDF3A4C01DB0D6EF00511BAF /* Main UI */ = {
+		EDF3A4C01DB0D6EF00511BAF /* Storyboard */ = {
 			isa = PBXGroup;
 			children = (
 				EDF3A4B21DB0D60800511BAF /* Main.storyboard */,
 			);
-			name = "Main UI";
+			name = Storyboard;
 			sourceTree = "<group>";
 		};
 		EDF3A4C11DB0D77200511BAF /* Audio Core */ = {
@@ -489,8 +499,6 @@
 				EDF3A4EF1DB0D7D000511BAF /* ZXSpectrum48.mm */,
 				99A79E6B1DC14A2E00B8D4CD /* ZXSpectrum128.h */,
 				99A79E691DC14A1E00B8D4CD /* ZXSpectrum128.mm */,
-				EDAB3B721DC8FC74002AA8BB /* ZXSpectrumSE.h */,
-				EDAB3B731DC8FC74002AA8BB /* ZXSpectrumSE.mm */,
 			);
 			name = Machines;
 			sourceTree = "<group>";
@@ -681,6 +689,7 @@
 				EDF3A4D81DB0D7AB00511BAF /* Z80Core_DDOpcodes.cpp in Sources */,
 				99A268521E5C3C450079DB5E /* SZX.m in Sources */,
 				99F71A831DDB17B80093CAE4 /* PixelImageView.m in Sources */,
+				178A01561EF6CB5D00CEFBB7 /* RomSelectionViewController.m in Sources */,
 				ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */,
 				0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */,
 				ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */,
@@ -689,7 +698,6 @@
 				EDF3A4D71DB0D7AB00511BAF /* Z80Core_EDOpcodes.cpp in Sources */,
 				ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */,
 				EDF3A4D41DB0D7AB00511BAF /* Z80Core.cpp in Sources */,
-				EDAB3B741DC8FC74002AA8BB /* ZXSpectrumSE.mm in Sources */,
 				99F71A801DDB13CC0093CAE4 /* CenteredClipView.m in Sources */,
 				EDF3A4FD1DB7745700511BAF /* NSObject+Bindings.m in Sources */,
 				EDC7C68E1EF28B270031BC9D /* SaveAccessoryViewController.m in Sources */,

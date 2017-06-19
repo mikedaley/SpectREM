@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ZXSpectrum48.h"
 #import "Z80Core.h"
+#import "ConfigViewController.h"
 
 #pragma mark - Extension Interface
 
@@ -266,8 +267,8 @@ char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned sho
 
 - (void)loadDefaultROM
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"48" ofType:@"rom"];
-    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSURL *url = [self.preferences URLForKey:cRom48Path];
+    NSData *data = [NSData dataWithContentsOfURL:url];
     const char *fileBytes = (const char*)[data bytes];
     memcpy(memory, fileBytes, data.length);
 }

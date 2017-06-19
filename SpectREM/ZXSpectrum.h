@@ -261,6 +261,8 @@ static NS_ENUM(NSUInteger, MachineType)
 @property (strong) SKTexture *texture;
 @property (strong) SKTexture *memoryTexture;
 
+@property (strong) NSUserDefaults *preferences;
+
 @property (strong) id imageRef;
 @property (assign) CGColorSpaceRef colorSpace;
 

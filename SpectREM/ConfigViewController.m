@@ -48,12 +48,21 @@ NSString *const cMultiface128 = @"multiface128";
 NSString *const cMultiface128Lockout = @"multiface128Lockout";
 NSString *const cInstaTAPLoading = @"instaTAPLoading";
 NSString *const cSmartCardEnabled = @"smartCardEnabled";
+NSString *const cRom48Name = @"rom48Name";
+NSString *const cRom48Path = @"rom48Path";
+NSString *const cRom1280Name = @"rom1280Name";
+NSString *const cRom1280Path = @"rom1280Path";
+NSString *const cRom1281Name = @"rom1281Name";
+NSString *const cRom1281Path = @"rom1281Path";
 
 #pragma mark - Implementation 
 
 @implementation ConfigViewController
 {
     NSUserDefaults *_preferences;
+    NSStoryboard *_storyBoard;
+    RomSelectionViewController *_romSelectionViewController;
+    NSWindowController *_romSelectionWindowController;
 }
 
 - (void)dealloc
@@ -94,6 +103,13 @@ NSString *const cSmartCardEnabled = @"smartCardEnabled";
 
     [_preferences removeObserver:self forKeyPath:cInstaTAPLoading];
     [_preferences removeObserver:self forKeyPath:cCurrentMachineType];
+//    [_preferences removeObserver:self forKeyPath:cRom48Name];
+//    [_preferences removeObserver:self forKeyPath:cRom48Path];
+//    [_preferences removeObserver:self forKeyPath:cRom1280Name];
+//    [_preferences removeObserver:self forKeyPath:cRom1280Path];
+//    [_preferences removeObserver:self forKeyPath:cRom1281Name];
+//    [_preferences removeObserver:self forKeyPath:cRom1281Path];
+    
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -141,9 +157,15 @@ NSString *const cSmartCardEnabled = @"smartCardEnabled";
 
         [_preferences addObserver:self forKeyPath:cInstaTAPLoading options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
+//        [_preferences addObserver:self forKeyPath:cRom48Name options:NSKeyValueObservingOptionNew context:NULL];
+//        [_preferences addObserver:self forKeyPath:cRom48Path options:NSKeyValueObservingOptionNew context:NULL];
         
         self.accelerate = NO;
         self.accelerationMultiplier = 2.0;
+        
+        _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
+        _romSelectionWindowController = (NSWindowController *)[_storyBoard instantiateControllerWithIdentifier:@"RomSelectionWindow"];
+        _romSelectionViewController = (RomSelectionViewController *)[_storyBoard instantiateControllerWithIdentifier:@"RomSelectionViewController"];
         
         // Apply default values
         NSString *userDefaultsPath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
@@ -177,27 +199,36 @@ NSString *const cSmartCardEnabled = @"smartCardEnabled";
 {
     for (NSString *key in [self observableFloatKeys])
     {
-        if ([keyPath isEqualToString:key] && [[self valueForKey:key] floatValue] != [change[NSKeyValueChangeNewKey] floatValue])
+        if ([keyPath isEqualToString:key])
         {
-            [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            if ([[self valueForKey:key] floatValue] != [change[NSKeyValueChangeNewKey] floatValue])
+            {
+                [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            }
             return;
         }
     }
 
     for (NSString *key in [self observableUIntKeys])
     {
-        if ([keyPath isEqualToString:key] && [[self valueForKey:key] unsignedIntegerValue] != [change[NSKeyValueChangeNewKey] unsignedIntegerValue])
+        if ([keyPath isEqualToString:key])
         {
-            [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            if ([[self valueForKey:key] unsignedIntegerValue] != [change[NSKeyValueChangeNewKey] unsignedIntegerValue])
+            {
+                [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            }
             return;
         }
     }
 
     for (NSString *key in [self observableBoolKeys])
     {
-        if ([keyPath isEqualToString:key] && [[self valueForKey:key] boolValue] != [change[NSKeyValueChangeNewKey] boolValue])
+        if ([keyPath isEqualToString:key])
         {
-            [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            if ([[self valueForKey:key] boolValue] != [change[NSKeyValueChangeNewKey] boolValue])
+            {
+                [self setValue:change[NSKeyValueChangeNewKey] forKey:key];
+            }
             return;
         }
     }
@@ -255,10 +286,23 @@ NSString *const cSmartCardEnabled = @"smartCardEnabled";
 			 cSmartCardEnabled
              ];
 }
+
+- (NSArray *)observableStringKeys
+{
+    return @[
+             cRom48Name,
+             cRom48Path
+             ];
+}
     
 - (ORSSerialPortManager *)serialPortManager
 {
     return [ORSSerialPortManager sharedSerialPortManager];
+}
+
+- (IBAction)selectRom:(id)sender
+{
+    [_romSelectionWindowController showWindow:nil];
 }
 
 @end

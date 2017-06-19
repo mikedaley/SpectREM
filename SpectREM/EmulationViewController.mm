@@ -60,6 +60,9 @@
     SaveAccessoryViewController *_saveAccessoryController;
     NSView                  *_saveAccessoryView;
     
+    NSWindowController      *_romSelectionWindowController;
+    RomSelectionViewController *_romSelectionViewController;
+    
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
     dispatch_queue_t        _debugTimerQueue;
@@ -136,6 +139,9 @@
     _saveAccessoryController = [_storyBoard instantiateControllerWithIdentifier:@"SaveAccessoryController"];
     _saveAccessoryView = _saveAccessoryController.view;
     
+    _romSelectionWindowController = [_storyBoard instantiateControllerWithIdentifier:@"RomSelectionWindow"];
+    _romSelectionViewController = (RomSelectionViewController *)_romSelectionWindowController.contentViewController;
+    
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:cSceneScaleMode] integerValue];
@@ -151,18 +157,13 @@
     [self setupNotificationCenterObservers];
     [self setupGamepad];
     [self setupTimers];
+    [self checkForDefaultROM];
     
     // Switch to the last machine saved in preferences
     [self switchToMachine:_configViewController.currentMachineType];
 
     [self setupMachineBindings];
     
-//    if ([_preferences objectForKey:@"romPath"])
-//    {
-//        NSString *romPath = [_preferences objectForKey:@"romPath"];
-//        [_machine loadROMWithPath:romPath];
-//    }
-
     [self restoreSession];
 
 }
@@ -210,11 +211,35 @@
             return;
         }
         
-        // Load the last session file it if exists
         supportDirUrl = [supportDirUrl URLByAppendingPathComponent:@"session.z80"];
         snap sessionSnapshot = [Snapshot createZ80SnapshotFromMachine:_machine];
         NSData *data = [NSData dataWithBytes:sessionSnapshot.data length:sessionSnapshot.length];
         [data writeToURL:supportDirUrl atomically:YES];
+    }
+}
+
+- (void)checkForDefaultROM
+{
+    // If any of the default rom keys are missing from preferences then point them to the ROMS that come with SpectREM
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSString *rom48Path = [(NSURL *)[_preferences URLForKey:cRom48Path] path];
+    NSString *rom1280Path = [(NSURL *)[_preferences URLForKey:cRom1280Path] path];
+    NSString *rom1281Path = [(NSURL *)[_preferences URLForKey:cRom1281Path] path];
+
+    if (![_preferences stringForKey:cRom48Name] || ![fileManager fileExistsAtPath:rom48Path])
+    {
+        [_romSelectionViewController reset48kRom];
+    }
+
+    if (![_preferences stringForKey:cRom1280Name] || ![fileManager fileExistsAtPath:rom1280Path])
+    {
+        [_romSelectionViewController reset128kRom0];
+    }
+
+    if (![_preferences stringForKey:cRom1281Name] || ![fileManager fileExistsAtPath:rom1281Path])
+    {
+        [_romSelectionViewController reset128kRom1];
     }
 }
 
@@ -797,7 +822,6 @@
     snap snapShot = [Snapshot createSnapshotFromMachine:_machine];
 
     [_machine.smartLink sendSnapshot:snapShot.data];
-
 }
 
 #pragma mark - User Notifications

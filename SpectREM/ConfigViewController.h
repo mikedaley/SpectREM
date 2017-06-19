@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "RomSelectionViewController.h"
 
 #pragma mark - Key Path Constants
 
@@ -53,12 +54,26 @@ extern NSString *const cMultiface128;
 extern NSString *const cMultiface128Lockout;
 extern NSString *const cInstaTAPLoading;
 extern NSString *const cSmartCardEnabled;
+extern NSString *const cRom48Name;
+extern NSString *const cRom48Path;
+extern NSString *const cRom1280Name;
+extern NSString *const cRom1280Path;
+extern NSString *const cRom1281Name;
+extern NSString *const cRom1281Path;
 
 @interface ConfigViewController : NSViewController
 
 // Machine properties
 @property (assign) BOOL accelerate;
 @property (assign) double accelerationMultiplier;
+@property (assign) NSInteger currentMachineType;
+@property (assign) BOOL instaTAPLoading;
+@property (strong) NSString *rom48Name;
+@property (strong) NSString *rom48Path;
+@property (strong) NSString *rom1280Name;
+@property (strong) NSString *rom1280Path;
+@property (strong) NSString *rom1281Name;
+@property (strong) NSString *rom1281Path;
 
 // Display properties
 @property (assign) double displayBorderWidth;
@@ -100,10 +115,6 @@ extern NSString *const cSmartCardEnabled;
 @property (nonatomic, readonly) ORSSerialPortManager *serialPortManager;
 @property (nonatomic, strong) ORSSerialPort *serialPort;
 @property (nonatomic, assign) BOOL useSmartLink;
-
-// Emulation
-@property (assign) NSInteger currentMachineType;
-@property (assign) BOOL instaTAPLoading;
 
 // UI Properties
 @property (strong) IBOutlet NSView *scrollDocView;

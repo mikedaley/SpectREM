@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ZXSpectrum128.h"
 #import "Z80Core.h"
+#import "ConfigViewController.h"
 
 #pragma mark - Private Interface
 
@@ -272,15 +273,15 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 
 - (void)loadDefaultROM
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"128-0" ofType:@"rom"];
-    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSURL *url = [self.preferences URLForKey:cRom1280Path];
+    NSData *data = [NSData dataWithContentsOfURL:url];
     
     const char *fileBytes = (const char*)[data bytes];
     
     memcpy(rom, fileBytes, data.length);
 
-    path = [[NSBundle mainBundle] pathForResource:@"128-1" ofType:@"rom"];
-    data = [NSData dataWithContentsOfFile:path];
+    url = [self.preferences URLForKey:cRom1281Path];
+    data = [NSData dataWithContentsOfURL:url];
     
     fileBytes = (const char*)[data bytes];
 
