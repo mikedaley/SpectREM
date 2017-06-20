@@ -533,6 +533,12 @@
 
 - (IBAction)openFile:(id)sender
 {
+    if ([(NSControl *)sender tag] == 1)
+    {
+        [self loadLastUrl:nil];
+        return;
+    }
+    
     NSOpenPanel *openPanel = [NSOpenPanel new];
     openPanel.canChooseDirectories = NO;
     openPanel.allowsMultipleSelection = NO;
@@ -653,7 +659,22 @@
     }
     
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
-    [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+    
+    // Don't add the session snapshot to the recent files list
+    if (![(NSString *)[url.path lastPathComponent] isEqualToString:@"session.z80"])
+    {
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+        [_preferences setURL:url forKey:@"lastUrl"];
+        [_preferences synchronize];
+    }
+}
+
+- (IBAction)loadLastUrl:(id)sender
+{
+    if ([_preferences URLForKey:@"lastUrl"])
+    {
+        [self loadFileWithURL:[_preferences URLForKey:@"lastUrl"]];
+    }
 }
 
 - (IBAction)resetPreferences:(id)sender

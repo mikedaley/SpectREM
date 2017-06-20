@@ -7,6 +7,7 @@
 //
 
 #import "ConfigViewController.h"
+
 @import ORSSerial;
 
 #pragma mark - Key Path Constants
@@ -159,6 +160,10 @@ NSString *const cRom1281Path = @"rom1281Path";
         [_preferences addObserver:self forKeyPath:cCurrentMachineType options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cRom48Name options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cRom48Path options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cRom1280Name options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cRom1280Path options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cRom1281Name options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cRom1281Path options:NSKeyValueObservingOptionNew context:NULL];
         
         self.accelerate = NO;
         self.accelerationMultiplier = 2.0;

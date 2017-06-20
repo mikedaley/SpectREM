@@ -26,9 +26,8 @@ typedef NS_ENUM(int, SZXMachineType)
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do view setup here.
+    
     self.preferences = [NSUserDefaults standardUserDefaults];
-
 }
 
 #pragma mark - Actions
@@ -49,7 +48,6 @@ typedef NS_ENUM(int, SZXMachineType)
     {
         [self reset128kRom1];
     }
-    
 }
 
 - (IBAction)selectRom:(id)sender
