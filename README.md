@@ -2,10 +2,9 @@
 
 This is a ZX Spectrum emulator written for MacOS 10.10+
 
-Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
-
 ## Features
 
+- Emulates the 48k and 128k ZX Spectrum
 - Extremely accurate Z80 core (developed by Adrian Brown)
   - Passes all emulator based tests for Z80 core accuracy including FLAGS, MEMPTR and SCF/CCF Q register
 - Cycle accurate emulation of the ULA allowing all advanced colour demos to work correctly (the ones tested ;o) )
@@ -15,13 +14,18 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
 - TAP Insta loading
 - SNA 48k snapshot loading/saving
 - Z80 48k/128k snapshot loading/saving
-- Graphical memory viewer
-- CPU view (registers and flags)
 - Virtual tape browser
 - Debugger (Under active development)
+  - Memory Viewer
+  - Graphical memory viewer
+  - CPU view (registers and flags)
   - Pause, Resume
   - Step In
 - ULAplus
+- Automatically restores your last session
+- Allows selection of the default 48k/128k ROM
+- Imports labels generated when compiling with Pasmo and displays them in the disassembly window
+  - Automatically looks for a file with the same name as the snapshot being loaded but with a .dbg extension
 
 ## Peripheral Emulation
 
@@ -42,7 +46,6 @@ Currently the ZX Spectrum 48k and ZX Spectrum 128k machines are emulated.
   - Step Over
   - Breakpoints
   - Break on Read/Write/Execute of a memory location
-  - Import Labels and other info from assemblers such as Pasmo
   - Screen debugger that shows what has been drawn to screen even when single stepping instructions
   - Screen debugger that can be used to show a specific memory page for 128k screen debugging e.g. look at the page updating that is going to be flipped too
   - Show on screen where the screen refresh location is for debugging colour effects
