@@ -632,8 +632,6 @@
             [self switchToMachine:eZXSpectrum48];
             [_preferences setValue:@(eZXSpectrum48) forKey:cCurrentMachineType];
         }
-        [_preferences setObject:url.path forKey:@"romPath"];
-        [_preferences synchronize];
         [_machine loadROMWithPath:url.path];
         [_machine reset:NO];
     }
@@ -664,16 +662,16 @@
     if (![(NSString *)[url.path lastPathComponent] isEqualToString:@"session.z80"])
     {
         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
-        [_preferences setURL:url forKey:@"lastUrl"];
+        [_preferences setURL:url forKey:cLastUrl];
         [_preferences synchronize];
     }
 }
 
 - (IBAction)loadLastUrl:(id)sender
 {
-    if ([_preferences URLForKey:@"lastUrl"])
+    if ([_preferences URLForKey:cLastUrl])
     {
-        [self loadFileWithURL:[_preferences URLForKey:@"lastUrl"]];
+        [self loadFileWithURL:[_preferences URLForKey:cLastUrl]];
     }
 }
 

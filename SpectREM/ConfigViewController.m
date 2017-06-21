@@ -55,6 +55,7 @@ NSString *const cRom1280Name = @"rom1280Name";
 NSString *const cRom1280Path = @"rom1280Path";
 NSString *const cRom1281Name = @"rom1281Name";
 NSString *const cRom1281Path = @"rom1281Path";
+NSString *const cLastUrl = @"lastUrl";
 
 #pragma mark - Implementation 
 
@@ -110,7 +111,7 @@ NSString *const cRom1281Path = @"rom1281Path";
     [_preferences removeObserver:self forKeyPath:cRom1280Path];
     [_preferences removeObserver:self forKeyPath:cRom1281Name];
     [_preferences removeObserver:self forKeyPath:cRom1281Path];
-    
+    [_preferences removeObserver:self forKeyPath:cLastUrl];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -164,6 +165,7 @@ NSString *const cRom1281Path = @"rom1281Path";
         [_preferences addObserver:self forKeyPath:cRom1280Path options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cRom1281Name options:NSKeyValueObservingOptionNew context:NULL];
         [_preferences addObserver:self forKeyPath:cRom1281Path options:NSKeyValueObservingOptionNew context:NULL];
+        [_preferences addObserver:self forKeyPath:cLastUrl options:NSKeyValueObservingOptionNew context:NULL];
         
         self.accelerate = NO;
         self.accelerationMultiplier = 2.0;
@@ -312,7 +314,8 @@ NSString *const cRom1281Path = @"rom1281Path";
              cRom1280Name,
              cRom1280Path,
              cRom1281Name,
-             cRom1281Path
+             cRom1281Path,
+             cLastUrl
              ];
 }
     

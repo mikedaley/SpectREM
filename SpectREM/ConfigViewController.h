@@ -60,6 +60,7 @@ extern NSString *const cRom1280Name;
 extern NSString *const cRom1280Path;
 extern NSString *const cRom1281Name;
 extern NSString *const cRom1281Path;
+extern NSString *const cLastUrl;
 
 @interface ConfigViewController : NSViewController
 
@@ -74,6 +75,8 @@ extern NSString *const cRom1281Path;
 @property (strong) NSString *rom1280Path;
 @property (strong) NSString *rom1281Name;
 @property (strong) NSString *rom1281Path;
+@property (strong) NSString *romPath;
+@property (strong) NSString *lastUrl;
 
 // Display properties
 @property (assign) double displayBorderWidth;
