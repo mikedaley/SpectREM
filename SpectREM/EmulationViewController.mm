@@ -624,6 +624,13 @@
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
     {
         [_zxTape openTapeWithURL:url];
+        if (_machine.instaTAPLoading)
+        {
+            [_machine.keystrokesBuffer addObject:@(239)];
+            [_machine.keystrokesBuffer addObject:@(34)];
+            [_machine.keystrokesBuffer addObject:@(34)];
+            [_machine.keystrokesBuffer addObject:@(13)];
+        }
     }
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"ROM"])
     {
@@ -739,8 +746,6 @@
     _cpuViewController.decimalFormat = (_cpuViewController.decimalFormat) ? NO : YES;
     _disassemblyViewController.decimalFormat = (_disassemblyViewController.decimalFormat) ? NO : YES;
 }
-
-// Debugging
 
 - (IBAction)pause:(id)sender
 {

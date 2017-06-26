@@ -2547,7 +2547,7 @@
                 </windowController>
                 <customObject id="ciz-5m-Sie" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2940" y="210"/>
+            <point key="canvasLocation" x="3020" y="207"/>
         </scene>
         <!--Rom Selection View Controller-->
         <scene sceneID="7Vb-6k-wDO">
@@ -2558,7 +2558,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="kno-Ud-xiU">
-                                <rect key="frame" x="18" y="259" width="61" height="14"/>
+                                <rect key="frame" x="22" y="256" width="61" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="48k ROM" id="2Pa-fh-Fzg">
                                     <font key="font" metaFont="smallSystem"/>
@@ -2569,7 +2569,7 @@
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="8lg-ad-p4G">
                                 <rect key="frame" x="20" y="196" width="445" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="5YS-f3-A42">
+                                <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="5YS-f3-A42">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2583,7 +2583,7 @@
                                 </connections>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="siz-H3-8bz">
-                                <rect key="frame" x="18" y="171" width="78" height="14"/>
+                                <rect key="frame" x="22" y="168" width="78" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="128k ROM 0" id="4cD-n8-INt">
                                     <font key="font" metaFont="smallSystem"/>
@@ -2594,7 +2594,7 @@
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="22n-ZD-krH">
                                 <rect key="frame" x="20" y="108" width="445" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="7Z1-CI-u3S">
+                                <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="7Z1-CI-u3S">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2608,7 +2608,7 @@
                                 </connections>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="v1b-oX-Adw">
-                                <rect key="frame" x="22" y="83" width="76" height="14"/>
+                                <rect key="frame" x="22" y="80" width="76" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="128k ROM 1" id="N4y-VU-nOf">
                                     <font key="font" metaFont="smallSystem"/>
@@ -2619,7 +2619,7 @@
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="kQL-Jz-Rqf">
                                 <rect key="frame" x="20" y="20" width="445" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="0U3-rB-DMv">
+                                <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="0U3-rB-DMv">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2770,14 +2770,14 @@
                                 </connections>
                             </textField>
                             <scrollView wantsLayer="YES" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="JBW-sc-jxp">
-                                <rect key="frame" x="20" y="20" width="660" height="399"/>
+                                <rect key="frame" x="0.0" y="0.0" width="700" height="419"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="F5l-SG-cgj">
-                                    <rect key="frame" x="1" y="0.0" width="658" height="398"/>
+                                    <rect key="frame" x="1" y="0.0" width="698" height="418"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="MemoryTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="hTs-LP-fFw" viewBased="YES" id="3ss-5U-qa2" userLabel="Memory Table View">
-                                            <rect key="frame" x="0.0" y="0.0" width="658" height="375"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="698" height="395"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2850,7 +2850,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="MemoryASCIIColID" width="257" minWidth="10" maxWidth="3.4028234663852886e+38" id="ggz-Bl-6ST">
+                                                <tableColumn identifier="MemoryASCIIColID" width="297" minWidth="10" maxWidth="3.4028234663852886e+38" id="ggz-Bl-6ST">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="ASCII">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -2864,11 +2864,11 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="3Ct-6D-ftW">
-                                                            <rect key="frame" x="399" y="1" width="257" height="17"/>
+                                                            <rect key="frame" x="399" y="1" width="297" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsCharacterPickerTouchBarItem="NO" id="KNp-jf-cyT">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="257" height="17"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="297" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="y90-KP-SaD">
                                                                         <font key="font" size="12" name="Monaco"/>
@@ -2900,7 +2900,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="hTs-LP-fFw">
-                                    <rect key="frame" x="0.0" y="0.0" width="658" height="23"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="698" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>

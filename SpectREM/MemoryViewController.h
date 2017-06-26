@@ -15,6 +15,6 @@
 @property (assign) ZXSpectrum *machine;
 @property (assign) BOOL decimalFormat;
 @property (weak) IBOutlet NSTableView *memoryTableView;
-@property (assign, nonatomic) int byteWidth;
+@property (assign, nonatomic) unsigned int byteWidth;
 
 @end

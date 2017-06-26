@@ -240,8 +240,25 @@ static void coreDebugWrite(unsigned int address, unsigned char byte, void *m, vo
 static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m)
 {
 	ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    CZ80Core *core = (CZ80Core *)[machine getCore];
 	
-	if (opcode == 0x08 && address == 0x04d0)
+    // Trap keyboard wait and inject any keystrokes
+    if (address + 1 == 0x3683)
+    {
+        // Check to see if there is anything to be typed in
+        if (machine.keystrokesBuffer.count > 0)
+        {
+            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) * 32;
+            if (!newKeyPressed)
+            {
+                core->Z80CoreDebugMemWrite(23611, newKeyPressed | 32, NULL);
+                core->Z80CoreDebugMemWrite(23560, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);
+                [machine.keystrokesBuffer removeObjectAtIndex:0];
+            }
+        }
+    }
+
+    if (opcode == 0x08 && address == 0x04d0)
 	{
 		machine->saveTrapTriggered = true;
 		

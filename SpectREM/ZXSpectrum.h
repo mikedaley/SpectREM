@@ -268,6 +268,8 @@ static NS_ENUM(NSUInteger, MachineType)
 
 @property (assign) BOOL accelerated;
 
+@property (strong) NSMutableArray *keystrokesBuffer;
+
 // Serial core used to communicate with SmartLINK
 @property (strong) SmartLink *smartLink;
 @property (nonatomic, assign) BOOL useSmartLink;
@@ -275,6 +277,7 @@ static NS_ENUM(NSUInteger, MachineType)
 // Debug properties
 @property (assign) BOOL paused;
 @property (assign) BOOL step;
+
 
 #pragma mark - Methods
 

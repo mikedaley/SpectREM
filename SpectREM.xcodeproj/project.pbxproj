@@ -35,7 +35,7 @@
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5E38151DDA14E700525788 /* GraphicalMemViewController.m */; };
 		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
-		ED61BE721E61E02A0024FEBB /* MemoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED61BE711E61E02A0024FEBB /* MemoryViewController.m */; };
+		ED61BE721E61E02A0024FEBB /* MemoryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED61BE711E61E02A0024FEBB /* MemoryViewController.mm */; };
 		ED804FD71DD32443004B6F31 /* NSClipView+Flipped.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */; };
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
 		ED8BD24B1E5CAC490033DBAA /* AgentX.szx in Resources */ = {isa = PBXBuildFile; fileRef = ED8BD24A1E5CA6980033DBAA /* AgentX.szx */; };
@@ -131,7 +131,7 @@
 		ED619C851DC0BC97004A60CA /* CALayer+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+Actions.h"; sourceTree = "<group>"; };
 		ED619C861DC0BC97004A60CA /* CALayer+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Actions.m"; sourceTree = "<group>"; };
 		ED61BE701E61E02A0024FEBB /* MemoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryViewController.h; sourceTree = "<group>"; };
-		ED61BE711E61E02A0024FEBB /* MemoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MemoryViewController.m; sourceTree = "<group>"; };
+		ED61BE711E61E02A0024FEBB /* MemoryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MemoryViewController.mm; sourceTree = "<group>"; };
 		ED804FD51DD32443004B6F31 /* NSClipView+Flipped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSClipView+Flipped.h"; sourceTree = "<group>"; };
 		ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSClipView+Flipped.m"; sourceTree = "<group>"; };
 		ED804FD81DD32EAC004B6F31 /* NSView+Vibrancy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+Vibrancy.h"; sourceTree = "<group>"; };
@@ -294,7 +294,7 @@
 			isa = PBXGroup;
 			children = (
 				ED61BE701E61E02A0024FEBB /* MemoryViewController.h */,
-				ED61BE711E61E02A0024FEBB /* MemoryViewController.m */,
+				ED61BE711E61E02A0024FEBB /* MemoryViewController.mm */,
 			);
 			name = "Memory View Controller";
 			sourceTree = "<group>";
@@ -663,7 +663,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED61BE721E61E02A0024FEBB /* MemoryViewController.m in Sources */,
+				ED61BE721E61E02A0024FEBB /* MemoryViewController.mm in Sources */,
 				999698981E467BD7007FD246 /* TapeCellView.m in Sources */,
 				EDF3A4DA1DB0D7AB00511BAF /* Z80Core_DDCB_FDCBOpcodes.cpp in Sources */,
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,

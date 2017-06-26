@@ -73,7 +73,7 @@
 
 		// Register the callback for the debug information
 		core->RegisterDebugCallback(debugDisplayCallback);
-		
+        
         [self reset:YES];
     }
     return self;
@@ -195,7 +195,24 @@ static void coreDebugWrite(unsigned int address, unsigned char byte, void *m, vo
 static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m)
 {
 	ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)m;
+    CZ80Core *core = (CZ80Core *)[machine getCore];
 	
+    // Trap keyboard wait and inject any keystrokes
+    if (address + 1 == 0x10b0)
+    {
+        // Check to see if there is anything to be typed in
+        if (machine.keystrokesBuffer.count > 0)
+        {
+            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) & 32;
+            if (!newKeyPressed)
+            {
+                core->Z80CoreDebugMemWrite(23611, newKeyPressed | 32, NULL);
+                core->Z80CoreDebugMemWrite(23560, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);
+                [machine.keystrokesBuffer removeObjectAtIndex:0];
+            }
+        }
+    }
+
 	// Trap ROM tape saving
     if (opcode == 0x08 && address == 0x04d0)
 	{
@@ -231,36 +248,38 @@ const char *Get48KRomAddressLabel(unsigned short address);
 
 char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data)
 {
-	// First we only want to alter addresses
-	if ( variableType == CZ80Core::eVARIABLETYPE_Word || variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
-	{
-		// Words are fine, relative offsets we need to update
-		unsigned short label_address = value;
-		
-		if ( variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
-		{
-			label_address = address + value + 1;
-		}
-		
-		const char *label = Get48KRomAddressLabel(label_address);
-		
-		if ( label != NULL )
-		{
-			snprintf(buffer, 64, "%s", label);
-		}
-        else
-        {
-            ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)param;
-            NSString *key = [NSString stringWithFormat:@"%04X", label_address];
-            NSString *asmLabel = [machine.emulationViewController.debugLabels objectForKey:key];
-            if (asmLabel.length > 0)
-            {
-                snprintf(buffer, 64, "%s", [asmLabel cStringUsingEncoding:NSUTF8StringEncoding]);
-            }
-        }
-	}
-	
-	return buffer;
+    return NULL;
+    
+//    // First we only want to alter addresses
+//	if ( variableType == CZ80Core::eVARIABLETYPE_Word || variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
+//	{
+//		// Words are fine, relative offsets we need to update
+//		unsigned short label_address = value;
+//		
+//		if ( variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
+//		{
+//			label_address = address + value + 1;
+//		}
+//		
+//		const char *label = Get48KRomAddressLabel(label_address);
+//		
+//		if ( label != NULL )
+//		{
+//			snprintf(buffer, 64, "%s", label);
+//		}
+//        else
+//        {
+//            ZXSpectrum48 *machine = (__bridge ZXSpectrum48 *)param;
+//            NSString *key = [NSString stringWithFormat:@"%04X", label_address];
+//            NSString *asmLabel = [machine.emulationViewController.debugLabels objectForKey:key];
+//            if (asmLabel.length > 0)
+//            {
+//                snprintf(buffer, 64, "%s", [asmLabel cStringUsingEncoding:NSUTF8StringEncoding]);
+//            }
+//        }
+//	}
+//	
+//	return buffer;
 }
 
 #pragma mark - Load ROM

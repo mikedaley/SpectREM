@@ -78,6 +78,8 @@
         
         self.accelerated = NO;
         
+        self.keystrokesBuffer = [NSMutableArray new];
+        
         [self resetFrame];
         [self resetSound];
         [self buildContentionTable];
@@ -185,6 +187,8 @@
         [preferences synchronize];
         [self loadDefaultROM];
     }
+    
+
     frameCounter = 0;
     saveTrapTriggered = false;
     loadTrapTriggered = false;
