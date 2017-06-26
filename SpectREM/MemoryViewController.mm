@@ -8,6 +8,7 @@
 
 #import "MemoryViewController.h"
 #import "ZXSpectrum.h"
+#import "Z80Core.h"
 
 @interface MemoryViewController ()
 {
@@ -85,10 +86,14 @@
             }
             else if ([tableColumn.identifier isEqualToString:@"MemoryBytesColID"])
             {
+                CZ80Core *core = (CZ80Core *)[self.machine getCore];
+
                 NSMutableString *content = [NSMutableString new];
-                for (int i = 0; i < self.byteWidth; i++)
+                for (unsigned int i = 0; i < self.byteWidth; i++)
                 {
-                    [content appendString:[NSString stringWithFormat:@"%02X  ", self.machine->memory[(row * self.byteWidth) + i]]];
+                    unsigned int address = ((unsigned int)row * self.byteWidth) + i;
+                    [content appendString:[NSString stringWithFormat:@"%02X  ",
+                                           (unsigned int)core->Z80CoreDebugMemRead(address, NULL)]];
                 }
                 view.textField.stringValue = content;
             }
