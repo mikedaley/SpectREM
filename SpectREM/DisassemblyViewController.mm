@@ -37,13 +37,21 @@
     [self disassemmbleFromAddress:_disassembleAddress length:65536 - _disassembleAddress];
     [self.disassemblyTableview reloadData];
     
-    self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        if (_viewVisilbe)
-        {
-//            [self disassemmbleFromAddress:_disassembleAddress length:65536 - _disassembleAddress];
+//    self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
+//        if (_viewVisilbe)
+//        {
+//            CZ80Core *core = (CZ80Core *)[self.machine getCore];
+//            
+//            unsigned short address = core->GetRegister(CZ80Core::eREG_PC);
+//
+//            [self disassemmbleFromAddress:address length:65536 - address];
 //            [self.disassemblyTableview reloadData];
-        }
-    }];
+//            
+//            [self.disassemblyTableview selectRowIndexes:[NSIndexSet indexSetWithIndex:address] byExtendingSelection:NO];
+//            [self.disassemblyTableview scrollRowToVisible:address];
+//
+//        }
+//    }];
 }
 
 - (void)viewWillDisappear
@@ -95,16 +103,16 @@
             pc += length;
             
             // Add a blank row if the last instruction was RET, JP, JR to space things out
-            if ([instruction.instruction containsString:@"RET"] ||
-                [instruction.instruction containsString:@"JP"] ||
-                [instruction.instruction containsString:@"JR"])
-            {
-                instruction = [DisassembledInstruction new];
-                instruction.address = -1;
-                instruction.bytes = @"";
-                instruction.instruction = @"";
-                [self.disassemblyArray addObject:instruction];
-            }
+//            if ([instruction.instruction containsString:@"RET"] ||
+//                [instruction.instruction containsString:@"JP"] ||
+//                [instruction.instruction containsString:@"JR"])
+//            {
+//                instruction = [DisassembledInstruction new];
+//                instruction.address = -1;
+//                instruction.bytes = @"";
+//                instruction.instruction = @"";
+//                [self.disassemblyArray addObject:instruction];
+//            }
         }
     }
 }
@@ -158,21 +166,13 @@
         view = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
         if (view)
         {
-            CZ80Core *core = (CZ80Core *)[self.machine getCore];
-            
             if ([tableColumn.identifier isEqualToString:@"AddressColID"])
             {
                 // If the address is -1 then this is a blank row
                 if ([(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address] != -1)
                 {
                     int address = [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address];
-
-                    if (core->GetRegister(CZ80Core::eREG_PC) == address)
-                    {
-                        [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-                        [tableView scrollRowToVisible:row];
-                    }
-                    
+        
                     if (self.decimalFormat)
                     {
                         view.textField.stringValue = [NSString stringWithFormat:@"%05i", address];
@@ -206,6 +206,14 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
 //    [self.disassemblyTableview reloadData];
+//    CZ80Core *core = (CZ80Core *)[self.machine getCore];
+//    
+//    if (core->GetRegister(CZ80Core::eREG_PC) == address)
+//    {
+//        [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+//        [tableView scrollRowToVisible:row];
+//    }
+
 }
 
 #pragma mark - Update methods
