@@ -247,19 +247,17 @@ const char *Get48KRomAddressLabel(unsigned short address);
 
 char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned short address, unsigned int value, void *param, void *data)
 {
-    return NULL;
-    
-//    // First we only want to alter addresses
-//	if ( variableType == CZ80Core::eVARIABLETYPE_Word || variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
-//	{
-//		// Words are fine, relative offsets we need to update
-//		unsigned short label_address = value;
-//		
-//		if ( variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
-//		{
-//			label_address = address + value + 1;
-//		}
-//		
+    // First we only want to alter addresses
+	if ( variableType == CZ80Core::eVARIABLETYPE_Word || variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
+	{
+		// Words are fine, relative offsets we need to update
+		unsigned short label_address = value;
+		
+		if ( variableType == CZ80Core::eVARIABLETYPE_RelativeOffset )
+		{
+			label_address = address + value + 1;
+		}
+		
 //		const char *label = Get48KRomAddressLabel(label_address);
 //		
 //		if ( label != NULL )
@@ -276,9 +274,9 @@ char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned sho
 //                snprintf(buffer, 64, "%s", [asmLabel cStringUsingEncoding:NSUTF8StringEncoding]);
 //            }
 //        }
-//	}
-//	
-//	return buffer;
+	}
+	
+	return buffer;
 }
 
 #pragma mark - Load ROM
