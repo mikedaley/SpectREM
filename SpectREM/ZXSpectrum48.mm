@@ -204,7 +204,7 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
         if (machine.keystrokesBuffer.count > 0)
         {
             unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) & 32;
-            if (!newKeyPressed)
+            if (!newKeyPressed && core->GetTStates() % 5)
             {
                 core->Z80CoreDebugMemWrite(23611, newKeyPressed | 32, NULL);
                 core->Z80CoreDebugMemWrite(23560, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);

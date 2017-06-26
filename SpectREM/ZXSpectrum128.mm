@@ -243,13 +243,13 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
     CZ80Core *core = (CZ80Core *)[machine getCore];
 	
     // Trap keyboard wait and inject any keystrokes
-    if (address + 1 == 0x3683)
+    if (address - 1 == 0x3683)
     {
         // Check to see if there is anything to be typed in
         if (machine.keystrokesBuffer.count > 0)
         {
-            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) * 32;
-            if (!newKeyPressed)
+            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) & 32;
+            if (!newKeyPressed && core->GetTStates() % 5)
             {
                 core->Z80CoreDebugMemWrite(23611, newKeyPressed | 32, NULL);
                 core->Z80CoreDebugMemWrite(23560, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);

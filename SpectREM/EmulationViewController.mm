@@ -626,10 +626,18 @@
         [_zxTape openTapeWithURL:url];
         if (_machine.instaTAPLoading)
         {
-            [_machine.keystrokesBuffer addObject:@(239)];
-            [_machine.keystrokesBuffer addObject:@(34)];
-            [_machine.keystrokesBuffer addObject:@(34)];
-            [_machine.keystrokesBuffer addObject:@(13)];
+            if (_machine->machineInfo.machineType == eZXSpectrum48)
+            {
+                [_machine.keystrokesBuffer addObject:@(239)];
+                [_machine.keystrokesBuffer addObject:@(34)];
+                [_machine.keystrokesBuffer addObject:@(34)];
+                [_machine.keystrokesBuffer addObject:@(13)];
+            }
+            else if (_machine->machineInfo.machineType == eZXSpectrum128)
+            {
+//                [_machine reset:NO];
+                [_machine.keystrokesBuffer addObject:@(13)];
+            }
         }
     }
     else if ([[[url pathExtension] uppercaseString] isEqualToString:@"ROM"])
