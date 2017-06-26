@@ -200,7 +200,6 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
     // Trap keyboard wait and inject any keystrokes
     if (address + 1 == 0x10b0)
     {
-        // Check to see if there is anything to be typed in
         if (machine.keystrokesBuffer.count > 0)
         {
             unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) & 32;
