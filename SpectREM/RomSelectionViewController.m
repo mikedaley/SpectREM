@@ -16,6 +16,8 @@ typedef NS_ENUM(int, SZXMachineType)
     e128kRom_1
 };
 
+static NSUInteger const cROM_SIZE_16K = 16384;
+
 @interface RomSelectionViewController ()
 
 @property (strong) NSUserDefaults *preferences;
@@ -91,6 +93,12 @@ typedef NS_ENUM(int, SZXMachineType)
     [openPanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
         if (result == NSModalResponseOK)
         {
+            if (![self isFileAtUrl:openPanel.URL size:cROM_SIZE_16K])
+            {
+                [self displayInvalidROM];
+                return;
+            }
+
             NSInteger tag = [(NSControl  *)sender tag];
             
             if (tag == e48kRom)
@@ -112,6 +120,28 @@ typedef NS_ENUM(int, SZXMachineType)
             [self.preferences synchronize];
         }
     }];
+}
+
+- (BOOL)isFileAtUrl:(NSURL *)url size:(NSUInteger)dataSize
+{
+    NSData *romData = [NSData dataWithContentsOfURL:url];
+    
+    if (romData.length != dataSize)
+    {
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (void)displayInvalidROM
+{
+    NSAlert *alert = [NSAlert new];
+    alert.informativeText = @"The ROM file selected is not 16k?";
+    [alert addButtonWithTitle:@"OK"];
+    [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode)
+     {
+     }];
 }
 
 @end
