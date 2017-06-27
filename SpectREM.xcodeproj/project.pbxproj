@@ -31,6 +31,7 @@
 		ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED06D3301E362B8D001F99FB /* KeyboardViewController.m */; };
 		ED06D3371E37794D001F99FB /* CRT.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ED06D3361E37794D001F99FB /* CRT.fsh */; };
 		ED0ABFB31E37BD5F00287363 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED0ABFB21E37BD5F00287363 /* Assets.xcassets */; };
+		ED1D48501F027B790063C1AC /* RomSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED1D484F1F027B790063C1AC /* RomSelectionView.m */; };
 		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5E38151DDA14E700525788 /* GraphicalMemViewController.m */; };
@@ -124,6 +125,8 @@
 		ED06D3351E375B88001F99FB /* PixelData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PixelData.h; sourceTree = "<group>"; };
 		ED06D3361E37794D001F99FB /* CRT.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CRT.fsh; sourceTree = "<group>"; };
 		ED0ABFB21E37BD5F00287363 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = SpectREM/Assets.xcassets; sourceTree = "<group>"; };
+		ED1D484E1F027B790063C1AC /* RomSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RomSelectionView.h; sourceTree = "<group>"; };
+		ED1D484F1F027B790063C1AC /* RomSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RomSelectionView.m; sourceTree = "<group>"; };
 		ED3295CB1DBE4F4E00372061 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		ED5E38141DDA14E700525788 /* GraphicalMemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicalMemViewController.h; sourceTree = "<group>"; };
@@ -232,6 +235,8 @@
 			children = (
 				99BFAA281DBA0AE00049D811 /* EmulationView.h */,
 				99BFAA291DBA0AE00049D811 /* EmulationView.m */,
+				ED1D484E1F027B790063C1AC /* RomSelectionView.h */,
+				ED1D484F1F027B790063C1AC /* RomSelectionView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -667,6 +672,7 @@
 				999698981E467BD7007FD246 /* TapeCellView.m in Sources */,
 				EDF3A4DA1DB0D7AB00511BAF /* Z80Core_DDCB_FDCBOpcodes.cpp in Sources */,
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,
+				ED1D48501F027B790063C1AC /* RomSelectionView.m in Sources */,
 				99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */,
 				EDF3A4D91DB0D7AB00511BAF /* Z80Core_FDOpcodes.cpp in Sources */,
 				EDF3A4AC1DB0D60700511BAF /* EmulationScene.m in Sources */,

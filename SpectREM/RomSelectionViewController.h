@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface RomSelectionViewController : NSViewController
+@interface RomSelectionViewController : NSViewController <NSDraggingDestination>
 
 - (void)reset48kRom;
 - (void)reset128kRom0;

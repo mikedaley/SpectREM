@@ -2586,7 +2586,7 @@
                                                 <action selector="setRom:" target="22X-k1-02m" id="4uK-TA-rpT"/>
                                             </connections>
                                         </button>
-                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="cuY-lO-tbe">
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="cuY-lO-tbe" customClass="RomSelectionView">
                                             <rect key="frame" x="133" y="27" width="178" height="87"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="rOMChip" id="zMd-7h-ntW"/>
@@ -2666,7 +2666,7 @@
                                                 <action selector="setRom:" target="22X-k1-02m" id="fLa-Yy-iR1"/>
                                             </connections>
                                         </button>
-                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="QIZ-sd-fSw">
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" tag="1" id="QIZ-sd-fSw" customClass="RomSelectionView">
                                             <rect key="frame" x="30" y="27" width="178" height="87"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="rOMChip" id="ncH-dg-sXz"/>
@@ -2683,7 +2683,7 @@
                                                 <binding destination="lGY-aU-ApO" name="value" keyPath="values.rom1280Name" id="p0f-3m-slO"/>
                                             </connections>
                                         </textField>
-                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="015-Nj-55X">
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" tag="2" id="015-Nj-55X" customClass="RomSelectionView">
                                             <rect key="frame" x="236" y="27" width="178" height="87"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="rOMChip" id="tYw-YL-Cn4"/>
@@ -2723,6 +2723,11 @@
                             </box>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="rom1280" destination="QIZ-sd-fSw" id="tcu-Aa-9c0"/>
+                        <outlet property="rom1281" destination="015-Nj-55X" id="hWx-q7-V68"/>
+                        <outlet property="rom48" destination="cuY-lO-tbe" id="h7M-sf-JZb"/>
+                    </connections>
                 </viewController>
                 <customObject id="Kkk-M1-x6y" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="BKU-FF-Pxw" userLabel="Rom Selection Defaults"/>
@@ -2915,7 +2920,7 @@
                                         </tableView>
                                     </subviews>
                                 </clipView>
-                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="Z8b-db-Z89">
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Z8b-db-Z89">
                                     <rect key="frame" x="1" y="397" width="688" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
