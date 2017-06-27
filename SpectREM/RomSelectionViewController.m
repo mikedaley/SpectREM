@@ -27,6 +27,8 @@ static NSUInteger const cROM_SIZE_16K = 16384;
 @property (weak) IBOutlet NSImageView *rom48;
 @property (weak) IBOutlet NSImageView *rom1280;
 @property (weak) IBOutlet NSImageView *rom1281;
+@property (weak) IBOutlet NSView *box48;
+@property (strong) IBOutlet NSView *box128;
 
 @end
 
@@ -38,6 +40,7 @@ static NSUInteger const cROM_SIZE_16K = 16384;
     [super viewDidLoad];
     
     self.preferences = [NSUserDefaults standardUserDefaults];
+    
     [(RomSelectionView *)self.rom48 setDelegate:self];
     [(RomSelectionView *)self.rom1280 setDelegate:self];
     [(RomSelectionView *)self.rom1281 setDelegate:self];
@@ -92,17 +95,17 @@ static NSUInteger const cROM_SIZE_16K = 16384;
 {
     if (machineType == e48kRom)
     {
-        [self.preferences setURL:url forKey:cRom48Path];
+        [self.preferences setURL:[url filePathURL] forKey:cRom48Path];
         [self.preferences setObject:[url lastPathComponent] forKey:cRom48Name];
     }
     else if (machineType == e128kRom_0)
     {
-        [self.preferences setURL:url forKey:cRom1280Path];
+        [self.preferences setURL:[url filePathURL] forKey:cRom1280Path];
         [self.preferences setObject:[url lastPathComponent] forKey:cRom1280Name];
     }
     else if (machineType == e128kRom_1)
     {
-        [self.preferences setURL:url forKey:cRom1281Path];
+        [self.preferences setURL:[url filePathURL] forKey:cRom1281Path];
         [self.preferences setObject:[url lastPathComponent] forKey:cRom1281Name];
     }
     
@@ -173,15 +176,15 @@ static NSUInteger const cROM_SIZE_16K = 16384;
             {
                 if ([self isFileAtUrl:fileURL size:cROM_SIZE_16K])
                 {
-                    if (NSPointInRect(sender.draggingLocation, self.rom48.bounds))
+                    if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box48], self.rom48.frame))
                     {
                         return NSDragOperationCopy;
                     }
-                    else if (NSPointInRect(sender.draggingLocation, self.rom1280.bounds))
+                    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1280.frame))
                     {
                         return NSDragOperationCopy;
                     }
-                    else if (NSPointInRect(sender.draggingLocation, self.rom1281.bounds))
+                    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1281.frame))
                     {
                         return NSDragOperationCopy;
                     }
@@ -198,15 +201,15 @@ static NSUInteger const cROM_SIZE_16K = 16384;
 
 - (NSDragOperation)draggingUpdated:(id<NSDraggingInfo>)sender
 {
-    if (NSPointInRect(sender.draggingLocation, self.rom48.bounds))
+    if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box48], self.rom48.frame))
     {
         return NSDragOperationCopy;
     }
-    else if (NSPointInRect(sender.draggingLocation, self.rom1280.bounds))
+    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1280.frame))
     {
         return NSDragOperationCopy;
     }
-    else if (NSPointInRect(sender.draggingLocation, self.rom1281.bounds))
+    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1281.frame))
     {
         return NSDragOperationCopy;
     }
@@ -221,17 +224,17 @@ static NSUInteger const cROM_SIZE_16K = 16384;
     if ([[pBoard types] containsObject:NSURLPboardType])
     {
         NSURL *fileURL = [NSURL URLFromPasteboard:pBoard];
-        if (NSPointInRect(sender.draggingLocation, self.rom48.bounds))
+        if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box48], self.rom48.frame))
         {
             [self setRomWithURL:fileURL forMachineType:e48kRom];
             return YES;
         }
-        else if (NSPointInRect(sender.draggingLocation, self.rom1280.bounds))
+        else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1280.frame))
         {
             [self setRomWithURL:fileURL forMachineType:e128kRom_0];
             return YES;
         }
-        else if (NSPointInRect(sender.draggingLocation, self.rom1281.bounds))
+        else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1281.frame))
         {
             [self setRomWithURL:fileURL forMachineType:e128kRom_1];
             return YES;
