@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G18a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
@@ -2554,18 +2554,18 @@
             <objects>
                 <viewController storyboardIdentifier="RomSelectionViewController" id="22X-k1-02m" customClass="RomSelectionViewController" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="aIL-mw-B0J">
-                        <rect key="frame" x="0.0" y="0.0" width="483" height="302"/>
+                        <rect key="frame" x="0.0" y="0.0" width="522" height="364"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box misplaced="YES" title="ZX Spectrum 48k" id="NgU-cH-wCj">
-                                <rect key="frame" x="17" y="151" width="449" height="131"/>
+                                <rect key="frame" x="17" y="182" width="488" height="162"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="iJq-tk-xRJ">
-                                    <rect key="frame" x="2" y="2" width="445" height="114"/>
+                                    <rect key="frame" x="2" y="2" width="484" height="145"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" misplaced="YES" id="m6h-o6-Gkh">
-                                            <rect key="frame" x="220" y="9" width="88" height="28"/>
+                                            <rect key="frame" x="233" y="14" width="88" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tM7-sT-Eq3">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2576,7 +2576,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" id="c1L-R1-5x1">
-                                            <rect key="frame" x="135" y="9" width="88" height="28"/>
+                                            <rect key="frame" x="148" y="14" width="88" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Select..." bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sE5-SO-66j">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2587,12 +2587,12 @@
                                             </connections>
                                         </button>
                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="cuY-lO-tbe" customClass="RomSelectionView">
-                                            <rect key="frame" x="133" y="35" width="178" height="73"/>
+                                            <rect key="frame" x="133" y="46" width="203" height="79"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="rOMChip" id="zMd-7h-ntW"/>
                                         </imageView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="Ynl-sr-Du2">
-                                            <rect key="frame" x="241" y="41" width="64" height="17"/>
+                                            <rect key="frame" x="269" y="52" width="64" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="16k ROM 0" id="VmO-RL-tHL">
                                                 <font key="font" metaFont="fixedUser" size="11"/>
@@ -2601,7 +2601,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="cPE-9X-ubs">
-                                            <rect key="frame" x="152" y="63" width="115" height="17"/>
+                                            <rect key="frame" x="151" y="77" width="137" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="48.rom" id="6DB-0u-Ap7">
                                                 <font key="font" metaFont="system"/>
@@ -2616,14 +2616,14 @@
                                 </view>
                             </box>
                             <box misplaced="YES" title="ZX Spectrum 128k" id="0XY-Ne-yrb">
-                                <rect key="frame" x="17" y="16" width="449" height="131"/>
+                                <rect key="frame" x="17" y="16" width="488" height="162"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="pFl-O2-JzV">
-                                    <rect key="frame" x="2" y="2" width="445" height="114"/>
+                                    <rect key="frame" x="2" y="2" width="484" height="145"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" misplaced="YES" tag="1" id="xMq-5i-ljA">
-                                            <rect key="frame" x="32" y="9" width="88" height="28"/>
+                                            <rect key="frame" x="34" y="14" width="88" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Select..." bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Lmj-aY-Zgk">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2634,7 +2634,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" tag="2" id="6zH-qz-fvc">
-                                            <rect key="frame" x="324" y="9" width="88" height="28"/>
+                                            <rect key="frame" x="361" y="14" width="88" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DPV-2C-vuq">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2645,7 +2645,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" tag="1" id="5wN-Rg-TLy">
-                                            <rect key="frame" x="118" y="9" width="88" height="28"/>
+                                            <rect key="frame" x="120" y="14" width="88" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="b65-IC-Cc6">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2656,7 +2656,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" misplaced="YES" tag="2" id="3FW-Gw-VLD">
-                                            <rect key="frame" x="238" y="9" width="88" height="28"/>
+                                            <rect key="frame" x="275" y="14" width="88" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Select..." bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="He6-48-iKG">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2667,12 +2667,12 @@
                                             </connections>
                                         </button>
                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" tag="1" id="QIZ-sd-fSw" customClass="RomSelectionView">
-                                            <rect key="frame" x="30" y="35" width="178" height="73"/>
+                                            <rect key="frame" x="20" y="46" width="203" height="79"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="rOMChip" id="ncH-dg-sXz"/>
                                         </imageView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="W7W-xh-TC5">
-                                            <rect key="frame" x="51" y="63" width="115" height="17"/>
+                                            <rect key="frame" x="37" y="77" width="139" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="128-0.rom" id="lF8-Jy-4Yw">
                                                 <font key="font" metaFont="system"/>
@@ -2684,12 +2684,12 @@
                                             </connections>
                                         </textField>
                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" tag="2" id="015-Nj-55X" customClass="RomSelectionView">
-                                            <rect key="frame" x="236" y="35" width="178" height="73"/>
+                                            <rect key="frame" x="261" y="46" width="203" height="79"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="rOMChip" id="tYw-YL-Cn4"/>
                                         </imageView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="lXm-Ds-4H3">
-                                            <rect key="frame" x="139" y="41" width="64" height="17"/>
+                                            <rect key="frame" x="156" y="52" width="64" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="16k ROM 0" id="E4O-pj-ifE">
                                                 <font key="font" metaFont="fixedUser" size="11"/>
@@ -2698,7 +2698,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="lTG-zV-BzA">
-                                            <rect key="frame" x="345" y="41" width="64" height="17"/>
+                                            <rect key="frame" x="397" y="52" width="64" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="16k ROM 1" id="4Q3-xO-9Rp">
                                                 <font key="font" metaFont="fixedUser" size="11"/>
@@ -2707,7 +2707,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="vpl-Lg-M7I">
-                                            <rect key="frame" x="255" y="63" width="115" height="17"/>
+                                            <rect key="frame" x="278" y="77" width="136" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="128-1.rom" id="tjd-De-LG8">
                                                 <font key="font" metaFont="system"/>
@@ -2735,7 +2735,7 @@
                 <userDefaultsController id="BKU-FF-Pxw" userLabel="Rom Selection Defaults"/>
                 <userDefaultsController representsSharedInstance="YES" id="lGY-aU-ApO"/>
             </objects>
-            <point key="canvasLocation" x="1299.5" y="1668"/>
+            <point key="canvasLocation" x="1298" y="1667"/>
         </scene>
         <!--Memory View Controller-->
         <scene sceneID="wcp-Og-HE1">

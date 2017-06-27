@@ -201,21 +201,41 @@ static NSUInteger const cROM_SIZE_16K = 16384;
 
 - (NSDragOperation)draggingUpdated:(id<NSDraggingInfo>)sender
 {
-    if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box48], self.rom48.frame))
+    NSPasteboard *pBoard;
+    NSDragOperation sourceDragMask;
+    sourceDragMask = [sender draggingSourceOperationMask];
+    pBoard = [sender draggingPasteboard];
+    
+    if ([[pBoard types] containsObject:NSFilenamesPboardType])
     {
-        return NSDragOperationCopy;
+        if (sourceDragMask * NSDragOperationCopy)
+        {
+            NSURL *fileURL = [NSURL URLFromPasteboard:pBoard];
+            if ([[fileURL.pathExtension uppercaseString]isEqualToString:@"ROM"])
+            {
+                if ([self isFileAtUrl:fileURL size:cROM_SIZE_16K])
+                {
+                    if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box48], self.rom48.frame))
+                    {
+                        return NSDragOperationCopy;
+                    }
+                    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1280.frame))
+                    {
+                        return NSDragOperationCopy;
+                    }
+                    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1281.frame))
+                    {
+                        return NSDragOperationCopy;
+                    }
+                }
+            }
+            else
+            {
+                return NSDragOperationNone;
+            }
+        }
     }
-    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1280.frame))
-    {
-        return NSDragOperationCopy;
-    }
-    else if (NSPointInRect([self.view convertPoint:sender.draggingLocation toView:self.box128], self.rom1281.frame))
-    {
-        return NSDragOperationCopy;
-    }
-
     return NSDragOperationNone;
-
 }
 
 - (BOOL)performDragOperation:(id<NSDraggingInfo>)sender
