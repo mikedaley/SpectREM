@@ -202,11 +202,11 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
     {
         if (machine.keystrokesBuffer.count > 0)
         {
-            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) & 32;
+            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(cFLAGS, NULL) & 32;
             if (!newKeyPressed && core->GetTStates() % 5)
             {
-                core->Z80CoreDebugMemWrite(23611, newKeyPressed | 32, NULL);
-                core->Z80CoreDebugMemWrite(23560, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);
+                core->Z80CoreDebugMemWrite(cFLAGS, newKeyPressed | 32, NULL);
+                core->Z80CoreDebugMemWrite(cLAST_K, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);
                 [machine.keystrokesBuffer removeObjectAtIndex:0];
             }
         }
@@ -258,6 +258,9 @@ char *debugDisplayCallback(char *buffer, unsigned int variableType, unsigned sho
 			label_address = address + value + 1;
 		}
 		
+        
+        //TODO: Find a way to stop labels being used when a number is used as an operand which matches a label address!
+        
 //		const char *label = Get48KRomAddressLabel(label_address);
 //		
 //		if ( label != NULL )

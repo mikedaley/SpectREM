@@ -49,6 +49,11 @@ static size_t const cSmartCardSRAMSize = 8 * 8192;
 // Multiface memory size
 static size_t const cMultifaceMemSize = 16 * 1024;
 
+// System Variable Constants
+static unsigned short const cFLAGS = 23611;
+static unsigned short const cLAST_K = 23560;
+static unsigned short const cFRAMES = 23672;
+
 #pragma mark - Type Definitions
 
 // Defines an enum for each type of display action used when drawing the screen

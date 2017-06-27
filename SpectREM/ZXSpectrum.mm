@@ -227,6 +227,16 @@
     audioTsStepCounter = 0;
 }
 
+- (void)randomizeFramesVar
+{
+    int frames = arc4random_uniform(2^24);
+    CZ80Core *core = (CZ80Core *)[self getCore];
+    
+    core->Z80CoreDebugMemWrite(cFRAMES, frames & 0xff, NULL);
+    core->Z80CoreDebugMemWrite(cFRAMES + 1, frames & 0xff00, NULL);
+    core->Z80CoreDebugMemWrite(cFRAMES + 2, frames & 0xff0000, NULL);
+}
+
 - (void)NMI
 {
     CZ80Core *core = (CZ80Core *)[self getCore];

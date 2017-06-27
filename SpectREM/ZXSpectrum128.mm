@@ -242,16 +242,16 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 	ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
 	
-    // Trap keyboard wait and inject any keystrokes
+    // Trap keyboard key press and inject any keystrokes
     if (address - 1 == 0x3683)
     {
         if (machine.keystrokesBuffer.count > 0)
         {
-            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(23611, NULL) & 32;
+            unsigned char newKeyPressed = core->Z80CoreDebugMemRead(cFLAGS, NULL) & 32;
             if (!newKeyPressed && core->GetTStates() % 5)
             {
-                core->Z80CoreDebugMemWrite(23611, newKeyPressed | 32, NULL);
-                core->Z80CoreDebugMemWrite(23560, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);
+                core->Z80CoreDebugMemWrite(cFLAGS, newKeyPressed | 32, NULL);
+                core->Z80CoreDebugMemWrite(cLAST_K, [(NSNumber *)[machine.keystrokesBuffer objectAtIndex:0] unsignedCharValue], NULL);
                 [machine.keystrokesBuffer removeObjectAtIndex:0];
             }
         }
