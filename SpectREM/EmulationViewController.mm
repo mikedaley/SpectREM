@@ -7,6 +7,7 @@
 //
 
 #import <IOKit/hid/IOHIDLib.h>
+#import <QuartzCore/QuartzCore.h>
 #import <Foundation/Foundation.h>
 
 #import "EmulationViewController.h"
@@ -528,7 +529,15 @@
         configFrame.origin.x = 0 - configFrame.size.width;
         configFrame.origin.y = 0;
     }
-    [self.configEffectsView.animator setFrame:configFrame];
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        context.duration = 0.45;
+        context.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        [self.configEffectsView.animator setFrame:configFrame];
+    }  completionHandler:^{
+        
+    }];
+    
 }
 
 - (IBAction)openFile:(id)sender
@@ -635,7 +644,6 @@
             }
             else if (_machine->machineInfo.machineType == eZXSpectrum128)
             {
-//                [_machine reset:NO];
                 [_machine.keystrokesBuffer addObject:@(13)];
             }
         }
