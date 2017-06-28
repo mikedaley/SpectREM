@@ -22,12 +22,12 @@
 @end
 
 
-#pragma mark - Implementation 
+#pragma mark - Implementation
 
 
 @implementation ZXSpectrum
 {
-	SLNetwork *smart_card;
+    SLNetwork *smart_card;
 }
 
 
@@ -40,7 +40,7 @@
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info
 {
     if (self = [super init])
-    {   
+    {
         machineInfo = info;
         _emulationViewController = emulationViewController;
         
@@ -188,14 +188,14 @@
         [self loadDefaultROM];
     }
     
-
+    
     frameCounter = 0;
     saveTrapTriggered = false;
     loadTrapTriggered = false;
     ulaPlusPaletteOn = 0;
     multifacePagedIn = false;
     multifaceLockedOut = false;
-	smartCardActive = true;
+    smartCardActive = true;
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -244,7 +244,7 @@
     {
         multifacePagedIn = true;
     }
-    core->setNMIReq(true);    
+    core->setNMIReq(true);
 }
 
 #pragma mark - CPU Frames
@@ -358,10 +358,10 @@
     
     // If smartlink is activated and a serial port has been selected then try to read from
     // SmartLINK and if successful this will update the keyboard map and Kempston joystick port
-//    if (self.smartLink.serialPort && self.useSmartLink)
-//    {
-//        [self.smartLink sendData:smartLinkRequest code:0x77 waitForResponse:NO];
-//    }
+    //    if (self.smartLink.serialPort && self.useSmartLink)
+    //    {
+    //        [self.smartLink sendData:smartLinkRequest code:0x77 waitForResponse:NO];
+    //    }
     
 }
 
@@ -418,13 +418,13 @@ void updateAudioWithTStates(int numberTs, void *m)
     {
         return;
     }
-
+    
     // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes.
     // Only need to do this once per audio update
     signed int localBeeperLevel = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier) | machine->specDrumOutput;
     signed int beeperLevelLeft = localBeeperLevel;
     signed int beeperLevelRight = localBeeperLevel;
-
+    
     double leftMixA = 0.5;
     double rightMixA = 0.5;
     double leftMixB = 0.5;
@@ -444,7 +444,7 @@ void updateAudioWithTStates(int numberTs, void *m)
         leftMixA = 1.0 - (machine->_AYChannelABalance / 2);
         rightMixA = 1.0 - (1.0 - machine->_AYChannelABalance);
     }
-
+    
     if (machine->_AYChannelBBalance > 0.5)
     {
         leftMixB = 1.0 - machine->_AYChannelBBalance;
@@ -455,7 +455,7 @@ void updateAudioWithTStates(int numberTs, void *m)
         leftMixB = 1.0 - (machine->_AYChannelBBalance / 2);
         rightMixB = 1.0 - (1.0 - machine->_AYChannelBBalance);
     }
-
+    
     if (machine->_AYChannelCBalance > 0.5)
     {
         leftMixC = 1.0 - machine->_AYChannelCBalance;
@@ -574,7 +574,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        machine->emuDisplayBufferIndex++;
                     }
                 }
                 else
@@ -624,7 +624,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                        machine->emuDisplayBufferIndex++;
                     }
                 }
                 else
@@ -647,14 +647,16 @@ void updateScreenWithTStates(int numberTs, void *m)
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].r;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].g;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].b;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                            machine->emuDisplayBufferIndex++;
+
                         }
                         else
                         {
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].r;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].g;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].b;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                            machine->emuDisplayBufferIndex++;
+
                         }
                     }
                 }
@@ -679,21 +681,21 @@ void updateScreenWithTStates(int numberTs, void *m)
  All non-even port numbers below to the ULA. N:x means no contention to be added and just advance the tStates.
  C:x means that contention should be calculated based on the current tState value and then x tStates are to be
  added to the current tState count
-
-   in 40 - 7F?| Low bit | Contention pattern
-  ------------+---------+-------------------
-        No    |  Reset  | N:1, C:3
-		No    |   Set   | N:4
-		Yes   |  Reset  | C:1, C:3
-		Yes   |   Set   | C:1, C:1, C:1, C:1
-**/
+ 
+ in 40 - 7F?| Low bit | Contention pattern
+ ------------+---------+-------------------
+ No    |  Reset  | N:1, C:3
+ No    |   Set   | N:4
+ Yes   |  Reset  | C:1, C:3
+ Yes   |   Set   | C:1, C:1, C:1, C:1
+ **/
 unsigned char coreIORead(unsigned short address, void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
     bool contended = false;
-    int page = address / 16384;
+    int page = address / c16k;
     
     // Identify contention on the 48k
     if (!machine->machineInfo.hasPaging && page == 1)
@@ -793,14 +795,20 @@ unsigned char coreIORead(unsigned short address, void *m)
         }
         
         // Multiface 1
-        else if ((address & 0xff) == 0x9f && !machine->multifacePagedIn && machine->machineInfo.machineType == eZXSpectrum48 && machine.multiface1)
+        else if ((address & 0xff) == 0x9f
+                 && !machine->multifacePagedIn
+                 && machine->machineInfo.machineType == eZXSpectrum48
+                 && machine.multiface1)
         {
             machine->multifacePagedIn = true;
             [machine.audioCore reset];
         }
-
+        
         // Multiface 128
-        else if ((address & 0xff) == 0xbf && !machine->multifacePagedIn && machine->machineInfo.machineType == eZXSpectrum128 && machine.multiface128)
+        else if ((address & 0xff) == 0xbf
+                 && !machine->multifacePagedIn
+                 && machine->machineInfo.machineType == eZXSpectrum128
+                 && machine.multiface128)
         {
             machine->multifacePagedIn = true;
             [machine.audioCore reset];
@@ -813,24 +821,24 @@ unsigned char coreIORead(unsigned short address, void *m)
                 return 0x7f;
             }
         }
-
-		// Retroleum SmartCard
-		else if ((address & 0xfff1) == 0xfaf1 && machine.smartCardEnabled && machine->smart_card)
-		{
-			if(address == 0xfaf3)
-			{
-				return machine->smartCardPortFAF3;
-			}
-			else if(address == 0xfafb)
-			{
-				return machine->smartCardPortFAFB;
-			}
-			else
-			{
-				return machine->smart_card->read_port(address);
-			}
-		}
-		
+        
+        // Retroleum SmartCard
+        else if ((address & 0xfff1) == 0xfaf1 && machine.smartCardEnabled && machine->smart_card)
+        {
+            if(address == 0xfaf3)
+            {
+                return machine->smartCardPortFAF3;
+            }
+            else if(address == 0xfafb)
+            {
+                return machine->smartCardPortFAFB;
+            }
+            else
+            {
+                return machine->smart_card->read_port(address);
+            }
+        }
+        
         // Getting here means that nothing has handled that port read so based on a real Spectrum return the floating bus value
         return floatingBus(m);
     }
@@ -864,7 +872,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
     bool contended = false;
-    int page = address / 16384;
+    int page = address / c16k;
     
     // Identify contention in the 48k
     if (!machine->machineInfo.hasPaging && page == 1)
@@ -955,9 +963,9 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     
     // AY-3-8912 ports
     if(address == 0xfffd && (machine->machineInfo.hasAY ||
-                                        (machine->machineInfo.hasAY ||
-                                        (machine->machineInfo.machineType == eZXSpectrum48 &&
-                                        machine.useAYOn48k) )))
+                             (machine->machineInfo.hasAY ||
+                              (machine->machineInfo.machineType == eZXSpectrum48 &&
+                               machine.useAYOn48k) )))
     {
         machine->lastfffd = data;
         [machine.audioCore setAYRegister:data];
@@ -965,8 +973,8 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     
     if ((address & 0xc002) == 0x8000 && (machine->machineInfo.hasAY ||
                                          (machine->machineInfo.hasAY ||
-                                         (machine->machineInfo.machineType == eZXSpectrum48 &&
-                                         machine.useAYOn48k) )))
+                                          (machine->machineInfo.machineType == eZXSpectrum48 &&
+                                           machine.useAYOn48k) )))
     {
         [machine.audioCore writeAYData:data];
     }
@@ -1017,31 +1025,32 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     {
         machine->multifaceLockedOut = (machine->multifaceLockedOut) ? false : true;
     }
-	
-	// Retroleum SmartCard
-	if ((address & 0xfff1) == 0xfaf1 && machine.smartCardEnabled && machine->smart_card)
-	{
-		if(address == 0xfaf3)
-		{
-			machine->smartCardPortFAF3 = data;
-		}
-		else if(address == 0xfafb)
-		{
-			machine->smartCardPortFAFB = data;
-		}
-		else
-		{
-			machine->smart_card->write_port(address, data);
-		}
-	}
+    
+    // Retroleum SmartCard
+    if ((address & 0xfff1) == 0xfaf1 && machine.smartCardEnabled && machine->smart_card)
+    {
+        if(address == 0xfaf3)
+        {
+            machine->smartCardPortFAF3 = data;
+        }
+        else if(address == 0xfafb)
+        {
+            machine->smartCardPortFAFB = data;
+        }
+        else
+        {
+            machine->smart_card->write_port(address, data);
+        }
+    }
 }
 
 
-/** When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
-   Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
-   is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
-   predict if the ULA is reading a pixel or attribute byte based on the current t-state.
-   This routine works out what would be on the ULA bus for a given t-state and returns the result
+/** 
+ When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the
+ Spectrums ULA data bus. This may happen to be a byte being transferred from screen memory. If the ULA
+ is building the border then the bus is idle and the return value is 0xFF, otherwise its possible to
+ predict if the ULA is reading a pixel or attribute byte based on the current t-state.
+ This routine works out what would be on the ULA bus for a given tstate and returns the result
  **/
 static unsigned char floatingBus(void *m)
 {
@@ -1093,7 +1102,7 @@ static unsigned char floatingBus(void *m)
             uint32 line = (i - machineInfo.tsToOrigin) / machineInfo.tsPerLine;
             uint32 ts = (i - machineInfo.tsToOrigin) % machineInfo.tsPerLine;
             
-            if (line < 192 && ts < 128)
+            if (line < machineInfo.pxVerticalDisplay && ts < 128)
             {
                 memoryContentionTable[i] = cContentionValues[ ts & 0x07 ];
                 ioContentionTable[i] = cContentionValues[ ts & 0x07 ];

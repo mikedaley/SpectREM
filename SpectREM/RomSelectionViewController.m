@@ -41,6 +41,8 @@ static NSUInteger const cROM_SIZE_16K = 16384;
     
     self.preferences = [NSUserDefaults standardUserDefaults];
     
+    // Set this class as a delegate so that the drag and drop events are passed from the RomSelectionView
+    // to this class, keeping all the drag and drop code in the same palce
     [(RomSelectionView *)self.rom48 setDelegate:self];
     [(RomSelectionView *)self.rom1280 setDelegate:self];
     [(RomSelectionView *)self.rom1281 setDelegate:self];

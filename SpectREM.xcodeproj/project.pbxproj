@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */; };
 		178A01561EF6CB5D00CEFBB7 /* RomSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 178A01551EF6CB5D00CEFBB7 /* RomSelectionViewController.m */; };
+		17956FF91F02F2B60055CF21 /* CurrahSpeech.rom in Resources */ = {isa = PBXBuildFile; fileRef = 17956FF81F02F2B60055CF21 /* CurrahSpeech.rom */; };
 		991D87C41E33937A00667E37 /* SmartLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 991D87C31E33937A00667E37 /* SmartLink.m */; };
 		991D87F21E33BD6700667E37 /* ORSSerial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; };
 		991D87F31E33BD6700667E37 /* ORSSerial.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 991D87F11E33BD6700667E37 /* ORSSerial.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -89,6 +90,7 @@
 		0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = 48KRomLabels.mm; sourceTree = "<group>"; };
 		178A01541EF6CB5D00CEFBB7 /* RomSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RomSelectionViewController.h; sourceTree = "<group>"; };
 		178A01551EF6CB5D00CEFBB7 /* RomSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RomSelectionViewController.m; sourceTree = "<group>"; };
+		17956FF81F02F2B60055CF21 /* CurrahSpeech.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = CurrahSpeech.rom; sourceTree = "<group>"; };
 		179D95581ED8C06200185F76 /* asio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = asio.hpp; path = SpectREM/asio.hpp; sourceTree = "<group>"; };
 		991D87C21E33937A00667E37 /* SmartLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartLink.h; sourceTree = "<group>"; };
 		991D87C31E33937A00667E37 /* SmartLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartLink.m; sourceTree = "<group>"; };
@@ -533,6 +535,7 @@
 		EDF3A4C41DB0D79100511BAF /* ROMS */ = {
 			isa = PBXGroup;
 			children = (
+				17956FF81F02F2B60055CF21 /* CurrahSpeech.rom */,
 				99A79E6C1DC2295000B8D4CD /* 128-0.rom */,
 				99A79E6D1DC2295000B8D4CD /* 128-1.rom */,
 				EDF3A4DD1DB0D7BB00511BAF /* 48.rom */,
@@ -644,6 +647,7 @@
 			files = (
 				EDF3A4A71DB0D60700511BAF /* EmulationScene.sks in Resources */,
 				996318ED1DC6241C00F8F730 /* Open_SEBASIC_3.12.rom in Resources */,
+				17956FF91F02F2B60055CF21 /* CurrahSpeech.rom in Resources */,
 				EDF3A4F81DB0F25F00511BAF /* CRT_old.fsh in Resources */,
 				99FB31901E6CB4C100DF9C91 /* MF128.rom in Resources */,
 				99FB318E1E6CB4B100DF9C91 /* MF1.rom in Resources */,

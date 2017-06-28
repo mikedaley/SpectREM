@@ -256,18 +256,16 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
             }
         }
     }
-
+ 
+    // Tap ROM Saving
     if (opcode == 0x08 && address == 0x04d0)
 	{
 		machine->saveTrapTriggered = true;
-		
-		// Skip the instruction
 		return true;
 	}
 	else if (machine->saveTrapTriggered)
 	{
 		machine->saveTrapTriggered = false;
-		return false;
 	}
     
     // Trap ROM loading
@@ -279,7 +277,6 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
     else if (machine->loadTrapTriggered)
     {
         machine->loadTrapTriggered = false;
-        return false;
     }
 	
 	return false;

@@ -21,6 +21,7 @@
 // Commonly used memory addresses
 static int const cBitmapAddress = 16384;
 static int const cBitmapSize = 6144;
+static int const cAttrSize = 768;
 
 // Used to increase the volume of the beeper output. Too high and the output is clipped
 static int const cAudioBeeperVolumeMultiplier = 48;
@@ -36,6 +37,7 @@ static unsigned char const cFloatingBusTable[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 static int const cAcceleratedSkipFrames = 10;
 
 // Memory sizes/Pages
+static size_t const c16k = 16 * 1024;
 static size_t const c32k = 32 * 1024;
 static size_t const c48k = 48 * 1023;
 static size_t const c64k = 64 * 1024;

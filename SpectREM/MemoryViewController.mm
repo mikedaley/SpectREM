@@ -151,7 +151,7 @@
 
 #pragma mark - Getters/Setters
 
-- (void)setByteWidth:(int)byteWidth
+- (void)setByteWidth:(unsigned int)byteWidth
 {
     _byteWidth = byteWidth;
     [self.memoryTableView reloadData];

@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>displayBorderWidth</key>
-	<integer>16</integer>
+	<integer>32</integer>
 	<key>displayCurve</key>
-	<real>0.125</real>
+	<integer>0</integer>
 	<key>displaySaturation</key>
-	<real>1</real>
-	<key>displayContrast</key>
 	<integer>1</integer>
+	<key>displayContrast</key>
+	<real>0.65</real>
 	<key>displayBrightness</key>
-	<real>1</real>
+	<integer>1</integer>
 	<key>displayVignetteX</key>
 	<integer>1</integer>
 	<key>displayVignetteY</key>
