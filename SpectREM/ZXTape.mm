@@ -92,7 +92,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     self.tapBlocks = [NSMutableArray new];
 
     [self processTAPFileData:tapeData];
+    
+    
     [self printTAPContents];
+    
+    
     self.tapeLoaded = YES;
 }
 
@@ -462,7 +466,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
         newBlock = YES;
     }
 
-    // Introduce a random crackle in between blocks to produce a similar experience as a loading from a real tape
+    // Introduce a random crackle in between blocks to produce a similar experience as loading from a real tape
     // on a ZX Spectrum.
     if (arc4random_uniform(200000) == 1)
     {
@@ -855,11 +859,6 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 {
     return self.blockData[cHeaderFlagOffset];
 }
-
-//- (unsigned short)getDataLength
-//{
-//    return self.blockLength;
-//}
 
 - (unsigned char)getChecksum
 {

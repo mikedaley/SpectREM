@@ -129,6 +129,7 @@
 		ED0ABFB21E37BD5F00287363 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = SpectREM/Assets.xcassets; sourceTree = "<group>"; };
 		ED1D484E1F027B790063C1AC /* RomSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RomSelectionView.h; sourceTree = "<group>"; };
 		ED1D484F1F027B790063C1AC /* RomSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RomSelectionView.m; sourceTree = "<group>"; };
+		ED1D48521F03EBF60063C1AC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		ED3295CB1DBE4F4E00372061 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		ED5E38141DDA14E700525788 /* GraphicalMemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicalMemViewController.h; sourceTree = "<group>"; };
@@ -549,6 +550,7 @@
 		EDF3A4F11DB0D7F100511BAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ED1D48521F03EBF60063C1AC /* CoreGraphics.framework */,
 				991D87F11E33BD6700667E37 /* ORSSerial.framework */,
 				ED3295CD1DBE556C00372061 /* IOKit.framework */,
 				ED3295CB1DBE4F4E00372061 /* GameController.framework */,
