@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G18a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
@@ -332,7 +332,7 @@
         <scene sceneID="hiA-aY-H1r">
             <objects>
                 <viewController storyboardIdentifier="SaveAccessoryController" id="wgu-Sv-p3g" customClass="SaveAccessoryViewController" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="YN8-L5-gYA">
+                    <view key="view" wantsLayer="YES" misplaced="YES" id="YN8-L5-gYA">
                         <rect key="frame" x="0.0" y="0.0" width="278" height="77"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -376,7 +376,7 @@
                 </viewController>
                 <customObject id="Yta-62-9cN" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-137" y="376"/>
+            <point key="canvasLocation" x="-269" y="264"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -446,7 +446,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="606"/>
+            <point key="canvasLocation" x="76" y="542"/>
         </scene>
         <!--Config View Controller-->
         <scene sceneID="suV-XS-mcE">
@@ -675,7 +675,6 @@
                                         </button>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box misplaced="YES" boxType="secondary" title="Audio" id="61y-0j-XH6">
                                 <rect key="frame" x="8" y="281" width="221" height="233"/>
@@ -871,7 +870,6 @@
                                         </slider>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box misplaced="YES" title="Computer" id="16N-tf-hw7">
                                 <rect key="frame" x="8" y="847" width="221" height="212"/>
@@ -1049,7 +1047,6 @@
                                         </button>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box misplaced="YES" title="Peripherals" id="DTH-e0-9zP">
                                 <rect key="frame" x="8" y="151" width="221" height="126"/>
@@ -1140,7 +1137,6 @@
                                         </button>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box misplaced="YES" title="SmartLINK" id="PhZ-fu-zoX">
                                 <rect key="frame" x="8" y="16" width="221" height="131"/>
@@ -1222,7 +1218,6 @@
                                         </button>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <slider hidden="YES" verticalHuggingPriority="750" misplaced="YES" id="r8P-8v-7ZD">
                                 <rect key="frame" x="104" y="-141" width="84" height="18"/>
@@ -1281,7 +1276,7 @@
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s" userLabel="Config User Defaults"/>
             </objects>
-            <point key="canvasLocation" x="-290" y="1017.5"/>
+            <point key="canvasLocation" x="-290" y="954"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">
@@ -1300,7 +1295,7 @@
                 </windowController>
                 <customObject id="QM7-Fj-LRw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="596" y="209"/>
+            <point key="canvasLocation" x="596" y="150"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="QrI-Me-C3I">
@@ -1318,7 +1313,7 @@
                 </windowController>
                 <customObject id="akj-Wl-v3M" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1215" y="187"/>
+            <point key="canvasLocation" x="1166" y="150"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="ihi-53-5WE">
@@ -1338,7 +1333,7 @@
                 </windowController>
                 <customObject id="ps7-LN-tQV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="92.5" y="956"/>
+            <point key="canvasLocation" x="93" y="858"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="j4T-1C-mNu">
@@ -1358,7 +1353,7 @@
                 </windowController>
                 <customObject id="V0c-IT-ucs" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="652.5" y="956"/>
+            <point key="canvasLocation" x="173" y="1148"/>
         </scene>
         <!--TAP View Controller-->
         <scene sceneID="ef2-PT-cdk">
@@ -1549,7 +1544,7 @@
                     </connections>
                 </arrayController>
             </objects>
-            <point key="canvasLocation" x="653" y="1389"/>
+            <point key="canvasLocation" x="173" y="1518"/>
         </scene>
         <!--Keyboard View Controller-->
         <scene sceneID="ahz-sD-Vlf">
@@ -1589,7 +1584,7 @@
                 </viewController>
                 <customObject id="yOY-te-xxY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="93" y="1305"/>
+            <point key="canvasLocation" x="584" y="851"/>
         </scene>
         <!--CPU View Controller-->
         <scene sceneID="9Af-Td-QZ7">
@@ -2498,7 +2493,7 @@
                 </viewController>
                 <customObject id="Pew-Ua-735" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1215.5" y="723"/>
+            <point key="canvasLocation" x="1167" y="597"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="6n8-Bg-DaB">
@@ -2518,7 +2513,7 @@
                 </windowController>
                 <customObject id="ImZ-FR-aGI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1733.5" y="195.5"/>
+            <point key="canvasLocation" x="1732" y="159"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="DTQ-nu-qZb">
@@ -2536,7 +2531,7 @@
                 </windowController>
                 <customObject id="LkW-6L-Peq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2332" y="187"/>
+            <point key="canvasLocation" x="2332" y="150"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="pK6-Mu-XfT">
@@ -2554,13 +2549,13 @@
                 </windowController>
                 <customObject id="ciz-5m-Sie" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1299" y="1180"/>
+            <point key="canvasLocation" x="721" y="1190"/>
         </scene>
         <!--Rom Selection View Controller-->
         <scene sceneID="7Vb-6k-wDO">
             <objects>
                 <viewController storyboardIdentifier="RomSelectionViewController" id="22X-k1-02m" customClass="RomSelectionViewController" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="aIL-mw-B0J">
+                    <view key="view" wantsLayer="YES" misplaced="YES" id="aIL-mw-B0J">
                         <rect key="frame" x="0.0" y="0.0" width="522" height="364"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -2621,7 +2616,6 @@
                                         </textField>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <box misplaced="YES" title="ZX Spectrum 128k" id="0XY-Ne-yrb">
                                 <rect key="frame" x="17" y="16" width="488" height="162"/>
@@ -2728,7 +2722,6 @@
                                         </textField>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                         </subviews>
                     </view>
@@ -2744,7 +2737,7 @@
                 <userDefaultsController id="BKU-FF-Pxw" userLabel="Rom Selection Defaults"/>
                 <userDefaultsController representsSharedInstance="YES" id="lGY-aU-ApO"/>
             </objects>
-            <point key="canvasLocation" x="1298" y="1667"/>
+            <point key="canvasLocation" x="1343" y="1088"/>
         </scene>
         <!--Memory View Controller-->
         <scene sceneID="wcp-Og-HE1">
@@ -2952,7 +2945,7 @@
                 </viewController>
                 <customObject id="h8X-aX-Jak" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2332" y="761"/>
+            <point key="canvasLocation" x="2332" y="711"/>
         </scene>
         <!--Disassembly View Controller-->
         <scene sceneID="Elc-OR-UI0">
@@ -3128,7 +3121,7 @@
                 </viewController>
                 <customObject id="0a8-Dw-EYR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1732" y="723"/>
+            <point key="canvasLocation" x="1732" y="667"/>
         </scene>
         <!--Graphical Mem View Controller-->
         <scene sceneID="KMB-hG-mTJ">
@@ -3201,7 +3194,7 @@
                 </viewController>
                 <customObject id="K6x-f1-4c5" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="596" y="606"/>
+            <point key="canvasLocation" x="596" y="542"/>
         </scene>
     </scenes>
     <resources>
