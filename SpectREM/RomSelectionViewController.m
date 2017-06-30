@@ -110,8 +110,6 @@ static NSUInteger const cROM_SIZE_16K = 16384;
         [self.preferences setURL:[url filePathURL] forKey:cRom1281Path];
         [self.preferences setObject:[url lastPathComponent] forKey:cRom1281Name];
     }
-    
-    [self.preferences synchronize];
 }
 
 - (void)reset48kRom
@@ -119,7 +117,6 @@ static NSUInteger const cROM_SIZE_16K = 16384;
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"48" withExtension:@"rom"];
     [self.preferences setURL:url forKey:cRom48Path];
     [self.preferences setObject:@"48.rom" forKey:cRom48Name];
-    [self.preferences synchronize];
 }
 
 - (void)reset128kRom0
@@ -127,7 +124,6 @@ static NSUInteger const cROM_SIZE_16K = 16384;
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"128-0" withExtension:@"rom"];
     [self.preferences setURL:url forKey:cRom1280Path];
     [self.preferences setObject:@"128-0.rom" forKey:cRom1280Name];
-    [self.preferences synchronize];
 }
 
 - (void)reset128kRom1
@@ -135,7 +131,6 @@ static NSUInteger const cROM_SIZE_16K = 16384;
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"128-1" withExtension:@"rom"];
     [self.preferences setURL:url forKey:cRom1281Path];
     [self.preferences setObject:@"128-1.rom" forKey:cRom1281Name];
-    [self.preferences synchronize];
 }
 
 - (BOOL)isFileAtUrl:(NSURL *)url size:(NSUInteger)dataSize

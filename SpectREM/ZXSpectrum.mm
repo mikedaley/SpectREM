@@ -184,7 +184,7 @@
     {
         NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
         [preferences removeObjectForKey:@"romPath"];
-        [preferences synchronize];
+//        [preferences synchronize];
         [self loadDefaultROM];
     }
     

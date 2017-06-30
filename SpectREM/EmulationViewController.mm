@@ -119,7 +119,8 @@
     self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width,
         0,
         self.configEffectsView.frame.size.width,
-        self.configEffectsView.frame.size.height};
+        self.configEffectsView.frame.size.height - 10};
+    self.configEffectsView.alphaValue = 0;
     self.configScrollView.documentView = _configViewController.view;
     
     // Init the keyboard mapping view
@@ -194,6 +195,12 @@
     }
 }
 
+
+- (void)viewWillAppear
+{
+    
+    self.view.frame = (CGRect) {0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height - 22};
+}
 - (void)viewWillDisappear
 {
     NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
@@ -533,6 +540,7 @@
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         context.duration = 0.45;
         context.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        [self.configEffectsView.animator setAlphaValue:(self.configEffectsView.alphaValue) ? 0 : 1];
         [self.configEffectsView.animator setFrame:configFrame];
     }  completionHandler:^{
         
@@ -749,7 +757,7 @@
     {
         NSMenuItem *menuItem = (NSMenuItem*)sender;
         float width = 320 * menuItem.tag;
-        float height = 256 * menuItem.tag + 22;
+        float height = (256 * menuItem.tag) + 22;
         float originX = self.view.window.frame.origin.x;
         float originY = self.view.window.frame.origin.y - (height - self.view.window.frame.size.height);
         NSRect windowFrame = CGRectMake(originX, originY, width, height);
@@ -911,7 +919,7 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
 
 - (void)windowResize:(NSNotification *)notification
 {
-
+    self.view.frame = (CGRect) {0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height - 22};
 }
 
 @end

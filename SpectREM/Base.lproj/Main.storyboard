@@ -383,7 +383,7 @@
             <objects>
                 <windowController id="B8D-0N-5wS" customClass="EmulationWindowController" sceneMemberID="viewController">
                     <window key="window" title="SpectREM" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="spectrem" animationBehavior="default" id="IQv-IB-iLA">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="160" y="570" width="320" height="256"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -408,7 +408,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="459" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView appearanceType="vibrantDark" misplaced="YES" blendingMode="withinWindow" material="dark" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
+                            <visualEffectView wantsLayer="YES" appearanceType="vibrantDark" misplaced="YES" blendingMode="withinWindow" material="dark" state="followsWindowActiveState" id="qoy-KM-Y5t" userLabel="Config Effects View">
                                 <rect key="frame" x="0.0" y="0.0" width="236" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
@@ -446,7 +446,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="542"/>
+            <point key="canvasLocation" x="75.5" y="542"/>
         </scene>
         <!--Config View Controller-->
         <scene sceneID="suV-XS-mcE">
@@ -568,7 +568,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="cbA-Mb-1ew">
                                             <rect key="frame" x="116" y="132" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="vKZ-ij-3Zb"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="vKZ-ij-3Zb"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayRGBOffset" id="nWr-xh-W5e"/>
                                             </connections>
