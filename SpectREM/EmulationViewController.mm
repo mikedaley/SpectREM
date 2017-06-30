@@ -31,7 +31,14 @@
 
 #import <OpenGL/gl.h>
 
-#pragma mark - Enums
+#pragma mark - Interface
+
+@interface EmulationViewController ()
+
+@property (strong) NSMutableArray *disassemblyArray;
+@property (strong) NSMutableDictionary *debugLabels;
+
+@end
 
 #pragma mark - Implementation
 
@@ -70,10 +77,8 @@
     dispatch_source_t       _debugTimer;
     dispatch_queue_t        _fastTimerQueue;
     dispatch_source_t       _fastTimer;
-    
     dispatch_queue_t        _serialQueue;
     dispatch_source_t       _serialTimer;
-    
     dispatch_queue_t        _smartlinkQueue;
     
     ZXTape                  *_zxTape;
@@ -160,14 +165,9 @@
     [self setupGamepad];
     [self setupTimers];
     [self checkForDefaultROM];
-    
-    // Switch to the last machine saved in preferences
-    [self switchToMachine:_configViewController.currentMachineType];
-
     [self setupMachineBindings];
-    
+    [self switchToMachine:_configViewController.currentMachineType];
     [self restoreSession];
-
 }
 
 - (void)restoreSession
@@ -195,12 +195,6 @@
     }
 }
 
-
-- (void)viewWillAppear
-{
-    
-    self.view.frame = (CGRect) {0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height - 22};
-}
 - (void)viewWillDisappear
 {
     NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
@@ -575,7 +569,7 @@
 {    
     NSSavePanel *savePanel = [NSSavePanel new];
 
-    if (_machine->machineInfo.machineType == eZXSpectrum48 || _machine->machineInfo.machineType == eZXSpectrumSE)
+    if (_machine->machineInfo.machineType == eZXSpectrum48)
     {
         [[_saveAccessoryController.exportPopup itemAtIndex:cSNA_SNAPSHOT_TYPE] setEnabled:YES];
         savePanel.allowedFileTypes = @[@"z80", @"sna"];
@@ -919,6 +913,9 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
 
 - (void)windowResize:(NSNotification *)notification
 {
+    // Reduce the size of the view so that it sits below the title bar of the window. The window is setup to use the entire window contents
+    // so that the titlebar doesn't show the contents of the config panel through it. This seems to cause performance issues. So to ensure
+    // that the view is not drawn below the titlebar its height is reduced.
     self.view.frame = (CGRect) {0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height - 22};
 }
 

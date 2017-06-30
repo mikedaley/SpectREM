@@ -43,7 +43,7 @@
         rom = (unsigned char*)calloc(c32k, sizeof(unsigned char));
         
         // Multiface ROM/RAM setup
-        multifaceMemory = (unsigned char*)calloc(cMultifaceMemSize, sizeof(unsigned char));
+        multifaceMemory = (unsigned char*)calloc(cMULTIFACE_MEM_SIZE, sizeof(unsigned char));
         
         NSString *path = [[NSBundle mainBundle] pathForResource:@"MF128" ofType:@"rom"];
         NSData *data = [NSData dataWithContentsOfFile:path];

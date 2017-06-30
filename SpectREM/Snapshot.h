@@ -15,6 +15,12 @@ unsigned short const    cZ80_V3_HEADER_SIZE = 86;
 unsigned short const    cZ80_V3_ADD_HEADER_SIZE = 54;
 unsigned char const     cZ80_V3_PAGE_HEADER_SIZE = 3;
 
+enum
+{
+    cZ80_SNAPSHOT_TYPE = 0,
+    cSNA_SNAPSHOT_TYPE
+};
+
 struct snap {
     int length;
     unsigned char *data;

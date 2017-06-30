@@ -14,10 +14,119 @@
 #import "SmartLink.h"
 #import "SLNetwork.hpp"
 
+#pragma mark - Type Definitions
+
+// Defines an enum for each type of display action used when drawing the screen
+typedef NS_ENUM(NSUInteger, DisplayAction)
+{
+    eDisplayBorder = 1,
+    eDisplayPaper,
+    eDisplayRetrace
+};
+
+// Defines an enum for each event type that can be encountered
+typedef NS_ENUM(NSUInteger, EmulatorEventType)
+{
+    eNone,
+    eReset,
+    eSnapshot,
+    eZ80Snapshot
+};
+
+// Defines an enum for the different values that are retrieved as part of the floating bus method
+typedef NS_ENUM(NSUInteger, FloatingBusValueType)
+{
+    ePixel = 1,
+    eAttribute = 2
+};
+
+typedef NS_ENUM(int, TapeLoadingState)
+{
+    ePilotPulseHeader = 0,
+    ePilotPulseData,
+    eFirstSyncPulse,
+    eSecondSyncPulse,
+    eDataPulse
+};
+
+typedef NS_ENUM(int, ULAplusMode)
+{
+    eULAplusPaletteGroup = 0,
+    eULAplusModeGroup
+};
+
 #pragma mark - Interface
 
 
 @interface ZXSpectrum ()
+{
+    // Keyboard matrix data
+    unsigned char keyboardMap[8];
+
+    // Emulation display sizes
+    int emuLeftBorderPx;
+    int emuRightBorderPx;
+    int emuBottomBorderPx;
+    int emuTopBorderPx;
+    int emuDisplayPxWidth;
+    int emuDisplayPxHeight;
+
+    // Stores the memory address for the first byte in each row of the bitmap screen
+    uint16 emuTsLine[192];
+
+    // Stores the screen action based on the current frames tstate e.g. draw border, draw bitmap or beam retrace
+    uint8 emuDisplayTsTable[313][225];
+
+    // Holds the texture horiz and vert scale used when only selecting a subset of the texture to be displayed.
+    // The full Spectrum screen size is generated so to display equal border sizes a sub rect of the full texture
+    // is used for the display. Also reducing the size of the border is perfored in the same way e.g. making a smaller
+    // rect from which to take the texture data
+    float emuHScale;
+    float emuVScale;
+
+    // Used to track the flash phase
+    int frameCounter;
+
+    // ULAplus
+    int ulaPlusMode;
+    int ulaPlusPaletteOn;
+    int ulaPlusCurrentReg;
+    char clut[64];
+    struct PixelColor ulaColor[256];
+
+    // Audio
+    double audioBeeperLeft;
+    double audioBeeperRight;
+    int audioEarBit;
+    int audioMicBit;
+    int audioBufferIndex;
+    int audioTStates;
+    int audioTsCounter;
+    double audioTsStepCounter;
+    double audioTsStep;
+    int audioBufferSize;
+    int audioAYTStates;
+    int audioAYTStatesStep;
+    unsigned char lastfffd;
+
+    // SpecDrum
+    int specDrumOutput;
+
+    // Tape loading
+    int tapeLoadingState;
+    int tapeLoadingSubState;
+    int pilotPulseTs;
+    int pilotPulses;
+    BOOL flipTapeBit;
+    int tapeInputBit;
+
+
+    // Holds the kempston joystick last byte value read either through the emulator or SmartLINK
+    char smartlinkKempston;
+
+    // Byte request used to get data from SmartLink
+    NSData *smartLinkRequest;
+}
 
 @end
 
@@ -27,7 +136,11 @@
 
 @implementation ZXSpectrum
 {
+    // Used to connect over the network to the smart card server
     SLNetwork *smart_card;
+
+    // Thread event e.g. should a snap shot be loaded
+    EmulatorEventType event;
 }
 
 
@@ -46,7 +159,7 @@
         
         _preferences = [NSUserDefaults standardUserDefaults];
         
-        event = EventType::eNone;
+        event = EmulatorEventType::eNone;
         
         borderColor = 7;
         frameCounter = 0;
@@ -71,8 +184,8 @@
         
         float fps = 50;
         
-        audioBufferSize = (cAudioSampleRate / fps) * 6;
-        audioTsStep = machineInfo.tsPerFrame / (cAudioSampleRate / fps);
+        audioBufferSize = (cAUDIO_SAMPLE_RATE / fps) * 6;
+        audioTsStep = machineInfo.tsPerFrame / (cAUDIO_SAMPLE_RATE / fps);
         audioAYTStatesStep = 32;
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         
@@ -90,7 +203,7 @@
         [self setupSmartLink];
         
         self.emulationQueue = dispatch_queue_create("emulationQueue", nil);
-        self.audioCore = [[AudioCore alloc] initWithSampleRate:cAudioSampleRate
+        self.audioCore = [[AudioCore alloc] initWithSampleRate:cAUDIO_SAMPLE_RATE
                                                framesPerSecond:fps
                                                 emulationQueue:self.emulationQueue
                                                        machine:self];
@@ -182,13 +295,9 @@
     core->Reset(hard);
     if (hard)
     {
-        NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-        [preferences removeObjectForKey:@"romPath"];
-//        [preferences synchronize];
         [self loadDefaultROM];
     }
-    
-    
+        
     frameCounter = 0;
     saveTrapTriggered = false;
     loadTrapTriggered = false;
@@ -258,24 +367,24 @@
                       @autoreleasepool {
                           switch (event)
                           {
-                              case EventType::eNone:
+                              case EmulatorEventType::eNone:
                                   break;
                                   
-                              case EventType::eReset:
+                              case EmulatorEventType::eReset:
                                   break;
                                   
-                              case EventType::eSnapshot:
+                              case EmulatorEventType::eSnapshot:
                                   [self loadSnapshot];
                                   break;
                                   
-                              case EventType::eZ80Snapshot:
+                              case EmulatorEventType::eZ80Snapshot:
                                   [self loadZ80Snapshot];
                                   break;
                                   
                               default:
                                   break;
                           }
-                          event = EventType::eNone;
+                          event = EmulatorEventType::eNone;
                           [self resetFrame];
                           [self generateFrame];
                       }
@@ -332,7 +441,7 @@
                 
                 if (self.accelerated)
                 {
-                    if (frameCounter % cAcceleratedSkipFrames)
+                    if (frameCounter % cACCELERATED_SKIP_FRAMES)
                     {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
@@ -421,7 +530,7 @@ void updateAudioWithTStates(int numberTs, void *m)
     
     // Grab the current state of the audio ear output & the tapeLevel which is used to register input when loading tapes.
     // Only need to do this once per audio update
-    signed int localBeeperLevel = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAudioBeeperVolumeMultiplier) | machine->specDrumOutput;
+    signed int localBeeperLevel = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAUDIO_BEEPER_VOL_MULTIPLIER) | machine->specDrumOutput;
     signed int beeperLevelLeft = localBeeperLevel;
     signed int beeperLevelRight = localBeeperLevel;
     
@@ -549,7 +658,7 @@ void updateScreenWithTStates(int numberTs, void *m)
 {
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     
-    if (machine->_accelerated && machine->frameCounter % cAcceleratedSkipFrames)
+    if (machine->_accelerated && machine->frameCounter % cACCELERATED_SKIP_FRAMES)
     {
         return;
     }
@@ -595,7 +704,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                 int x = (ts >> 2) - 4;
                 
                 uint pixelAddress = machine->emuTsLine[y] + x;
-                uint attributeAddress = cBitmapSize + ((y >> 3) << 5) + x;
+                uint attributeAddress = cBITMAP_SIZE + ((y >> 3) << 5) + x;
                 
                 int pixelByte = machine->memory[(machine->displayPage * 16384) + pixelAddress];
                 int attributeByte = machine->memory[(machine->displayPage * 16384) + attributeAddress];
@@ -1067,19 +1176,19 @@ static unsigned char floatingBus(void *m)
         && currentDisplayLine < (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxVerticalDisplay)
         && currentTs <= machine->machineInfo.tsHorizontalDisplay)
     {
-        unsigned char ulaValueType = cFloatingBusTable[ currentTs & 0x07 ];
+        unsigned char ulaValueType = cFLOATING_BUS_TABLE[ currentTs & 0x07 ];
         
         int y = currentDisplayLine - (machine->machineInfo.pxTopBorder + machine->machineInfo.pxVerticalBlank);
         int x = currentTs >> 2;
         
         if (ulaValueType == FloatingBusValueType::ePixel)
         {
-            return machine->memory[cBitmapAddress + machine->emuTsLine[y] + x];
+            return machine->memory[cBITMAP_ADDRESS + machine->emuTsLine[y] + x];
         }
         
         if (ulaValueType == FloatingBusValueType::eAttribute)
         {
-            return machine->memory[cBitmapAddress + cBitmapSize + ((y >> 3) << 5) + x];
+            return machine->memory[cBITMAP_ADDRESS + cBITMAP_SIZE + ((y >> 3) << 5) + x];
         }
     }
     
@@ -1104,8 +1213,8 @@ static unsigned char floatingBus(void *m)
             
             if (line < machineInfo.pxVerticalDisplay && ts < 128)
             {
-                memoryContentionTable[i] = cContentionValues[ ts & 0x07 ];
-                ioContentionTable[i] = cContentionValues[ ts & 0x07 ];
+                memoryContentionTable[i] = cCONTENTION_VALUES[ ts & 0x07 ];
+                ioContentionTable[i] = cCONTENTION_VALUES[ ts & 0x07 ];
             }
         }
     }
@@ -1519,12 +1628,12 @@ static unsigned char floatingBus(void *m)
                       
                       if ([extension isEqualToString:@"SNA"])
                       {
-                          event = EventType::eSnapshot;
+                          event = EmulatorEventType::eSnapshot;
                       }
                       
                       if ([extension isEqualToString:@"Z80"])
                       {
-                          event = EventType::eZ80Snapshot;
+                          event = EmulatorEventType::eZ80Snapshot;
                       }
                   });
 }

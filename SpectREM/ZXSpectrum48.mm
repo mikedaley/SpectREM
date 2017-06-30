@@ -46,7 +46,7 @@
         memory = (unsigned char*)calloc(c64k, sizeof(unsigned char));
         
         // Multiface ROM/RAM setup
-        multifaceMemory = (unsigned char*)calloc(cMultifaceMemSize, sizeof(unsigned char));
+        multifaceMemory = (unsigned char*)calloc(cMULTIFACE_MEM_SIZE, sizeof(unsigned char));
         
         NSString *path = [[NSBundle mainBundle] pathForResource:@"MF1" ofType:@"rom"];
         NSData *data = [NSData dataWithContentsOfFile:path];
@@ -66,7 +66,7 @@
         // SmartCard ROM/RAM setup
         smartCardPortFAF3 = 0;
         smartCardPortFAFB = 0;
-        smartCardSRAM = (unsigned char*)calloc(cSmartCardSRAMSize, sizeof(unsigned char));
+        smartCardSRAM = (unsigned char*)calloc(cSMART_CARD_RAME_SIZE, sizeof(unsigned char));
         
         // Register the opcode callback for the save trapping
         core->RegisterOpcodeCallback(opcodeCallback);
@@ -101,7 +101,7 @@
     }
     // Clear SmartCard SRAM and ports, happens on both soft and hard reset
     smartCardPortFAF3 = 0;
-    memset(smartCardSRAM, 0, cSmartCardSRAMSize);
+    memset(smartCardSRAM, 0, cSMART_CARD_RAME_SIZE);
     smartCardPortFAFB = 0;
     
     [super reset:hard];
@@ -159,7 +159,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     }
     
     // Only update screen if display memory has been written too
-    if (address >= 16384 && address < cBitmapAddress + cBitmapSize + cAttrSize){
+    if (address >= 16384 && address < cBITMAP_ADDRESS + cBITMAP_SIZE + cATTR_SIZE){
         updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
     }
     

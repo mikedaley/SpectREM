@@ -14,12 +14,6 @@
 @class ZXTape;
 @class EmulationScene;
 
-enum
-{
-    cZ80_SNAPSHOT_TYPE = 0,
-    cSNA_SNAPSHOT_TYPE
-};
-
 @interface EmulationViewController : NSViewController
 
 // Emulation view that contains the SpriteKit scene used to render the emulations display
@@ -28,10 +22,6 @@ enum
 
 @property (weak) IBOutlet NSVisualEffectView *configEffectsView;
 @property (weak) IBOutlet NSScrollView *configScrollView;
-
-@property (strong) NSMutableArray *disassemblyArray;
-
-@property (strong) NSMutableDictionary *debugLabels;
 
 #pragma mark - Methods
 

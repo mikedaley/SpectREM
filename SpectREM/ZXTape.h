@@ -12,45 +12,45 @@
 
 #pragma mark - Constants
 
-extern NSString *const cTapeBlocksChanged;
-extern NSString *const cTapeByteProcessed;
+extern NSString *const cTAPE_BLOCKS_CHANGED;
+extern NSString *const cTAPE_BYTE_PROCESSED;
 
-static int const cHeaderLength = 21;
+static int const cHEADER_LENGTH = 21;
 
-static int cPilotHeaderPulses = 8063;
-static int cPilotDataPulses = 3223;
-static int cPilotPulseTStateLength = 2168;
-static int cFirstSyncPulseTStateDelay = 667;
-static int cSecondSyncPulseTStateDelay = 735;
-static int cDataBitZeroPulseTStateDelay = 855;
-static int cDataBitOnePulseTStateDelay = 1710;
+static int cPILOT_HEADER_PULSES = 8063;
+static int cPILOT_DATA_PULSES = 3223;
+static int cPILOT_PULSE_TSTATE_LENGTH = 2168;
+static int cFIRST_SYNC_PULSE_TSTATE_DELAY = 667;
+static int cSECOND_SYNC_PULSE_TSTATE_DELAY = 735;
+static int cDATA_BIT_ZERO_PULSE_TSTATE_DELAY = 855;
+static int cDATA_BIT_ONE_PULSE_TSTATE_DELAY = 1710;
 
-static int cHeaderFlagOffset = 0;
-static int cHeaderDataTypeOffset = 1;
-static int cHeaderFilenameOffset = 2;
-static int cHeaderDataLengthOffset = 12;
-static int cHeaderChecksumOffset = 17;
+static int cHEADER_FLAG_OFFSET = 0;
+static int cHEADER_DATA_TYPE_OFFSET = 1;
+static int cHEADER_FILENAME_OFFSET = 2;
+static int cHEADER_DATA_LENGTH_OFFSET = 12;
+static int cHEADER_CHECKSUM_OFFSET = 17;
 
-static int cProgramHeaderAutostartLineOffset = 14;
-static int cProgramHeaderProgramLengthOffset = 16;
-static int cProgramHeaderChecksumOffset = 18;
+static int cPROGRAM_HEADER_AUTOSTART_LINE_OFFSET = 14;
+static int cPROGRAM_HEADER_PROGRAM_LENGTH_OFFSET = 16;
+static int cPROGRAM_HEADER_CHECKSUM_OFFSET = 18;
 
-static int cNumericDataHeaderUnused1Offset = 14;
-static int cNumericDataHeaderVariableNameOffset = 15;
-static int cNumericDataHeaderUnused2Offset = 16;
+static int cNUMERIC_DATA_HEADER_UNUSED_1_OFFSET = 14;
+static int cNUMERIC_DATA_HEADER_VARIBABLE_NAME_OFFSET = 15;
+static int cNUMERIC_DATA_HEADER_UNUSED_2_OFFSET = 16;
 
-static int cAlphaNumericDataHeaderUnused1Offset = 14;
-static int cAlphaNumericDataHeaderVariableNameOffset = 15;
-static int cAlphaNumericDataHeaderUnused2Offset = 16;
+static int cALPHA_NUMERIC_DATA_HEADER_UNUSED_1_OFFSET = 14;
+static int cALPHA_NUMERIC_DATA_HEADER_VARIABLE_NAME_OFFSET = 15;
+static int cALPHA_NUMERIC_DATA_HEADER_UNUSED_2_OFFSET = 16;
 
-static int cByteHeaderStartAddressOffset = 14;
-static int cByteHeaderUnused1Offset = 16;
+static int cBYTE_HEADER_START_ADDRESS_OFFSET = 14;
+static int cBYTE_HEADER_UNUSED_1_OFFSET = 16;
 
-static int cDataBlockDataLengthOffset = 1;
+static int cDATA_BLOCK_DATA_LENGTH_OFFSET = 1;
 
-static int cHeaderFilenameLength = 10;
+static int cHEADER_FILENAME_LENGTH = 10;
 
-static int cHeaderBlockLength = 19;
+static int cHEADER_BLOCK_LENGTH = 19;
 
 #pragma mark - Enums
 

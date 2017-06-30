@@ -216,7 +216,7 @@
     [machine setPaused:YES];
     
     int snapshotSize = 0;
-    if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
+    if (machine->machineInfo.machineType == eZXSpectrum48)
     {
         snapshotSize = (48 * 1024) + cZ80_V3_HEADER_SIZE + (cZ80_V3_PAGE_HEADER_SIZE * 3);
     }
@@ -273,7 +273,7 @@
     snapData.data[32] = core->GetRegister(CZ80Core::eREG_PC) & 0xff;    // PC
     snapData.data[33] = core->GetRegister(CZ80Core::eREG_PC) >> 8;
     
-    if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
+    if (machine->machineInfo.machineType == eZXSpectrum48)
     {
         snapData.data[34] = 0;
     }
@@ -312,7 +312,7 @@
     
     int snapPtr = 86;
     
-    if (machine->machineInfo.machineType == eZXSpectrum48 || machine->machineInfo.machineType == eZXSpectrumSE)
+    if (machine->machineInfo.machineType == eZXSpectrum48)
     {
         snapData.data[snapPtr++] = 0xff;
         snapData.data[snapPtr++] = 0xff;

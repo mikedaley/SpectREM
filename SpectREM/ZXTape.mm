@@ -9,8 +9,8 @@
 #import "ZXTape.h"
 #import "Z80Core.h"
 
-NSString *const cTapeBlocksChanged = @"cTapeBlocksChanged";
-NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
+NSString *const cTAPE_BLOCKS_CHANGED = @"cTAPE_BLOCKS_CHANGED";
+NSString *const cTAPE_BYTE_PROCESSED = @"cTAPE_BYTE_PROCESSED";
 
 @implementation ZXTape
 {
@@ -93,9 +93,9 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
     [self processTAPFileData:tapeData];
     
-    
+#ifdef DEBUG
     [self printTAPContents];
-    
+#endif
     
     self.tapeLoaded = YES;
 }
@@ -129,8 +129,8 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
         // Move the pointer to the start of the actual tap block
         self.currentBytePointer += 2;
         
-        flag = tapeBytes[self.currentBytePointer + cHeaderFlagOffset];
-        dataType = tapeBytes[self.currentBytePointer + cHeaderDataTypeOffset];
+        flag = tapeBytes[self.currentBytePointer + cHEADER_FLAG_OFFSET];
+        dataType = tapeBytes[self.currentBytePointer + cHEADER_DATA_TYPE_OFFSET];
         
         TAPBlock *newTAPBlock = nil;
         
@@ -271,7 +271,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (void)generateHeaderPilotWithTStates:(int)tStates
 {
-    if (pilotPulses < cPilotHeaderPulses)
+    if (pilotPulses < cPILOT_HEADER_PULSES)
     {
         if (flipTapeBit)
         {
@@ -279,7 +279,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
             flipTapeBit = NO;
         }
         
-        if (pilotPulseTStates >= cPilotPulseTStateLength)
+        if (pilotPulseTStates >= cPILOT_PULSE_TSTATE_LENGTH)
         {
             pilotPulses += 1;
             pilotPulseTStates = 0;
@@ -298,7 +298,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (void)generateDataPilotWithTStates:(int)tStates
 {
-    if (pilotPulses < cPilotDataPulses)
+    if (pilotPulses < cPILOT_DATA_PULSES)
     {
         if (flipTapeBit)
         {
@@ -306,7 +306,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
             flipTapeBit = NO;
         }
         
-        if (pilotPulseTStates >= cPilotPulseTStateLength)
+        if (pilotPulseTStates >= cPILOT_PULSE_TSTATE_LENGTH)
         {
             pilotPulses += 1;
             pilotPulseTStates = 0;
@@ -330,7 +330,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
         flipTapeBit = NO;
     }
     
-    if (syncPulseTStates >= cFirstSyncPulseTStateDelay)
+    if (syncPulseTStates >= cFIRST_SYNC_PULSE_TSTATE_DELAY)
     {
         syncPulseTStates = 0;
         flipTapeBit = YES;
@@ -350,7 +350,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
         flipTapeBit = NO;
     }
     
-    if (syncPulseTStates >= cSecondSyncPulseTStateDelay)
+    if (syncPulseTStates >= cSECOND_SYNC_PULSE_TSTATE_DELAY)
     {
         syncPulseTStates = 0;
         self.currentBytePointer = 0;
@@ -384,11 +384,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     
     if (bit)
     {
-        dataPulseTStates = cDataBitOnePulseTStateDelay;
+        dataPulseTStates = cDATA_BIT_ONE_PULSE_TSTATE_DELAY;
     }
     else
     {
-        dataPulseTStates = cDataBitZeroPulseTStateDelay;
+        dataPulseTStates = cDATA_BIT_ZERO_PULSE_TSTATE_DELAY;
     }
     flipTapeBit = YES;
     dataBitTStates = 0;
@@ -398,7 +398,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (void)generateHeaderDataStreamWithTStates:(int)tStates
 {
-    int currentBlockLength = cHeaderBlockLength;
+    int currentBlockLength = cHEADER_BLOCK_LENGTH;
     unsigned char byte = [[self.tapBlocks objectAtIndex:self.currentBlockIndex] blockData][self.currentBytePointer];
     unsigned char bit = (byte << currentDataBit) & 128;
     
@@ -418,11 +418,11 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     
     if (bit)
     {
-        dataPulseTStates = cDataBitOnePulseTStateDelay;
+        dataPulseTStates = cDATA_BIT_ONE_PULSE_TSTATE_DELAY;
     }
     else
     {
-        dataPulseTStates = cDataBitZeroPulseTStateDelay;
+        dataPulseTStates = cDATA_BIT_ZERO_PULSE_TSTATE_DELAY;
     }
     flipTapeBit = YES;
     dataBitTStates = 0;
@@ -603,7 +603,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
     {
         if (core->GetRegister(CZ80Core::eREG_ALT_F) & CZ80Core::FLAG_C)
         {
-            self.currentBytePointer = cHeaderDataTypeOffset;
+            self.currentBytePointer = cHEADER_DATA_TYPE_OFFSET;
             int checksum = expectedBlockType;
             
             for (int i = 0; i < blockLength; i++)
@@ -701,18 +701,18 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned char)getFlag
 {
-    return self.blockData[cHeaderFlagOffset];
+    return self.blockData[cHEADER_FLAG_OFFSET];
 }
 
 - (unsigned char)getDataType
 {
-    return self.blockData[cHeaderDataTypeOffset];
+    return self.blockData[cHEADER_DATA_TYPE_OFFSET];
 }
 
 - (NSString *)getFilename
 {
-    char *filename = (char *)calloc(cHeaderFilenameLength, sizeof(char));
-    memcpy(filename, &_blockData[cHeaderFilenameOffset], cHeaderFilenameLength);
+    char *filename = (char *)calloc(cHEADER_FILENAME_LENGTH, sizeof(char));
+    memcpy(filename, &_blockData[cHEADER_FILENAME_OFFSET], cHEADER_FILENAME_LENGTH);
     NSString *filenameString = [NSString stringWithCString:filename encoding:NSASCIIStringEncoding];
     free(filename);
     return filenameString;
@@ -725,7 +725,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned char)getChecksum
 {
-    return self.blockData[cHeaderChecksumOffset];
+    return self.blockData[cHEADER_CHECKSUM_OFFSET];
 }
 
 @end
@@ -746,22 +746,22 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned short)getAutostartLine
 {
-    return ((unsigned short *)&self.blockData[cProgramHeaderAutostartLineOffset])[0];
+    return ((unsigned short *)&self.blockData[cPROGRAM_HEADER_AUTOSTART_LINE_OFFSET])[0];
 }
 
 - (unsigned short)getProgramLength
 {
-    return ((unsigned short *)&self.blockData[cProgramHeaderProgramLengthOffset])[0];
+    return ((unsigned short *)&self.blockData[cPROGRAM_HEADER_PROGRAM_LENGTH_OFFSET])[0];
 }
 
 - (unsigned char)getChecksum
 {
-    return self.blockData[cProgramHeaderChecksumOffset];
+    return self.blockData[cPROGRAM_HEADER_CHECKSUM_OFFSET];
 }
 
 - (unsigned short)getDataLength
 {
-    return cHeaderBlockLength;
+    return cHEADER_BLOCK_LENGTH;
 }
 
 @end
@@ -777,12 +777,12 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned char)getVariableName
 {
-    return self.blockData[cNumericDataHeaderVariableNameOffset];
+    return self.blockData[cNUMERIC_DATA_HEADER_VARIBABLE_NAME_OFFSET];
 }
 
 - (unsigned short)getDataLength
 {
-    return cHeaderBlockLength - 2;
+    return cHEADER_BLOCK_LENGTH - 2;
 }
 
 @end
@@ -798,12 +798,12 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned char)getVariableName
 {
-    return self.blockData[cAlphaNumericDataHeaderVariableNameOffset];
+    return self.blockData[cALPHA_NUMERIC_DATA_HEADER_VARIABLE_NAME_OFFSET];
 }
 
 - (unsigned short)getDataLength
 {
-    return cHeaderBlockLength - 2;
+    return cHEADER_BLOCK_LENGTH - 2;
 }
 
 @end
@@ -819,7 +819,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned short)getStartAddress
 {
-    return ((unsigned short *)&self.blockData[cByteHeaderStartAddressOffset])[0];
+    return ((unsigned short *)&self.blockData[cBYTE_HEADER_START_ADDRESS_OFFSET])[0];
 }
 
 - (unsigned char)getChecksum
@@ -829,7 +829,7 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 
 - (unsigned short)getDataLength
 {
-    return cHeaderBlockLength - 2;
+    return cHEADER_BLOCK_LENGTH - 2;
 }
 
 @end
@@ -851,13 +851,13 @@ NSString *const cTapeByteProcessed = @"cTapeByteProcessed";
 - (unsigned char *)getDataBlock
 {
     unsigned char *dataBlock = (unsigned char *)calloc([self getDataLength], sizeof(unsigned char));
-    memcpy(dataBlock, &self.blockData[cDataBlockDataLengthOffset], sizeof(unsigned char) * [self getDataLength]);
+    memcpy(dataBlock, &self.blockData[cDATA_BLOCK_DATA_LENGTH_OFFSET], sizeof(unsigned char) * [self getDataLength]);
     return dataBlock;
 }
 
 - (unsigned char)getDataType
 {
-    return self.blockData[cHeaderFlagOffset];
+    return self.blockData[cHEADER_FLAG_OFFSET];
 }
 
 - (unsigned char)getChecksum
