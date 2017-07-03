@@ -39,7 +39,7 @@ static int const cACCELERATED_SKIP_FRAMES = 10;
 // Memory sizes/Pages
 static size_t const c16k = 16 * 1024;
 static size_t const c32k = 32 * 1024;
-static size_t const c48k = 48 * 1023;
+static size_t const c48k = 48 * 1024;
 static size_t const c64k = 64 * 1024;
 static size_t const c128k = 128 * 1024;
 static size_t const c48kPages = c48k / 16384;
@@ -55,6 +55,23 @@ static size_t const cMULTIFACE_MEM_SIZE = 16 * 1024;
 static unsigned short const cFLAGS = 23611;
 static unsigned short const cLAST_K = 23560;
 static unsigned short const cFRAMES = 23672;
+
+// Next Sprites
+static unsigned char const cMAX_SPRITES = 64;
+static unsigned int const cPALETTE_SIZE = 256;
+static unsigned char const cMAX_SPRITES_PER_SCANLINE = 12;
+static unsigned char const cSPRITE_WIDTH = 16;
+static unsigned char const cSPRITE_HEIGHT = 16;
+static unsigned char const cSPRITE_TRANSPARENT_COLOR = 0xe3;
+static unsigned char const cSPRITE_ATTRIBUTES = 4;
+static int const cSPRITE_VERT_LINES = 256;
+
+typedef enum : NSUInteger {
+    eXPosition,
+    eYPosition,
+    ePaletteMirrorRotate,
+    eVisible
+} SpriteInfo;
 
 #pragma mark - Interface
 
@@ -108,6 +125,18 @@ static unsigned short const cFRAMES = 23672;
     // Memory and IO contention tables
     unsigned char memoryContentionTable[80000];
     unsigned char ioContentionTable[80000];
+    
+    // Next Sprites
+    unsigned char sprites[cMAX_SPRITES][cSPRITE_WIDTH * cSPRITE_HEIGHT];
+    unsigned char spritePalette[cPALETTE_SIZE];
+    unsigned char spriteInfo[cMAX_SPRITES][cSPRITE_ATTRIBUTES];
+    int spriteLineList[cSPRITE_VERT_LINES][cMAX_SPRITES_PER_SCANLINE];
+    unsigned char currentSprite;
+    unsigned char currentSpriteInfo;
+    unsigned char currentPalette;
+    unsigned char spriteDataOffset;
+    unsigned char spriteInfoOffset;
+    
 }
 
 #pragma mark - Properties

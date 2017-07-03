@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZXSpectrum128.h"
+#import "ZXSpectrumNext.h"
 #import "Z80Core.h"
 #import "ConfigViewController.h"
 
 #pragma mark - Private Interface
 
-@interface ZXSpectrum128 ()
+@interface ZXSpectrumNext ()
 {
     CZ80Core *core;
 }
@@ -22,7 +22,7 @@
 
 #pragma mark - Implementation
 
-@implementation ZXSpectrum128
+@implementation ZXSpectrumNext
 
 - (void)dealloc
 {
@@ -101,7 +101,7 @@
 
 static unsigned char coreMemoryRead(unsigned short address, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumNext *machine = (__bridge ZXSpectrumNext *)m;
     
     int page = address / 16384;
     address &= 16383;
@@ -132,7 +132,7 @@ static unsigned char coreMemoryRead(unsigned short address, void *m)
 
 static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumNext *machine = (__bridge ZXSpectrumNext *)m;
     
     int page = address / 16384;
     address &= 16383;
@@ -166,7 +166,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
 
 static void coreMemoryContention(unsigned short address, unsigned int tstates, void *m)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumNext *machine = (__bridge ZXSpectrumNext *)m;
     
     int page = address / 16384;
     if (page == 1 ||
@@ -181,7 +181,7 @@ static void coreMemoryContention(unsigned short address, unsigned int tstates, v
 
 static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 {
-	ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+	ZXSpectrumNext *machine = (__bridge ZXSpectrumNext *)m;
 	
 	int page = address / 16384;
 	address &= 16383;
@@ -208,7 +208,7 @@ static unsigned char coreDebugRead(unsigned int address, void *m, void *d)
 
 static void coreDebugWrite(unsigned int address, unsigned char byte, void *m, void *d)
 {
-    ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+    ZXSpectrumNext *machine = (__bridge ZXSpectrumNext *)m;
     int page = address / 16384;
     address &= 16383;
     
@@ -234,7 +234,7 @@ static void coreDebugWrite(unsigned int address, unsigned char byte, void *m, vo
 
 static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m)
 {
-	ZXSpectrum128 *machine = (__bridge ZXSpectrum128 *)m;
+	ZXSpectrumNext *machine = (__bridge ZXSpectrumNext *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
 	
     // Trap keyboard key press and inject any keystrokes
