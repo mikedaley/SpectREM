@@ -631,6 +631,11 @@ NSString *const cTAP_EXTENSION = @"TAP";
 
 - (void)printTAPContents
 {
+    
+#ifndef DEBUG
+    return;
+#endif
+    
     for (TAPBlock *tapBlock in self.tapBlocks) {
         
         NSLog(@"+----------------------------------------");

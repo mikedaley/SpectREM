@@ -366,7 +366,7 @@
 			name = "Disassembly View Controller";
 			sourceTree = "<group>";
 		};
-		EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */ = {
+		EDEBA7A11DEEE6DE00671446 /* Snapshots/Tape */ = {
 			isa = PBXGroup;
 			children = (
 				EDEBA79E1DEEDCB000671446 /* Snapshot.h */,
@@ -377,7 +377,7 @@
 				99A268501E5C3C450079DB5E /* SZX.h */,
 				99A268511E5C3C450079DB5E /* SZX.m */,
 			);
-			name = Snapshot/Tape;
+			name = Snapshots/Tape;
 			sourceTree = "<group>";
 		};
 		EDF3A4941DB0D60700511BAF = {
@@ -413,6 +413,8 @@
 				EDF3A4C01DB0D6EF00511BAF /* Storyboard */,
 				EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */,
 				99D359AD1DBD0A0300C49FAE /* Keyboard */,
+				ED8BD2491E4DA3D60033DBAA /* Debugger */,
+				EDEBA7A11DEEE6DE00671446 /* Snapshots/Tape */,
 				EDF3A4C21DB0D77D00511BAF /* Machines */,
 				EDF3A4A31DB0D60700511BAF /* Supporting Files */,
 			);
@@ -500,8 +502,6 @@
 		EDF3A4C21DB0D77D00511BAF /* Machines */ = {
 			isa = PBXGroup;
 			children = (
-				ED8BD2491E4DA3D60033DBAA /* Debugger */,
-				EDEBA7A11DEEE6DE00671446 /* Snapshot/Tape */,
 				ED06D3351E375B88001F99FB /* PixelData.h */,
 				EDFEB2941DED8D4100ED3C25 /* MachineDetails.h */,
 				995657F11DC1327100114FC9 /* ZXSpectrum.h */,
