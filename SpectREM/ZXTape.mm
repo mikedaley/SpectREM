@@ -15,34 +15,20 @@ NSString *const cTAP_EXTENSION = @"TAP";
 
 @implementation ZXTape
 {
-    // How many Ts have passed since the start of the pilot pulses
-    int pilotPulseTStates;
-    // How many pilot pulses have been generated
-    int pilotPulses;
-    // Sync pulse tStates
-    int syncPulseTStates;
-    // How many Ts have passed since the start of the data pulse
-    int dataPulseTStates;
-    // Should the tape bit be flipped
-    BOOL flipTapeBit;
-    // Current processing state e.g. generating pilot, streaming data
-    int processingState;
-    // Next processing state to be used
-    int nextProcessingState;
-    // Which bit of the current byte in the data stream is being processed
-    int currentDataBit;
-    // How many tStates have passed since starting the pause between data blocks
-    int blockPauseTStates;
-    // How many tStates to pause when processing data bit pulses
-    int dataBitTStates;
-    // How many pulses have been generated for the current data bit;
-    int dataPulseCount;
-    // Is a new block about to start
-    BOOL newBlock;
-    // Timer used to update the progress indicators during a tape load
-    NSTimer *progressTimer;
-    // Current tape block
-    TAPBlock *currentBlock;
+    int pilotPulseTStates;          // How many Ts have passed since the start of the pilot pulses
+    int pilotPulses;                // How many pilot pulses have been generated
+    int syncPulseTStates;           // Sync pulse tStates
+    int dataPulseTStates;           // How many Ts have passed since the start of the data pulse
+    BOOL flipTapeBit;               // Should the tape bit be flipped
+    int processingState;            // Current processing state e.g. generating pilot, streaming data
+    int nextProcessingState;        // Next processing state to be used
+    int currentDataBit;             // Which bit of the current byte in the data stream is being processed
+    int blockPauseTStates;          // How many tStates have passed since starting the pause between data blocks
+    int dataBitTStates;             // How many tStates to pause when processing data bit pulses
+    int dataPulseCount;             // How many pulses have been generated for the current data bit;
+    BOOL newBlock;                  // Is a new block about to start
+    NSTimer *progressTimer;         // Timer used to update the progress indicators during a tape load
+    TAPBlock *currentBlock;         // Current tape block
 }
 
 - (instancetype)init
