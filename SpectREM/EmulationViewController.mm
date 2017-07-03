@@ -34,9 +34,9 @@
 
 #pragma mark - Constants
 
-static NSString  * const cSESSION_FILE_NAME = @"session.z80";
-static NSString  * const cROM_EXTENSION = @"ROM";
-static NSString  * const cDEBUG_EXTENSION = @"DBG";
+static NSString  *const cSESSION_FILE_NAME = @"session.z80";
+static NSString  *const cROM_EXTENSION = @"ROM";
+static NSString  *const cDEBUG_EXTENSION = @"DBG";
 
 #pragma mark - Interface
 
