@@ -28,12 +28,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"Deallocating ZXSpectrum48");
     delete core;
-    free (memory);
-    free (rom);
-    free(emuDisplayBuffer);
-    free(self.audioBuffer);
 }
 
 - (instancetype)initWithEmulationViewController:(EmulationViewController *)emulationViewController machineInfo:(MachineInfo)info

@@ -60,6 +60,7 @@ typedef NS_ENUM(int, ULAplusMode)
 
 @interface ZXSpectrum ()
 {
+@public
     // Keyboard matrix data
     unsigned char keyboardMap[8];
 
@@ -146,7 +147,11 @@ typedef NS_ENUM(int, ULAplusMode)
 
 - (void)dealloc
 {
-    NSLog(@"Deallocating ZXSpectrum");
+    NSLog(@"Deallocating %@", [self className]);
+    free (memory);
+    free (rom);
+    free(emuDisplayBuffer);
+    free(self.audioBuffer);
 }
 
 
@@ -195,6 +200,7 @@ typedef NS_ENUM(int, ULAplusMode)
         
         [self resetFrame];
         [self resetSound];
+        [self resetNext];
         [self buildContentionTable];
         [self buildScreenLineAddressTable];
         [self buildDisplayTsTable];
@@ -305,6 +311,7 @@ typedef NS_ENUM(int, ULAplusMode)
     multifacePagedIn = false;
     multifaceLockedOut = false;
     smartCardActive = true;
+    [self resetNext];
     [self resetKeyboardMap];
     [self resetSound];
     [self resetFrame];
@@ -334,6 +341,33 @@ typedef NS_ENUM(int, ULAplusMode)
     audioBufferIndex = 0;
     audioTsCounter = 0;
     audioTsStepCounter = 0;
+}
+
+- (void)resetNext
+{
+    // Reset the sprite palette
+    for (int i = 0; i < 256; i++)
+    {
+        spritePalette[i] = i;
+    }
+    
+    // Reset the sprite info
+    for (int i = 0; i < cMAX_SPRITES; i++)
+    {
+        spriteInfo[i][SpriteInfo::eXPosition] = 0;
+        spriteInfo[i][SpriteInfo::eYPosition] = 0;
+        spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] = 0;
+        spriteInfo[i][SpriteInfo::eVisible] = 0;
+    }
+    
+    // Reset sprite list
+    for (int i = 0; i < cSPRITE_VERT_LINES; i++)
+    {
+        for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
+        {
+            spriteLineList[i][j] = -1;
+        }
+    }
 }
 
 - (void)randomizeFramesVar
@@ -718,6 +752,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                     int index = 0;
                     char ulaPlusColor = 0;
                     
+                    int bit = 0;
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
@@ -734,6 +769,13 @@ void updateScreenWithTStates(int numberTs, void *m)
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
                         machine->emuDisplayBufferIndex++;
+                        
+                        if (machine->machineInfo.machineType == eZXSpectrumNext)
+                        {
+                            drawSprites((x * 8) + bit + 32, y + machine->emuTopBorderPx, machine);
+                        }
+                        
+                        bit++;
                     }
                 }
                 else
@@ -750,6 +792,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                         ink = tempPaper;
                     }
                     
+                    int bit = 0;
                     for (int b = 0x80; b; b >>= 1)
                     {
                         if (pixelByte & b) {
@@ -765,10 +808,17 @@ void updateScreenWithTStates(int numberTs, void *m)
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].g;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].b;
                             machine->emuDisplayBufferIndex++;
-
                         }
+                        
+                        if (machine->machineInfo.machineType == eZXSpectrumNext)
+                        {
+                            drawSprites((x * 8) + bit + 32, y + machine->emuTopBorderPx, machine);
+                        }
+                        
+                        bit++;
                     }
                 }
+            
                 break;
             }
                 
@@ -781,6 +831,68 @@ void updateScreenWithTStates(int numberTs, void *m)
     }
 }
 
+void drawSprites(int x, int y, ZXSpectrum *machine)
+{
+    for (int i = 0; i < cMAX_SPRITES_PER_SCANLINE; i++)
+    {
+        if (machine->spriteLineList[y][i] != -1)
+        {
+            int spriteName = machine->spriteLineList[y][i];
+            
+            if (machine->spriteInfo[spriteName][SpriteInfo::eVisible])
+            {
+                int spriteX = machine->spriteInfo[spriteName][SpriteInfo::eXPosition];
+                int spriteY = machine->spriteInfo[spriteName][SpriteInfo::eYPosition];
+                
+                // X MSB bit
+                if (machine->spriteInfo[spriteName][SpriteInfo::ePaletteMirrorRotate] & 0x01)
+                {
+                    spriteX += 256;
+                }
+                
+                if (x >= spriteX && x < (spriteX + 16) && y >= spriteY && y < (spriteY + 16))
+                {
+                    int paletteOffset = machine->spriteInfo[spriteName][SpriteInfo::ePaletteMirrorRotate] >> 4;
+                    
+                    int offsetX = x - spriteX;
+                    int offsetY = y - spriteY;
+                    
+                    // Rotate
+                    if (machine->spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] & 0x02)
+                    {
+                        int t = offsetX;
+                        offsetX = offsetY;
+                        offsetY = t;
+                    }
+                    
+                    // Mirror Y
+                    if (machine->spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] & 0x04)
+                    {
+                        offsetY = 15 - offsetY;
+                    }
+                    
+                    // Mirror X
+                    if (machine->spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] & 0x08)
+                    {
+                        offsetX = 15 - offsetX;
+                    }
+                    
+                    unsigned int pixelData = machine->sprites[spriteName][(offsetY * cSPRITE_HEIGHT) + offsetX];
+                    unsigned int pixelColor = machine->spritePalette[(paletteOffset + pixelData) & 0xff];
+                    
+                    if (pixelColor != cSPRITE_TRANSPARENT_COLOR)
+                    {
+                        machine->emuDisplayBufferIndex -= 4;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (pixelColor & 0xe0) << 0;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (pixelColor & 0x1c) << 3;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (pixelColor & 0x03) << 6;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
+                    }
+                }
+            }
+        }
+    }
+}
 
 #pragma mark - ULA
 
@@ -1151,8 +1263,95 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
             machine->smart_card->write_port(address, data);
         }
     }
-}
+    
+    // Next Sprites
+    if (machine->machineInfo.machineType == eZXSpectrumNext)
+    {
+        if (address == 0x303B)
+        {
+            machine->currentSprite = data;
+            machine->currentPalette = data;
+            machine->currentSpriteInfo = data;
+            machine->spriteDataOffset = 0;
+            machine->spriteInfoOffset = SpriteInfo::eXPosition;
+        }
+        
+        // Set palette colour info
+        if ((address & 0xff) == 0x53)
+        {
+            machine->spritePalette[machine->currentPalette++] = data;
+        }
+        
+        // Set sprite pattern info
+        if ((address & 0xff) == 0x55)
+        {
+            machine->sprites[machine->currentSprite][machine->spriteDataOffset++] = data;
+            if (machine->spriteDataOffset == 0)
+            {
+                machine->currentSprite++;
+            }
+        }
+        
+        // Set sprite attribute info
+        if ((address & 0xff) == 0x57)
+        {
+            // If Y pos being changed
+            if (machine->spriteInfoOffset == SpriteInfo::eYPosition || machine->spriteInfoOffset == SpriteInfo::eVisible)
+            {
+                int y = machine->spriteLineList[machine->currentSpriteInfo][SpriteInfo::eYPosition];
+                int visible = machine->spriteLineList[machine->currentSpriteInfo][SpriteInfo::eVisible] & 0x80;
+                
+                // No point in updating anything if the new value is the same as the old value
+                if (data != y || !visible)
+                {
+                    int spriteName = (machine->spriteInfo[machine->currentSpriteInfo][SpriteInfo::eVisible] & 63);
 
+                    // Reset all the sprite lines that contain this sprite as its moving
+                    for (int i = y; i < y + cSPRITE_HEIGHT; i++)
+                    {
+                        for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
+                        {
+                            if (i <= cSPRITE_VERT_LINES)
+                            {
+                                if (machine->spriteLineList[i][j] == spriteName)
+                                {
+                                    machine->spriteLineList[i][j] = -1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Update the sprite lines list based on the sprites new position
+                    y = data;
+                    for (int i = y; i < y + cSPRITE_HEIGHT; i++)
+                    {
+                        for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
+                        {
+                            if (i <= cSPRITE_VERT_LINES)
+                            {
+                                if (machine->spriteLineList[i][j] == -1)
+                                {
+                                    machine->spriteLineList[i][j] = spriteName;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            machine->spriteInfo[machine->currentSpriteInfo][machine->spriteInfoOffset++] = data;
+            machine->spriteInfoOffset &= 0x03;
+            if (machine->spriteInfoOffset == 0)
+            {
+                machine->currentSpriteInfo++;
+            }
+        }
+        
+    }
+    
+}
 
 /** 
  When the Z80 reads from an unattached port, such as 0xFF, it actually reads the data currently on the

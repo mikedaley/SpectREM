@@ -26,6 +26,7 @@
 
 #import "ZXSpectrum48.h"
 #import "ZXSpectrum128.h"
+#import "ZXSpectrumNext.h"
 #import "SmartLink.h"
 #import "Z80Core.h"
 
@@ -719,10 +720,13 @@
     switch (machineType) {
         default:
         case eZXSpectrum48:
-            _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self machineInfo:machines[0]];
+            _machine = [[ZXSpectrum48 alloc] initWithEmulationViewController:self machineInfo:machines[eZXSpectrum48]];
             break;
         case eZXSpectrum128:
-            _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self machineInfo:machines[1]];
+            _machine = [[ZXSpectrum128 alloc] initWithEmulationViewController:self machineInfo:machines[eZXSpectrum128]];
+            break;
+        case eZXSpectrumNext:
+            _machine = [[ZXSpectrumNext alloc] initWithEmulationViewController:self machineInfo:machines[eZXSpectrumNext]];
             break;
     }
     _machine.zxTape = _zxTape;
