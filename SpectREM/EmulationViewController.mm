@@ -532,7 +532,7 @@
     }
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        context.duration = 0.45;
+        context.duration = 0.3;
         context.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         [self.configEffectsView.animator setAlphaValue:(self.configEffectsView.alphaValue) ? 0 : 1];
         [self.configEffectsView.animator setFrame:configFrame];
