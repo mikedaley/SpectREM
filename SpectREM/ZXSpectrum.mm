@@ -1309,9 +1309,9 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                     // Reset all the sprite lines that contain this sprite as its moving
                     for (int i = y; i < y + cSPRITE_HEIGHT; i++)
                     {
-                        for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
+                        if (i <= cSPRITE_VERT_LINES)
                         {
-                            if (i <= cSPRITE_VERT_LINES)
+                            for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
                             {
                                 if (machine->spriteLineList[i][j] == spriteName)
                                 {
@@ -1326,9 +1326,9 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                     y = data;
                     for (int i = y; i < y + cSPRITE_HEIGHT; i++)
                     {
-                        for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
+                        if (i <= cSPRITE_VERT_LINES)
                         {
-                            if (i <= cSPRITE_VERT_LINES)
+                            for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
                             {
                                 if (machine->spriteLineList[i][j] == -1)
                                 {
@@ -1445,19 +1445,30 @@ static unsigned char floatingBus(void *m)
  **/
 - (void)buildDisplayTsTable
 {
+    int tsRightBorderStart = (emuLeftBorderPx / 2) + machineInfo.tsHorizontalDisplay;
+    int tsRightBorderEnd = (emuLeftBorderPx / 2) + machineInfo.tsHorizontalDisplay + (emuRightBorderPx / 2);
+    int tsLeftBorderStart = 0;
+    int tsLeftBorderEnd = emuLeftBorderPx / 2;
+    int pxLineTopBorderStart = machineInfo.pxVerticalBlank;
+    int pxLineTopBorderEnd = machineInfo.pxVerticalBlank + machineInfo.pxTopBorder;
+    int pxLinePaperStart = machineInfo.pxVerticalBlank + machineInfo.pxTopBorder;
+    int pxLinePaperEnd = machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay;
+    int pxLineBottomBorderEnd = machineInfo.pxVerticalTotal - (machineInfo.pxTopBorder - emuTopBorderPx);
+    
     for(int line = 0; line < machineInfo.pxVerticalTotal; line++)
     {
         for(int ts = 0 ; ts < machineInfo.tsPerLine; ts++)
         {
+            // Screen Retrace
             if (line >= 0  && line < machineInfo.pxVerticalBlank)
             {
                 emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
             }
             
             // Top Border
-            if (line >= machineInfo.pxVerticalBlank && line < machineInfo.pxVerticalBlank + machineInfo.pxTopBorder)
+            if (line >= pxLineTopBorderStart && line < pxLineTopBorderEnd)
             {
-                if ((ts >= 160 && ts < machineInfo.tsPerLine) || line < machineInfo.pxVerticalBlank + machineInfo.pxTopBorder - emuTopBorderPx)
+                if ((ts >= tsRightBorderEnd && ts < machineInfo.tsPerLine) || line < pxLinePaperStart - emuTopBorderPx)
                 {
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
@@ -1468,13 +1479,13 @@ static unsigned char floatingBus(void *m)
             }
             
             // Border + Paper + Border
-            if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder) && line < (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay))
+            if (line >= pxLinePaperStart && line < pxLinePaperEnd)
             {
-                if ((ts >= 0 && ts < 16) || (ts >= 144 && ts < 160))
+                if ((ts >= tsLeftBorderStart && ts < tsLeftBorderEnd) || (ts >= tsRightBorderStart && ts < tsRightBorderEnd))
                 {
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
-                else if (ts >= 160 && ts < machineInfo.tsPerLine)
+                else if (ts >= tsRightBorderEnd && ts < machineInfo.tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
@@ -1485,9 +1496,9 @@ static unsigned char floatingBus(void *m)
             }
             
             // Bottom Border
-            if (line >= (machineInfo.pxVerticalBlank + machineInfo.pxTopBorder + machineInfo.pxVerticalDisplay) && line < machineInfo.pxVerticalTotal - 24)
+            if (line >= pxLinePaperEnd && line < pxLineBottomBorderEnd)
             {
-                if (ts >= 160 && ts < machineInfo.tsPerLine)
+                if (ts >= tsRightBorderEnd && ts < machineInfo.tsPerLine)
                 {
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayRetrace;
                 }
@@ -1496,14 +1507,13 @@ static unsigned char floatingBus(void *m)
                     emuDisplayTsTable[line][ts] = DisplayAction::eDisplayBorder;
                 }
             }
-            
         }
     }
 }
 
 
 /**
- Build a table of all the possible ULAplus colours using G3R3B2.
+ Build a table of all the possible ULAplus colours using GGGRRRBB.
  **/
 - (void)buildULAColorTable
 {
