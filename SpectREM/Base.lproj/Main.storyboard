@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G23a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
@@ -144,6 +144,12 @@
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="switchMachine:" target="Ady-hI-5gd" id="tXc-7S-WdG"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ZX Spectrum Next" tag="2" keyEquivalent="3" id="Nba-9c-Abg" userLabel="ZX Spectrum 128k">
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="switchMachine:" target="Ady-hI-5gd" id="qYX-Bn-8Uh"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="FyH-IS-Ku3"/>
@@ -878,7 +884,7 @@
                                     <rect key="frame" x="2" y="2" width="217" height="195"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <popUpButton verticalHuggingPriority="750" misplaced="YES" id="PWl-1w-lVC">
+                                        <popUpButton verticalHuggingPriority="750" misplaced="YES" id="PWl-1w-lVC" userLabel="Machine Type Selection">
                                             <rect key="frame" x="17" y="164" width="183" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="ZX Spectrum 48k" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" continuous="YES" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ta2-se-wRH" id="KmX-Rz-7Sw">

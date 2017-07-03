@@ -48,7 +48,7 @@
     
     if (version == 1)
     {
-        return 0;
+        return eZXSpectrum48;
     }
     
     if (version == 2)
@@ -56,12 +56,11 @@
         hardwareType = ((unsigned char *)&fileBytes[34])[0];
         if (hardwareType == 0 || hardwareType == 1)
         {
-            return 0;
+            return eZXSpectrum48;
         }
-        
-        if (hardwareType == 3 || hardwareType == 4)
+        else if (hardwareType == 3 || hardwareType == 4)
         {
-            return 1;
+            return eZXSpectrum128;
         }
     }
     
@@ -70,12 +69,15 @@
         hardwareType = ((unsigned char *)&fileBytes[34])[0];
         if (hardwareType == 0 || hardwareType == 1 || hardwareType == 3)
         {
-            return 0;
+            return eZXSpectrum48;
         }
-        
-        if (hardwareType == 4 || hardwareType == 5 || hardwareType == 6)
+        else if (hardwareType == 4 || hardwareType == 5 || hardwareType == 6)
         {
-            return 1;
+            return eZXSpectrum128;
+        }
+        else if (hardwareType == 9)
+        {
+            return eZXSpectrumNext;
         }
     }
     
@@ -277,12 +279,16 @@
     {
         snapData.data[34] = 0;
     }
-    else
+    else if (machine->machineInfo.machineType == eZXSpectrum128)
     {
         snapData.data[34] = 4;
     }
+    else if (machine->machineInfo.machineType == eZXSpectrumNext)
+    {
+        snapData.data[34] = 9;
+    }
     
-    if (machine->machineInfo.machineType == eZXSpectrum128)
+    if (machine->machineInfo.machineType == eZXSpectrum128 || machine->machineInfo.machineType == eZXSpectrumNext)
     {
         snapData.data[35] = machine->last7ffd; // last 128k 0x7ffd port value
     }
@@ -344,7 +350,7 @@
     }
     else
     {
-        // 128k
+        // 128k/Next
         for (int page = 0; page < 8; page++)
         {
             snapData.data[snapPtr++] = 0xff;
@@ -455,7 +461,7 @@
             additionHeaderBlockLength = ((unsigned short *)&fileBytes[30])[0];
             int offset = 32 + additionHeaderBlockLength;
             
-            if ( (version == 2 && (hardwareType == 3 || hardwareType == 4)) || (version == 3 && (hardwareType == 4 || hardwareType == 5 || hardwareType == 6)) )
+            if ( (version == 2 && (hardwareType == 3 || hardwareType == 4)) || (version == 3 && (hardwareType == 4 || hardwareType == 5 || hardwareType == 6 || hardwareType == 9)) )
             {
                 // Decode byte 35 so that port 0x7ffd can be set on the 128k
                 unsigned char data = ((unsigned char *)&fileBytes[35])[0];
@@ -611,6 +617,8 @@
             case 6:
                 hardware = @"128k + M.G.T";
                 break;
+            case 9:
+                hardware = @"Next";
                 
             default:
                 break;

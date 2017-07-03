@@ -645,7 +645,7 @@
                 [_machine.keystrokesBuffer addObject:@(34)];
                 [_machine.keystrokesBuffer addObject:@(13)];
             }
-            else if (_machine->machineInfo.machineType == eZXSpectrum128)
+            else if (_machine->machineInfo.machineType == eZXSpectrum128 || _machine->machineInfo.machineType == eZXSpectrumNext)
             {
                 [_machine.keystrokesBuffer addObject:@(13)];
             }

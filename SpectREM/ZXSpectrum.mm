@@ -989,7 +989,7 @@ unsigned char coreIORead(unsigned short address, void *m)
             }
         }
         
-        if ((address & 0xff) == 0x3f && machine->machineInfo.machineType == eZXSpectrum128)
+        if ((address & 0xff) == 0x3f && (machine->machineInfo.machineType == eZXSpectrum128 || machine->machineInfo.machineType == eZXSpectrumNext))
         {
             if (machine->multifacePagedIn)
             {
@@ -1028,7 +1028,7 @@ unsigned char coreIORead(unsigned short address, void *m)
         // Multiface 128
         else if ((address & 0xff) == 0xbf
                  && !machine->multifacePagedIn
-                 && machine->machineInfo.machineType == eZXSpectrum128
+                 && (machine->machineInfo.machineType == eZXSpectrum128 || machine->machineInfo.machineType == eZXSpectrumNext)
                  && machine.multiface128)
         {
             machine->multifacePagedIn = true;
@@ -1242,7 +1242,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     }
     
     // Multiface 128
-    if ((address & 0xff) == 0x1f && machine->machineInfo.machineType == eZXSpectrum128 && machine.multiface128)
+    if ((address & 0xff) == 0x1f && (machine->machineInfo.machineType == eZXSpectrum128 || machine->machineInfo.machineType == eZXSpectrumNext) && machine.multiface128)
     {
         machine->multifaceLockedOut = (machine->multifaceLockedOut) ? false : true;
     }

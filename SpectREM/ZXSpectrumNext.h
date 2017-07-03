@@ -1,5 +1,5 @@
 //
-//  ZXSpectrum128.h
+//  ZXSpectrumNext.h
 //  ZXRetroEmu
 //
 //  Created by Mike Daley on 02/09/2016.

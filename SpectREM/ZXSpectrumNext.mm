@@ -1,5 +1,5 @@
 //
-//  ZXSpectrum128.m
+//  ZXSpectrumNext.m
 //  ZXRetroEmu
 //
 //  Created by Mike Daley on 02/09/2016.
@@ -306,7 +306,7 @@ static bool opcodeCallback(unsigned char opcode, unsigned short address, void *m
 
 - (NSString *)machineName
 {
-    return @"ZX Spectrum 128k";
+    return @"ZX Spectrum Next";
 }
 
 @end
