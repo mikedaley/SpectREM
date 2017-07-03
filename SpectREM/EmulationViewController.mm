@@ -32,6 +32,12 @@
 
 #import <OpenGL/gl.h>
 
+#pragma mark - Constants
+
+static NSString  * const cSESSION_FILE_NAME = @"session.z80";
+static NSString  * const cROM_EXTENSION = @"ROM";
+static NSString  * const cDEBUG_EXTENSION = @"DBG";
+
 #pragma mark - Interface
 
 @interface EmulationViewController ()
@@ -183,7 +189,7 @@
         NSURL *supportDirUrl = [[supportDir objectAtIndex:0] URLByAppendingPathComponent:bundleID];
 
         // Load the last session file it if exists
-        supportDirUrl = [supportDirUrl URLByAppendingPathComponent:@"session.z80"];
+        supportDirUrl = [supportDirUrl URLByAppendingPathComponent:cSESSION_FILE_NAME];
         if ([fileManager fileExistsAtPath:supportDirUrl.path])
         {
             NSLog(@"Restoring session");
@@ -214,7 +220,7 @@
             return;
         }
         
-        supportDirUrl = [supportDirUrl URLByAppendingPathComponent:@"session.z80"];
+        supportDirUrl = [supportDirUrl URLByAppendingPathComponent:cSESSION_FILE_NAME];
         snap sessionSnapshot = [Snapshot createZ80SnapshotFromMachine:_machine];
         NSData *data = [NSData dataWithBytes:sessionSnapshot.data length:sessionSnapshot.length];
         [data writeToURL:supportDirUrl atomically:YES];
@@ -295,7 +301,6 @@
     [_emulationScene bind:cDisplayVertRoll toObject:_configViewController withKeyPath:cDisplayVertRoll options:nil];
     [_emulationScene bind:cDisplayStatic toObject:_configViewController withKeyPath:cDisplayStatic options:nil];
     [_emulationScene bind:cDisplayShowReflection toObject:_configViewController withKeyPath:cDisplayShowReflection options:nil];
-
 }
 
 - (void)setupMachineBindings
@@ -540,7 +545,6 @@
     }  completionHandler:^{
         
     }];
-    
 }
 
 - (IBAction)openFile:(id)sender
@@ -554,7 +558,7 @@
     NSOpenPanel *openPanel = [NSOpenPanel new];
     openPanel.canChooseDirectories = NO;
     openPanel.allowsMultipleSelection = NO;
-    openPanel.allowedFileTypes = @[@"SNA", @"Z80", @"TAP", @"ROM"];
+    openPanel.allowedFileTypes = @[cSNA_EXTENSION, cZ80_EXTENSION, cTAP_EXTENSION, cROM_EXTENSION];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [openPanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
@@ -573,13 +577,13 @@
     if (_machine->machineInfo.machineType == eZXSpectrum48)
     {
         [[_saveAccessoryController.exportPopup itemAtIndex:cSNA_SNAPSHOT_TYPE] setEnabled:YES];
-        savePanel.allowedFileTypes = @[@"z80", @"sna"];
+        savePanel.allowedFileTypes = @[cZ80_EXTENSION, cSNA_EXTENSION];
     }
     else
     {
         [[_saveAccessoryController.exportPopup itemAtIndex:cSNA_SNAPSHOT_TYPE] setEnabled:NO];
         [_saveAccessoryController.exportPopup selectItemAtIndex:cZ80_SNAPSHOT_TYPE];
-        savePanel.allowedFileTypes = @[@"z80"];
+        savePanel.allowedFileTypes = @[cZ80_EXTENSION];
     }
     
     savePanel.accessoryView = _saveAccessoryController.view;
@@ -593,12 +597,12 @@
                 switch (_saveAccessoryController.exportType) {
                     case cZ80_SNAPSHOT_TYPE:
                         snapshotData = [Snapshot createZ80SnapshotFromMachine:_machine];
-                        url = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"z80"];
+                        url = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:cZ80_EXTENSION];
                         break;
                         
                     case cSNA_SNAPSHOT_TYPE:
                         snapshotData = [Snapshot createSnapshotFromMachine:_machine];
-                        url = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"sna"];
+                        url = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:cSNA_EXTENSION];
                     default:
                         break;
                 }
@@ -619,8 +623,8 @@
         [self notifyUserWithMessage:NSLocalizedString(@"Acceleration mode off", nil)];
     }
     
-    if ([[[url pathExtension] uppercaseString] isEqualToString:@"Z80"] ||
-        [[[url pathExtension] uppercaseString] isEqualToString:@"SNA"])
+    if ([[[url pathExtension] uppercaseString] isEqualToString:cZ80_EXTENSION] ||
+        [[[url pathExtension] uppercaseString] isEqualToString:cSNA_EXTENSION])
     {
         // Check to see if the snapshot being loaded is compatible with the current machine and if not then switch
         // to the machine needed for the snapshot
@@ -633,7 +637,7 @@
         }
         [_machine loadSnapshotWithPath:url.path];
     }
-    else if ([[[url pathExtension] uppercaseString] isEqualToString:@"TAP"])
+    else if ([[[url pathExtension] uppercaseString] isEqualToString:cTAP_EXTENSION])
     {
         [_zxTape openTapeWithURL:url];
         if (_machine.instaTAPLoading)
@@ -651,7 +655,7 @@
             }
         }
     }
-    else if ([[[url pathExtension] uppercaseString] isEqualToString:@"ROM"])
+    else if ([[[url pathExtension] uppercaseString] isEqualToString:cROM_EXTENSION])
     {
         if (_machine->machineInfo.machineType != eZXSpectrum48)
         {
@@ -664,7 +668,7 @@
     
     // Check to see if the loaded file has a Pasmo debug file and if so then load the labels and addresses into the debug dictionary
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSURL *debugURL = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:@"dbg"];
+    NSURL *debugURL = [[url URLByDeletingPathExtension] URLByAppendingPathExtension:cDEBUG_EXTENSION];
     
     self.debugLabels = [NSMutableDictionary new];
 
@@ -685,7 +689,7 @@
     [self.view.window setTitle:[NSString stringWithFormat:@"SpectREM - %@", [url.path lastPathComponent]]];
     
     // Don't add the session snapshot to the recent files list
-    if (![(NSString *)[url.path lastPathComponent] isEqualToString:@"session.z80"])
+    if (![(NSString *)[url.path lastPathComponent] isEqualToString:cSESSION_FILE_NAME])
     {
         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
         [_preferences setURL:url forKey:cLastUrl];
@@ -737,7 +741,6 @@
     [self notifyUserWithMessage:[NSString stringWithFormat:NSLocalizedString(@"%@ Loaded", nil), _machine.machineName]];
     
     [_machine start];
-    
     
 }
 

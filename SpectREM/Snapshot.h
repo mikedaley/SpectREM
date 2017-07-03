@@ -15,6 +15,9 @@ unsigned short const    cZ80_V3_HEADER_SIZE = 86;
 unsigned short const    cZ80_V3_ADD_HEADER_SIZE = 54;
 unsigned char const     cZ80_V3_PAGE_HEADER_SIZE = 3;
 
+extern NSString *const cSNA_EXTENSION;
+extern NSString *const cZ80_EXTENSION;
+
 enum
 {
     cZ80_SNAPSHOT_TYPE = 0,

@@ -20,20 +20,20 @@
 - (void)dealloc
 {
     NSLog(@"Deallocating Scene");
-    [self removeObserver:self forKeyPath:@"displayCurve"];
-    [self removeObserver:self forKeyPath:@"displaySaturation"];
-    [self removeObserver:self forKeyPath:@"displayContrast"];
-    [self removeObserver:self forKeyPath:@"displayBrightness"];
-    [self removeObserver:self forKeyPath:@"displayShowVignette"];
-    [self removeObserver:self forKeyPath:@"displayVignetteX"];
-    [self removeObserver:self forKeyPath:@"displayVignetteY"];
-    [self removeObserver:self forKeyPath:@"displayScanLine"];
-    [self removeObserver:self forKeyPath:@"displayRGBOffset"];
-    [self removeObserver:self forKeyPath:@"displayHorizOffset"];
-    [self removeObserver:self forKeyPath:@"displayVertJump"];
-    [self removeObserver:self forKeyPath:@"displayVertRoll"];
-    [self removeObserver:self forKeyPath:@"displayStatic"];
-    [self removeObserver:self forKeyPath:@"displayShowReflection"];
+    [self removeObserver:self forKeyPath:cDisplayCurve];
+    [self removeObserver:self forKeyPath:cDisplaySaturation];
+    [self removeObserver:self forKeyPath:cDisplayContrast];
+    [self removeObserver:self forKeyPath:cDisplayBrightness];
+    [self removeObserver:self forKeyPath:cDisplayShowVignette];
+    [self removeObserver:self forKeyPath:cDisplayVignetteX];
+    [self removeObserver:self forKeyPath:cDisplayVignetteY];
+    [self removeObserver:self forKeyPath:cDisplayScanLine];
+    [self removeObserver:self forKeyPath:cDisplayRGBOffset];
+    [self removeObserver:self forKeyPath:cDisplayHorizOffset];
+    [self removeObserver:self forKeyPath:cDisplayVertJump];
+    [self removeObserver:self forKeyPath:cDisplayVertRoll];
+    [self removeObserver:self forKeyPath:cDisplayStatic];
+    [self removeObserver:self forKeyPath:cDisplayShowReflection];
     [self removeObserver:self forKeyPath:@"screenHeight"];
 }
 
@@ -76,78 +76,78 @@
 
 - (void)setupObservers
 {
-    [self addObserver:self forKeyPath:@"displayCurve" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displaySaturation" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayContrast" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayBrightness" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayShowVignette" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayVignetteX" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayVignetteY" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayScanLine" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayRGBOffset" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayHorizOffset" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayVertJump" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayVertRoll" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayStatic" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"displayShowReflection" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayCurve options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplaySaturation options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayContrast options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayBrightness options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayShowVignette options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayVignetteX options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayVignetteY options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayScanLine options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayRGBOffset options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayHorizOffset options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayVertJump options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayVertRoll options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayStatic options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:cDisplayShowReflection options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"screenHeight" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"displayCurve"])
+    if ([keyPath isEqualToString:cDisplayCurve])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_distortion"];
     }
-    else if ([keyPath isEqualToString:@"displaySaturation"])
+    else if ([keyPath isEqualToString:cDisplaySaturation])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_saturation"];
     }
-    else if ([keyPath isEqualToString:@"displayContrast"])
+    else if ([keyPath isEqualToString:cDisplayContrast])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_contrast"];
     }
-    else if ([keyPath isEqualToString:@"displayBrightness"])
+    else if ([keyPath isEqualToString:cDisplayBrightness])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_brightness"];
     }
-    else if ([keyPath isEqualToString:@"displayShowVignette"])
+    else if ([keyPath isEqualToString:cDisplayShowVignette])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_show_vignette"];
     }
-    else if ([keyPath isEqualToString:@"displayVignetteX"])
+    else if ([keyPath isEqualToString:cDisplayVignetteX])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_x"];
     }
-    else if ([keyPath isEqualToString:@"displayVignetteY"])
+    else if ([keyPath isEqualToString:cDisplayVignetteY])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vignette_y"];
     }
-    else if ([keyPath isEqualToString:@"displayScanLine"])
+    else if ([keyPath isEqualToString:cDisplayScanLine])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_scan_line"];
     }
-    else if ([keyPath isEqualToString:@"displayRGBOffset"])
+    else if ([keyPath isEqualToString:cDisplayRGBOffset])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_rgb_offset"];
     }
-    else if ([keyPath isEqualToString:@"displayHorizOffset"])
+    else if ([keyPath isEqualToString:cDisplayHorizOffset])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_horiz_offset"];
     }
-    else if ([keyPath isEqualToString:@"displayVertJump"])
+    else if ([keyPath isEqualToString:cDisplayVertJump])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vert_jump"];
     }
-    else if ([keyPath isEqualToString:@"displayVertRoll"])
+    else if ([keyPath isEqualToString:cDisplayVertRoll])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_vert_roll"];
     }
-    else if ([keyPath isEqualToString:@"displayStatic"])
+    else if ([keyPath isEqualToString:cDisplayStatic])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_static"];
     }
-    else if ([keyPath isEqualToString:@"displayShowReflection"])
+    else if ([keyPath isEqualToString:cDisplayShowReflection])
     {
         [_emulationDisplaySprite setValue:[SKAttributeValue valueWithFloat:[change[NSKeyValueChangeNewKey] floatValue]] forAttributeNamed:@"u_show_reflection"];
     }

@@ -9,6 +9,9 @@
 #import "Snapshot.h"
 #import "Z80Core.h"
 
+NSString *const cSNA_EXTENSION = @"SNA";
+NSString *const cZ80_EXTENSION = @"Z80";
+
 @implementation Snapshot
 
 #pragma mark - Snapshot info

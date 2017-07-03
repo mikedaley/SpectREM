@@ -146,7 +146,7 @@
                                                 <action selector="switchMachine:" target="Ady-hI-5gd" id="tXc-7S-WdG"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="ZX Spectrum Next" tag="2" keyEquivalent="3" id="Nba-9c-Abg" userLabel="ZX Spectrum 128k">
+                                        <menuItem title="ZX Spectrum Next" tag="1" keyEquivalent="2" id="Nba-9c-Abg">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="switchMachine:" target="Ady-hI-5gd" id="qYX-Bn-8Uh"/>
@@ -2681,7 +2681,7 @@
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="rOMChip" id="ncH-dg-sXz"/>
                                         </imageView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="W7W-xh-TC5">
-                                            <rect key="frame" x="37" y="77" width="139" height="17"/>
+                                            <rect key="frame" x="37" y="74" width="139" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="128-0.rom" id="lF8-Jy-4Yw">
                                                 <font key="font" size="14" name="Menlo-Regular"/>

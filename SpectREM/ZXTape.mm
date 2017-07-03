@@ -11,6 +11,7 @@
 
 NSString *const cTAPE_BLOCKS_CHANGED = @"cTAPE_BLOCKS_CHANGED";
 NSString *const cTAPE_BYTE_PROCESSED = @"cTAPE_BYTE_PROCESSED";
+NSString *const cTAP_EXTENSION = @"TAP";
 
 @implementation ZXTape
 {

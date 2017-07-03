@@ -14,6 +14,7 @@
 
 extern NSString *const cTAPE_BLOCKS_CHANGED;
 extern NSString *const cTAPE_BYTE_PROCESSED;
+extern NSString *const cTAP_EXTENSION;
 
 static int const cHEADER_LENGTH = 21;
 
