@@ -57,17 +57,17 @@ static unsigned short const cLAST_K = 23560;
 static unsigned short const cFRAMES = 23672;
 
 // Next Sprites
-static unsigned char const cMAX_SPRITES = 64;
-static unsigned int const cPALETTE_SIZE = 256;
-static unsigned char const cMAX_SPRITES_PER_SCANLINE = 12;
-static unsigned char const cSPRITE_WIDTH = 16;
-static unsigned char const cSPRITE_HEIGHT = 16;
-static unsigned char const cSPRITE_TRANSPARENT_COLOR = 0xe3;
-static unsigned char const cSPRITE_ATTRIBUTES = 4;
+static int const cMAX_SPRITES = 64;
+static int const cPALETTE_SIZE = 256;
+static int const cMAX_SPRITES_PER_SCANLINE = 12;
+static int const cSPRITE_WIDTH = 16;
+static int const cSPRITE_HEIGHT = 16;
+static int const cSPRITE_TRANSPARENT_COLOR = 0xe3;
+static int const cSPRITE_ATTRIBUTES = 4;
 static int const cSPRITE_VERT_LINES = 256;
 
 typedef enum : NSUInteger {
-    eXPosition,
+    eXPosition = 0,
     eYPosition,
     ePaletteMirrorRotate,
     eVisible
@@ -127,7 +127,7 @@ typedef enum : NSUInteger {
     unsigned char ioContentionTable[80000];
     
     // Next Sprites
-    unsigned char sprites[cMAX_SPRITES][cSPRITE_WIDTH * cSPRITE_HEIGHT];
+    int sprites[cMAX_SPRITES][cSPRITE_WIDTH * cSPRITE_HEIGHT];
     unsigned char spritePalette[cPALETTE_SIZE];
     unsigned char spriteInfo[cMAX_SPRITES][cSPRITE_ATTRIBUTES];
     int spriteLineList[cSPRITE_VERT_LINES][cMAX_SPRITES_PER_SCANLINE];

@@ -121,12 +121,14 @@ typedef NS_ENUM(int, ULAplusMode)
     BOOL flipTapeBit;
     int tapeInputBit;
 
-
     // Holds the kempston joystick last byte value read either through the emulator or SmartLINK
     char smartlinkKempston;
 
     // Byte request used to get data from SmartLink
     NSData *smartLinkRequest;
+    
+    // Next Sprite List
+    NSMutableArray *spriteRenderList;
 }
 
 @end
@@ -368,6 +370,8 @@ typedef NS_ENUM(int, ULAplusMode)
             spriteLineList[i][j] = -1;
         }
     }
+    
+    spriteRenderList = [NSMutableArray new];
 }
 
 - (void)randomizeFramesVar
@@ -493,8 +497,9 @@ typedef NS_ENUM(int, ULAplusMode)
                     });
                 }
                 
-                
                 frameCounter++;
+                
+                spriteRenderList = [NSMutableArray new];
             }
         }
     }
@@ -697,6 +702,8 @@ void updateScreenWithTStates(int numberTs, void *m)
         return;
     }
     
+    int memoryAddress = machine->displayPage * 16384;
+    
     while (numberTs > 0)
     {
         int line = machine->emuDisplayTs / machine->machineInfo.tsPerLine;
@@ -740,8 +747,8 @@ void updateScreenWithTStates(int numberTs, void *m)
                 uint pixelAddress = machine->emuTsLine[y] + x;
                 uint attributeAddress = cBITMAP_SIZE + ((y >> 3) << 5) + x;
                 
-                int pixelByte = machine->memory[(machine->displayPage * 16384) + pixelAddress];
-                int attributeByte = machine->memory[(machine->displayPage * 16384) + attributeAddress];
+                int pixelByte = machine->memory[memoryAddress + pixelAddress];
+                int attributeByte = machine->memory[memoryAddress + attributeAddress];
                 
                 if (machine->ulaPlusPaletteOn)
                 {
@@ -800,7 +807,6 @@ void updateScreenWithTStates(int numberTs, void *m)
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].g;
                             machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].b;
                             machine->emuDisplayBufferIndex++;
-
                         }
                         else
                         {
@@ -835,6 +841,7 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
 {
     for (int i = 0; i < cMAX_SPRITES_PER_SCANLINE; i++)
     {
+        
         if (machine->spriteLineList[y][i] != -1)
         {
             int spriteName = machine->spriteLineList[y][i];
@@ -850,7 +857,7 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     spriteX += 256;
                 }
                 
-                if (x >= spriteX && x < (spriteX + 16) && y >= spriteY && y < (spriteY + 16))
+                if (x >= spriteX && x < (spriteX + cSPRITE_WIDTH) && y >= spriteY && y < (spriteY + cSPRITE_HEIGHT))
                 {
                     int paletteOffset = machine->spriteInfo[spriteName][SpriteInfo::ePaletteMirrorRotate] >> 4;
                     
@@ -860,9 +867,9 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     // Rotate
                     if (machine->spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] & 0x02)
                     {
-                        int t = offsetX;
+                        int temp = offsetX;
                         offsetX = offsetY;
-                        offsetY = t;
+                        offsetY = temp;
                     }
                     
                     // Mirror Y
@@ -877,8 +884,9 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                         offsetX = 15 - offsetX;
                     }
                     
-                    unsigned int pixelData = machine->sprites[spriteName][(offsetY * cSPRITE_HEIGHT) + offsetX];
-                    unsigned int pixelColor = machine->spritePalette[(paletteOffset + pixelData) & 0xff];
+                    int pixelOffset = (offsetY * cSPRITE_HEIGHT) + offsetX;
+                    int pixelData = machine->sprites[spriteName][pixelOffset];
+                    int pixelColor = machine->spritePalette[(paletteOffset + pixelData) & 0xff];
                     
                     if (pixelColor != cSPRITE_TRANSPARENT_COLOR)
                     {
@@ -1089,6 +1097,7 @@ unsigned char coreIORead(unsigned short address, void *m)
 
 void coreIOWrite(unsigned short address, unsigned char data, void *m)
 {
+    
     ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
     CZ80Core *core = (CZ80Core *)[machine getCore];
     
@@ -1159,27 +1168,6 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         machine->audioEarBit = (data & 0x10) >> 4;
         machine->audioMicBit = (data & 0x08) >> 3;
         machine->borderColor = data & 0x07;
-    }
-    
-    // Memory paging port
-    if ( (address & 0x8002) == 0 && machine->disablePaging == NO)
-    {
-        // Save the last byte set, used when generating a Z80 snapshot
-        machine->last7ffd = data;
-        
-        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
-        {
-            updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
-        }
-        
-        // You should only be able to disable paging once. To enable paging again then a reset is necessary.
-        if (data & 0x20 && machine->disablePaging != YES)
-        {
-            machine->disablePaging = YES;
-        }
-        machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
-        machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
-        machine->currentRAMPage = (data & 0x07);
     }
     
     // AY-3-8912 ports
@@ -1295,17 +1283,14 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         // Set sprite attribute info
         if ((address & 0xff) == 0x57)
         {
-            // If Y pos being changed
-            if (machine->spriteInfoOffset == SpriteInfo::eYPosition || machine->spriteInfoOffset == SpriteInfo::eVisible)
+            // If Y pos or visibility is being changed
+            if (machine->spriteInfoOffset == SpriteInfo::eYPosition)
             {
-                int y = machine->spriteLineList[machine->currentSpriteInfo][SpriteInfo::eYPosition];
-                int visible = machine->spriteLineList[machine->currentSpriteInfo][SpriteInfo::eVisible] & 0x80;
+                int y = machine->spriteInfo[machine->currentSpriteInfo][SpriteInfo::eYPosition];
                 
                 // No point in updating anything if the new value is the same as the old value
-                if (data != y || !visible)
+                if ((int)data != y)
                 {
-                    int spriteName = (machine->spriteInfo[machine->currentSpriteInfo][SpriteInfo::eVisible] & 63);
-
                     // Reset all the sprite lines that contain this sprite as its moving
                     for (int i = y; i < y + cSPRITE_HEIGHT; i++)
                     {
@@ -1313,7 +1298,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                         {
                             for (int j = 0; j < cMAX_SPRITES_PER_SCANLINE; j++)
                             {
-                                if (machine->spriteLineList[i][j] == spriteName)
+                                if (machine->spriteLineList[i][j] == machine->currentSpriteInfo)
                                 {
                                     machine->spriteLineList[i][j] = -1;
                                     break;
@@ -1323,8 +1308,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                     }
                     
                     // Update the sprite lines list based on the sprites new position
-                    y = data;
-                    for (int i = y; i < y + cSPRITE_HEIGHT; i++)
+                    for (int i = (int)data; i < (int)data + cSPRITE_HEIGHT; i++)
                     {
                         if (i <= cSPRITE_VERT_LINES)
                         {
@@ -1332,7 +1316,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                             {
                                 if (machine->spriteLineList[i][j] == -1)
                                 {
-                                    machine->spriteLineList[i][j] = spriteName;
+                                    machine->spriteLineList[i][j] = machine->currentSpriteInfo;
                                     break;
                                 }
                             }
@@ -1348,8 +1332,29 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
                 machine->currentSpriteInfo++;
             }
         }
-        
     }
+    
+    // Memory paging port
+    if ( address == 0x7ffd && machine->disablePaging == NO)
+    {
+        // Save the last byte set, used when generating a Z80 snapshot
+        machine->last7ffd = data;
+        
+        if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
+        {
+            updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
+        }
+        
+        // You should only be able to disable paging once. To enable paging again then a reset is necessary.
+        if (data & 0x20 && machine->disablePaging != YES)
+        {
+            machine->disablePaging = YES;
+        }
+        machine->currentROMPage = ((data & 0x10) == 0x10) ? 1 : 0;
+        machine->displayPage = ((data & 0x08) == 0x08) ? 7 : 5;
+        machine->currentRAMPage = (data & 0x07);
+    }
+
     
 }
 
