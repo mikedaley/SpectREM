@@ -474,7 +474,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="MNb-Xd-By4">
                                             <rect key="frame" x="116" y="181" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="2CO-1H-pbL"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.20000000000000001" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="2CO-1H-pbL"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayCurve" id="p4e-Pw-5XU"/>
                                             </connections>
@@ -482,7 +482,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="KEJ-Ux-JaQ">
                                             <rect key="frame" x="116" y="206" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="1" maxValue="32" doubleValue="32" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="LoA-Pk-COT"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="1" maxValue="32" doubleValue="32" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="LoA-Pk-COT"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayBorderWidth" id="0pA-iy-0cF"/>
                                             </connections>
@@ -526,7 +526,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="SMV-Z4-sZ7">
                                             <rect key="frame" x="116" y="278" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="4" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="MmM-L9-T2p"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="4" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="MmM-L9-T2p"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displaySaturation" id="xSB-LP-n0v"/>
                                             </connections>
@@ -534,7 +534,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="SQD-oW-KMJ">
                                             <rect key="frame" x="116" y="253" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="Jms-f6-keg"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="Jms-f6-keg"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayBrightness" id="bUe-qi-rj2"/>
                                             </connections>
@@ -542,7 +542,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="c2R-T9-O6n">
                                             <rect key="frame" x="116" y="228" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="CwY-6z-aYU"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="CwY-6z-aYU"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayContrast" id="ETj-R9-Qie"/>
                                             </connections>
@@ -559,7 +559,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="LGP-ie-Zwh">
                                             <rect key="frame" x="116" y="156" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="N9T-7D-MZV"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="2" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="N9T-7D-MZV"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayScanLine" id="sKl-1T-5yg"/>
                                             </connections>
@@ -576,7 +576,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="cbA-Mb-1ew">
                                             <rect key="frame" x="116" y="132" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="vKZ-ij-3Zb"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="vKZ-ij-3Zb"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayRGBOffset" id="nWr-xh-W5e"/>
                                             </connections>
@@ -593,7 +593,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="J4R-ef-52m">
                                             <rect key="frame" x="116" y="108" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.25" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="ljc-U5-FmQ"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.25" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="ljc-U5-FmQ"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayHorizOffset" id="SEp-f7-9TH"/>
                                             </connections>
@@ -610,7 +610,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="4ip-4L-sA2">
                                             <rect key="frame" x="116" y="39" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="0.5" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="vKd-Gi-Rkh"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" minValue="0.5" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="vKd-Gi-Rkh"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayVignetteX" id="Lsd-No-upt"/>
                                             </connections>
@@ -647,7 +647,7 @@
                                         <slider verticalHuggingPriority="750" misplaced="YES" id="xcx-sM-p2U">
                                             <rect key="frame" x="116" y="14" width="84" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="5" sliderType="linear" id="BQK-jx-mLG"/>
+                                            <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="0.5" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="2" sliderType="linear" id="BQK-jx-mLG"/>
                                             <connections>
                                                 <binding destination="ywq-i7-o5s" name="value" keyPath="values.displayVignetteY" id="JqZ-6z-EAv"/>
                                             </connections>
@@ -1285,7 +1285,7 @@
                 <customObject id="vpk-g3-oSY" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ywq-i7-o5s" userLabel="Config User Defaults"/>
             </objects>
-            <point key="canvasLocation" x="-290" y="954"/>
+            <point key="canvasLocation" x="-290" y="953.5"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="sUf-y6-rXa">
