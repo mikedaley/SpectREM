@@ -354,6 +354,7 @@ typedef NS_ENUM(int, ULAplusMode)
         spritePalette[j++] = (i & 0xe0) << 0;
         spritePalette[j++] = (i & 0x1c) << 3;
         spritePalette[j++] = (i & 0x03) << 6;
+        spritePalette[j++] = 255;
     }
     
     // Reset the sprite info
@@ -889,8 +890,7 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     
                     int pixelOffset = (offsetY * cSPRITE_HEIGHT) + offsetX;
                     int pixelData = machine->sprites[spriteName][pixelOffset];
-//                    int pixelColor = machine->spritePalette[(paletteOffset + pixelData) & 0xff];
-                    int colorIndex = (paletteOffset + pixelData) * 3;
+                    int colorIndex = (paletteOffset + pixelData) * cPALETTE_COLOR_COMPONENTS;
                     
                     unsigned char red = machine->spritePalette[colorIndex];
                     unsigned char green = machine->spritePalette[colorIndex + 1];
@@ -899,7 +899,7 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     int color = red << 16;
                     color |= green << 8;
                     color |= blue;
-                    if (color != 0xe000c0)
+                    if (color != cSPRITE_TRANSPARENT_COLOR)
                     {
                         machine->emuDisplayBufferIndex -= 4;
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex];
