@@ -128,7 +128,7 @@ typedef enum : NSUInteger {
     
     // Next Sprites
     int sprites[cMAX_SPRITES][cSPRITE_WIDTH * cSPRITE_HEIGHT];
-    unsigned char spritePalette[cPALETTE_SIZE];
+    unsigned char spritePalette[cPALETTE_SIZE * 3];
     unsigned char spriteInfo[cMAX_SPRITES][cSPRITE_ATTRIBUTES];
     int spriteLineList[cSPRITE_VERT_LINES][cMAX_SPRITES_PER_SCANLINE];
     unsigned char currentSprite;

@@ -348,9 +348,12 @@ typedef NS_ENUM(int, ULAplusMode)
 - (void)resetNext
 {
     // Reset the sprite palette
+    int j = 0;
     for (int i = 0; i < 256; i++)
     {
-        spritePalette[i] = i;
+        spritePalette[j++] = (i & 0xe0) << 0;
+        spritePalette[j++] = (i & 0x1c) << 3;
+        spritePalette[j++] = (i & 0x03) << 6;
     }
     
     // Reset the sprite info
@@ -886,14 +889,22 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     
                     int pixelOffset = (offsetY * cSPRITE_HEIGHT) + offsetX;
                     int pixelData = machine->sprites[spriteName][pixelOffset];
-                    int pixelColor = machine->spritePalette[(paletteOffset + pixelData) & 0xff];
+//                    int pixelColor = machine->spritePalette[(paletteOffset + pixelData) & 0xff];
+                    int colorIndex = (paletteOffset + pixelData) * 3;
                     
-                    if (pixelColor != cSPRITE_TRANSPARENT_COLOR)
+                    unsigned char red = machine->spritePalette[colorIndex];
+                    unsigned char green = machine->spritePalette[colorIndex + 1];
+                    unsigned char blue = machine->spritePalette[colorIndex + 2];
+                    
+                    int color = red << 16;
+                    color |= green << 8;
+                    color |= blue;
+                    if (color != 0xe000c0)
                     {
                         machine->emuDisplayBufferIndex -= 4;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (pixelColor & 0xe0) << 0;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (pixelColor & 0x1c) << 3;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (pixelColor & 0x03) << 6;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex];
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex + 1];
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex + 2];
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                     }
                 }
