@@ -33,6 +33,7 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
 @implementation EmulationScene {
     
     SKShader *_shader;
+    unsigned char buffer[4 * 81920];
 
 }
 
@@ -62,7 +63,8 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
     {
         self.emulationBackingSprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationBackingSprite"];
         self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationDisplaySprite"];
-
+        self.backingTexture.filteringMode = SKTextureFilteringNearest;
+        
         _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];
         _shader.attributes = @[
                                [SKAttribute attributeWithName:cU_DISTORTION type:SKAttributeTypeHalfFloat],

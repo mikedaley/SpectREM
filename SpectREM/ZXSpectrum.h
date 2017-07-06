@@ -45,6 +45,9 @@ static size_t const c128k = 128 * 1024;
 static size_t const c48kPages = c48k / 16384;
 static size_t const c128kPages = c128k / 16384;
 
+// Display
+static int const cBORDER_PX_SIZE = 32;
+
 // SmartCard constants
 static size_t const cSMART_CARD_RAME_SIZE = 8 * 8192;
 
@@ -66,6 +69,10 @@ static int const cSPRITE_HEIGHT = 16;
 static int const cSPRITE_TRANSPARENT_COLOR = 0xe000c0;
 static int const cSPRITE_ATTRIBUTES = 4;
 static int const cSPRITE_VERT_LINES = 256;
+static int const cSPRITE_MIRROR_X = 0x08;
+static int const cSPRITE_MIRROR_Y = 0x04;
+static int const cSPRITE_ROTATE = 0x02;
+static int const cSPRITE_X_MSB = 0x01;
 
 typedef enum : NSUInteger {
     eXPosition = 0,

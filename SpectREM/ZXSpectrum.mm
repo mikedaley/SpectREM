@@ -171,11 +171,11 @@ typedef NS_ENUM(int, ULAplusMode)
         borderColor = 7;
         frameCounter = 0;
         
-        emuLeftBorderPx = 32;
-        emuRightBorderPx = 32;
+        emuLeftBorderPx = cBORDER_PX_SIZE;
+        emuRightBorderPx = cBORDER_PX_SIZE;
         
-        emuBottomBorderPx = 32;
-        emuTopBorderPx = 32;
+        emuBottomBorderPx = cBORDER_PX_SIZE;
+        emuTopBorderPx = cBORDER_PX_SIZE;
         
         emuDisplayPxWidth = 256 + emuLeftBorderPx + emuRightBorderPx;
         emuDisplayPxHeight = 192 + emuTopBorderPx + emuBottomBorderPx;
@@ -783,7 +783,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                         
                         if (machine->machineInfo.machineType == eZXSpectrumNext)
                         {
-                            drawSprites((x * 8) + bit + 32, y + machine->emuTopBorderPx, machine);
+                            drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
                         }
                         
                         bit++;
@@ -822,7 +822,7 @@ void updateScreenWithTStates(int numberTs, void *m)
                         
                         if (machine->machineInfo.machineType == eZXSpectrumNext)
                         {
-                            drawSprites((x * 8) + bit + 32, y + machine->emuTopBorderPx, machine);
+                            drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
                         }
                         
                         bit++;
@@ -869,7 +869,7 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     int offsetY = y - spriteY;
                     
                     // Rotate
-                    if (machine->spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] & 0x02)
+                    if (machine->spriteInfo[spriteName][SpriteInfo::ePaletteMirrorRotate] & cSPRITE_ROTATE)
                     {
                         int temp = offsetX;
                         offsetX = offsetY;
@@ -877,13 +877,13 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     }
                     
                     // Mirror Y
-                    if (machine->spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] & 0x04)
+                    if (machine->spriteInfo[spriteName][SpriteInfo::ePaletteMirrorRotate] & cSPRITE_MIRROR_Y)
                     {
                         offsetY = 15 - offsetY;
                     }
                     
                     // Mirror X
-                    if (machine->spriteInfo[i][SpriteInfo::ePaletteMirrorRotate] & 0x08)
+                    if (machine->spriteInfo[spriteName][SpriteInfo::ePaletteMirrorRotate] & cSPRITE_MIRROR_X)
                     {
                         offsetX = 15 - offsetX;
                     }
@@ -902,9 +902,9 @@ void drawSprites(int x, int y, ZXSpectrum *machine)
                     if (color != cSPRITE_TRANSPARENT_COLOR)
                     {
                         machine->emuDisplayBufferIndex -= 4;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex];
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex + 1];
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex + 2];
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex++];
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex++];
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = machine->spritePalette[colorIndex++];
                         machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = 255;
                     }
                 }

@@ -90,7 +90,8 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     
     ZXTape                  *_zxTape;
     
-    SKTexture               *_backingTexture;
+    NSInteger               _currentViewScale;
+    
 }
 
 - (void)dealloc
@@ -124,14 +125,14 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     
     _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
     _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
-    
+        
     // Setup the config view controller used for the config panel on the right. This initially places the view off the
     // left edge of the window and drops the configViewController view into the config scroll view.
     _configViewController = [_storyBoard instantiateControllerWithIdentifier:@"ConfigViewController"];
     self.configEffectsView.frame = (CGRect){-self.configEffectsView.frame.size.width,
         0,
         self.configEffectsView.frame.size.width,
-        self.configEffectsView.frame.size.height - 10};
+        self.configEffectsView.frame.size.height};
     self.configEffectsView.alphaValue = 0;
     self.configScrollView.documentView = _configViewController.view;
     
@@ -461,32 +462,32 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 - (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size
 {
     CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, pixelBuffer, length, kCFAllocatorNull);
-    _backingTexture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+    self.emulationScene.backingTexture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                       size:size
                                                    flipped:YES];
     CFRelease(dataRef);
     
-    _backingTexture.filteringMode = SKTextureFilteringNearest;
-    self.emulationScene.emulationBackingSprite.texture = _backingTexture;
-    self.emulationScene.emulationBackingSprite.size = (CGSize){size.width  * (floorf(self.view.frame.size.width / size.width)),
-        size.height * (floorf(self.view.frame.size.width / size.height))};
+    self.emulationScene.backingTexture.filteringMode = SKTextureFilteringNearest;
+    self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
+    
+    float widthScale = floorf(self.view.frame.size.width / size.width);
+    float heightScale = floorf(self.view.frame.size.width / size.height);
 
-    // Use the configurable border width to work out the rect that should be extraced from the texture
-    CGRect textureRect = (CGRect){0, 0, 1, 1};
-    float borderWidth = 32 - _configViewController.displayBorderWidth;
-    float emuHScale = 1.0 / size.width;
-    float emuVScale = 1.0 / size.height;
+    CGSize backingsize = (CGSize){size.width  * widthScale, size.height * heightScale};
     
-    textureRect = (CGRect){
-        borderWidth * emuHScale,
-        borderWidth * emuVScale,
-        1.0 - (borderWidth * 2.0 * emuHScale),
-        1.0 - (borderWidth * 2.0 * emuVScale)
+    self.emulationScene.emulationBackingSprite.size = backingsize;
+
+    float borderWidth = (cBORDER_PX_SIZE - _configViewController.displayBorderWidth);
+
+    CGRect textureRect = (CGRect){
+        floorf((-size.width / 2) + borderWidth * widthScale),
+        floorf((-size.height / 2) + borderWidth * heightScale),
+        floorf(backingsize.width - (borderWidth * widthScale) * 2),
+        floorf(backingsize.height - (borderWidth * heightScale) * 2)
     };
-    
-    _backingTexture = [SKTexture textureWithRect:textureRect
-                                       inTexture:[self.skView textureFromNode:self.emulationScene.emulationBackingSprite]];
-    self.emulationScene.emulationDisplaySprite.texture = _backingTexture;
+
+    self.emulationScene.emulationDisplaySprite.texture = [self.skView textureFromNode:self.emulationScene.emulationBackingSprite
+                                                                                 crop:textureRect];;
 }
 
 #pragma mark - UI Actions
@@ -757,8 +758,9 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     if (([self.view.window styleMask] & NSFullScreenWindowMask) != NSFullScreenWindowMask)
     {
         NSMenuItem *menuItem = (NSMenuItem*)sender;
+        _currentViewScale = menuItem.tag;
         float width = 320 * menuItem.tag;
-        float height = (256 * menuItem.tag) + 22;
+        float height = (256 * menuItem.tag);
         float originX = self.view.window.frame.origin.x;
         float originY = self.view.window.frame.origin.y - (height - self.view.window.frame.size.height);
         NSRect windowFrame = CGRectMake(originX, originY, width, height);
@@ -923,7 +925,7 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
     // Reduce the size of the view so that it sits below the title bar of the window. The window is setup to use the entire window contents
     // so that the titlebar doesn't show the contents of the config panel through it. This seems to cause performance issues. So to ensure
     // that the view is not drawn below the titlebar its height is reduced.
-    self.view.frame = (CGRect) {0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height - 22};
+//    self.view.frame = (CGRect) {0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height - 22};
 }
 
 @end
