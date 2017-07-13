@@ -460,7 +460,7 @@
         <scene sceneID="suV-XS-mcE">
             <objects>
                 <viewController storyboardIdentifier="ConfigViewController" id="eq9-hE-kE2" customClass="ConfigViewController" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" canDrawConcurrently="YES" misplaced="YES" id="a97-VP-aKI" customClass="VibrantView">
+                    <view key="view" wantsLayer="YES" canDrawConcurrently="YES" misplaced="YES" id="a97-VP-aKI">
                         <rect key="frame" x="0.0" y="0.0" width="236" height="1079"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -2756,20 +2756,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="700" height="466"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField identifier="MemoryAddressField" focusRingType="none" verticalHuggingPriority="750" misplaced="YES" tag="1" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="qN6-dp-Wg1">
-                                <rect key="frame" x="75" y="427" width="67" height="19"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" drawsBackground="YES" id="YRl-gZ-bba">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <outlet property="delegate" destination="I9y-0Q-dHM" id="YJU-xj-pMg"/>
-                                </connections>
-                            </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="1Gd-Xr-9TF">
-                                <rect key="frame" x="18" y="430" width="51" height="14"/>
+                                <rect key="frame" x="3" y="430" width="51" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Address:" id="lq2-8Z-31R">
                                     <font key="font" metaFont="smallSystem"/>
@@ -2946,6 +2934,18 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
+                            <textField identifier="MemoryAddressField" focusRingType="none" verticalHuggingPriority="750" misplaced="YES" tag="1" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="qN6-dp-Wg1">
+                                <rect key="frame" x="60" y="427" width="67" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" drawsBackground="YES" id="YRl-gZ-bba">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <outlet property="delegate" destination="I9y-0Q-dHM" id="YJU-xj-pMg"/>
+                                </connections>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
@@ -2973,10 +2973,10 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Shv-h1-xAW">
+                            <scrollView wantsLayer="YES" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Shv-h1-xAW">
                                 <rect key="frame" x="20" y="20" width="406" height="311"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="a1q-lE-GB7">
+                                <clipView key="contentView" wantsLayer="YES" drawsBackground="NO" copiesOnScroll="NO" id="a1q-lE-GB7">
                                     <rect key="frame" x="1" y="0.0" width="404" height="310"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -3094,10 +3094,9 @@
                                             </connections>
                                         </tableView>
                                     </subviews>
-                                    <nil key="backgroundColor"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Mpa-Au-3Aw">
-                                    <rect key="frame" x="1" y="294" width="283" height="16"/>
+                                    <rect key="frame" x="1" y="294" width="404" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="NAc-4G-n8J">

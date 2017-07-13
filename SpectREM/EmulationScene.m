@@ -8,6 +8,7 @@
 
 #import "EmulationScene.h"
 #import "ConfigViewController.h"
+#import "EmulationWindowController.h"
 
 #pragma mark - Constants
 
@@ -33,7 +34,6 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
 @implementation EmulationScene {
     
     SKShader *_shader;
-    unsigned char buffer[4 * 81920];
 
 }
 
@@ -88,6 +88,7 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
                              ];
         self.emulationDisplaySprite.shader = _shader;
         [self setupObservers];
+        
     }
     return self;
 }
@@ -182,6 +183,17 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
 - (void)keyUp:(NSEvent *)event
 {
     [self.keyboardDelegate keyUp:event];
+}
+
+- (void)mouseMoved:(NSEvent *)event
+{
+    NSPoint point = [event locationInWindow];
+    [(EmulationWindowController *)self.view.window.windowController updateTrafficlightsWithMouseLocation:point];
+}
+
+- (void)mouseDown:(NSEvent *)event
+{
+    [self.view.window performWindowDragWithEvent:event];
 }
 
 #pragma mark - Scene View Size Changes

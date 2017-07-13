@@ -467,16 +467,14 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
                                                    flipped:YES];
     CFRelease(dataRef);
     
-    self.emulationScene.backingTexture.filteringMode = SKTextureFilteringNearest;
-    self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
-    
     float widthScale = floorf(self.view.frame.size.width / size.width);
     float heightScale = floorf(self.view.frame.size.width / size.height);
-
     CGSize backingsize = (CGSize){size.width  * widthScale, size.height * heightScale};
     
     self.emulationScene.emulationBackingSprite.size = backingsize;
-
+    self.emulationScene.backingTexture.filteringMode = SKTextureFilteringNearest;
+    self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
+    
     float borderWidth = (cBORDER_PX_SIZE - _configViewController.displayBorderWidth);
 
     CGRect textureRect = (CGRect){
@@ -496,14 +494,12 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 {
     _emulationScene.scaleMode = SKSceneScaleModeAspectFit;
     [_preferences setValue:@(SKSceneScaleModeAspectFit) forKey:cSceneScaleMode];
-    [_preferences synchronize];
 }
 
 - (IBAction)setFillMode:(id)sender
 {
     _emulationScene.scaleMode = SKSceneScaleModeFill;
     [_preferences setValue:@(SKSceneScaleModeFill) forKey:cSceneScaleMode];
-    [_preferences synchronize];
 }
 
 - (IBAction)machineRestart:(id)sender
@@ -694,7 +690,6 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     {
         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
         [_preferences setURL:url forKey:cLastUrl];
-        [_preferences synchronize];
     }
 }
 

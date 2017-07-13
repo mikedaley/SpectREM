@@ -34,13 +34,11 @@
 		ED06D3371E37794D001F99FB /* CRT.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ED06D3361E37794D001F99FB /* CRT.fsh */; };
 		ED0ABFB31E37BD5F00287363 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED0ABFB21E37BD5F00287363 /* Assets.xcassets */; };
 		ED1D48501F027B790063C1AC /* RomSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED1D484F1F027B790063C1AC /* RomSelectionView.m */; };
-		ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CB1DBE4F4E00372061 /* GameController.framework */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5E38151DDA14E700525788 /* GraphicalMemViewController.m */; };
 		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
 		ED61BE721E61E02A0024FEBB /* MemoryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED61BE711E61E02A0024FEBB /* MemoryViewController.mm */; };
 		ED6DE1681F0A5C2D0061CC2A /* NextSpriteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = ED6DE1671F0A5C2D0061CC2A /* NextSpriteInfo.m */; };
-		ED6DE16B1F0E83700061CC2A /* VibrantView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED6DE16A1F0E83700061CC2A /* VibrantView.m */; };
 		ED804FD71DD32443004B6F31 /* NSClipView+Flipped.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */; };
 		ED804FDA1DD32EAC004B6F31 /* NSView+Vibrancy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED804FD91DD32EAC004B6F31 /* NSView+Vibrancy.m */; };
 		ED8BD24B1E5CAC490033DBAA /* AgentX.szx in Resources */ = {isa = PBXBuildFile; fileRef = ED8BD24A1E5CA6980033DBAA /* AgentX.szx */; };
@@ -145,8 +143,6 @@
 		ED61BE711E61E02A0024FEBB /* MemoryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MemoryViewController.mm; sourceTree = "<group>"; };
 		ED6DE1661F0A5C2D0061CC2A /* NextSpriteInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextSpriteInfo.h; sourceTree = "<group>"; };
 		ED6DE1671F0A5C2D0061CC2A /* NextSpriteInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NextSpriteInfo.m; sourceTree = "<group>"; };
-		ED6DE1691F0E83700061CC2A /* VibrantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VibrantView.h; sourceTree = "<group>"; };
-		ED6DE16A1F0E83700061CC2A /* VibrantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VibrantView.m; sourceTree = "<group>"; };
 		ED804FD51DD32443004B6F31 /* NSClipView+Flipped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSClipView+Flipped.h"; sourceTree = "<group>"; };
 		ED804FD61DD32443004B6F31 /* NSClipView+Flipped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSClipView+Flipped.m"; sourceTree = "<group>"; };
 		ED804FD81DD32EAC004B6F31 /* NSView+Vibrancy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+Vibrancy.h"; sourceTree = "<group>"; };
@@ -214,7 +210,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */,
-				ED3295CC1DBE4F4E00372061 /* GameController.framework in Frameworks */,
 				EDF3A4F31DB0D7F100511BAF /* QuartzCore.framework in Frameworks */,
 				991D87F21E33BD6700667E37 /* ORSSerial.framework in Frameworks */,
 			);
@@ -249,8 +244,6 @@
 				99BFAA291DBA0AE00049D811 /* EmulationView.m */,
 				ED1D484E1F027B790063C1AC /* RomSelectionView.h */,
 				ED1D484F1F027B790063C1AC /* RomSelectionView.m */,
-				ED6DE1691F0E83700061CC2A /* VibrantView.h */,
-				ED6DE16A1F0E83700061CC2A /* VibrantView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -695,7 +688,6 @@
 				EDF3A4A51DB0D60700511BAF /* main.m in Sources */,
 				178072F01F08DE7200C930A5 /* ZXSpectrumNext.mm in Sources */,
 				ED1D48501F027B790063C1AC /* RomSelectionView.m in Sources */,
-				ED6DE16B1F0E83700061CC2A /* VibrantView.m in Sources */,
 				99A79E6A1DC14A1E00B8D4CD /* ZXSpectrum128.mm in Sources */,
 				EDF3A4D91DB0D7AB00511BAF /* Z80Core_FDOpcodes.cpp in Sources */,
 				EDF3A4AC1DB0D60700511BAF /* EmulationScene.m in Sources */,

@@ -29,7 +29,7 @@
 {
     if (!_viewUpdateTimer)
     {
-        _viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        _viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 repeats:YES block:^(NSTimer * _Nonnull timer) {
             [self updateViewDetails];
         }];
     }
@@ -46,6 +46,8 @@
 - (IBAction)stepOver:(id)sender
 {
     [_machine stepInstruction];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL];
+    
 }
 
 - (IBAction)stepIn:(id)sender

@@ -10,4 +10,8 @@
 
 @interface EmulationWindowController : NSWindowController
 
+@property (nonatomic, assign) NSView *controlsView;
+
+- (void)updateTrafficlightsWithMouseLocation:(NSPoint)point;
+
 @end

@@ -37,6 +37,10 @@
     [self disassemmbleFromAddress:_disassembleAddress length:65536 - _disassembleAddress];
     [self.disassemblyTableview reloadData];
     
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
+        [self.disassemblyTableview reloadData];
+    }];
+    
 //    self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
 //        if (_viewVisilbe)
 //        {
@@ -65,7 +69,6 @@
 {
     CZ80Core *core = (CZ80Core *)[self.machine getCore];
     
-    // Disassemble ROM into an array of strings
     self.disassemblyArray = [NSMutableArray new];
     
     int pc = address;
@@ -203,6 +206,19 @@
     return nil;
 }
 
+- (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row
+{
+    CZ80Core *core = (CZ80Core *)[self.machine getCore];
+    if (core->GetRegister(CZ80Core::eREG_PC) == row + _disassembleAddress)
+    {
+        rowView.backgroundColor = [NSColor greenColor];
+    }
+    else
+    {
+        rowView.backgroundColor = [NSColor controlBackgroundColor];
+    }
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
 //    [self.disassemblyTableview reloadData];
@@ -238,14 +254,6 @@
 - (void)setDecimalFormat:(BOOL)decimalFormat
 {
     _decimalFormat = decimalFormat;
-//    if (self.decimalFormat)
-//    {
-//        self.addressTextField.formatter = _decimalFormatter;
-//    }
-//    else
-//    {
-//        self.addressTextField.formatter = _hexFormatter;
-//    }
     if (self.machine)
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

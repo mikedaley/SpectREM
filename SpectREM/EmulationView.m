@@ -11,7 +11,8 @@
 
 @implementation EmulationView
 {
-
+    NSTrackingArea *_trackingArea;
+    NSWindowController *_windowController;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -19,11 +20,13 @@
     self = [super initWithCoder:coder];
     if (self)
     {
-        [self registerForDraggedTypes:@[NSFilenamesPboardType]];
+
     }
     
     return self;
 }
+
+#pragma mark - Drag/Drop
 
 - (NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender
 {

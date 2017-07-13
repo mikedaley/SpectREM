@@ -9,8 +9,7 @@
 #import "AudioQueue.h"
 
 #define kExponent 18
-#define kMask (_capacity - 1)
-#define kUsed ((_written - _read) & ((1 << kExponent) - 1))
+#define kUsed ((_written - _read) & (_capacity - 1))
 #define kSpace (_capacity - 1 - kUsed)
 #define kSize (_capacity - 1)
 
