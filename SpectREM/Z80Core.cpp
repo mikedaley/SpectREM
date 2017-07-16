@@ -621,16 +621,19 @@ char *CZ80Core::Debug_WriteData(unsigned int variableType, char *pStr, unsigned 
 			break;
 			
 		case eVARIABLETYPE_RelativeOffset:
+		{
+			signed char rnum = Z80CoreDebugMemRead(address, data);
 			num = Z80CoreDebugMemRead(address, data);
 			if (hexFormat)
 			{
-				sprintf(number_buffer, "$%04X", address + num + 1);
+				sprintf(number_buffer, "$%04X", address + rnum + 1);
 			}
 			else
 			{
-				sprintf(number_buffer, "%04i", address + num + 1);
+				sprintf(number_buffer, "%04i", address + rnum + 1);
 			}
 			break;
+		}
 			
 		case eVARIABLETYPE_Word:
 			num = Z80CoreDebugMemRead(address, data) | (Z80CoreDebugMemRead(address + 1, data) << 8);
