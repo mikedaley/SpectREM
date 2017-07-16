@@ -83,9 +83,11 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
 //                               [SKAttribute attributeWithName:cU_VERT_ROLL type:SKAttributeTypeHalfFloat],
 //                               [SKAttribute attributeWithName:cU_STATIC type:SKAttributeTypeHalfFloat],
                                ];
+        
         _shader.uniforms = @[
                              [SKUniform uniformWithName:cU_REFLECTION texture:[SKTexture textureWithImageNamed:@"reflection"]]
                              ];
+        
         self.emulationDisplaySprite.shader = _shader;
         [self setupObservers];
         

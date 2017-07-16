@@ -23,6 +23,11 @@
 
 @implementation DisassemblyViewController
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:@"UPDATE_DISASSEMBLE_TABLE"];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do view setup here.
@@ -38,24 +43,34 @@
     [self.disassemblyTableview reloadData];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
+
+        BOOL pcfound = NO;
+        NSUInteger row = 0;
+        CZ80Core *core = (CZ80Core *)[self.machine getCore];
+        
+        NSRange visibleRowIndexes = [self.disassemblyTableview rowsInRect:self.disassemblyTableview.visibleRect];
+        
+        for (NSUInteger i = visibleRowIndexes.location; i < visibleRowIndexes.location + visibleRowIndexes.length - 1; i++)
+        {
+            DisassembledInstruction *instruction = [self.disassemblyArray objectAtIndex:i];
+            if (instruction.address == core->GetRegister(CZ80Core::eREG_PC))
+            {
+                pcfound = YES;
+                row = i;
+                break;
+            }
+        }
+        
+        if (!pcfound)
+        {
+            _disassembleAddress = core->GetRegister(CZ80Core::eREG_PC);
+            [self disassemmbleFromAddress:_disassembleAddress length:65536 - _disassembleAddress];
+        }
+        
         [self.disassemblyTableview reloadData];
+        [self.disassemblyTableview deselectAll:NULL];
+        [self.disassemblyTableview scrollRowToVisible:row];
     }];
-    
-//    self.viewUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer * _Nonnull timer) {
-//        if (_viewVisilbe)
-//        {
-//            CZ80Core *core = (CZ80Core *)[self.machine getCore];
-//            
-//            unsigned short address = core->GetRegister(CZ80Core::eREG_PC);
-//
-//            [self disassemmbleFromAddress:address length:65536 - address];
-//            [self.disassemblyTableview reloadData];
-//            
-//            [self.disassemblyTableview selectRowIndexes:[NSIndexSet indexSetWithIndex:address] byExtendingSelection:NO];
-//            [self.disassemblyTableview scrollRowToVisible:address];
-//
-//        }
-//    }];
 }
 
 - (void)viewWillDisappear
@@ -209,7 +224,7 @@
 - (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row
 {
     CZ80Core *core = (CZ80Core *)[self.machine getCore];
-    if (core->GetRegister(CZ80Core::eREG_PC) == row + _disassembleAddress)
+    if (core->GetRegister(CZ80Core::eREG_PC) == [(DisassembledInstruction *)[self.disassemblyArray objectAtIndex:row] address])
     {
         rowView.backgroundColor = [NSColor greenColor];
     }

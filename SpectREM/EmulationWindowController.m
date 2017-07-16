@@ -9,6 +9,9 @@
 #import "EmulationWindowController.h"
 #import <CoreImage/CoreImage.h>
 
+static CGFloat const MIN_DISTANCE = 75;
+static CGFloat const MAX_DISTNACE = 200;
+
 @interface EmulationWindowController () <NSWindowDelegate>
 
 @property (nonatomic, strong) NSTrackingArea *trackingArea;
@@ -24,6 +27,7 @@
     self.window.titleVisibility = NSWindowTitleHidden;
     self.window.titlebarAppearsTransparent = YES;
     
+    // Tweak how the window controls look
     for (NSView *view in self.window.contentView.superview.subviews) {
         if (view != self.window.contentView && ![[view className] isEqualToString:@"NSVisualEffectsView"]) {
             self.controlsView = view;
@@ -58,23 +62,11 @@
 {
     CGFloat x = fabs(NSMinX(self.window.contentView.bounds) - point.x);
     CGFloat y = fabs(NSMaxY(self.window.contentView.bounds) - point.y);
-    
-    CGFloat distance = MAX(0, MAX(x, y) - 40);
-    
-    if (distance < 100) {
-        CGFloat intensity = 0.7 / 200.0 * distance;
-        self.controlsView.alphaValue = MAX(1.0 - intensity, 0.3);
-    }
-    else {
-        CGFloat intensity = 0.3 / 200.0 * (distance - 200);
-        self.controlsView.alphaValue = MAX(0.0, 0.3 - intensity);
-    }
-    
-    CGFloat mono = MIN(1.0, 1.0 / 200.0 * distance);
-    [self.controlsView setValue:@(mono) forKeyPath:@"contentFilters.mono.inputIntensity"];
-    
-    CGFloat gamma = MIN(0.7, 0.7 / 200.0 * distance);
-    [self.controlsView setValue:@(1.0 - gamma) forKeyPath:@"contentFilters.gamma.inputPower"];
+    CGFloat distance = (x - self.controlsView.bounds.origin.x) + (y - self.controlsView.bounds.origin.y);
+    CGFloat alpha = 1.0 - (distance - MIN_DISTANCE) / (MAX_DISTNACE - MIN_DISTANCE);
+    alpha = (alpha < 0.0) ? 0.0 : alpha;
+    alpha = (alpha > 1.0) ? 1.0 : alpha;
+    self.controlsView.alphaValue = alpha;
 }
 
 @end

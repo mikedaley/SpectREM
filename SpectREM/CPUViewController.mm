@@ -45,14 +45,13 @@
 
 - (IBAction)stepOver:(id)sender
 {
-    [_machine stepInstruction];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL];
     
 }
 
 - (IBAction)stepIn:(id)sender
 {
-    
+    [_machine stepInstruction];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL];
 }
 
 - (IBAction)stepOut:(id)sender
@@ -64,6 +63,7 @@
 {
     [_machine resetSound];
     [_machine.audioCore stop];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL];
 }
 
 - (IBAction)resume:(id)sender

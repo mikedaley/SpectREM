@@ -20,7 +20,7 @@
     self = [super initWithCoder:coder];
     if (self)
     {
-
+        [self registerForDraggedTypes:@[NSURLPboardType]];
     }
     
     return self;

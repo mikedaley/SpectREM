@@ -1292,7 +1292,7 @@
             <objects>
                 <windowController storyboardIdentifier="GraphicalMemoryView" id="Fqr-BV-rhB" sceneMemberID="viewController">
                     <window key="window" title="Memory (Graphical)" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="graphcialMemView" animationBehavior="default" id="kBN-yL-jn0" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
@@ -1311,7 +1311,7 @@
             <objects>
                 <windowController storyboardIdentifier="CPUView" id="Jdx-mp-AoU" sceneMemberID="viewController">
                     <window key="window" title="CPU" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="cpuView" animationBehavior="default" id="LMu-dd-4Bh" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="163" y="199" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
@@ -1329,7 +1329,7 @@
             <objects>
                 <windowController storyboardIdentifier="KeyboardWindow" id="rd2-U6-lqk" sceneMemberID="viewController">
                     <window key="window" title="Keyboard Map" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="keyboardMap" animationBehavior="default" id="v7V-uE-i5A" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="163" y="199" width="355" height="200"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
@@ -1349,7 +1349,7 @@
             <objects>
                 <windowController storyboardIdentifier="TAPBrowserWindow" id="aEX-Zc-V4a" sceneMemberID="viewController">
                     <window key="window" title="TAP Browser" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="tapBrowser" animationBehavior="default" id="TGS-8M-haL" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="515" height="208"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
@@ -1606,7 +1606,7 @@
                             <button verticalHuggingPriority="750" misplaced="YES" id="dUx-EI-Rb6">
                                 <rect key="frame" x="225" y="57" width="201" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Step Over" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I7U-nj-6I0">
+                                <buttonCell key="cell" type="push" title="Step Over" bezelStyle="rounded" alignment="center" controlSize="small" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I7U-nj-6I0">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
@@ -1628,7 +1628,7 @@
                             <button verticalHuggingPriority="750" misplaced="YES" id="AWs-cQ-8Wt">
                                 <rect key="frame" x="225" y="31" width="201" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Step In" bezelStyle="rounded" alignment="center" controlSize="small" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ph1-ZP-5u8">
+                                <buttonCell key="cell" type="push" title="Step In" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ph1-ZP-5u8">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
@@ -2509,7 +2509,7 @@
             <objects>
                 <windowController storyboardIdentifier="DisassemblyWindow" id="Cm4-8B-A1s" sceneMemberID="viewController">
                     <window key="window" title="Disassembly Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="disassemblyWindow" animationBehavior="default" id="Cxy-Qm-BaW" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="544" y="461" width="446" height="287"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
@@ -2529,7 +2529,7 @@
             <objects>
                 <windowController storyboardIdentifier="MemoryWindow" id="2v2-qh-e9I" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="4ZN-vz-sLK" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="461" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
@@ -2547,7 +2547,7 @@
             <objects>
                 <windowController storyboardIdentifier="RomSelectionWindow" id="nS3-l1-52v" sceneMemberID="viewController">
                     <window key="window" title="Default ROM Selection" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="JCR-S6-P3J" customClass="NSPanel">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="163" y="199" width="481" height="309"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
@@ -2980,7 +2980,7 @@
                                     <rect key="frame" x="1" y="0.0" width="404" height="310"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView identifier="DisassembleTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="AXg-mX-dqP" viewBased="YES" id="Qh5-lO-X2h">
+                                        <tableView identifier="DisassembleTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="AXg-mX-dqP" viewBased="YES" floatsGroupRows="NO" id="Qh5-lO-X2h">
                                             <rect key="frame" x="0.0" y="0.0" width="404" height="287"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
