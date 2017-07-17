@@ -230,6 +230,7 @@
 		991D87C11E33935600667E37 /* SmartLINK */ = {
 			isa = PBXGroup;
 			children = (
+				EDCEAF1E1EDDDA4800A213B8 /* ASIO */,
 				991D87C21E33937A00667E37 /* SmartLink.h */,
 				991D87C31E33937A00667E37 /* SmartLink.m */,
 				EDCEAF1C1EDDD8CC00A213B8 /* SLNetwork.hpp */,
@@ -266,6 +267,33 @@
 			name = "Keyboard View Controller";
 			sourceTree = "<group>";
 		};
+		ED2571A21F1CA7E50007B7ED /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		ED2571A31F1CA82F0007B7ED /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				EDF3A4F61DB0F23000511BAF /* Shaders */,
+				EDF3A4C01DB0D6EF00511BAF /* Storyboard */,
+				EDF3A4BD1DB0D69800511BAF /* Window Controllers */,
+				ED2571A21F1CA7E50007B7ED /* View Controllers */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		ED2571A41F1CA8660007B7ED /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				ED8BD24A1E5CA6980033DBAA /* AgentX.szx */,
+				EDF3A4C41DB0D79100511BAF /* ROMS */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,6 +324,16 @@
 		ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */ = {
 			isa = PBXGroup;
 			children = (
+				ED619C881DC0BE39004A60CA /* Emulation View Controller */,
+				ED619C891DC0BE44004A60CA /* Config View Controller */,
+				ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */,
+				ED61BE6F1E61E0130024FEBB /* Memory View Controller */,
+				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,
+				EDE99ED51E48D3AC006F8E63 /* Disassembly View Controller */,
+				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
+				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
+				EDC7C68B1EF28AF80031BC9D /* Save Accessory View Controller */,
+				178A01531EF6CB2E00CEFBB7 /* ROM Selection View Controller */,
 				99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */,
 				99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */,
 			);
@@ -320,13 +358,13 @@
 			name = "CPU View Controller";
 			sourceTree = "<group>";
 		};
-		ED8BD2491E4DA3D60033DBAA /* Debugger */ = {
+		ED8BD2491E4DA3D60033DBAA /* Debugger Resources */ = {
 			isa = PBXGroup;
 			children = (
 				0A6386D91E48C72300783DA4 /* AddressLabels.h */,
 				0A6386DA1E48C7E800783DA4 /* 48KRomLabels.mm */,
 			);
-			name = Debugger;
+			name = "Debugger Resources";
 			sourceTree = "<group>";
 		};
 		EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */ = {
@@ -402,19 +440,15 @@
 		EDF3A49F1DB0D60700511BAF /* SpectREM */ = {
 			isa = PBXGroup;
 			children = (
-				ED8BD24A1E5CA6980033DBAA /* AgentX.szx */,
-				EDCEAF1E1EDDDA4800A213B8 /* ASIO */,
+				ED2571A41F1CA8660007B7ED /* Resources */,
+				EDF3A4BB1DB0D67D00511BAF /* App Delegate */,
 				EDF3A4FE1DB77D0F00511BAF /* Class Extensions */,
-				EDF3A4F61DB0F23000511BAF /* Shaders */,
-				EDF3A4C41DB0D79100511BAF /* ROMS */,
 				EDF3A4C31DB0D78A00511BAF /* Z80 Core */,
 				EDF3A4C11DB0D77200511BAF /* Audio Core */,
 				991D87C11E33935600667E37 /* SmartLINK */,
-				EDF3A4BB1DB0D67D00511BAF /* App Delegate */,
-				EDF3A4C01DB0D6EF00511BAF /* Storyboard */,
-				EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */,
+				ED2571A31F1CA82F0007B7ED /* UI */,
 				99D359AD1DBD0A0300C49FAE /* Keyboard */,
-				ED8BD2491E4DA3D60033DBAA /* Debugger */,
+				ED8BD2491E4DA3D60033DBAA /* Debugger Resources */,
 				EDEBA7A11DEEE6DE00671446 /* Snapshots/Tape */,
 				EDF3A4C21DB0D77D00511BAF /* Machines */,
 				EDF3A4A31DB0D60700511BAF /* Supporting Files */,
@@ -453,24 +487,14 @@
 			name = "Emulation Scene";
 			sourceTree = "<group>";
 		};
-		EDF3A4BD1DB0D69800511BAF /* View/Window Controllers */ = {
+		EDF3A4BD1DB0D69800511BAF /* Window Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				EDF3A4BC1DB0D68800511BAF /* Emulation Scene */,
 				ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */,
-				ED619C881DC0BE39004A60CA /* Emulation View Controller */,
-				ED619C891DC0BE44004A60CA /* Config View Controller */,
-				ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */,
-				ED61BE6F1E61E0130024FEBB /* Memory View Controller */,
-				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,
-				EDE99ED51E48D3AC006F8E63 /* Disassembly View Controller */,
-				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
-				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
-				EDC7C68B1EF28AF80031BC9D /* Save Accessory View Controller */,
-				178A01531EF6CB2E00CEFBB7 /* ROM Selection View Controller */,
 				99BFAA271DBA0AC50049D811 /* Views */,
 			);
-			name = "View/Window Controllers";
+			name = "Window Controllers";
 			sourceTree = "<group>";
 		};
 		EDF3A4BE1DB0D6A500511BAF /* Actions */ = {
