@@ -34,6 +34,7 @@
 		ED06D3371E37794D001F99FB /* CRT.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ED06D3361E37794D001F99FB /* CRT.fsh */; };
 		ED0ABFB31E37BD5F00287363 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED0ABFB21E37BD5F00287363 /* Assets.xcassets */; };
 		ED1D48501F027B790063C1AC /* RomSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED1D484F1F027B790063C1AC /* RomSelectionView.m */; };
+		ED2571A81F1CA9720007B7ED /* DebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED2571A71F1CA9720007B7ED /* DebugWindowController.m */; };
 		ED3295CE1DBE556C00372061 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3295CD1DBE556C00372061 /* IOKit.framework */; };
 		ED5E38161DDA14E700525788 /* GraphicalMemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5E38151DDA14E700525788 /* GraphicalMemViewController.m */; };
 		ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = ED619C861DC0BC97004A60CA /* CALayer+Actions.m */; };
@@ -45,6 +46,7 @@
 		EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAAD8C11E05893F0070153E /* ZXTape.mm */; };
 		EDB3FDFF1E41F65C00EE38A8 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB3FDFE1E41F65C00EE38A8 /* TapeViewController.m */; };
 		EDC7C68E1EF28B270031BC9D /* SaveAccessoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDC7C68D1EF28B270031BC9D /* SaveAccessoryViewController.m */; };
+		EDD0F0B01F1CF7D80086A749 /* DebugViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDD0F0AF1F1CF7D80086A749 /* DebugViewController.mm */; };
 		EDE99ED81E48D3C8006F8E63 /* DisassemblyViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */; };
 		EDEBA7A01DEEDCB000671446 /* Snapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDEBA79F1DEEDCB000671446 /* Snapshot.mm */; };
 		EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3A4A11DB0D60700511BAF /* AppDelegate.m */; };
@@ -133,6 +135,8 @@
 		ED1D484E1F027B790063C1AC /* RomSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RomSelectionView.h; sourceTree = "<group>"; };
 		ED1D484F1F027B790063C1AC /* RomSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RomSelectionView.m; sourceTree = "<group>"; };
 		ED1D48521F03EBF60063C1AC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		ED2571A61F1CA9720007B7ED /* DebugWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugWindowController.h; sourceTree = "<group>"; };
+		ED2571A71F1CA9720007B7ED /* DebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugWindowController.m; sourceTree = "<group>"; };
 		ED3295CB1DBE4F4E00372061 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		ED3295CD1DBE556C00372061 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		ED5E38141DDA14E700525788 /* GraphicalMemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicalMemViewController.h; sourceTree = "<group>"; };
@@ -155,6 +159,8 @@
 		EDC7C68C1EF28B270031BC9D /* SaveAccessoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveAccessoryViewController.h; sourceTree = "<group>"; };
 		EDC7C68D1EF28B270031BC9D /* SaveAccessoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveAccessoryViewController.m; sourceTree = "<group>"; };
 		EDCEAF1C1EDDD8CC00A213B8 /* SLNetwork.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SLNetwork.hpp; sourceTree = "<group>"; };
+		EDD0F0AE1F1CF7D80086A749 /* DebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
+		EDD0F0AF1F1CF7D80086A749 /* DebugViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DebugViewController.mm; sourceTree = "<group>"; };
 		EDE99ED61E48D3C8006F8E63 /* DisassemblyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisassemblyViewController.h; sourceTree = "<group>"; };
 		EDE99ED71E48D3C8006F8E63 /* DisassemblyViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DisassemblyViewController.mm; sourceTree = "<group>"; };
 		EDEBA79E1DEEDCB000671446 /* Snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snapshot.h; sourceTree = "<group>"; };
@@ -270,6 +276,17 @@
 		ED2571A21F1CA7E50007B7ED /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED619C881DC0BE39004A60CA /* Emulation View Controller */,
+				ED619C891DC0BE44004A60CA /* Config View Controller */,
+				ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */,
+				ED61BE6F1E61E0130024FEBB /* Memory View Controller */,
+				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,
+				EDE99ED51E48D3AC006F8E63 /* Disassembly View Controller */,
+				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
+				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
+				EDC7C68B1EF28AF80031BC9D /* Save Accessory View Controller */,
+				178A01531EF6CB2E00CEFBB7 /* ROM Selection View Controller */,
+				EDD0F0AD1F1CF7C10086A749 /* Debug View Controller */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -281,6 +298,7 @@
 				EDF3A4C01DB0D6EF00511BAF /* Storyboard */,
 				EDF3A4BD1DB0D69800511BAF /* Window Controllers */,
 				ED2571A21F1CA7E50007B7ED /* View Controllers */,
+				99BFAA271DBA0AC50049D811 /* Views */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -292,6 +310,15 @@
 				EDF3A4C41DB0D79100511BAF /* ROMS */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		ED2571A51F1CA9530007B7ED /* Debug Window Controller */ = {
+			isa = PBXGroup;
+			children = (
+				ED2571A61F1CA9720007B7ED /* DebugWindowController.h */,
+				ED2571A71F1CA9720007B7ED /* DebugWindowController.m */,
+			);
+			name = "Debug Window Controller";
 			sourceTree = "<group>";
 		};
 		ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */ = {
@@ -324,16 +351,6 @@
 		ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */ = {
 			isa = PBXGroup;
 			children = (
-				ED619C881DC0BE39004A60CA /* Emulation View Controller */,
-				ED619C891DC0BE44004A60CA /* Config View Controller */,
-				ED5E380E1DD9E85900525788 /* Graphical Mem View Controller */,
-				ED61BE6F1E61E0130024FEBB /* Memory View Controller */,
-				ED804FDB1DD37C57004B6F31 /* CPU View Controller */,
-				EDE99ED51E48D3AC006F8E63 /* Disassembly View Controller */,
-				ED06D32E1E362B70001F99FB /* Keyboard View Controller */,
-				EDB3FDFC1E41EF7D00EE38A8 /* TapeViewController */,
-				EDC7C68B1EF28AF80031BC9D /* Save Accessory View Controller */,
-				178A01531EF6CB2E00CEFBB7 /* ROM Selection View Controller */,
 				99BFAA2B1DBA0CA50049D811 /* EmulationWindowController.h */,
 				99BFAA2C1DBA0CA50049D811 /* EmulationWindowController.m */,
 			);
@@ -394,6 +411,15 @@
 			);
 			name = ASIO;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		EDD0F0AD1F1CF7C10086A749 /* Debug View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				EDD0F0AE1F1CF7D80086A749 /* DebugViewController.h */,
+				EDD0F0AF1F1CF7D80086A749 /* DebugViewController.mm */,
+			);
+			name = "Debug View Controller";
 			sourceTree = "<group>";
 		};
 		EDE99ED51E48D3AC006F8E63 /* Disassembly View Controller */ = {
@@ -492,7 +518,7 @@
 			children = (
 				EDF3A4BC1DB0D68800511BAF /* Emulation Scene */,
 				ED619C8A1DC0BE5E004A60CA /* Emulation Window Controller */,
-				99BFAA271DBA0AC50049D811 /* Views */,
+				ED2571A51F1CA9530007B7ED /* Debug Window Controller */,
 			);
 			name = "Window Controllers";
 			sourceTree = "<group>";
@@ -739,6 +765,7 @@
 				ED06D3311E362B8D001F99FB /* KeyboardViewController.m in Sources */,
 				0A6386DB1E48C7E800783DA4 /* 48KRomLabels.mm in Sources */,
 				ED619C871DC0BC97004A60CA /* CALayer+Actions.m in Sources */,
+				ED2571A81F1CA9720007B7ED /* DebugWindowController.m in Sources */,
 				EDF3A4A21DB0D60700511BAF /* AppDelegate.m in Sources */,
 				EDF3A4EB1DB0D7C700511BAF /* AudioCore.m in Sources */,
 				EDF3A4D71DB0D7AB00511BAF /* Z80Core_EDOpcodes.cpp in Sources */,
@@ -748,6 +775,7 @@
 				EDF3A4FD1DB7745700511BAF /* NSObject+Bindings.m in Sources */,
 				EDC7C68E1EF28B270031BC9D /* SaveAccessoryViewController.m in Sources */,
 				EDAAD8C21E05893F0070153E /* ZXTape.mm in Sources */,
+				EDD0F0B01F1CF7D80086A749 /* DebugViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -862,6 +890,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -870,9 +899,11 @@
 				INFOPLIST_FILE = SpectREM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.71squared.SpectREM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
+				WARNING_LDFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -882,6 +913,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -890,6 +922,7 @@
 				INFOPLIST_FILE = SpectREM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.71squared.SpectREM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/**";

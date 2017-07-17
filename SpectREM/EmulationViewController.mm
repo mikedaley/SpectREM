@@ -20,6 +20,8 @@
 #import "MemoryViewController.h"
 #import "SaveAccessoryViewController.h"
 #import "RomSelectionViewController.h"
+#import "DebugWindowController.h"
+#import "DebugViewController.h"
 #import "EmulationView.h"
 #import "Snapshot.h"
 #import "ZXTape.h"
@@ -77,6 +79,9 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     
     NSWindowController      *_romSelectionWindowController;
     RomSelectionViewController *_romSelectionViewController;
+    
+    DebugWindowController   *_debugWindowController;
+    DebugViewController     *_debugViewController;
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
@@ -136,6 +141,10 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     self.configEffectsView.alphaValue = 0;
     self.configScrollView.documentView = _configViewController.view;
     
+    [self setupLocalObservers];
+    [self setupSceneBindings];
+    [self setupNotificationCenterObservers];
+
     // Init the keyboard mapping view
     _keyboardMapWindowController = [_storyBoard instantiateControllerWithIdentifier:@"KeyboardWindow"];
     
@@ -157,6 +166,9 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     _romSelectionWindowController = [_storyBoard instantiateControllerWithIdentifier:@"RomSelectionWindow"];
     _romSelectionViewController = (RomSelectionViewController *)_romSelectionWindowController.contentViewController;
     
+    _debugWindowController = [_storyBoard instantiateControllerWithIdentifier:@"DebugWindow"];
+    _debugViewController = (DebugViewController *)_debugWindowController.contentViewController;
+    
     // Setup the Sprite Kit emulation scene
     self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
     self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:cSceneScaleMode] integerValue];
@@ -167,9 +179,6 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     _zxTape = [ZXTape new];
     _zxTape.delegate = _tapeViewController;
 
-    [self setupLocalObservers];
-    [self setupSceneBindings];
-    [self setupNotificationCenterObservers];
     [self setupGamepad];
     [self setupTimers];
     [self checkForDefaultROM];
@@ -330,6 +339,7 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     [_disassemblyViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
     [_cpuViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
     [_memoryViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
+    [_debugViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
 }
 
 - (void)setupLocalObservers
@@ -848,6 +858,11 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 - (IBAction)showMemoryWindow:(id)sender
 {
     [_memoryWindowController showWindow:nil];
+}
+
+- (IBAction)showDebugWindow:(id)sender
+{
+    [_debugWindowController showWindow:nil];
 }
 
 - (IBAction)sendToSmartLink:(id)sender
