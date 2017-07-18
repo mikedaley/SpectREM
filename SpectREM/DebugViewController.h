@@ -56,6 +56,11 @@
 @property (assign) ZXSpectrum *machine;
 @property (weak) IBOutlet NSTableView *disassemblyTableview;
 @property (weak) IBOutlet NSTableView *memoryTableView;
+@property (weak) IBOutlet NSTableView *stackTable;
+@property (strong) NSData *imageData;
+@property (strong) NSImage *displayImage;
+
+- (void)step;
 
 @end
 

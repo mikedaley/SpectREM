@@ -7,8 +7,11 @@
 //
 
 #import "DebugWindowController.h"
+#import "DebugViewController.h"
 
 @interface DebugWindowController ()
+
+@property (weak) DebugViewController *debugViewController;
 
 @end
 
@@ -18,6 +21,22 @@
     [super windowDidLoad];
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    self.debugViewController = (DebugViewController *)self.contentViewController;
+}
+
+- (void)keyDown:(NSEvent *)event
+{
+    if ((event.modifierFlags & NSEventModifierFlagCommand))
+    {
+        switch (event.keyCode) {
+            case 1:
+                [self.debugViewController step];
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 @end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G24b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
@@ -862,7 +862,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="I5e-9s-xeK">
-                                            <rect key="frame" x="20" y="130" width="183" height="178"/>
+                                            <rect key="frame" x="20" y="130" width="183" height="103"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         </box>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jQk-wY-hxU">
@@ -2934,22 +2934,22 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box title="Registers" translatesAutoresizingMaskIntoConstraints="NO" id="YFg-Vu-WTU">
-                                <rect key="frame" x="6" y="409" width="222" height="305"/>
+                                <rect key="frame" x="6" y="326" width="222" height="388"/>
                                 <view key="contentView" id="Vbc-pl-OKA">
-                                    <rect key="frame" x="2" y="2" width="218" height="288"/>
+                                    <rect key="frame" x="2" y="2" width="218" height="371"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GEw-H9-Wi8">
-                                            <rect key="frame" x="7" y="265" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="348" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="AF" id="Fjm-hA-ETO">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="AF:" id="Fjm-hA-ETO">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vr7-cS-9cu">
-                                            <rect key="frame" x="38" y="262" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="345" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="$ABCF" drawsBackground="YES" id="mYc-bN-G9e">
                                                 <font key="font" size="13" name="Courier"/>
@@ -2961,16 +2961,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ccz-rw-lQa">
-                                            <rect key="frame" x="121" y="265" width="29" height="17"/>
+                                            <rect key="frame" x="121" y="348" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="AF'" id="hiL-Jw-MlO">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="AF':" id="hiL-Jw-MlO">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWK-tL-PKl">
-                                            <rect key="frame" x="152" y="263" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="346" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x812E" drawsBackground="YES" id="y6e-wf-y92">
                                                 <font key="font" size="13" name="Courier"/>
@@ -2982,16 +2982,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oa4-Kt-0xr">
-                                            <rect key="frame" x="7" y="236" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="319" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="BC" id="Hey-Lm-ZPF">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="BC:" id="Hey-Lm-ZPF">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWO-ac-lNZ">
-                                            <rect key="frame" x="38" y="232" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="315" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0xABCF" drawsBackground="YES" id="1rr-iF-B7F">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3003,16 +3003,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AFH-uj-1T7">
-                                            <rect key="frame" x="121" y="236" width="29" height="17"/>
+                                            <rect key="frame" x="121" y="319" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="BC'" id="D6y-bq-HJr">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="BC':" id="D6y-bq-HJr">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXo-DH-aeZ">
-                                            <rect key="frame" x="152" y="232" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="315" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x812E" drawsBackground="YES" id="npe-cV-mo9">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3024,16 +3024,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K1a-EU-1ka">
-                                            <rect key="frame" x="7" y="205" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="288" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="DE" id="0tU-Q3-E1s">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="DE:" id="0tU-Q3-E1s">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHv-0D-B1R">
-                                            <rect key="frame" x="38" y="201" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="284" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0xABCF" drawsBackground="YES" id="AGE-Z4-4wf">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3045,16 +3045,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o3m-M0-mou">
-                                            <rect key="frame" x="121" y="205" width="29" height="17"/>
+                                            <rect key="frame" x="121" y="288" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="DE'" id="ztf-bk-s2K">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="DE':" id="ztf-bk-s2K">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fnv-fD-ann">
-                                            <rect key="frame" x="152" y="201" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="284" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x812E" drawsBackground="YES" id="egN-Q0-YbS">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3066,16 +3066,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uTP-ov-jvu">
-                                            <rect key="frame" x="7" y="173" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="256" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="HL" id="hZs-pV-bTw">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="HL:" id="hZs-pV-bTw">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVA-Cq-4rS">
-                                            <rect key="frame" x="38" y="170" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="253" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0xABCF" drawsBackground="YES" id="tsY-xJ-IVr">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3087,16 +3087,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MB1-fX-GFr">
-                                            <rect key="frame" x="121" y="174" width="29" height="17"/>
+                                            <rect key="frame" x="121" y="257" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="HL'" id="dPP-Dj-lmT">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="HL':" id="dPP-Dj-lmT">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qbw-Cm-4Zd">
-                                            <rect key="frame" x="152" y="170" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="253" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x812E" drawsBackground="YES" id="wgI-6F-TK5">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3108,16 +3108,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9h0-MU-wdY">
-                                            <rect key="frame" x="7" y="141" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="224" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="IX" id="lby-14-iar">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="IX:" id="lby-14-iar">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9A-rV-ibQ">
-                                            <rect key="frame" x="38" y="138" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="221" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0xABCF" drawsBackground="YES" id="80k-LZ-wg4">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3129,16 +3129,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2r7-Pl-aSx">
-                                            <rect key="frame" x="121" y="141" width="29" height="17"/>
+                                            <rect key="frame" x="121" y="224" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="IY" id="ZjU-IY-rAB">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="IY:" id="ZjU-IY-rAB">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sDo-rd-zfJ">
-                                            <rect key="frame" x="152" y="138" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="221" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x812E" drawsBackground="YES" id="8qu-dB-UBW">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3150,16 +3150,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fBN-5b-fHK">
-                                            <rect key="frame" x="7" y="109" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="192" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="PC" id="nKN-8e-T0b">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="PC:" id="nKN-8e-T0b">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yoG-8D-ejc">
-                                            <rect key="frame" x="38" y="106" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="189" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0xABCF" drawsBackground="YES" id="7Hc-dC-brT">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3171,16 +3171,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vFK-IY-bKY">
-                                            <rect key="frame" x="121" y="109" width="29" height="17"/>
+                                            <rect key="frame" x="121" y="192" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="SP" id="YRd-ae-FgW">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="SP:" id="YRd-ae-FgW">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mbs-E2-qhU">
-                                            <rect key="frame" x="152" y="106" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="189" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x812E" drawsBackground="YES" id="jBv-fl-wue">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3192,16 +3192,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ba-BZ-18W">
-                                            <rect key="frame" x="7" y="78" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="161" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="I" id="nns-xQ-da8">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="I:" id="nns-xQ-da8">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oCj-U0-Nfy">
-                                            <rect key="frame" x="38" y="75" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="158" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x00" drawsBackground="YES" id="QZ4-bb-ctu">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3213,16 +3213,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zyU-ew-XTz">
-                                            <rect key="frame" x="121" y="78" width="29" height="17"/>
+                                            <rect key="frame" x="121" y="161" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="R" id="aGC-9e-qSf">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="R:" id="aGC-9e-qSf">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZEh-aL-qwp">
-                                            <rect key="frame" x="152" y="75" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="158" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x45" drawsBackground="YES" id="XrO-EU-13P">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3234,7 +3234,7 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARr-yf-FTh">
-                                            <rect key="frame" x="38" y="44" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="127" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x00" drawsBackground="YES" id="idb-ZP-okg">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3246,16 +3246,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4TO-9y-zx2">
-                                            <rect key="frame" x="121" y="47" width="36" height="17"/>
+                                            <rect key="frame" x="121" y="130" width="36" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="IFF1" id="hJL-Ea-3nh">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="IFF1:" id="hJL-Ea-3nh">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ul-7W-4qh">
-                                            <rect key="frame" x="152" y="44" width="60" height="23"/>
+                                            <rect key="frame" x="152" y="127" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x45" drawsBackground="YES" id="g3v-Yj-SUi">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3267,16 +3267,16 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wTt-JI-rfF">
-                                            <rect key="frame" x="7" y="17" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="100" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Ts" id="Da1-cf-CV9">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Ts:" id="Da1-cf-CV9">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IKo-oV-nBt">
-                                            <rect key="frame" x="38" y="13" width="60" height="23"/>
+                                            <rect key="frame" x="38" y="96" width="60" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x0000" drawsBackground="YES" id="23K-Jb-Bus">
                                                 <font key="font" size="13" name="Courier"/>
@@ -3288,36 +3288,99 @@
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gt1-5E-jsJ">
-                                            <rect key="frame" x="7" y="47" width="29" height="17"/>
+                                            <rect key="frame" x="7" y="130" width="29" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="IM" id="GCN-ZW-gwy">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="IM:" id="GCN-ZW-gwy">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2c-Ua-jHu">
+                                            <rect key="frame" x="7" y="68" width="72" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="ROM Page:" id="709-jg-boC">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPd-eJ-UHd">
+                                            <rect key="frame" x="7" y="38" width="70" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="RAM Page:" id="cI8-km-TEL">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P6Z-uh-U69">
+                                            <rect key="frame" x="7" y="8" width="51" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Screen:" id="Ioe-1Y-iYS">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4mq-Mp-gTU">
+                                            <rect key="frame" x="152" y="66" width="60" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x0000" drawsBackground="YES" id="GcP-OX-zhC">
+                                                <font key="font" size="13" name="Courier"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="L3c-hb-0DS" name="value" keyPath="self.currentRom" id="JZo-V8-sls"/>
+                                            </connections>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L40-Ut-9Jg">
+                                            <rect key="frame" x="152" y="35" width="60" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x0000" drawsBackground="YES" id="Agj-hc-WyY">
+                                                <font key="font" size="13" name="Courier"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="L3c-hb-0DS" name="value" keyPath="self.ramPage" id="K3T-Ac-wDq"/>
+                                            </connections>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lrg-8A-DVh">
+                                            <rect key="frame" x="152" y="4" width="60" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="0x0000" drawsBackground="YES" id="rpV-1y-Po8">
+                                                <font key="font" size="13" name="Courier"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="L3c-hb-0DS" name="value" keyPath="self.displayPage" id="cDS-Dh-diZ"/>
+                                            </connections>
+                                        </textField>
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="301" id="048-iB-eXR"/>
+                                    <constraint firstAttribute="height" constant="384" id="048-iB-eXR"/>
                                     <constraint firstAttribute="width" constant="216" id="SXg-VZ-gJd"/>
                                 </constraints>
                             </box>
                             <box title="Disassembly" translatesAutoresizingMaskIntoConstraints="NO" id="t07-MA-7RY">
-                                <rect key="frame" x="320" y="259" width="433" height="455"/>
+                                <rect key="frame" x="320" y="259" width="386" height="455"/>
                                 <view key="contentView" id="f5N-yf-TRS">
-                                    <rect key="frame" x="2" y="2" width="429" height="438"/>
+                                    <rect key="frame" x="2" y="2" width="382" height="438"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView wantsLayer="YES" fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="42" horizontalPageScroll="10" verticalLineScroll="42" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8R0-Pt-ExQ">
-                                            <rect key="frame" x="5" y="3" width="419" height="437"/>
+                                            <rect key="frame" x="5" y="3" width="372" height="437"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" wantsLayer="YES" ambiguous="YES" copiesOnScroll="NO" id="sWl-Kw-Qa3">
-                                                <rect key="frame" x="0.0" y="0.0" width="419" height="437"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="372" height="437"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView identifier="DisassembleTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="40" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="5L5-KT-m44">
-                                                        <rect key="frame" x="0.0" y="0.0" width="419" height="437"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="372" height="437"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" red="0.89905709030000003" green="0.89907819030000002" blue="0.89906686540000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3390,7 +3453,7 @@
                                                                     </tableCellView>
                                                                 </prototypeCellViews>
                                                             </tableColumn>
-                                                            <tableColumn identifier="DisassemblyColID" width="270" minWidth="10" maxWidth="3.4028234663852886e+38" id="itp-QP-MPl">
+                                                            <tableColumn identifier="DisassemblyColID" width="223" minWidth="10" maxWidth="3.4028234663852886e+38" id="itp-QP-MPl">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Instruction">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -3404,11 +3467,11 @@
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="DisassemblyColID" id="OxB-Kf-vAB">
-                                                                        <rect key="frame" x="147" y="1" width="270" height="40"/>
+                                                                        <rect key="frame" x="147" y="1" width="223" height="40"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vqs-YD-cEZ">
-                                                                                <rect key="frame" x="0.0" y="25" width="270" height="17"/>
+                                                                                <rect key="frame" x="0.0" y="25" width="223" height="17"/>
                                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="SET 5, (IY+$FF)" id="CfY-sm-J3d">
                                                                                     <font key="font" size="16" name="Courier"/>
@@ -3433,7 +3496,7 @@
                                                 <color key="backgroundColor" red="0.89905709030000003" green="0.89907819030000002" blue="0.89906686540000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="MZa-88-OMH">
-                                                <rect key="frame" x="0.0" y="421" width="419" height="16"/>
+                                                <rect key="frame" x="0.0" y="421" width="371.5" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Ypg-Pb-YT0">
@@ -3445,13 +3508,13 @@
                                 </view>
                             </box>
                             <box title="Breakpoints" translatesAutoresizingMaskIntoConstraints="NO" id="dPF-54-vxq">
-                                <rect key="frame" x="755" y="260" width="237" height="454"/>
+                                <rect key="frame" x="708" y="522" width="284" height="192"/>
                                 <view key="contentView" id="Nel-2E-wuJ">
-                                    <rect key="frame" x="2" y="2" width="233" height="437"/>
+                                    <rect key="frame" x="2" y="2" width="280" height="175"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="231" id="LLE-uT-YOI"/>
+                                    <constraint firstAttribute="width" constant="278" id="LLE-uT-YOI"/>
                                 </constraints>
                             </box>
                             <box title="Stack" translatesAutoresizingMaskIntoConstraints="NO" id="7VX-lX-pYF">
@@ -3459,6 +3522,72 @@
                                 <view key="contentView" id="lRb-r2-Zjj">
                                     <rect key="frame" x="2" y="2" width="84" height="438"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b7l-IO-5ch">
+                                            <rect key="frame" x="5" y="0.0" width="74" height="438"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <clipView key="contentView" ambiguous="YES" id="F3N-ZA-DrQ">
+                                                <rect key="frame" x="0.0" y="0.0" width="74" height="438"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <tableView identifier="StackTable" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="adJ-Ae-WKB">
+                                                        <rect key="frame" x="0.0" y="0.0" width="74" height="438"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <size key="intercellSpacing" width="3" height="1"/>
+                                                        <color key="backgroundColor" red="0.89794141049999998" green="0.89809560779999997" blue="0.89793163539999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                        <tableColumns>
+                                                            <tableColumn identifier="AddrColID" width="70" minWidth="40" maxWidth="1000" id="pLU-Sz-CDO">
+                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                                    <font key="font" metaFont="smallSystem"/>
+                                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                                </tableHeaderCell>
+                                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="9GJ-Ek-Qbu">
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                <prototypeCellViews>
+                                                                    <tableCellView id="su1-G8-S3E">
+                                                                        <rect key="frame" x="1" y="0.0" width="70" height="17"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <subviews>
+                                                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TmP-Y5-zqj">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="69" height="17"/>
+                                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="$FFFF" id="Lwb-pG-gSG">
+                                                                                    <font key="font" size="14" name="Courier"/>
+                                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                                </textFieldCell>
+                                                                            </textField>
+                                                                        </subviews>
+                                                                        <connections>
+                                                                            <outlet property="textField" destination="TmP-Y5-zqj" id="ddc-W9-mHD"/>
+                                                                        </connections>
+                                                                    </tableCellView>
+                                                                </prototypeCellViews>
+                                                            </tableColumn>
+                                                        </tableColumns>
+                                                        <connections>
+                                                            <outlet property="dataSource" destination="L3c-hb-0DS" id="aFL-eF-wVL"/>
+                                                            <outlet property="delegate" destination="L3c-hb-0DS" id="bPg-HF-1Wq"/>
+                                                        </connections>
+                                                    </tableView>
+                                                </subviews>
+                                            </clipView>
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Uwc-Uu-3KH">
+                                                <rect key="frame" x="0.0" y="422" width="74" height="16"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="CSM-tG-vd8">
+                                                <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                        </scrollView>
+                                    </subviews>
                                 </view>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="82" id="pW6-VY-ehR"/>
@@ -3468,7 +3597,7 @@
                                 <rect key="frame" x="6" y="39" width="986" height="217"/>
                                 <view key="contentView" id="sPf-Fm-TTv">
                                     <rect key="frame" x="2" y="2" width="982" height="200"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <scrollView wantsLayer="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="42" horizontalPageScroll="10" verticalLineScroll="42" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7A-ga-sTK">
                                             <rect key="frame" x="5" y="3" width="970" height="197"/>
@@ -3476,11 +3605,11 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="970" height="197"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <tableView identifier="MemoryTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="40" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="2s4-jP-kgN" userLabel="Memory Table View">
+                                                    <tableView identifier="MemoryTableView" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="40" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="2s4-jP-kgN" userLabel="Memory Table View">
                                                         <rect key="frame" x="0.0" y="0.0" width="970" height="197"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
-                                                        <color key="backgroundColor" red="0.89905709030000003" green="0.89907819030000002" blue="0.89906686540000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" red="0.89794141049999998" green="0.89809560779999997" blue="0.89793163539999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <tableViewGridLines key="gridStyleMask" vertical="YES"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
@@ -3528,7 +3657,8 @@
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
-                                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="key"/>
+                                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView id="LTv-yd-o3v">
                                                                         <rect key="frame" x="52" y="1" width="660" height="40"/>
@@ -3550,7 +3680,7 @@
                                                                     </tableCellView>
                                                                 </prototypeCellViews>
                                                             </tableColumn>
-                                                            <tableColumn identifier="MemoryASCIIColID" width="251" minWidth="10" maxWidth="3.4028234663852886e+38" id="HKd-KV-ut2">
+                                                            <tableColumn identifier="MemoryASCIIColID" width="251" minWidth="251" maxWidth="251" id="HKd-KV-ut2">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="ASCII">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -3561,11 +3691,11 @@
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
-                                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView id="7Df-3t-ngr">
                                                                         <rect key="frame" x="715" y="1" width="251" height="40"/>
-                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                         <subviews>
                                                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-WO-FhV">
                                                                                 <rect key="frame" x="0.0" y="23" width="251" height="17"/>
@@ -3804,15 +3934,37 @@
                                     <constraint firstAttribute="width" constant="216" id="fU9-wR-CCw"/>
                                 </constraints>
                             </box>
+                            <box title="Display" translatesAutoresizingMaskIntoConstraints="NO" id="7e2-BZ-LbB">
+                                <rect key="frame" x="708" y="260" width="284" height="258"/>
+                                <view key="contentView" id="6cd-YX-aBa">
+                                    <rect key="frame" x="2" y="2" width="280" height="241"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="buf-hB-x2P">
+                                            <rect key="frame" x="7" y="8" width="266" height="227"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="QNg-Pl-pR6"/>
+                                            <connections>
+                                                <binding destination="L3c-hb-0DS" name="value" keyPath="self.displayImage" id="5u5-KC-t6p"/>
+                                            </connections>
+                                        </imageView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="254" id="LH5-VW-qHr"/>
+                                </constraints>
+                            </box>
                         </subviews>
                         <constraints>
                             <constraint firstItem="YFg-Vu-WTU" firstAttribute="leading" secondItem="Nrw-Kh-W21" secondAttribute="leading" constant="9" id="2VM-WR-pl0"/>
                             <constraint firstItem="t07-MA-7RY" firstAttribute="leading" secondItem="7VX-lX-pYF" secondAttribute="trailing" constant="8" id="Bk5-C4-MQA"/>
                             <constraint firstItem="rJy-Pf-BJ4" firstAttribute="leading" secondItem="Nrw-Kh-W21" secondAttribute="leading" constant="9" id="D1x-iF-uMB"/>
                             <constraint firstItem="pLY-yy-nTy" firstAttribute="leading" secondItem="Nrw-Kh-W21" secondAttribute="leading" constant="9" id="FNU-mi-xY4"/>
+                            <constraint firstItem="7e2-BZ-LbB" firstAttribute="leading" secondItem="t07-MA-7RY" secondAttribute="trailing" constant="8" id="GpK-mJ-wWv"/>
                             <constraint firstItem="YFg-Vu-WTU" firstAttribute="top" secondItem="Nrw-Kh-W21" secondAttribute="top" constant="8" id="IkF-Yo-z0n"/>
                             <constraint firstItem="B2a-na-mqL" firstAttribute="leading" secondItem="Nrw-Kh-W21" secondAttribute="leading" constant="9" id="JTy-Sj-bNc"/>
                             <constraint firstItem="dPF-54-vxq" firstAttribute="leading" secondItem="t07-MA-7RY" secondAttribute="trailing" constant="8" id="Jo6-co-gEs"/>
+                            <constraint firstItem="pLY-yy-nTy" firstAttribute="top" secondItem="7e2-BZ-LbB" secondAttribute="bottom" constant="8" id="SRR-1c-6i9"/>
                             <constraint firstItem="t07-MA-7RY" firstAttribute="top" secondItem="Nrw-Kh-W21" secondAttribute="top" constant="8" id="SnB-35-qKr"/>
                             <constraint firstAttribute="trailing" secondItem="pLY-yy-nTy" secondAttribute="trailing" constant="9" id="T6U-An-3nA"/>
                             <constraint firstItem="7VX-lX-pYF" firstAttribute="top" secondItem="Nrw-Kh-W21" secondAttribute="top" constant="8" id="Ucw-vA-v2V"/>
@@ -3820,10 +3972,11 @@
                             <constraint firstItem="pLY-yy-nTy" firstAttribute="top" secondItem="t07-MA-7RY" secondAttribute="bottom" constant="7" id="azA-OJ-HM2"/>
                             <constraint firstItem="dPF-54-vxq" firstAttribute="top" secondItem="Nrw-Kh-W21" secondAttribute="top" constant="8" id="kMX-xT-67Z"/>
                             <constraint firstItem="7VX-lX-pYF" firstAttribute="leading" secondItem="B2a-na-mqL" secondAttribute="trailing" constant="8" id="m8U-B5-STk"/>
-                            <constraint firstItem="B2a-na-mqL" firstAttribute="top" secondItem="YFg-Vu-WTU" secondAttribute="bottom" constant="91" id="mKI-Fg-qh0"/>
+                            <constraint firstItem="B2a-na-mqL" firstAttribute="top" secondItem="YFg-Vu-WTU" secondAttribute="bottom" constant="8" id="mKI-Fg-qh0"/>
                             <constraint firstItem="rJy-Pf-BJ4" firstAttribute="top" secondItem="pLY-yy-nTy" secondAttribute="bottom" constant="15" id="nD1-ES-eeB"/>
+                            <constraint firstAttribute="trailing" secondItem="7e2-BZ-LbB" secondAttribute="trailing" constant="9" id="nyE-D8-vfd"/>
                             <constraint firstAttribute="trailing" secondItem="dPF-54-vxq" secondAttribute="trailing" constant="9" id="ruR-4l-AKE"/>
-                            <constraint firstItem="pLY-yy-nTy" firstAttribute="top" secondItem="dPF-54-vxq" secondAttribute="bottom" constant="8" id="vHD-6y-Ca6"/>
+                            <constraint firstItem="pLY-yy-nTy" firstAttribute="top" secondItem="dPF-54-vxq" secondAttribute="bottom" constant="270" id="vHD-6y-Ca6"/>
                             <constraint firstAttribute="bottom" secondItem="rJy-Pf-BJ4" secondAttribute="bottom" constant="6" id="vkf-3X-His"/>
                             <constraint firstAttribute="trailing" secondItem="rJy-Pf-BJ4" secondAttribute="trailing" constant="9" id="yYY-8S-lN7"/>
                         </constraints>
@@ -3831,10 +3984,12 @@
                     <connections>
                         <outlet property="disassemblyTableview" destination="5L5-KT-m44" id="kOq-Xs-sPs"/>
                         <outlet property="memoryTableView" destination="2s4-jP-kgN" id="5ub-g0-UkJ"/>
+                        <outlet property="stackTable" destination="adJ-Ae-WKB" id="Tgj-HF-7qE"/>
                     </connections>
                 </viewController>
                 <customObject id="nSM-9v-N4I" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="ah3-bl-6hM"/>
+                <userDefaultsController id="xWV-8m-SbM"/>
             </objects>
             <point key="canvasLocation" x="1897" y="1817"/>
         </scene>

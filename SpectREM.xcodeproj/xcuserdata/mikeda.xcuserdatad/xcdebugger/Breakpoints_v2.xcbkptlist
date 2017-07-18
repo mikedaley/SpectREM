@@ -25,14 +25,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SpectREM/ZXSpectrum.mm"
-            timestampString = "520944024.790339"
+            filePath = "SpectREM/EmulationViewController.mm"
+            timestampString = "522017190.465809"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "902"
-            endingLineNumber = "902"
-            landmarkName = "drawSprites(int x, int y, ZXSpectrum *machine)"
-            landmarkType = "9">
+            startingLineNumber = "475"
+            endingLineNumber = "475"
+            landmarkName = "-updateEmulationViewWithPixelBuffer:length:size:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

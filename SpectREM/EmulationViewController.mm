@@ -475,6 +475,7 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     self.emulationScene.backingTexture = [SKTexture textureWithData:(__bridge NSData *)dataRef
                                                       size:size
                                                    flipped:YES];
+    
     CFRelease(dataRef);
     
     float widthScale = floorf(self.view.frame.size.width / size.width);
@@ -495,7 +496,10 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     };
 
     self.emulationScene.emulationDisplaySprite.texture = [self.skView textureFromNode:self.emulationScene.emulationBackingSprite
-                                                                                 crop:textureRect];;
+                                                                                 crop:textureRect];
+    
+//    _debugViewController.displayImage = [[NSImage alloc] initWithCGImage:self.emulationScene.emulationDisplaySprite.texture.CGImage size:CGSizeZero];
+    
 }
 
 #pragma mark - UI Actions
