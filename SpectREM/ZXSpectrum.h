@@ -327,5 +327,6 @@ unsigned char coreIORead(unsigned short address, void *m);
 #pragma mark - Debugging
 
 - (void)stepInstruction;
+- (void)refreshEmulationDisplay;
 
 @end

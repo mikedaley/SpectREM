@@ -60,7 +60,10 @@
 @property (strong) NSData *imageData;
 @property (strong) NSImage *displayImage;
 
+#pragma mark - Methods
+
 - (void)step;
+- (void)updateMemoryTableSize;
 
 @end
 

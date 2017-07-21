@@ -8,6 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface DebugWindowController : NSWindowController
+@interface DebugWindowController : NSWindowController <NSWindowDelegate>
 
 @end

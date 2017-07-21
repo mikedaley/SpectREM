@@ -15,7 +15,9 @@
 @property (assign) unsigned short disassembleAddress;
 @property (strong) NSMutableArray *disassemblyArray;
 @property (strong) NSMutableArray *stackArray;
-@property (assign) unsigned short byteWidth;
+@property (assign) unsigned int byteWidth;
+@property (assign) int memoryTableSearchAddress;
+@property (strong) NSDictionary *z80Registers;
 
 @end
 
@@ -25,7 +27,40 @@
 {
     if ([super initWithCoder:coder])
     {
-        self.byteWidth = 36;
+        self.byteWidth = 28;
+        self.disassembleAddress = 0;
+        self.memoryTableSearchAddress = -1;
+        
+        self.z80Registers = @{@"A" : @(CZ80Core::eREG_A),
+                              @"F" : @(CZ80Core::eREG_F),
+                              @"B" : @(CZ80Core::eREG_B),
+                              @"C" : @(CZ80Core::eREG_C),
+                              @"D" : @(CZ80Core::eREG_D),
+                              @"E" : @(CZ80Core::eREG_E),
+                              @"H" : @(CZ80Core::eREG_H),
+                              @"L" : @(CZ80Core::eREG_L),
+                              @"AF" : @(CZ80Core::eREG_AF),
+                              @"BC" : @(CZ80Core::eREG_BC),
+                              @"DE" : @(CZ80Core::eREG_DE),
+                              @"HL" : @(CZ80Core::eREG_HL),
+                              @"A'" : @(CZ80Core::eREG_ALT_A),
+                              @"F'" : @(CZ80Core::eREG_ALT_F),
+                              @"B'" : @(CZ80Core::eREG_ALT_B),
+                              @"C'" : @(CZ80Core::eREG_ALT_C),
+                              @"D'" : @(CZ80Core::eREG_ALT_D),
+                              @"E'" : @(CZ80Core::eREG_ALT_E),
+                              @"H'" : @(CZ80Core::eREG_ALT_H),
+                              @"L'" : @(CZ80Core::eREG_ALT_L),
+                              @"AF'" : @(CZ80Core::eREG_ALT_AF),
+                              @"BC'" : @(CZ80Core::eREG_ALT_BC),
+                              @"DE'" : @(CZ80Core::eREG_ALT_DE),
+                              @"HL'" : @(CZ80Core::eREG_ALT_HL),
+                              @"PC" : @(CZ80Core::eREG_PC),
+                              @"SP" : @(CZ80Core::eREG_SP),
+                              @"I" : @(CZ80Core::eREG_I),
+                              @"R" : @(CZ80Core::eREG_R)                           
+                              };
+        
         return self;
     }
     
@@ -37,8 +72,8 @@
     // Do view setup here.
     self.decimalFormat = NO;
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowDidResizeNotification object:NULL queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
-        [self updateMemoryTableByteWidth];
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSViewFrameDidChangeNotification object:self.memoryTableView queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
+        [self updateMemoryTableSize];
     }];
 
     [[NSNotificationCenter defaultCenter] addObserverForName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
@@ -51,15 +86,16 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResizeNotification object:NULL];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UPDATE_DISASSEMBLE_TABLE" object:NULL];
-    [self.machine setPaused:NO];
+    [_machine.audioCore start];
 }
 
 - (void)viewWillAppear
 {
-    [self.machine setPaused:YES];
+    [_machine resetSound];
+    [_machine.audioCore stop];
     CZ80Core *core = (CZ80Core *)[self.machine getCore];
     self.disassembleAddress = core->GetRegister(CZ80Core::eREG_PC);
-    [self disassemmbleFromAddress:self.disassembleAddress length:65536 - self.disassembleAddress];
+    [self disassemmbleFromAddress:self.disassembleAddress length:c64k - self.disassembleAddress];
     [self.disassemblyTableview reloadData];
     [self.memoryTableView reloadData];
     [self updateCPUDetails];
@@ -72,7 +108,105 @@
 {
     [self.machine stepInstruction];
     self.displayImage = [[NSImage alloc] initWithData:self.imageData];
-    [self updateViewDetails];
+    [self updateDisassemblyTable];
+    [self updateCPUDetails];
+    [self updateMemoryTable];
+}
+
+- (void)controlTextDidEndEditing:(NSNotification *)obj
+{
+    CZ80Core *core = (CZ80Core *)[_machine getCore];
+    
+    // Explode the entered command on space
+    NSArray *commandList = [[(NSTextField *)obj.object stringValue] componentsSeparatedByString:@" "];
+
+    NSString *command = [(NSString *)commandList[0] uppercaseString];
+    
+    // Check to see if the command is recognised
+    if ([command isEqualToString:@"D"])
+    {
+        NSScanner *scanner = [NSScanner scannerWithString:commandList[1]];
+        unsigned int address;
+        if ([scanner scanHexInt:&address])
+        {
+            self.disassembleAddress = address;
+            [self disassemmbleFromAddress:self.disassembleAddress length:c64k - self.disassembleAddress];
+            [self.disassemblyTableview reloadData];
+        }
+        else if ([[commandList[1] uppercaseString]isEqualToString:@"PC"])
+        {
+            self.disassembleAddress = core->GetRegister(CZ80Core::eREG_PC);
+            [self disassemmbleFromAddress:self.disassembleAddress length:c64k - self.disassembleAddress];
+            [self.disassemblyTableview reloadData];
+        }
+        else if ([[commandList[1] uppercaseString]isEqualToString:@"SP"])
+        {
+            if (self.stackArray.count > 0)
+            {
+                self.disassembleAddress = [self.stackArray[0] unsignedShortValue];
+                [self disassemmbleFromAddress:self.disassembleAddress length:c64k - self.disassembleAddress];
+                [self.disassemblyTableview reloadData];
+            }
+        }
+    }
+    else if ([command isEqualToString:@"R"])
+    {
+        [self.machine.audioCore start];
+    }
+    else if ([command isEqualToString:@"P"])
+    {
+        [self.machine.audioCore stop];
+        [self updateDisassemblyTable];
+        [self updateViewDetails];
+    }
+    else if ([command isEqualToString:@"S"])
+    {
+        [self.machine stepInstruction];
+        [self updateDisassemblyTable];
+        [self updateViewDetails];
+    }
+    else if ([command isEqualToString:@"M"])
+    {
+        NSScanner *scanner = [NSScanner scannerWithString:commandList[1]];
+        unsigned int address;
+        if ([scanner scanHexInt:&address])
+        {
+            self.memoryTableSearchAddress = address;
+            NSUInteger row = (address / self.byteWidth);
+            [self updateMemoryTable];
+            [self.memoryTableView scrollRowToVisible:row];
+        }
+    }
+    else if ([command isEqualToString:@"SM"])
+    {
+        NSScanner *scanner = [NSScanner scannerWithString:commandList[1]];
+        unsigned int address;
+        if ([scanner scanHexInt:&address])
+        {
+            scanner = [NSScanner scannerWithString:commandList[2]];
+            unsigned int value;
+            if ([scanner scanHexInt:&value])
+            {
+                core->Z80CoreDebugMemWrite(address, value, NULL);
+                [self.machine refreshEmulationDisplay];
+                [self updateViewDetails];
+            }
+        }
+    }
+    else if ([command isEqualToString:@"RS"])
+    {
+        NSString *reg = [commandList[1] uppercaseString];
+        for (NSString *key in self.z80Registers)
+        {
+            if ([key isEqualToString:reg])
+            {
+//                core->SetRegister(CZ80Core::eREG_R, 0);
+                
+//                core->SetRegister([self.z80Registers[key] integerValue], 0);
+                break;
+            }
+        }
+    }
 }
 
 #pragma mark - Table View Methods
@@ -101,6 +235,7 @@
 {
     CZ80Core *core = (CZ80Core *)[self.machine getCore];
 
+    // DISASSEMBLY TABLE
     if ([tableView.identifier isEqualToString:@"DisassembleTableView"])
     {
         NSTableCellView *view;
@@ -141,6 +276,7 @@
         return view;
     }
     
+    // MEMORY TABLE
     if ([tableView.identifier isEqualToString:@"MemoryTableView"])
     {
         NSTableCellView *view;
@@ -162,14 +298,29 @@
             }
             else if ([tableColumn.identifier isEqualToString:@"MemoryBytesColID"])
             {
-                NSMutableString *content = [NSMutableString new];
+                NSMutableAttributedString *content = [NSMutableAttributedString new];
                 for (unsigned int i = 0; i < self.byteWidth; i++)
                 {
-                    unsigned int address = ((unsigned short)row * self.byteWidth) + i;
-                    [content appendString:[NSString stringWithFormat:@"%02X ",
-                                           (unsigned int)core->Z80CoreDebugMemRead(address, NULL)]];
+                    unsigned int address = ((int)row * self.byteWidth) + i;
+                    
+                    if (self.memoryTableSearchAddress == address)
+                    {
+                        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%02X ",
+                                                                                                    (unsigned int)core->Z80CoreDebugMemRead(address, NULL)]];
+                        [attrString addAttribute:NSBackgroundColorAttributeName value:[NSColor colorWithRed:0 green:0.5 blue:0 alpha:1.0] range:NSMakeRange(0, 2)];
+                        [content appendAttributedString:attrString];
+                    }
+                    else if (address > 0xffff)
+                    {
+                        [content appendAttributedString:[[NSAttributedString alloc] initWithString:@"   "]];
+                    }
+                    else
+                    {
+                        [content appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%02X ",
+                                                                                                    (unsigned int)core->Z80CoreDebugMemRead(address, NULL)]]];
+                    }
                 }
-                view.textField.stringValue = content;
+                view.textField.attributedStringValue = content;
             }
             else if ([tableColumn.identifier isEqualToString:@"MemoryASCIIColID"])
             {
@@ -195,6 +346,7 @@
         
     }
     
+    // STACK TABLE
     if ([tableView.identifier isEqualToString:@"StackTable"])
     {
         NSTableCellView *view;
@@ -219,11 +371,11 @@
     {
         if (core->GetRegister(CZ80Core::eREG_PC) == [(DisassembledOpcode *)[self.disassemblyArray objectAtIndex:row] address])
         {
-            rowView.backgroundColor = [NSColor greenColor];
+            rowView.backgroundColor = [NSColor colorWithRed:0 green:0.5 blue:0 alpha:1.0];
         }
         else
         {
-            rowView.backgroundColor = [NSColor colorWithRed:0.898 green:0.898 blue:0.898 alpha:1.0];
+            rowView.backgroundColor = [NSColor clearColor];
         }
     }
 }
@@ -283,7 +435,6 @@
 - (void)updateViewDetails
 {
     [self updateCPUDetails];
-    [self updateDisassemblyTable];
     [self updateMemoryTable];
     [self updateStackTable];
 }
@@ -376,7 +527,7 @@
     if (!pcfound)
     {
         self.disassembleAddress = core->GetRegister(CZ80Core::eREG_PC);
-        [self disassemmbleFromAddress:self.disassembleAddress length:65536 - self.disassembleAddress];
+        [self disassemmbleFromAddress:self.disassembleAddress length:c64k - self.disassembleAddress];
     }
     
 //    NSRect visibleRect = self.disassemblyTableview.visibleRect;
@@ -384,16 +535,17 @@
 //    [self.disassemblyTableview reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRowIndexes] columnIndexes:visibleCols];
     [self.disassemblyTableview reloadData];
     [self.disassemblyTableview deselectAll:NULL];
+//    [self.disassemblyTableview selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
     [self.disassemblyTableview scrollRowToVisible:row];
 }
 
 - (void)updateMemoryTable
 {
-//    NSRect visibleRect = self.memoryTableView.visibleRect;
-//    NSRange visibleRows = [self.memoryTableView rowsInRect:visibleRect];
-//    NSIndexSet *visibleCols = [self.memoryTableView columnIndexesInRect:visibleRect];
-//    [self.memoryTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRows] columnIndexes:visibleCols];
-    [self.memoryTableView reloadData];
+    NSRect visibleRect = self.memoryTableView.visibleRect;
+    NSRange visibleRows = [self.memoryTableView rowsInRect:visibleRect];
+    NSIndexSet *visibleCols = [self.memoryTableView columnIndexesInRect:visibleRect];
+    [self.memoryTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRows] columnIndexes:visibleCols];
+//    [self.memoryTableView reloadData];
 }
 
 - (void)updateStackTable
@@ -418,17 +570,26 @@
     [self.stackTable reloadData];
 }
 
-- (void)updateMemoryTableByteWidth
+- (void)updateMemoryTableSize
 {
-    for (NSTableColumn *col in self.memoryTableView.tableColumns)
-    {
-        if ([col.identifier isEqualToString:@"MemoryBytesColID"])
+//    return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (NSTableColumn *col in self.memoryTableView.tableColumns)
         {
-            self.byteWidth = col.width / 18;
-            NSLog(@"%i", self.byteWidth);
+            if ([col.identifier isEqualToString:@"MemoryBytesColID"])
+            {
+                col.width = self.memoryTableView.frame.size.width * 0.68;
+                self.byteWidth = col.width / 23.38;
+            }
+            
+            if ([col.identifier isEqualToString:@"MemoryASCIIColID"])
+            {
+                col.width = self.memoryTableView.frame.size.width * 0.24;
+            }
         }
-    }
-    [self.memoryTableView reloadData];
+
+        [self.memoryTableView reloadData];
+    });
 }
 
 @end

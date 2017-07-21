@@ -260,10 +260,11 @@
 - (void)updateDisassembly
 {
     [self disassemmbleFromAddress:_disassembleAddress length:65535 - _disassembleAddress];
-    NSRect visibleRect = self.disassemblyTableview.visibleRect;
-    NSRange visibleRows = [self.disassemblyTableview rowsInRect:visibleRect];
-    NSIndexSet *visibleCols = [self.disassemblyTableview columnIndexesInRect:visibleRect];
-    [self.disassemblyTableview reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRows] columnIndexes:visibleCols];
+//    NSRect visibleRect = self.disassemblyTableview.visibleRect;
+//    NSRange visibleRows = [self.disassemblyTableview rowsInRect:visibleRect];
+//    NSIndexSet *visibleCols = [self.disassemblyTableview columnIndexesInRect:visibleRect];
+//    [self.disassemblyTableview reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:visibleRows] columnIndexes:visibleCols];
+    [self.disassemblyTableview reloadData];
 }
 
 - (void)setDecimalFormat:(BOOL)decimalFormat

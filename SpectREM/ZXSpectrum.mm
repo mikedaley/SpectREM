@@ -532,6 +532,11 @@ typedef NS_ENUM(int, ULAplusMode)
         frameCounter ++;
     }
     
+    [self refreshEmulationDisplay];
+}
+
+- (void)refreshEmulationDisplay
+{
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
                                                                   length:(CFIndex)emuDisplayBufferLength
