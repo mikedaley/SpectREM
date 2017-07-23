@@ -17,7 +17,8 @@
 @property (strong) NSMutableArray *stackArray;
 @property (assign) unsigned int byteWidth;
 @property (assign) int memoryTableSearchAddress;
-@property (strong) NSDictionary *z80Registers;
+@property (strong) NSDictionary *z80ByteRegisters;
+@property (strong) NSDictionary *z80WordRegisters;
 
 @end
 
@@ -27,11 +28,12 @@
 {
     if ([super initWithCoder:coder])
     {
+        NSLog(@"DEBUG_VIEW_CONTROLLER INIT");
         self.byteWidth = 28;
         self.disassembleAddress = 0;
         self.memoryTableSearchAddress = -1;
         
-        self.z80Registers = @{@"A" : @(CZ80Core::eREG_A),
+        self.z80ByteRegisters = @{@"A" : @(CZ80Core::eREG_A),
                               @"F" : @(CZ80Core::eREG_F),
                               @"B" : @(CZ80Core::eREG_B),
                               @"C" : @(CZ80Core::eREG_C),
@@ -39,10 +41,6 @@
                               @"E" : @(CZ80Core::eREG_E),
                               @"H" : @(CZ80Core::eREG_H),
                               @"L" : @(CZ80Core::eREG_L),
-                              @"AF" : @(CZ80Core::eREG_AF),
-                              @"BC" : @(CZ80Core::eREG_BC),
-                              @"DE" : @(CZ80Core::eREG_DE),
-                              @"HL" : @(CZ80Core::eREG_HL),
                               @"A'" : @(CZ80Core::eREG_ALT_A),
                               @"F'" : @(CZ80Core::eREG_ALT_F),
                               @"B'" : @(CZ80Core::eREG_ALT_B),
@@ -51,16 +49,23 @@
                               @"E'" : @(CZ80Core::eREG_ALT_E),
                               @"H'" : @(CZ80Core::eREG_ALT_H),
                               @"L'" : @(CZ80Core::eREG_ALT_L),
-                              @"AF'" : @(CZ80Core::eREG_ALT_AF),
-                              @"BC'" : @(CZ80Core::eREG_ALT_BC),
-                              @"DE'" : @(CZ80Core::eREG_ALT_DE),
-                              @"HL'" : @(CZ80Core::eREG_ALT_HL),
-                              @"PC" : @(CZ80Core::eREG_PC),
-                              @"SP" : @(CZ80Core::eREG_SP),
                               @"I" : @(CZ80Core::eREG_I),
                               @"R" : @(CZ80Core::eREG_R)                           
                               };
-        
+
+        self.z80WordRegisters = @{
+                                  @"AF" : @(CZ80Core::eREG_AF),
+                                  @"BC" : @(CZ80Core::eREG_BC),
+                                  @"DE" : @(CZ80Core::eREG_DE),
+                                  @"HL" : @(CZ80Core::eREG_HL),
+                                  @"AF'" : @(CZ80Core::eREG_ALT_AF),
+                                  @"BC'" : @(CZ80Core::eREG_ALT_BC),
+                                  @"DE'" : @(CZ80Core::eREG_ALT_DE),
+                                  @"HL'" : @(CZ80Core::eREG_ALT_HL),
+                                  @"PC" : @(CZ80Core::eREG_PC),
+                                  @"SP" : @(CZ80Core::eREG_SP),
+                                  };
+
         return self;
     }
     
@@ -72,13 +77,6 @@
     // Do view setup here.
     self.decimalFormat = NO;
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:NSViewFrameDidChangeNotification object:self.memoryTableView queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
-        [self updateMemoryTableSize];
-    }];
-
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
-        [self updateViewDetails];
-    }];
 
 }
 
@@ -91,6 +89,14 @@
 
 - (void)viewWillAppear
 {
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSViewFrameDidChangeNotification object:self.memoryTableView queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
+        [self updateMemoryTableSize];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"UPDATE_DISASSEMBLE_TABLE" object:NULL queue:NULL usingBlock:^(NSNotification * _Nonnull note) {
+        [self updateViewDetails];
+    }];
+    
     [_machine resetSound];
     [_machine.audioCore stop];
     CZ80Core *core = (CZ80Core *)[self.machine getCore];
@@ -111,6 +117,7 @@
     [self updateDisassemblyTable];
     [self updateCPUDetails];
     [self updateMemoryTable];
+    [self updateStackTable];
 }
 
 - (void)controlTextDidEndEditing:(NSNotification *)obj
@@ -196,16 +203,36 @@
     else if ([command isEqualToString:@"RS"])
     {
         NSString *reg = [commandList[1] uppercaseString];
-        for (NSString *key in self.z80Registers)
+        for (NSString *key in self.z80ByteRegisters)
         {
             if ([key isEqualToString:reg])
             {
-//                core->SetRegister(CZ80Core::eREG_R, 0);
-                
-//                core->SetRegister([self.z80Registers[key] integerValue], 0);
-                break;
+                NSScanner *scanner = [NSScanner scannerWithString:commandList[2]];
+                unsigned int value;
+                if ([scanner scanHexInt:&value])
+                {
+                    core->SetRegister((CZ80Core::eZ80BYTEREGISTERS)[self.z80ByteRegisters[key] integerValue], value);
+                }
+                [self updateCPUDetails];
+                return;
             }
         }
+
+        for (NSString *key in self.z80WordRegisters)
+        {
+            if ([key isEqualToString:reg])
+            {
+                NSScanner *scanner = [NSScanner scannerWithString:commandList[2]];
+                unsigned int value;
+                if ([scanner scanHexInt:&value])
+                {
+                    core->SetRegister((CZ80Core::eZ80WORDREGISTERS)[self.z80WordRegisters[key] integerValue], value);
+                }
+                [self updateCPUDetails];
+                return;
+            }
+        }
+
     }
 }
 
@@ -305,9 +332,10 @@
                     
                     if (self.memoryTableSearchAddress == address)
                     {
-                        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%02X ",
-                                                                                                    (unsigned int)core->Z80CoreDebugMemRead(address, NULL)]];
+                        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%02X ", (unsigned short)core->Z80CoreDebugMemRead(address, NULL)]];
+                        
                         [attrString addAttribute:NSBackgroundColorAttributeName value:[NSColor colorWithRed:0 green:0.5 blue:0 alpha:1.0] range:NSMakeRange(0, 2)];
+                        
                         [content appendAttributedString:attrString];
                     }
                     else if (address > 0xffff)
@@ -317,7 +345,7 @@
                     else
                     {
                         [content appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%02X ",
-                                                                                                    (unsigned int)core->Z80CoreDebugMemRead(address, NULL)]]];
+                                                                                                    (unsigned short)core->Z80CoreDebugMemRead(address, NULL)]]];
                     }
                 }
                 view.textField.attributedStringValue = content;
@@ -327,7 +355,7 @@
                 NSMutableString *content = [NSMutableString new];
                 for (int i = 0; i < self.byteWidth; i++)
                 {
-                    unsigned char c = self.machine->memory[(row * self.byteWidth) + i];
+                    unsigned char c = core->Z80CoreDebugMemRead((unsigned short)((row * self.byteWidth) + i), NULL);
                     if ((c >= 0 && c < 32) || c > 126)
                     {
                         [content appendString:@"."];
@@ -555,13 +583,9 @@
     self.stackArray = [NSMutableArray new];
     
     unsigned short sp = core->GetRegister(CZ80Core::eREG_SP);
-    
-    for (unsigned short i = sp; i <= 0xffff; i += 2)
+
+    for (unsigned int i = sp; i <= 0xffff; i += 2)
     {
-        if (i == 0)
-        {
-            break;
-        }
         unsigned short address = core->Z80CoreDebugMemRead(i + 1, NULL) << 8;
         address |= core->Z80CoreDebugMemRead(i, NULL);
         [self.stackArray addObject:@(address)];

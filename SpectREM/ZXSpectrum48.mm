@@ -35,6 +35,7 @@
 {
     if (self = [super initWithEmulationViewController:emulationViewController machineInfo:info])
     {
+        NSLog(@"MACHINE_INIT");
         _emuViewController = emulationViewController;
         
         // We need 64k of memory total for the 48k Speccy
