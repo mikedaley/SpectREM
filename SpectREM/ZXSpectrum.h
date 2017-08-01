@@ -34,7 +34,7 @@ static unsigned char const cCONTENTION_VALUES[8] = { 6, 5, 4, 3, 2, 1, 0, 0 };
 static unsigned char const cFLOATING_BUS_TABLE[8] = { 0, 0, 1, 2, 1, 2, 0, 0 };
 
 // Number of frames to skip when running in accelerated mode
-static int const cACCELERATED_SKIP_FRAMES = 10;
+static int const cACCELERATED_SKIP_FRAMES = 25;
 
 // Memory sizes/Pages
 static size_t const c16k = 16 * 1024;

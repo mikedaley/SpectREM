@@ -88,7 +88,7 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
                              [SKUniform uniformWithName:cU_REFLECTION texture:[SKTexture textureWithImageNamed:@"reflection"]]
                              ];
         
-        self.emulationDisplaySprite.shader = _shader;
+//        self.emulationDisplaySprite.shader = _shader;
         [self setupObservers];
         
     }

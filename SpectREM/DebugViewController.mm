@@ -584,7 +584,7 @@
     
     unsigned short sp = core->GetRegister(CZ80Core::eREG_SP);
 
-    for (unsigned int i = sp; i <= 0xffff; i += 2)
+    for (unsigned int i = sp; i <= 0xfffe; i += 2)
     {
         unsigned short address = core->Z80CoreDebugMemRead(i + 1, NULL) << 8;
         address |= core->Z80CoreDebugMemRead(i, NULL);

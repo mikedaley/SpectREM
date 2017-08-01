@@ -97,6 +97,8 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     
     NSInteger               _currentViewScale;
     
+    NSData                  *_bufferData;
+    
 }
 
 - (void)dealloc
@@ -471,12 +473,10 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 
 - (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size
 {
-    CFDataRef dataRef = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, pixelBuffer, length, kCFAllocatorNull);
-    self.emulationScene.backingTexture = [SKTexture textureWithData:(__bridge NSData *)dataRef
+    _bufferData = [NSData dataWithBytes:pixelBuffer length:length];
+    self.emulationScene.backingTexture = [SKTexture textureWithData:_bufferData
                                                       size:size
                                                    flipped:YES];
-    
-    CFRelease(dataRef);
     
     float widthScale = floorf(self.view.frame.size.width / size.width);
     float heightScale = floorf(self.view.frame.size.width / size.height);
