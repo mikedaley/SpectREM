@@ -126,8 +126,6 @@ typedef enum : NSUInteger {
     unsigned int emuDisplayBufferLength;
     unsigned int emuDisplayBufferIndex;
     
-    unsigned char *emuDisplayBufferCopy;
-
     // Tracks the number of tStates used for drawing the screen. This is compared with the number of tStates that have passed
     // in the current frame so that the right number of 8x1 screen chunks are drawn
     int emuDisplayTs;

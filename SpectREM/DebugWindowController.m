@@ -41,7 +41,7 @@
 
 - (void)windowDidResize:(NSNotification *)notification
 {
-    NSLog(@"kk");
+
 }
 
 @end

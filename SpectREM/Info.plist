@@ -30,7 +30,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.8</string>
 	<key>CFBundleVersion</key>
-	<string>1010</string>
+	<string>1011</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
@@ -42,7 +42,7 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>PrefersOpenGL</key>
-	<true/>
+	<false/>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>

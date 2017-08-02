@@ -108,7 +108,16 @@ typedef NS_ENUM(int, ULAplusMode)
     int audioBufferSize;
     int audioAYTStates;
     int audioAYTStatesStep;
+    
+    double leftMixA;
+    double rightMixA;
+    double leftMixB;
+    double rightMixB;
+    double leftMixC;
+    double rightMixC;
+    
     unsigned char lastfffd;
+    
 
     // SpecDrum
     int specDrumOutput;
@@ -129,6 +138,15 @@ typedef NS_ENUM(int, ULAplusMode)
     
     // Next Sprite List
     NSMutableArray *spriteRenderList;
+    
+    // Previous frame screen buffer contents
+    struct ScreenBufferData {
+        unsigned char pixels;
+        unsigned char attribute;
+        unsigned char flash;
+    };
+    
+    ScreenBufferData *emuDisplayBufferCopy;
 }
 
 @end
@@ -172,6 +190,13 @@ typedef NS_ENUM(int, ULAplusMode)
         borderColor = 7;
         frameCounter = 0;
         
+        leftMixA = 0.5;
+        rightMixA = 0.5;
+        leftMixB = 0.5;
+        rightMixB = 0.5;
+        leftMixC = 0.5;
+        rightMixC = 0.5;
+        
         emuLeftBorderPx = cBORDER_PX_SIZE;
         emuRightBorderPx = cBORDER_PX_SIZE;
         
@@ -189,7 +214,7 @@ typedef NS_ENUM(int, ULAplusMode)
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelColor);
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
-        emuDisplayBufferCopy = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
+        emuDisplayBufferCopy = (ScreenBufferData *)calloc(machineInfo.tsPerFrame, sizeof(ScreenBufferData));
         
         float fps = 50;
         
@@ -487,20 +512,16 @@ typedef NS_ENUM(int, ULAplusMode)
                 {
                     if (frameCounter % cACCELERATED_SKIP_FRAMES)
                     {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
-                                                                                      length:(CFIndex)emuDisplayBufferLength
-                                                                                        size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
-                        });
+                        [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
+                                                                                  length:(CFIndex)emuDisplayBufferLength
+                                                                                    size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
                     }
                 }
                 else
                 {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
-                                                                                  length:(CFIndex)emuDisplayBufferLength
-                                                                                    size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
-                    });
+                    [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
+                                                                              length:(CFIndex)emuDisplayBufferLength
+                                                                                size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
                 }
                 
                 frameCounter++;
@@ -516,6 +537,40 @@ typedef NS_ENUM(int, ULAplusMode)
     //    {
     //        [self.smartLink sendData:smartLinkRequest code:0x77 waitForResponse:NO];
     //    }
+    
+    // Update sound balance. Doing it hear means it only happens at 5hz rather than for all instructions executed.
+    if (_AYChannelABalance > 0.5)
+    {
+        leftMixA = 1.0 - _AYChannelABalance;
+        rightMixA = _AYChannelABalance;
+    }
+    else if (_AYChannelABalance < 0.5)
+    {
+        leftMixA = 1.0 - (_AYChannelABalance / 2);
+        rightMixA = 1.0 - (1.0 - _AYChannelABalance);
+    }
+    
+    if (_AYChannelBBalance > 0.5)
+    {
+        leftMixB = 1.0 - _AYChannelBBalance;
+        rightMixB = _AYChannelBBalance;
+    }
+    else if (_AYChannelBBalance < 0.5)
+    {
+        leftMixB = 1.0 - (_AYChannelBBalance / 2);
+        rightMixB = 1.0 - (1.0 - _AYChannelBBalance);
+    }
+    
+    if (_AYChannelCBalance > 0.5)
+    {
+        leftMixC = 1.0 - _AYChannelCBalance;
+        rightMixC = _AYChannelCBalance;
+    }
+    else if (_AYChannelCBalance < 0.5)
+    {
+        leftMixC = 1.0 - (_AYChannelCBalance / 2);
+        rightMixC = 1.0 - (1.0 - _AYChannelCBalance);
+    }
     
 }
 
@@ -539,11 +594,9 @@ typedef NS_ENUM(int, ULAplusMode)
 
 - (void)refreshEmulationDisplay
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
-                                                                  length:(CFIndex)emuDisplayBufferLength
-                                                                    size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
-    });
+    [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
+                                                              length:(CFIndex)emuDisplayBufferLength
+                                                                size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
 }
 
 #pragma mark - Load IF2 ROM
@@ -583,48 +636,8 @@ void updateAudioWithTStates(int numberTs, void *m)
     signed int localBeeperLevel = ((machine->audioEarBit | machine->_zxTape->tapeInputBit) * cAUDIO_BEEPER_VOL_MULTIPLIER) | machine->specDrumOutput;
     signed int beeperLevelLeft = localBeeperLevel;
     signed int beeperLevelRight = localBeeperLevel;
-    
-    double leftMixA = 0.5;
-    double rightMixA = 0.5;
-    double leftMixB = 0.5;
-    double rightMixB = 0.5;
-    double leftMixC = 0.5;
-    double rightMixC = 0.5;
-    
+
     AudioCore *aCore = machine.audioCore;
-    
-    if (machine->_AYChannelABalance > 0.5)
-    {
-        leftMixA = 1.0 - machine->_AYChannelABalance;
-        rightMixA = machine->_AYChannelABalance;
-    }
-    else if (machine->_AYChannelABalance < 0.5)
-    {
-        leftMixA = 1.0 - (machine->_AYChannelABalance / 2);
-        rightMixA = 1.0 - (1.0 - machine->_AYChannelABalance);
-    }
-    
-    if (machine->_AYChannelBBalance > 0.5)
-    {
-        leftMixB = 1.0 - machine->_AYChannelBBalance;
-        rightMixB = machine->_AYChannelBBalance;
-    }
-    else if (machine->_AYChannelBBalance < 0.5)
-    {
-        leftMixB = 1.0 - (machine->_AYChannelBBalance / 2);
-        rightMixB = 1.0 - (1.0 - machine->_AYChannelBBalance);
-    }
-    
-    if (machine->_AYChannelCBalance > 0.5)
-    {
-        leftMixC = 1.0 - machine->_AYChannelCBalance;
-        rightMixC = machine->_AYChannelCBalance;
-    }
-    else if (machine->_AYChannelCBalance < 0.5)
-    {
-        leftMixC = 1.0 - (machine->_AYChannelCBalance / 2);
-        rightMixC = 1.0 - (1.0 - machine->_AYChannelCBalance);
-    }
     
     // Loop over each tState so that the necessary audio samples can be generated
     for(int i = 0; i < numberTs; i++)
@@ -640,22 +653,22 @@ void updateAudioWithTStates(int numberTs, void *m)
                 if (machine->_AYChannelA)
                 {
                     signed int channelA = aCore->channelOutput[0];
-                    beeperLevelLeft += (channelA * leftMixA);
-                    beeperLevelRight += (channelA * rightMixA);
+                    beeperLevelLeft += (channelA * machine->leftMixA);
+                    beeperLevelRight += (channelA * machine->rightMixA);
                 }
                 
                 if (machine->_AYChannelB)
                 {
                     signed int channelB = aCore->channelOutput[1];
-                    beeperLevelLeft += (channelB * leftMixB);
-                    beeperLevelRight += (channelB * rightMixB);
+                    beeperLevelLeft += (channelB * machine->leftMixB);
+                    beeperLevelRight += (channelB * machine->rightMixB);
                 }
                 
                 if (machine->_AYChannelC)
                 {
                     signed int channelC = aCore->channelOutput[2];
-                    beeperLevelLeft += (channelC * leftMixC);
-                    beeperLevelRight += (channelC * rightMixC);
+                    beeperLevelLeft += (channelC * machine->leftMixC);
+                    beeperLevelRight += (channelC * machine->rightMixC);
                 }
                 
                 // Reset the core channel values
@@ -713,7 +726,7 @@ void updateScreenWithTStates(int numberTs, void *m)
         return;
     }
     
-    int memoryAddress = machine->displayPage * 16384;
+    int memoryAddress = machine->displayPage * cBITMAP_ADDRESS;
     
     while (numberTs > 0)
     {
@@ -724,26 +737,34 @@ void updateScreenWithTStates(int numberTs, void *m)
         
         if (action == DisplayAction::eDisplayBorder)
         {
-            if (machine->ulaPlusPaletteOn)
+            if (machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute != machine->borderColor)
             {
-                int index = machine->borderColor + 8;
-                for (int i = 0; i < 8; i++)
+                machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute = machine->borderColor;
+                if (machine->ulaPlusPaletteOn)
                 {
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
-                    machine->emuDisplayBufferIndex++;
+                    int index = machine->borderColor + 8;
+                    for (int i = 0; i < 9; i++)
+                    {
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
+                        machine->emuDisplayBufferIndex++;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].r;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].g;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].b;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].a;
+                    }
                 }
             }
             else
             {
-                for (int i = 0; i < 8; i++)
-                {
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].r;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].g;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].b;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].a;
-                }
+                machine->emuDisplayBufferIndex += 32;
             }
         }
         else if (action == DisplayAction::eDisplayPaper)
@@ -757,81 +778,92 @@ void updateScreenWithTStates(int numberTs, void *m)
             int pixelByte = machine->memory[memoryAddress + pixelAddress];
             int attributeByte = machine->memory[memoryAddress + attributeAddress];
             
-            if (machine->ulaPlusPaletteOn)
+            if (machine->emuDisplayBufferCopy[machine->emuDisplayTs].pixels != pixelByte ||
+                machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute != attributeByte ||
+                (attributeByte & 0x80))
             {
-                int flash = (attributeByte & 0x80) ? 1 : 0;
-                int bright = (attributeByte & 0x40) ? 1 : 0;
-                int ulaPlusInk = (attributeByte & 0x07);
-                int ulaPlusPaper = ((attributeByte >> 3) & 0x07);
-                int index = 0;
-                char ulaPlusColor = 0;
+                machine->emuDisplayBufferCopy[machine->emuDisplayTs].pixels = pixelByte;
+                machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute = attributeByte;
                 
-                int bit = 0;
-                for (int b = 0x80; b; b >>= 1)
+                if (machine->ulaPlusPaletteOn)
                 {
-                    if (pixelByte & b) {
-                        index = (flash * 2 + bright) * 16 + ulaPlusInk;
-                        ulaPlusColor = machine->clut[index];
-                    }
-                    else
+                    int flash = (attributeByte & 0x80) ? 1 : 0;
+                    int bright = (attributeByte & 0x40) ? 1 : 0;
+                    int ulaPlusInk = (attributeByte & 0x07);
+                    int ulaPlusPaper = ((attributeByte >> 3) & 0x07);
+                    int index = 0;
+                    char ulaPlusColor = 0;
+                    
+                    int bit = 0;
+                    for (int b = 0x80; b; b >>= 1)
                     {
-                        index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
-                        ulaPlusColor = machine->clut[index];
+                        if (pixelByte & b) {
+                            index = (flash * 2 + bright) * 16 + ulaPlusInk;
+                            ulaPlusColor = machine->clut[index];
+                        }
+                        else
+                        {
+                            index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
+                            ulaPlusColor = machine->clut[index];
+                        }
+                        
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+                        machine->emuDisplayBufferIndex++;
+                        
+                        if (machine->machineInfo.machineType == eZXSpectrumNext)
+                        {
+                            drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
+                        }
+                        
+                        bit++;
                     }
+                }
+                else
+                {
+                    // Extract the ink and paper colours from the attribute byte read in
+                    int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
+                    int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
                     
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
-                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
-                    machine->emuDisplayBufferIndex++;
-                    
-                    if (machine->machineInfo.machineType == eZXSpectrumNext)
+                    // Switch ink and paper if the flash phase has changed
+                    if ((machine->frameCounter & 16) && (attributeByte & 0x80))
                     {
-                        drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
+                        int tempPaper = paper;
+                        paper = ink;
+                        ink = tempPaper;
                     }
                     
-                    bit++;
+                    int bit = 0;
+                    for (int b = 0x80; b; b >>= 1)
+                    {
+                        if (pixelByte & b) {
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].r;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].g;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].b;
+                            machine->emuDisplayBufferIndex++;
+                        }
+                        else
+                        {
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].r;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].g;
+                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].b;
+                            machine->emuDisplayBufferIndex++;
+                        }
+                        
+                        if (machine->machineInfo.machineType == eZXSpectrumNext)
+                        {
+                            drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
+                        }
+                        
+                        bit++;
+                    }
                 }
             }
             else
             {
-                // Extract the ink and paper colours from the attribute byte read in
-                int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
-                int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
-                
-                // Switch ink and paper if the flash phase has changed
-                if ((machine->frameCounter & 16) && (attributeByte & 0x80))
-                {
-                    int tempPaper = paper;
-                    paper = ink;
-                    ink = tempPaper;
-                }
-                
-                int bit = 0;
-                for (int b = 0x80; b; b >>= 1)
-                {
-                    if (pixelByte & b) {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].r;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].g;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].b;
-                        machine->emuDisplayBufferIndex++;
-                    }
-                    else
-                    {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].r;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].g;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].b;
-                        machine->emuDisplayBufferIndex++;
-                    }
-                    
-                    if (machine->machineInfo.machineType == eZXSpectrumNext)
-                    {
-                        drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
-                    }
-                    
-                    bit++;
-                }
+                machine->emuDisplayBufferIndex += 32;
             }
-
         }
     
         machine->emuDisplayTs += machine->machineInfo.tsPerChar;

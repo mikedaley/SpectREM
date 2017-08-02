@@ -85,7 +85,7 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     
     NSInteger               _currentViewScale;
     
-    NSData                  *_bufferData;
+    NSData                  *_screenBufferData;
     
 }
 
@@ -459,32 +459,33 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 // This is executed on the main thread as its updating the display
 - (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size
 {
-    _bufferData = [NSData dataWithBytes:pixelBuffer length:length];
-    self.emulationScene.backingTexture = [SKTexture textureWithData:_bufferData
-                                                               size:size
-                                                            flipped:YES];
-    
-    float widthScale = floorf(self.view.frame.size.width / size.width);
-    float heightScale = floorf(self.view.frame.size.width / size.height);
-    CGSize backingsize = (CGSize){size.width  * widthScale, size.height * heightScale};
-    
-    self.emulationScene.emulationBackingSprite.size = backingsize;
-    self.emulationScene.backingTexture.filteringMode = SKTextureFilteringNearest;
-    self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
-    
-    float borderWidth = (cBORDER_PX_SIZE - _configViewController.displayBorderWidth);
-    
-    CGRect textureRect = (CGRect){
-        floorf((-size.width / 2) + borderWidth * widthScale),
-        floorf((-size.height / 2) + borderWidth * heightScale),
-        floorf(backingsize.width - (borderWidth * widthScale) * 2),
-        floorf(backingsize.height - (borderWidth * heightScale) * 2)
-    };
-    
-    self.emulationScene.emulationDisplaySprite.texture = [self.skView textureFromNode:self.emulationScene.emulationBackingSprite
-                                                                                 crop:textureRect];
-    
-    //_debugViewController.displayImage = [[NSImage alloc] initWithCGImage:self.emulationScene.emulationDisplaySprite.texture.CGImage size:CGSizeZero];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _screenBufferData = [NSData dataWithBytes:pixelBuffer length:length];
+        self.emulationScene.backingTexture = [SKTexture textureWithData:_screenBufferData
+                                                                   size:size
+                                                                flipped:YES];
+        
+        float widthScale = floorf(self.view.frame.size.width / size.width);
+        float heightScale = floorf(self.view.frame.size.width / size.height);
+        CGSize backingsize = (CGSize){size.width  * widthScale, size.height * heightScale};
+        
+        self.emulationScene.emulationBackingSprite.size = backingsize;
+        self.emulationScene.backingTexture.filteringMode = SKTextureFilteringNearest;
+        self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
+        
+        float borderWidth = (cBORDER_PX_SIZE - _configViewController.displayBorderWidth);
+        
+        CGRect textureRect = (CGRect){
+            floorf((-size.width / 2) + borderWidth * widthScale),
+            floorf((-size.height / 2) + borderWidth * heightScale),
+            floorf(backingsize.width - (borderWidth * widthScale) * 2),
+            floorf(backingsize.height - (borderWidth * heightScale) * 2)
+        };
+        
+        self.emulationScene.emulationDisplaySprite.texture = [self.skView textureFromNode:self.emulationScene.emulationBackingSprite
+                                                                                     crop:textureRect];
+        
+    });
 }
 
 #pragma mark - UI Actions
@@ -905,10 +906,7 @@ void gamepadAction(void* inContext, IOReturn inResult, void* inSender, IOHIDValu
 
 - (void)windowResize:(NSNotification *)notification
 {
-    // Reduce the size of the view so that it sits below the title bar of the window. The window is setup to use the entire window contents
-    // so that the titlebar doesn't show the contents of the config panel through it. This seems to cause performance issues. So to ensure
-    // that the view is not drawn below the titlebar its height is reduced.
-//    self.view.frame = (CGRect) {0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height - 22};
+
 }
 
 @end
