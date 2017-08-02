@@ -14,10 +14,7 @@
 #import "EmulationScene.h"
 #import "ConfigViewController.h"
 #import "GraphicalMemViewController.h"
-#import "CPUViewController.h"
 #import "TapeViewController.h"
-#import "DisassemblyViewController.h"
-#import "MemoryViewController.h"
 #import "SaveAccessoryViewController.h"
 #import "RomSelectionViewController.h"
 #import "DebugWindowController.h"
@@ -60,19 +57,10 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     NSWindowController      *_graphicalMemoryWindowController;
     GraphicalMemViewController *_graphicalMemViewController;
     
-    NSWindowController      *_cpuWindowController;
-    CPUViewController       *_cpuViewController;
-    
     NSWindowController      *_keyboardMapWindowController;
     
     NSWindowController      *_tapeBrowserWindowController;
     TapeViewController      *_tapeViewController;
-    
-    NSWindowController      *_disassemblyWindowController;
-    DisassemblyViewController *_disassemblyViewController;
-    
-    NSWindowController      *_memoryWindowController;
-    MemoryViewController    *_memoryViewController;
     
     SaveAccessoryViewController *_saveAccessoryController;
     NSView                  *_saveAccessoryView;
@@ -126,13 +114,58 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 
     _storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     
-    // Setup debug window and view controllers
+    [self setupConfigView];
+    [self setupWindowViewControllers];
+    [self setupLocalObservers];
+    
+    [self setupSceneBindings];
+    [self setupNotificationCenterObservers];
+    [self setupEmulationScene];
+    
+    [self setupGamepad];
+    [self setupTimers];
+    [self checkForDefaultROM];
+    [self setupMachineBindings];
+    [self switchToMachine:_configViewController.currentMachineType];
+    [self restoreSession];
+}
+
+- (void)setupEmulationScene
+{
+    // Setup the Sprite Kit emulation scene
+    self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
+    self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:cSceneScaleMode] integerValue];
+    [self.skView setFrameSize:self.skView.window.frame.size];
+    [self.skView presentScene:_emulationScene];
+}
+
+- (void)setupWindowViewControllers
+{
+    // Init the keyboard mapping view
+    _keyboardMapWindowController = [_storyBoard instantiateControllerWithIdentifier:@"KeyboardWindow"];
+
+    _romSelectionWindowController = [_storyBoard instantiateControllerWithIdentifier:@"RomSelectionWindow"];
+    _romSelectionViewController = (RomSelectionViewController *)_romSelectionWindowController.contentViewController;
+
+    _debugWindowController = [_storyBoard instantiateControllerWithIdentifier:@"DebugWindow"];
+    _debugViewController = (DebugViewController *)_debugWindowController.contentViewController;
+
     _graphicalMemoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"GraphicalMemoryView"];
     _graphicalMemViewController = (GraphicalMemViewController *)_graphicalMemoryWindowController.contentViewController;
-    
-    _cpuWindowController = [_storyBoard instantiateControllerWithIdentifier:@"CPUView"];
-    _cpuViewController = (CPUViewController *)_cpuWindowController.contentViewController;
-        
+
+    _saveAccessoryController = [_storyBoard instantiateControllerWithIdentifier:@"SaveAccessoryController"];
+    _saveAccessoryView = _saveAccessoryController.view;
+
+    _tapeBrowserWindowController = [_storyBoard instantiateControllerWithIdentifier:@"TAPBrowserWindow"];
+    _tapeViewController = (TapeViewController *)_tapeBrowserWindowController.contentViewController;
+
+    // Create an instance of the ZXTape controller
+    _zxTape = [ZXTape new];
+    _zxTape.delegate = _tapeViewController;
+}
+
+- (void)setupConfigView
+{
     // Setup the config view controller used for the config panel on the right. This initially places the view off the
     // left edge of the window and drops the configViewController view into the config scroll view.
     _configViewController = [_storyBoard instantiateControllerWithIdentifier:@"ConfigViewController"];
@@ -142,51 +175,6 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
         self.configEffectsView.frame.size.height};
     self.configEffectsView.alphaValue = 0;
     self.configScrollView.documentView = _configViewController.view;
-    
-    [self setupLocalObservers];
-    [self setupSceneBindings];
-    [self setupNotificationCenterObservers];
-
-    // Init the keyboard mapping view
-    _keyboardMapWindowController = [_storyBoard instantiateControllerWithIdentifier:@"KeyboardWindow"];
-    
-    // Setup the tape view view controller;
-    _tapeBrowserWindowController = [_storyBoard instantiateControllerWithIdentifier:@"TAPBrowserWindow"];
-    _tapeViewController = (TapeViewController *)_tapeBrowserWindowController.contentViewController;
-    
-    // Setup the debug window
-    _disassemblyWindowController = [_storyBoard instantiateControllerWithIdentifier:@"DisassemblyWindow"];
-    _disassemblyViewController = (DisassemblyViewController *)_disassemblyWindowController.contentViewController;
-    
-    //  Setup memory view window
-    _memoryWindowController = [_storyBoard instantiateControllerWithIdentifier:@"MemoryWindow"];
-    _memoryViewController = (MemoryViewController *)_memoryWindowController.contentViewController;
-    
-    _saveAccessoryController = [_storyBoard instantiateControllerWithIdentifier:@"SaveAccessoryController"];
-    _saveAccessoryView = _saveAccessoryController.view;
-    
-    _romSelectionWindowController = [_storyBoard instantiateControllerWithIdentifier:@"RomSelectionWindow"];
-    _romSelectionViewController = (RomSelectionViewController *)_romSelectionWindowController.contentViewController;
-    
-    _debugWindowController = [_storyBoard instantiateControllerWithIdentifier:@"DebugWindow"];
-    _debugViewController = (DebugViewController *)_debugWindowController.contentViewController;
-    
-    // Setup the Sprite Kit emulation scene
-    self.emulationScene = (EmulationScene *)[SKScene nodeWithFileNamed:@"EmulationScene"];
-    self.emulationScene.scaleMode = (SKSceneScaleMode)[[_preferences valueForKey:cSceneScaleMode] integerValue];
-    [self.skView setFrameSize:self.skView.window.frame.size];
-    [self.skView presentScene:_emulationScene];
-
-    // Create an instance of the ZXTape controller
-    _zxTape = [ZXTape new];
-    _zxTape.delegate = _tapeViewController;
-
-    [self setupGamepad];
-    [self setupTimers];
-    [self checkForDefaultROM];
-    [self setupMachineBindings];
-    [self switchToMachine:_configViewController.currentMachineType];
-    [self restoreSession];
 }
 
 - (void)restoreSession
@@ -270,7 +258,7 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 {
     _debugTimerQueue = dispatch_queue_create("DebugTimerQueue", nil);
     _debugTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _debugTimerQueue);
-    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC, 0);
+    dispatch_source_set_timer(_debugTimer, DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC, 0);
     
     dispatch_source_set_event_handler(_debugTimer, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -338,9 +326,6 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 	[_machine bind:cSmartCardEnabled toObject:_configViewController withKeyPath:cSmartCardEnabled options:nil];
 	
     [_tapeViewController bind:@"tape" toObject:self withKeyPath:@"zxTape" options:nil];
-    [_disassemblyViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
-    [_cpuViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
-    [_memoryViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
     [_debugViewController bind:@"machine" toObject:self withKeyPath:@"_machine" options:nil];
 }
 
@@ -471,12 +456,13 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 
 #pragma mark - Emulation View Update
 
+// This is executed on the main thread as its updating the display
 - (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size
 {
     _bufferData = [NSData dataWithBytes:pixelBuffer length:length];
     self.emulationScene.backingTexture = [SKTexture textureWithData:_bufferData
-                                                      size:size
-                                                   flipped:YES];
+                                                               size:size
+                                                            flipped:YES];
     
     float widthScale = floorf(self.view.frame.size.width / size.width);
     float heightScale = floorf(self.view.frame.size.width / size.height);
@@ -487,19 +473,18 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
     
     float borderWidth = (cBORDER_PX_SIZE - _configViewController.displayBorderWidth);
-
+    
     CGRect textureRect = (CGRect){
         floorf((-size.width / 2) + borderWidth * widthScale),
         floorf((-size.height / 2) + borderWidth * heightScale),
         floorf(backingsize.width - (borderWidth * widthScale) * 2),
         floorf(backingsize.height - (borderWidth * heightScale) * 2)
     };
-
+    
     self.emulationScene.emulationDisplaySprite.texture = [self.skView textureFromNode:self.emulationScene.emulationBackingSprite
                                                                                  crop:textureRect];
     
-//    _debugViewController.displayImage = [[NSImage alloc] initWithCGImage:self.emulationScene.emulationDisplaySprite.texture.CGImage size:CGSizeZero];
-    
+    //_debugViewController.displayImage = [[NSImage alloc] initWithCGImage:self.emulationScene.emulationDisplaySprite.texture.CGImage size:CGSizeZero];
 }
 
 #pragma mark - UI Actions
@@ -779,8 +764,7 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 
 - (IBAction)switchHexDecValues:(id)sender
 {
-    _cpuViewController.decimalFormat = (_cpuViewController.decimalFormat) ? NO : YES;
-    _disassemblyViewController.decimalFormat = (_disassemblyViewController.decimalFormat) ? NO : YES;
+    _debugViewController.decimalFormat = (_debugViewController.decimalFormat) ? NO : YES;
 }
 
 - (IBAction)pause:(id)sender
@@ -844,24 +828,9 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     [_tapeBrowserWindowController showWindow:nil];
 }
 
-- (IBAction)showDisassemblyWindow:(id)sender
-{
-    [_disassemblyWindowController showWindow:nil];
-}
-
-- (IBAction)showCPUWindow:(id)sender
-{
-    [_cpuWindowController showWindow:nil];
-}
-
 - (IBAction)showGraphicalMemoryWindow:(id)sender
 {
     [_graphicalMemoryWindowController showWindow:nil];
-}
-
-- (IBAction)showMemoryWindow:(id)sender
-{
-    [_memoryWindowController showWindow:nil];
 }
 
 - (IBAction)showDebugWindow:(id)sender

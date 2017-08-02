@@ -153,6 +153,7 @@ typedef NS_ENUM(int, ULAplusMode)
     free (memory);
     free (rom);
     free(emuDisplayBuffer);
+    free(emuDisplayBufferCopy);
     free(self.audioBuffer);
 }
 
@@ -188,6 +189,7 @@ typedef NS_ENUM(int, ULAplusMode)
         // Setup the display buffer and length used to store the output from the emulator
         emuDisplayBufferLength = (emuDisplayPxWidth * emuDisplayPxHeight) * sizeof(PixelColor);
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
+        emuDisplayBufferCopy = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
         
         float fps = 50;
         
@@ -718,129 +720,120 @@ void updateScreenWithTStates(int numberTs, void *m)
         int line = machine->emuDisplayTs / machine->machineInfo.tsPerLine;
         int ts = machine->emuDisplayTs % machine->machineInfo.tsPerLine;
         
-        switch (machine->emuDisplayTsTable[line][ts])
-        {
-            case DisplayAction::eDisplayRetrace:
-                break;
-                
-            case DisplayAction::eDisplayBorder:
-                
-                if (machine->ulaPlusPaletteOn)
-                {
-                    int index = machine->borderColor + 8;
-                    for (int i = 0; i < 8; i++)
-                    {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
-                        machine->emuDisplayBufferIndex++;
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < 8; i++)
-                    {
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].r;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].g;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].b;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].a;
-                    }
-                }
-                break;
-                
-            case DisplayAction::eDisplayPaper:
-            {
-                int y = line - (machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxTopBorder);
-                int x = (ts >> 2) - 4;
-                
-                uint pixelAddress = machine->emuTsLine[y] + x;
-                uint attributeAddress = cBITMAP_SIZE + ((y >> 3) << 5) + x;
-                
-                int pixelByte = machine->memory[memoryAddress + pixelAddress];
-                int attributeByte = machine->memory[memoryAddress + attributeAddress];
-                
-                if (machine->ulaPlusPaletteOn)
-                {
-                    int flash = (attributeByte & 0x80) ? 1 : 0;
-                    int bright = (attributeByte & 0x40) ? 1 : 0;
-                    int ulaPlusInk = (attributeByte & 0x07);
-                    int ulaPlusPaper = ((attributeByte >> 3) & 0x07);
-                    int index = 0;
-                    char ulaPlusColor = 0;
-                    
-                    int bit = 0;
-                    for (int b = 0x80; b; b >>= 1)
-                    {
-                        if (pixelByte & b) {
-                            index = (flash * 2 + bright) * 16 + ulaPlusInk;
-                            ulaPlusColor = machine->clut[index];
-                        }
-                        else
-                        {
-                            index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
-                            ulaPlusColor = machine->clut[index];
-                        }
-                        
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
-                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
-                        machine->emuDisplayBufferIndex++;
-                        
-                        if (machine->machineInfo.machineType == eZXSpectrumNext)
-                        {
-                            drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
-                        }
-                        
-                        bit++;
-                    }
-                }
-                else
-                {
-                    // Extract the ink and paper colours from the attribute byte read in
-                    int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
-                    int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
-                    
-                    // Switch ink and paper if the flash phase has changed
-                    if ((machine->frameCounter & 16) && (attributeByte & 0x80))
-                    {
-                        int tempPaper = paper;
-                        paper = ink;
-                        ink = tempPaper;
-                    }
-                    
-                    int bit = 0;
-                    for (int b = 0x80; b; b >>= 1)
-                    {
-                        if (pixelByte & b) {
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].r;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].g;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].b;
-                            machine->emuDisplayBufferIndex++;
-                        }
-                        else
-                        {
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].r;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].g;
-                            machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].b;
-                            machine->emuDisplayBufferIndex++;
-                        }
-                        
-                        if (machine->machineInfo.machineType == eZXSpectrumNext)
-                        {
-                            drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
-                        }
-                        
-                        bit++;
-                    }
-                }
-            
-                break;
-            }
-                
-            default:
-                break;
-        }
+        uint8 action = machine->emuDisplayTsTable[line][ts];
         
+        if (action == DisplayAction::eDisplayBorder)
+        {
+            if (machine->ulaPlusPaletteOn)
+            {
+                int index = machine->borderColor + 8;
+                for (int i = 0; i < 8; i++)
+                {
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 28) >> 2) * 36;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((machine->clut[index] & 224) >> 5) * 36;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((machine->clut[index] & 3) << 1) | (machine->clut[index] & 2) | (machine->clut[index] & 1)) * 36;
+                    machine->emuDisplayBufferIndex++;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].r;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].g;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].b;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[machine->borderColor].a;
+                }
+            }
+        }
+        else if (action == DisplayAction::eDisplayPaper)
+        {
+            int y = line - (machine->machineInfo.pxVerticalBlank + machine->machineInfo.pxTopBorder);
+            int x = (ts >> 2) - 4;
+            
+            uint pixelAddress = machine->emuTsLine[y] + x;
+            uint attributeAddress = cBITMAP_SIZE + ((y >> 3) << 5) + x;
+            
+            int pixelByte = machine->memory[memoryAddress + pixelAddress];
+            int attributeByte = machine->memory[memoryAddress + attributeAddress];
+            
+            if (machine->ulaPlusPaletteOn)
+            {
+                int flash = (attributeByte & 0x80) ? 1 : 0;
+                int bright = (attributeByte & 0x40) ? 1 : 0;
+                int ulaPlusInk = (attributeByte & 0x07);
+                int ulaPlusPaper = ((attributeByte >> 3) & 0x07);
+                int index = 0;
+                char ulaPlusColor = 0;
+                
+                int bit = 0;
+                for (int b = 0x80; b; b >>= 1)
+                {
+                    if (pixelByte & b) {
+                        index = (flash * 2 + bright) * 16 + ulaPlusInk;
+                        ulaPlusColor = machine->clut[index];
+                    }
+                    else
+                    {
+                        index = (flash * 2 + bright) * 16 + ulaPlusPaper + 8;
+                        ulaPlusColor = machine->clut[index];
+                    }
+                    
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 28) >> 2) * 36;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = ((ulaPlusColor & 224) >> 5) * 36;
+                    machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = (((ulaPlusColor & 3) << 1) | (ulaPlusColor & 2) | (ulaPlusColor & 1)) * 36;
+                    machine->emuDisplayBufferIndex++;
+                    
+                    if (machine->machineInfo.machineType == eZXSpectrumNext)
+                    {
+                        drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
+                    }
+                    
+                    bit++;
+                }
+            }
+            else
+            {
+                // Extract the ink and paper colours from the attribute byte read in
+                int ink = (attributeByte & 0x07) + ((attributeByte & 0x40) >> 3);
+                int paper = ((attributeByte >> 3) & 0x07) + ((attributeByte & 0x40) >> 3);
+                
+                // Switch ink and paper if the flash phase has changed
+                if ((machine->frameCounter & 16) && (attributeByte & 0x80))
+                {
+                    int tempPaper = paper;
+                    paper = ink;
+                    ink = tempPaper;
+                }
+                
+                int bit = 0;
+                for (int b = 0x80; b; b >>= 1)
+                {
+                    if (pixelByte & b) {
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].r;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].g;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[ink].b;
+                        machine->emuDisplayBufferIndex++;
+                    }
+                    else
+                    {
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].r;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].g;
+                        machine->emuDisplayBuffer[machine->emuDisplayBufferIndex++] = palette[paper].b;
+                        machine->emuDisplayBufferIndex++;
+                    }
+                    
+                    if (machine->machineInfo.machineType == eZXSpectrumNext)
+                    {
+                        drawSprites((x * 8) + bit + cBORDER_PX_SIZE, y + machine->emuTopBorderPx, machine);
+                    }
+                    
+                    bit++;
+                }
+            }
+
+        }
+    
         machine->emuDisplayTs += machine->machineInfo.tsPerChar;
         numberTs -= machine->machineInfo.tsPerChar;
     }
