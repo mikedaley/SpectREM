@@ -15,6 +15,7 @@
 
 @interface ZXSpectrum48 ()
 {
+    
 @public
     CZ80Core *core;
     EmulationViewController *_emuViewController;
@@ -156,7 +157,7 @@ static void coreMemoryWrite(unsigned short address, unsigned char data, void *m)
     
     // Only update screen if display memory has been written too
     if (address >= 16384 && address < cBITMAP_ADDRESS + cBITMAP_SIZE + cATTR_SIZE){
-        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, m);
+        updateScreenWithTStates((machine->core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.paperDrawingOffset, machine);
     }
     
     machine->memory[address] = data;

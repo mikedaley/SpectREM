@@ -19,6 +19,8 @@ typedef NS_ENUM(NSUInteger, SZXMachineType)
 
 static NSUInteger const cROM_SIZE_16K = 16384;
 
+NSString  *const cROM_EXTENSION = @"ROM";
+
 #pragma mark - Interface
 
 @interface RomSelectionViewController ()

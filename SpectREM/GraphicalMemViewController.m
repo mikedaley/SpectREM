@@ -31,10 +31,8 @@
     self.displayByteWidth = 32;
 }
 
-- (void)updateViewWithMachine:(void *)m
+- (void)updateViewWithMachine:(ZXSpectrum *)machine
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    
     CFDataRef memoryDataRef = CFDataCreate(kCFAllocatorDefault, machine->memory, 65536);
     CGDataProviderRef providerRef = CGDataProviderCreateWithCFData(memoryDataRef);
 

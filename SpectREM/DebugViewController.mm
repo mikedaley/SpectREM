@@ -233,6 +233,11 @@
             }
         }
 
+    } else if ([command isEqualToString:@"RF"])
+    {
+        [_machine generateFrame];
+        [self updateDisassemblyTable];
+        [self updateViewDetails];
     }
 }
 

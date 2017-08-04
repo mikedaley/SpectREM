@@ -24,7 +24,7 @@ static int const cBITMAP_SIZE = 6144;
 static int const cATTR_SIZE = 768;
 
 // Used to increase the volume of the beeper output. Too high and the output is clipped
-static int const cAUDIO_BEEPER_VOL_MULTIPLIER = 48;
+static int const cAUDIO_BEEPER_VOL_MULTIPLIER = 24;
 
 // Sampled rate used to drive the update frequency in the audio engine which is then used to generate new frames e.g. 50.08 fps
 static int const cAUDIO_SAMPLE_RATE = 192000;
@@ -150,7 +150,7 @@ typedef enum : NSUInteger {
 #pragma mark - Properties
 
 // Buffer used to hold the sound samples generated for each emulation frame
-@property (assign) short *audioBuffer;
+@property (assign) signed short *audioBuffer;
 
 // Reference to the audio core instance
 @property (strong) AudioCore *audioCore;
@@ -299,12 +299,12 @@ Returns a reference to the Z80 core being used inside the machine
 /**
 Updates the screen buffer based on the number of tStates that have passed in the current frame
  */
-void updateScreenWithTStates(int numberTs, void *m);
+void updateScreenWithTStates(int numberTs, ZXSpectrum *m);
 
 /**
 Updates the audio buffer for both the beeper and AY chip based on the number of tStates that have passed in the current frame
  */
-void updateAudioWithTStates(int tsCPU, void *m);
+void updateAudioWithTStates(int tsCPU, ZXSpectrum *m);
 
 /**
 Handles any port writes made by the CPU

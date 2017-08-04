@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+extern NSString *const cROM_EXTENSION;
+
 @interface RomSelectionViewController : NSViewController <NSDraggingDestination>
 
 - (void)reset48kRom;

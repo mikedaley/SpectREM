@@ -9,12 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import "PixelImageView.h"
 
+@class ZXSpectrum;
+
 @interface GraphicalMemViewController : NSViewController
 
 @property (weak) IBOutlet PixelImageView *memoryView;
 
 @property (assign) int displayByteWidth;
 
-- (void)updateViewWithMachine:(void *)m;
+- (void)updateViewWithMachine:(ZXSpectrum *)m;
 
 @end

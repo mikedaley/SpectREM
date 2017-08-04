@@ -33,7 +33,7 @@
     unsigned char	AYRegisters[eAY_MAX_REGISTERS];
     unsigned char	currentAYRegister;
     unsigned char   floatingAYRegister;
-    signed short    AYVolumes[16];
+    unsigned short  AYVolumes[16];
     bool			envelopeHolding;
     bool			envelopeHold;
     bool			envelopeAlt;
@@ -120,7 +120,7 @@ static float fAYVolBase[] = {
         // Generate AY volumes
         for (int i = 0; i < 16; i++)
         {
-            AYVolumes[i] = (signed short)(fAYVolBase[i] * 8192);
+            AYVolumes[i] = (unsigned short)(fAYVolBase[i] * 16384);
         }
     
         CheckError(NewAUGraph(&_graph), "NewAUGraph");
@@ -467,7 +467,6 @@ static float fAYVolBase[] = {
         
         channelOutput[2] += AYVolumes[vol];
     }
-    
 }
 
 - (void)reset

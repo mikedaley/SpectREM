@@ -34,7 +34,6 @@
 #pragma mark - Constants
 
 static NSString  *const cSESSION_FILE_NAME = @"session.z80";
-static NSString  *const cROM_EXTENSION = @"ROM";
 static NSString  *const cDEBUG_EXTENSION = @"DBG";
 
 #pragma mark - Interface
@@ -51,9 +50,10 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 @implementation EmulationViewController
 {
     ZXSpectrum              *_machine;
-    ConfigViewController    *_configViewController;
     NSStoryboard            *_storyBoard;
-    
+
+    ConfigViewController    *_configViewController;
+
     NSWindowController      *_graphicalMemoryWindowController;
     GraphicalMemViewController *_graphicalMemViewController;
     
@@ -73,6 +73,7 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
     
     IOHIDManagerRef         _hidManager;
     NSUserDefaults          *_preferences;
+
     dispatch_queue_t        _debugTimerQueue;
     dispatch_source_t       _debugTimer;
     dispatch_queue_t        _fastTimerQueue;
@@ -266,7 +267,7 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
             {
                 if ([_graphicalMemoryWindowController.window isVisible])
                 {
-                    [_graphicalMemViewController updateViewWithMachine:(__bridge void*)_machine];
+                    [_graphicalMemViewController updateViewWithMachine:_machine];
                 }
             }
         });
@@ -459,8 +460,8 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 // This is executed on the main thread as its updating the display
 - (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size
 {
+    _screenBufferData = [NSData dataWithBytes:pixelBuffer length:length];
     dispatch_async(dispatch_get_main_queue(), ^{
-        _screenBufferData = [NSData dataWithBytes:pixelBuffer length:length];
         self.emulationScene.backingTexture = [SKTexture textureWithData:_screenBufferData
                                                                    size:size
                                                                 flipped:YES];
@@ -484,7 +485,6 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
         
         self.emulationScene.emulationDisplaySprite.texture = [self.skView textureFromNode:self.emulationScene.emulationBackingSprite
                                                                                      crop:textureRect];
-        
     });
 }
 

@@ -60,6 +60,7 @@ typedef NS_ENUM(int, ULAplusMode)
 
 @interface ZXSpectrum ()
 {
+    
 @public
     // Keyboard matrix data
     unsigned char keyboardMap[8];
@@ -147,6 +148,8 @@ typedef NS_ENUM(int, ULAplusMode)
     };
     
     ScreenBufferData *emuDisplayBufferCopy;
+    
+    BOOL capsPressed;
 }
 
 @end
@@ -186,6 +189,7 @@ typedef NS_ENUM(int, ULAplusMode)
         _preferences = [NSUserDefaults standardUserDefaults];
         
         event = EmulatorEventType::eNone;
+        capsPressed = NO;
         
         borderColor = 7;
         frameCounter = 0;
@@ -216,11 +220,12 @@ typedef NS_ENUM(int, ULAplusMode)
         emuDisplayBuffer = (unsigned char *)calloc(emuDisplayBufferLength, sizeof(unsigned char));
         emuDisplayBufferCopy = (ScreenBufferData *)calloc(machineInfo.tsPerFrame, sizeof(ScreenBufferData));
         
-        float fps = 50;
+        const float fps = 50;
         
         audioBufferSize = (cAUDIO_SAMPLE_RATE / fps) * 6;
         audioTsStep = machineInfo.tsPerFrame / (cAUDIO_SAMPLE_RATE / fps);
         audioAYTStatesStep = 32;
+        
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         
         self.accelerated = NO;
@@ -456,6 +461,14 @@ typedef NS_ENUM(int, ULAplusMode)
                           event = EmulatorEventType::eNone;
                           [self resetFrame];
                           [self generateFrame];
+                          
+                          if (capsPressed)
+                          {
+                              capsPressed = NO;
+                              keyboardMap[0] |= 0x01;
+                              keyboardMap[3] |= 0x02;
+                          }
+
                       }
                   });
 }
@@ -495,7 +508,7 @@ typedef NS_ENUM(int, ULAplusMode)
             count -= tsCPU;
             
             if (!self.accelerated) {
-                updateAudioWithTStates(tsCPU, (__bridge void *)self);
+                updateAudioWithTStates(tsCPU, self);
             }
             
             if (core->GetTStates() >= machineInfo.tsPerFrame )
@@ -506,27 +519,23 @@ typedef NS_ENUM(int, ULAplusMode)
                 core->ResetTStates( machineInfo.tsPerFrame );
                 core->SignalInterrupt();
                 
-                updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+                updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, self);
                 
                 if (self.accelerated)
                 {
                     if (frameCounter % cACCELERATED_SKIP_FRAMES)
                     {
-                        [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
-                                                                                  length:(CFIndex)emuDisplayBufferLength
-                                                                                    size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
+                        [self refreshEmulationDisplay];
                     }
                 }
                 else
                 {
-                    [self.emulationViewController updateEmulationViewWithPixelBuffer:emuDisplayBuffer
-                                                                              length:(CFIndex)emuDisplayBufferLength
-                                                                                size:(CGSize){(float)emuDisplayPxWidth, (float)emuDisplayPxHeight}];
+                    [self refreshEmulationDisplay];
                 }
                 
                 frameCounter++;
                 
-                spriteRenderList = [NSMutableArray new];
+//                spriteRenderList = [NSMutableArray new];
             }
         }
     }
@@ -585,7 +594,7 @@ typedef NS_ENUM(int, ULAplusMode)
     {
         core->ResetTStates();
         core->SignalInterrupt();
-        updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, (__bridge void *)self);
+        updateScreenWithTStates(machineInfo.tsPerFrame - emuDisplayTs, self);
         frameCounter ++;
     }
     
@@ -622,10 +631,8 @@ typedef NS_ENUM(int, ULAplusMode)
 #pragma mark - Audio
 
 
-void updateAudioWithTStates(int numberTs, void *m)
+void updateAudioWithTStates(int numberTs, ZXSpectrum *machine)
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    
     if (machine.paused)
     {
         return;
@@ -717,10 +724,8 @@ void updateAudioWithTStates(int numberTs, void *m)
 #pragma mark - Display
 
 
-void updateScreenWithTStates(int numberTs, void *m)
+void updateScreenWithTStates(int numberTs, ZXSpectrum *machine)
 {
-    ZXSpectrum *machine = (__bridge ZXSpectrum *)m;
-    
     if (machine->_accelerated && machine->frameCounter % cACCELERATED_SKIP_FRAMES)
     {
         return;
@@ -737,6 +742,7 @@ void updateScreenWithTStates(int numberTs, void *m)
         
         if (action == DisplayAction::eDisplayBorder)
         {
+            // Only draw the border if the border colour has changed
             if (machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute != machine->borderColor)
             {
                 machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute = machine->borderColor;
@@ -778,10 +784,12 @@ void updateScreenWithTStates(int numberTs, void *m)
             int pixelByte = machine->memory[memoryAddress + pixelAddress];
             int attributeByte = machine->memory[memoryAddress + attributeAddress];
             
+            // Only draw the bitmap if the bitmap data has changed
             if (machine->emuDisplayBufferCopy[machine->emuDisplayTs].pixels != pixelByte ||
                 machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute != attributeByte ||
                 (attributeByte & 0x80))
             {
+                // Update the buffers copy of the bitmap ready for the next frame
                 machine->emuDisplayBufferCopy[machine->emuDisplayTs].pixels = pixelByte;
                 machine->emuDisplayBufferCopy[machine->emuDisplayTs].attribute = attributeByte;
                 
@@ -1205,7 +1213,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // +---+---+---+---+---+-----------+
     if (!(address & 0x01))
     {
-        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
+        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, machine);
         machine->audioEarBit = (data & 0x10) >> 4;
         machine->audioMicBit = (data & 0x08) >> 3;
         machine->borderColor = data & 0x07;
@@ -1239,7 +1247,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     // ULAplus ports
     if (address == 0xbf3b)
     {
-        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs), m);
+        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs), machine);
         
         if (data & 0x40)
         {
@@ -1258,7 +1266,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
     
     if (address == 0xff3b)
     {
-        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs), m);
+        updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs), machine);
         
         if (machine->ulaPlusMode == eULAplusModeGroup)
         {
@@ -1383,7 +1391,7 @@ void coreIOWrite(unsigned short address, unsigned char data, void *m)
         
         if (machine->displayPage != ((data & 0x08) == 0x08) ? 7 : 5)
         {
-            updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, m);
+            updateScreenWithTStates((core->GetTStates() - machine->emuDisplayTs) + machine->machineInfo.borderDrawingOffset, machine);
         }
         
         // You should only be able to disable paging once. To enable paging again then a reset is necessary.
@@ -1590,7 +1598,9 @@ static unsigned char floatingBus(void *m)
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink )
+    NSLog(@"%@", theEvent);
+    
+    if (!theEvent.isARepeat && !self.useSmartLink )
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -1696,7 +1706,7 @@ static unsigned char floatingBus(void *m)
 - (void)keyUp:(NSEvent *)theEvent
 {
     
-    if (!theEvent.isARepeat && !(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
+    if (!theEvent.isARepeat && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
         // must be done on the emulation queue to prevent a race condition
@@ -1801,6 +1811,8 @@ static unsigned char floatingBus(void *m)
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
+    NSLog(@"%@", theEvent);
+
     if (!(theEvent.modifierFlags & NSEventModifierFlagCommand) && !self.useSmartLink)
     {
         // Because keyboard updates are called on the main thread, changes to the keyboard map
@@ -1823,10 +1835,11 @@ static unsigned char floatingBus(void *m)
                     break;
                     
                 case 57: // Caps Lock
-                    if (theEvent.modifierFlags & NSEventModifierFlagCapsLock)
+                    if (theEvent.modifierFlags & NSEventModifierFlagCapsLock && !capsPressed)
                     {
-                        //                        keyboardMap[0] &= ~0x01;
-                        //                        keyboardMap[3] &= ~0x02;
+                        keyboardMap[0] &= ~0x01;
+                        keyboardMap[3] &= ~0x02;
+                        capsPressed = YES;
                     }
                     break;
                     
