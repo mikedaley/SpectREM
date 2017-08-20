@@ -14,7 +14,7 @@
 
 @property (strong) SKSpriteNode *emulationDisplaySprite;
 @property (strong) SKSpriteNode *emulationBackingSprite;
-@property (strong) SKTexture *backingTexture;
+@property (strong) SKMutableTexture *backingTexture;
 @property (assign) id keyboardDelegate;
 
 @property (assign) double displayCurve;

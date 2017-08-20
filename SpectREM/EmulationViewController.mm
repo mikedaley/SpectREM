@@ -460,31 +460,37 @@ static NSString  *const cDEBUG_EXTENSION = @"DBG";
 // This is executed on the main thread as its updating the display
 - (void)updateEmulationViewWithPixelBuffer:(unsigned char *)pixelBuffer length:(CFIndex)length size:(CGSize)size
 {
-    _screenBufferData = [NSData dataWithBytes:pixelBuffer length:length];
+//    _screenBufferData = [NSData dataWithBytes:pixelBuffer length:length];
+    int widthScale = self.view.frame.size.width / size.width;
+    int heightScale = self.view.frame.size.width / size.height;
+    CGSize backingsize = (CGSize){size.width  * widthScale, size.height * heightScale};
+    
+    self.emulationScene.backingTexture.filteringMode = SKTextureFilteringNearest;
+    self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
+    self.emulationScene.emulationBackingSprite.size = backingsize;
+    
+    int borderWidth = (cBORDER_PX_SIZE - _configViewController.displayBorderWidth);
+    
+    CGRect textureRect = (CGRect){
+        floorf((-size.width / 2) + borderWidth * widthScale),
+        floorf((-size.height / 2) + borderWidth * heightScale),
+        floorf(backingsize.width - (borderWidth * widthScale) * 2),
+        floorf(backingsize.height - (borderWidth * heightScale) * 2)
+    };
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.emulationScene.backingTexture = [SKTexture textureWithData:_screenBufferData
-                                                                   size:size
-                                                                flipped:YES];
         
-        float widthScale = floorf(self.view.frame.size.width / size.width);
-        float heightScale = floorf(self.view.frame.size.width / size.height);
-        CGSize backingsize = (CGSize){size.width  * widthScale, size.height * heightScale};
+        [self.emulationScene.backingTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
+            memcpy(pixelData, pixelBuffer, length);
+        }];
         
-        self.emulationScene.emulationBackingSprite.size = backingsize;
-        self.emulationScene.backingTexture.filteringMode = SKTextureFilteringNearest;
-        self.emulationScene.emulationBackingSprite.texture = self.emulationScene.backingTexture;
-        
-        float borderWidth = (cBORDER_PX_SIZE - _configViewController.displayBorderWidth);
-        
-        CGRect textureRect = (CGRect){
-            floorf((-size.width / 2) + borderWidth * widthScale),
-            floorf((-size.height / 2) + borderWidth * heightScale),
-            floorf(backingsize.width - (borderWidth * widthScale) * 2),
-            floorf(backingsize.height - (borderWidth * heightScale) * 2)
-        };
         
         self.emulationScene.emulationDisplaySprite.texture = [self.skView textureFromNode:self.emulationScene.emulationBackingSprite
                                                                                      crop:textureRect];
+        
+//        self.emulationScene.emulationDisplaySprite.texture = [SKTexture textureWithRect:textureRect
+//                                                                              inTexture:self.emulationScene.backingTexture];
+        
     });
 }
 

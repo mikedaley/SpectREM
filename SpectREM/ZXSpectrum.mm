@@ -109,6 +109,7 @@ typedef NS_ENUM(int, ULAplusMode)
     int audioBufferSize;
     int audioAYTStates;
     int audioAYTStatesStep;
+    int AYTimer;
     
     double leftMixA;
     double rightMixA;
@@ -225,6 +226,7 @@ typedef NS_ENUM(int, ULAplusMode)
         audioBufferSize = (cAUDIO_SAMPLE_RATE / fps) * 6;
         audioTsStep = machineInfo.tsPerFrame / (cAUDIO_SAMPLE_RATE / fps);
         audioAYTStatesStep = 32;
+        AYTimer = 0;
         
         self.audioBuffer = (int16_t *)malloc(audioBufferSize);
         
@@ -506,9 +508,14 @@ typedef NS_ENUM(int, ULAplusMode)
         else
         {
             count -= tsCPU;
+            AYTimer += tsCPU;
             
             if (!self.accelerated) {
-                updateAudioWithTStates(tsCPU, self);
+                if (AYTimer >= 16)
+                {
+                    updateAudioWithTStates(AYTimer, self);
+                    AYTimer -= AYTimer;
+                }
             }
             
             if (core->GetTStates() >= machineInfo.tsPerFrame )
@@ -645,7 +652,7 @@ void updateAudioWithTStates(int numberTs, ZXSpectrum *machine)
     signed int beeperLevelRight = localBeeperLevel;
 
     AudioCore *aCore = machine.audioCore;
-    
+
     // Loop over each tState so that the necessary audio samples can be generated
     for(int i = 0; i < numberTs; i++)
     {
@@ -686,6 +693,7 @@ void updateAudioWithTStates(int numberTs, ZXSpectrum *machine)
                 machine->audioAYTStates -= machine->audioAYTStatesStep;
             }
         }
+        
         
         // If we have done more cycles now than the audio step counter, generate a new sample
         if (machine->audioTsCounter++ >= machine->audioTsStepCounter)

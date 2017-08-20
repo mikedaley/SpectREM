@@ -63,6 +63,7 @@ static NSString *const cU_REFLECTION =          @"u_reflection";
     {
         self.emulationBackingSprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationBackingSprite"];
         self.emulationDisplaySprite = (SKSpriteNode *)[self childNodeWithName:@"/emulationDisplaySprite"];
+        self.backingTexture = [SKMutableTexture mutableTextureWithSize:CGSizeMake(320, 256)];
         self.backingTexture.filteringMode = SKTextureFilteringNearest;
         
         _shader = [SKShader shaderWithFileNamed:@"CRT.fsh"];

@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpectREM/EmulationViewController.mm"
-            timestampString = "522017190.465809"
+            timestampString = "524918995.838873"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
+            startingLineNumber = "491"
+            endingLineNumber = "491"
             landmarkName = "-updateEmulationViewWithPixelBuffer:length:size:"
             landmarkType = "7">
          </BreakpointContent>

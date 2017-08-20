@@ -386,7 +386,7 @@ static float fAYVolBase[] = {
     if (AYChannelCount[0] >= freq)
     {
         AYChannelCount[0]  -= freq;
-        AYOutput ^= (1 << 0);
+        AYOutput ^= 1;
     }
     
     unsigned int tone_output = ((AYOutput >> 0) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> 0) & 1);
@@ -418,7 +418,7 @@ static float fAYVolBase[] = {
     if (AYChannelCount[1] >= freq)
     {
         AYChannelCount[1]  -= freq;
-        AYOutput ^= (1 << 1);
+        AYOutput ^= 2;
     }
     
     tone_output = ((AYOutput >> 1) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> 1) & 1);
@@ -450,7 +450,7 @@ static float fAYVolBase[] = {
     if (AYChannelCount[2] >= freq)
     {
         AYChannelCount[2]  -= freq;
-        AYOutput ^= (1 << 2);
+        AYOutput ^= 4;
     }
     
     tone_output = ((AYOutput >> 2) & 1) | ((AYRegisters[eAYREGISTER_ENABLE] >> 2) & 1);
